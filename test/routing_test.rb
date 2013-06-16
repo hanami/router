@@ -42,6 +42,14 @@ describe Lotus::Router do
         @router.get('/lotus/:id(.:format)', to: endpoint)
         @router.call(env).must_equal response
       end
+
+      it 'accepts a block' do
+        response = [200, {}, ['Sinatra!']]
+        env      = Rack::MockRequest.env_for('/sinatra')
+
+        @router.get('/sinatra') {|e| response }
+        @router.call(env).must_equal response
+      end
     end
   end
 end

@@ -10,8 +10,8 @@ module Lotus
       @resolver = resolver
     end
 
-    def get(path, options = {})
-      super(path, options).to resolver.resolve(options)
+    def get(path, options = {}, &endpoint)
+      super(path, options).to resolver.resolve(options, &endpoint)
     end
 
     def redirect(path)
