@@ -7,6 +7,7 @@ module Lotus
     def resolve(options)
       result = options.delete(:to)
       return result if result.respond_to?(:call)
+      return result.dest if result.respond_to?(:dest)
 
       result = if result.match(/#/)
         controller, action = result.split(/#/).map {|token| titleize(token) }

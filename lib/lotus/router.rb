@@ -13,5 +13,10 @@ module Lotus
     def get(path, options = {})
       super(path, options).to resolver.resolve(options)
     end
+
+    def redirect(path)
+      @routes.find {|r| r.original_path == path } ||
+        (raise ArgumentError.new(%(Cannot find route for path: "#{ path }")))
+    end
   end
 end
