@@ -5,18 +5,30 @@ module Lotus
     end
 
     def resolve(options, &endpoint)
-      result = endpoint || options.delete(:to)
+      result = endpoint || find(options)
       return result if result.respond_to?(:call)
-      return result.dest if result.respond_to?(:dest)
 
-      result = if result.match(/#/)
-        controller, action = result.split(/#/).map {|token| titleize(token) }
-        controller + 'Controller::' + action
-      else
-        titleize(result)
+      if result.respond_to?(:match)
+        result = if result.match(/#/)
+          controller, action = result.split(/#/).map {|token| titleize(token) }
+          controller + 'Controller::' + action
+        else
+          titleize(result)
+        end
+
+        return @namespace.const_get(result).new
       end
 
-      @namespace.const_get(result).new
+      default
+    end
+
+    def find(options, &endpoint)
+      options[:to]
+    end
+
+    private
+    def default
+      ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
     end
 
     # FIXME extract

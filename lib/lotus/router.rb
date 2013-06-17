@@ -11,12 +11,13 @@ module Lotus
     end
 
     def get(path, options = {}, &endpoint)
-      super(path, options).to resolver.resolve(options, &endpoint)
+      super(path, options).tap do |verb|
+        verb.to resolver.resolve(options, &endpoint)
+      end
     end
 
-    def redirect(path)
-      @routes.find {|r| r.original_path == path } ||
-        (raise ArgumentError.new(%(Cannot find route for path: "#{ path }")))
+    def redirect(path, options = {}, &endpoint)
+      get(path).redirect resolver.find(options), options[:code] || 302
     end
   end
 end

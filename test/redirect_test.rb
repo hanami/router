@@ -6,21 +6,28 @@ describe Lotus::Router do
   end
 
   describe '#redirect' do
-    it 'recognize endpoint' do
-      response = [200, {}, ['Redirect destination!']]
-      endpoint = ->(env) { response }
+    it 'recognizes string endpoint' do
+      endpoint = ->(env) { [200, {}, ['Redirect destination!']] }
       @router.get('/redirect_destination', to: endpoint)
+      @router.redirect('/redirect', to: '/redirect_destination')
 
       env = Rack::MockRequest.env_for('/redirect')
+      status, headers, _ = @router.call(env)
 
-      @router.get('/redirect', to: @router.redirect('/redirect_destination'))
-      @router.call(env).must_equal response
+      status.must_equal 302
+      headers['Location'].must_equal '/redirect_destination'
     end
 
-    it 'raises error when the given redirect endpoint cannot be found' do
-      -> {
-        @router.get('/redirect_to_unknown_route', to: @router.redirect('/unknown_route'))
-      }.must_raise ArgumentError
+    it 'recognizes string endpoint with custom http code' do
+      endpoint = ->(env) { [200, {}, ['Redirect destination!']] }
+      @router.get('/redirect_destination', to: endpoint)
+      @router.redirect('/redirect', to: '/redirect_destination', code: 301)
+
+      env = Rack::MockRequest.env_for('/redirect')
+      status, headers, _ = @router.call(env)
+
+      status.must_equal 301
+      headers['Location'].must_equal '/redirect_destination'
     end
   end
 end
