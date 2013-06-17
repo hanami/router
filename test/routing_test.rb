@@ -5,6 +5,10 @@ describe Lotus::Router do
     @router = Lotus::Router.new
   end
 
+  after do
+    @router.reset!
+  end
+
   describe '#get' do
     describe 'path recognition' do
       it 'recognize fixed string' do
@@ -81,6 +85,21 @@ describe Lotus::Router do
         router.get('/custom_named_route', to: endpoint, as: :get_custom_named_route)
 
         router.url(:get_custom_named_route).must_equal  'https://lotusrb.org/custom_named_route'
+      end
+    end
+
+    describe 'constraints' do
+      it 'recognize when called with matching constraints' do
+        response = [200, {}, ['Moving with constraints!']]
+        endpoint = ->(env) { response }
+
+        @router.get('/lotus/:id', to: endpoint, id: /\d+/)
+
+        env = Rack::MockRequest.env_for('/lotus/23')
+        @router.call(env).must_equal response
+
+        env = Rack::MockRequest.env_for('/lotus/flower')
+        @router.call(env).first.must_equal 404
       end
     end
   end
