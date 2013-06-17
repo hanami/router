@@ -51,5 +51,37 @@ describe Lotus::Router do
         @router.call(env).must_equal response
       end
     end
+
+    describe 'named routes' do
+      it 'recognizes by the given symbol' do
+        response = [200, {}, ['Named route!']]
+        endpoint = ->(env) { response }
+
+        @router.get('/named_route', to: endpoint, as: :get_named_route)
+
+        @router.path(:get_named_route).must_equal '/named_route'
+        @router.url(:get_named_route).must_equal  'http://localhost/named_route'
+      end
+
+      it 'compiles variables' do
+        response = [200, {}, ['Named %route!']]
+        endpoint = ->(env) { response }
+
+        @router.get('/named_:var', to: endpoint, as: :get_named_route_var)
+
+        @router.path(:get_named_route_var, var: 'route').must_equal '/named_route'
+        @router.url(:get_named_route_var, var: 'route').must_equal  'http://localhost/named_route'
+      end
+
+      it 'allows custom url parts' do
+        response = [200, {}, ['Named route with custom parts!']]
+        endpoint = ->(env) { response }
+
+        router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org', port: 443)
+        router.get('/custom_named_route', to: endpoint, as: :get_custom_named_route)
+
+        router.url(:get_custom_named_route).must_equal  'https://lotusrb.org/custom_named_route'
+      end
+    end
   end
 end
