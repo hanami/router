@@ -1,3 +1,5 @@
+require 'lotus/utils/string'
+
 module Lotus
   class EndpointResolver
     def initialize(namespace = Object)
@@ -10,10 +12,10 @@ module Lotus
 
       if result.respond_to?(:match)
         result = if result.match(/#/)
-          controller, action = result.split(/#/).map {|token| titleize(token) }
+          controller, action = result.split(/#/).map {|token| Utils::String.titleize(token) }
           controller + 'Controller::' + action
         else
-          titleize(result)
+          Utils::String.titleize(result)
         end
 
         return @namespace.const_get(result).new
@@ -29,11 +31,6 @@ module Lotus
     private
     def default
       ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
-    end
-
-    # FIXME extract
-    def titleize(string)
-      string.split('_').map {|token| token.slice(0).upcase + token.slice(1..-1) }.join
     end
   end
 end
