@@ -1,6 +1,8 @@
 require 'http_router'
 require 'lotus/endpoint_resolver'
 
+HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
+
 module Lotus
   class Router < HttpRouter
     attr_reader :resolver
@@ -16,6 +18,41 @@ module Lotus
     end
 
     def get(path, options = {}, &endpoint)
+      super(path, options).tap do |route|
+        route.to   resolver.resolve(options, &endpoint)
+        route.name = options[:as].to_sym if options[:as]
+      end
+    end
+
+    def post(path, options = {}, &endpoint)
+      super(path, options).tap do |route|
+        route.to   resolver.resolve(options, &endpoint)
+        route.name = options[:as].to_sym if options[:as]
+      end
+    end
+
+    def delete(path, options = {}, &endpoint)
+      super(path, options).tap do |route|
+        route.to   resolver.resolve(options, &endpoint)
+        route.name = options[:as].to_sym if options[:as]
+      end
+    end
+
+    def put(path, options = {}, &endpoint)
+      super(path, options).tap do |route|
+        route.to   resolver.resolve(options, &endpoint)
+        route.name = options[:as].to_sym if options[:as]
+      end
+    end
+
+    def patch(path, options = {}, &endpoint)
+      super(path, options).tap do |route|
+        route.to   resolver.resolve(options, &endpoint)
+        route.name = options[:as].to_sym if options[:as]
+      end
+    end
+
+    def trace(path, options = {}, &endpoint)
       super(path, options).tap do |route|
         route.to   resolver.resolve(options, &endpoint)
         route.name = options[:as].to_sym if options[:as]
