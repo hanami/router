@@ -1,5 +1,6 @@
 require 'http_router'
 require 'lotus/endpoint_resolver'
+require 'lotus/routing/namespace'
 require 'lotus/routing/resources'
 
 HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
@@ -62,6 +63,10 @@ module Lotus
 
     def redirect(path, options = {}, &endpoint)
       get(path).redirect resolver.find(options), options[:code] || 302
+    end
+
+    def namespace(name, &blk)
+      Routing::Namespace.new(self, name, &blk)
     end
 
     def resources(name, options = {})

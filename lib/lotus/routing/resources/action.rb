@@ -1,4 +1,5 @@
 require 'lotus/utils/string'
+require 'lotus/utils/path_prefix'
 
 module Lotus
   module Routing
@@ -13,58 +14,161 @@ module Lotus
         end
 
         def generate
-          raise NotImplementedError
+          @router.send verb, path, to: endpoint, as: as
         end
 
         def name
           @options[:name]
         end
 
+        def prefix
+          @prefix ||= Utils::PathPrefix.new @options[:prefix]
+        end
+
         private
         def self.class_for(action)
           Resources.const_get Utils::String.titleize(action)
         end
+
+        def path
+          prefix.join(rest_path)
+        end
+
+        def as
+          prefix.relative_join(named_route, '_').to_sym
+        end
       end
 
       class Index < Action
-        def generate
-          @router.get "/#{ name }", to: "#{ name }#index", as: :"#{ name }"
+        private
+        def verb
+          :get
+        end
+
+        def endpoint
+          "#{ name }#index"
+        end
+
+        def rest_path
+          "/#{ name }"
+        end
+
+        def named_route
+          name
         end
       end
 
       class New < Action
-        def generate
-          @router.get "/#{ name }/new", to: "#{ name }#new", as: :"new_#{ name }"
+        private
+        def verb
+          :get
+        end
+
+        def endpoint
+          "#{ name }#new"
+        end
+
+        def rest_path
+          "/#{ name }/new"
+        end
+
+        def named_route
+          "new_#{ name }"
         end
       end
 
       class Create < Action
-        def generate
-          @router.post "/#{ name }", to: "#{ name }#create", as: :"#{ name }"
+        private
+        def verb
+          :post
+        end
+
+        def endpoint
+          "#{ name }#create"
+        end
+
+        def rest_path
+          "/#{ name }"
+        end
+
+        def named_route
+          name
         end
       end
 
       class Show < Action
-        def generate
-          @router.get "/#{ name }/:id", to: "#{ name }#show", as: :"#{ name }"
+        private
+        def verb
+          :get
+        end
+
+        def endpoint
+          "#{ name }#show"
+        end
+
+        def rest_path
+          "/#{ name }/:id"
+        end
+
+        def named_route
+          name
         end
       end
 
       class Edit < Action
-        def generate
-          @router.get "/#{ name }/:id/edit", to: "#{ name }#edit", as: :"edit_#{ name }"
+        private
+        def verb
+          :get
+        end
+
+        def endpoint
+          "#{ name }#edit"
+        end
+
+        def rest_path
+          "/#{ name }/:id/edit"
+        end
+
+        def named_route
+          "edit_#{ name }"
         end
       end
 
       class Update < Action
-        def generate
-          @router.patch "/#{ name }/:id", to: "#{ name }#update", as: :"#{ name }"
+        private
+        def verb
+          :patch
+        end
+
+        def endpoint
+          "#{ name }#update"
+        end
+
+        def rest_path
+          "/#{ name }/:id"
+        end
+
+        def named_route
+          name
         end
       end
 
       class Destroy < Action
-        def generate
-          @router.delete "/#{ name }/:id", to: "#{ name }#destroy", as: :"#{ name }"
+        private
+        def verb
+          :delete
+        end
+
+        def endpoint
+          "#{ name }#destroy"
+        end
+
+        def rest_path
+          "/#{ name }/:id"
+        end
+
+        def named_route
+          name
         end
       end
     end

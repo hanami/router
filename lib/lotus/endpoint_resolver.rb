@@ -25,7 +25,11 @@ module Lotus
     end
 
     def find(options, &endpoint)
-      options[:to]
+      if prefix = options[:prefix]
+        prefix.join(options[:to])
+      else
+        options[:to]
+      end
     end
 
     private
