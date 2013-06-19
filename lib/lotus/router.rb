@@ -69,8 +69,8 @@ module Lotus
       Routing::Namespace.new(self, name, &blk)
     end
 
-    def resources(name, options = {})
-      Routing::Resources.new(self, name, options).generate
+    def resources(name, options = {}, &blk)
+      Routing::Resources.new(self, name, options, &blk)
     end
   end
 end

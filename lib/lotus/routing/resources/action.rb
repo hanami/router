@@ -6,15 +6,17 @@ module Lotus
     class Resources
       class Action
         def self.generate(router, action, options)
-          class_for(action).new(router, options).generate
+          class_for(action).new(router, options)
         end
 
-        def initialize(router, options)
+        def initialize(router, options, &blk)
           @router, @options = router, options
+          generate(&blk)
         end
 
-        def generate
+        def generate(&blk)
           @router.send verb, path, to: endpoint, as: as
+          instance_eval(&blk) if block_given?
         end
 
         def name
@@ -36,6 +38,38 @@ module Lotus
 
         def as
           prefix.relative_join(named_route, '_').to_sym
+        end
+      end
+
+      class CollectionAction < Action
+        def generate(&blk)
+          instance_eval(&blk) if block_given?
+        end
+
+        protected
+        def method_missing(m, *args, &blk)
+          verb, path, _ = m, *args
+          @router.send verb, path(path), to: endpoint(path), as: as(path)
+        end
+
+        private
+        def path(path)
+          prefix.join(path)
+        end
+
+        def endpoint(path)
+          "#{ name }##{ path }"
+        end
+
+        def as(path)
+          Utils::PathPrefix.new(path).relative_join(name, '_').to_sym
+        end
+      end
+
+      class MemberAction < CollectionAction
+        private
+        def path(path)
+          prefix.join("/:id/#{ path }")
         end
       end
 

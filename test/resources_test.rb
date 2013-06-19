@@ -102,5 +102,35 @@ describe Lotus::Router do
         -> { @router.path(:new_keyboards) }.must_raise HttpRouter::InvalidRouteException
       end
     end
+
+    describe 'member' do
+      before do
+        @router.resources 'keyboards', only: [] do
+          member do
+            get 'screenshot'
+          end
+        end
+      end
+
+      it 'recognizes the path' do
+        @router.path(:screenshot_keyboards, id: 23).must_equal          '/keyboards/23/screenshot'
+        @app.request('GET', '/keyboards/23/screenshot').body.must_equal 'Keyboards::Screenshot 23'
+      end
+    end
+
+    describe 'collection' do
+      before do
+        @router.resources 'keyboards', only: [] do
+          collection do
+            get 'search'
+          end
+        end
+      end
+
+      it 'recognizes the path' do
+        @router.path(:search_keyboards).must_equal               '/keyboards/search'
+        @app.request('GET', '/keyboards/search').body.must_equal 'Keyboards::Search'
+      end
+    end
   end
 end

@@ -78,4 +78,16 @@ class KeyboardsController
       [200, {}, ['Keyboards::Edit ' + env['router.params'][:id]]]
     end
   end
+
+  class Search
+    def call(env)
+      [200, {}, ['Keyboards::Search']]
+    end
+  end
+
+  class Screenshot
+    def call(env)
+      [200, {}, ['Keyboards::Screenshot ' + env['router.params'][:id]]]
+    end
+  end
 end # KeyboardsController
