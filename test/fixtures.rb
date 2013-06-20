@@ -16,6 +16,70 @@ class TestApp
   end
 end # TestApp
 
+class AvatarController
+  class New
+    def call(env)
+      [200, {}, ['Avatar::New']]
+    end
+  end
+
+  class Create
+    def call(env)
+      [200, {}, ['Avatar::Create']]
+    end
+  end
+
+  class Show
+    def call(env)
+      [200, {}, ['Avatar::Show']]
+    end
+  end
+
+  class Edit
+    def call(env)
+      [200, {}, ['Avatar::Edit']]
+    end
+  end
+
+  class Update
+    def call(env)
+      [200, {}, ['Avatar::Update']]
+    end
+  end
+
+  class Destroy
+    def call(env)
+      [200, {}, ['Avatar::Destroy']]
+    end
+  end
+end # AvatarController
+
+class ProfileController
+  class Edit
+    def call(env)
+      [200, {}, ['Profile::Edit']]
+    end
+  end
+
+  class Update
+    def call(env)
+      [200, {}, ['Profile::Update']]
+    end
+  end
+
+  class Activate
+    def call(env)
+      [200, {}, ['Profile::Activate']]
+    end
+  end
+
+  class Keys
+    def call(env)
+      [200, {}, ['Profile::Keys']]
+    end
+  end
+end # ProfileController
+
 class FlowersController
   class Index
     def call(env)

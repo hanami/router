@@ -2,6 +2,7 @@ require 'http_router'
 require 'lotus/endpoint_resolver'
 require 'lotus/routing/route'
 require 'lotus/routing/namespace'
+require 'lotus/routing/resource'
 require 'lotus/routing/resources'
 
 HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
@@ -27,6 +28,10 @@ module Lotus
 
     def namespace(name, &blk)
       Routing::Namespace.new(self, name, &blk)
+    end
+
+    def resource(name, options = {}, &blk)
+      Routing::Resource.new(self, name, options, &blk)
     end
 
     def resources(name, options = {}, &blk)
