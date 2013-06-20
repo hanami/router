@@ -4,10 +4,12 @@ require 'lotus/routing/resource/action'
 module Lotus
   module Routing
     class Resource
+      @actions = [:new, :create, :show, :edit, :update, :destroy]
+
       def initialize(router, name, options = {}, &blk)
         @router  = router
         @name    = name
-        @options = Options.new(options.merge(name: @name))
+        @options = Options.new(self.class.actions, options.merge(name: @name))
         generate(&blk)
       end
 
@@ -18,6 +20,10 @@ module Lotus
         end
 
         instance_eval(&blk) if block_given?
+      end
+
+      def self.actions
+        @actions
       end
 
       def member(&blk)

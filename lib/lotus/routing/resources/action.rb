@@ -1,9 +1,10 @@
 require 'lotus/utils/string'
 require 'lotus/utils/path_prefix'
+require 'lotus/routing/resource'
 
 module Lotus
   module Routing
-    class Resources
+    class Resources < Resource
       class Action
         def self.generate(router, action, options)
           class_for(action).new(router, options)

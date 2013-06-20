@@ -2,16 +2,14 @@ module Lotus
   module Routing
     class Resource
       class Options < Hash
-        ACTIONS = [:new, :create, :show, :edit, :update, :destroy]
+        attr_reader :actions
 
-        def initialize(options = {})
-          @only   = Array(options.delete(:only) || ACTIONS)
-          @except = Array(options.delete(:except))
+        def initialize(actions, options = {})
+          only     = Array(options.delete(:only) || actions)
+          except   = Array(options.delete(:except))
+          @actions = ( actions & only ) - except
+
           merge! options
-        end
-
-        def actions
-          (ACTIONS & @only) - @except
         end
       end
     end

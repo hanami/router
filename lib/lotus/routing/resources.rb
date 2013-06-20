@@ -1,15 +1,10 @@
-require 'lotus/routing/resources/options'
+require 'lotus/routing/resource'
 require 'lotus/routing/resources/action'
 
 module Lotus
   module Routing
-    class Resources
-      def initialize(router, name, options = {}, &blk)
-        @router  = router
-        @name    = name
-        @options = Options.new(options.merge(name: @name))
-        generate(&blk)
-      end
+    class Resources < Resource
+      @actions = [:index, :new, :create, :show, :edit, :update, :destroy]
 
       private
       def generate(&blk)
