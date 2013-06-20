@@ -9,6 +9,8 @@ HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS 
 
 module Lotus
   class Router < HttpRouter
+    VERSION = '0.0.1'
+
     attr_reader :resolver
 
     def initialize(options = {}, resolver = EndpointResolver.new)
