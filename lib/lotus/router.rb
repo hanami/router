@@ -1,5 +1,6 @@
 require 'http_router'
 require 'lotus/endpoint_resolver'
+require 'lotus/routing/route'
 require 'lotus/routing/namespace'
 require 'lotus/routing/resources'
 
@@ -15,50 +16,9 @@ module Lotus
       @default_scheme = options[:scheme] if options[:scheme]
       @default_host   = options[:host]   if options[:host]
       @default_port   = options[:port]   if options[:port]
+      @route_class    = Routing::Route
 
       @resolver = resolver
-    end
-
-    def get(path, options = {}, &endpoint)
-      super(path, options).tap do |route|
-        route.to   resolver.resolve(options, &endpoint)
-        route.name = options[:as].to_sym if options[:as]
-      end
-    end
-
-    def post(path, options = {}, &endpoint)
-      super(path, options).tap do |route|
-        route.to   resolver.resolve(options, &endpoint)
-        route.name = options[:as].to_sym if options[:as]
-      end
-    end
-
-    def delete(path, options = {}, &endpoint)
-      super(path, options).tap do |route|
-        route.to   resolver.resolve(options, &endpoint)
-        route.name = options[:as].to_sym if options[:as]
-      end
-    end
-
-    def put(path, options = {}, &endpoint)
-      super(path, options).tap do |route|
-        route.to   resolver.resolve(options, &endpoint)
-        route.name = options[:as].to_sym if options[:as]
-      end
-    end
-
-    def patch(path, options = {}, &endpoint)
-      super(path, options).tap do |route|
-        route.to   resolver.resolve(options, &endpoint)
-        route.name = options[:as].to_sym if options[:as]
-      end
-    end
-
-    def trace(path, options = {}, &endpoint)
-      super(path, options).tap do |route|
-        route.to   resolver.resolve(options, &endpoint)
-        route.name = options[:as].to_sym if options[:as]
-      end
     end
 
     def redirect(path, options = {}, &endpoint)
@@ -71,6 +31,11 @@ module Lotus
 
     def resources(name, options = {}, &blk)
       Routing::Resources.new(self, name, options, &blk)
+    end
+
+    private
+    def add_with_request_method(path, method, opts = {}, &app)
+      super.generate(resolver, opts, &app)
     end
   end
 end

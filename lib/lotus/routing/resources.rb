@@ -21,11 +21,11 @@ module Lotus
       end
 
       def member(&blk)
-        MemberAction.new(@router, { name: @name, prefix: @name }, &blk)
+        MemberAction.new(@router, @options.merge(prefix: @name), &blk)
       end
 
       def collection(&blk)
-        CollectionAction.new(@router, { name: @name, prefix: @name }, &blk)
+        CollectionAction.new(@router, @options.merge(prefix: @name), &blk)
       end
     end
   end
