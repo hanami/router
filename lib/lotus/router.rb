@@ -13,6 +13,10 @@ module Lotus
 
     attr_reader :resolver
 
+    def self.draw(&blk)
+      new.instance_eval(&blk)
+    end
+
     def initialize(options = {}, resolver = EndpointResolver.new)
       super
 
