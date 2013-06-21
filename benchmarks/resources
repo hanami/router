@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby -W0
+load File.dirname(__FILE__) + '/utils.rb'
+
+Benchmark.bm(35) do |b|
+
+  b.report 'generating resources' do
+    $resources.each do |r|
+      $router.resources r
+    end
+  end
+
+  b.report 'recognizing resources' do
+    TIMES.times do
+      $app.get($resources.sample)
+    end
+  end
+
+  b.report 'recognizing resources with param' do
+    param = '/23'
+    TIMES.times do
+      $app.get($resources.sample + param)
+    end
+  end
+
+end

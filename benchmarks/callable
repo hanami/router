@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby -W0
+load File.dirname(__FILE__) + '/utils.rb'
+
+Benchmark.bm(35) do |b|
+
+  b.report 'generating from callable endpoints' do
+    $callable.each do |route|
+      $router.get route, &$endpoint
+    end
+  end
+
+  b.report 'recognizing from callable endpoints' do
+     TIMES.times do
+       $app.get($callable.sample)
+     end
+   end
+
+end

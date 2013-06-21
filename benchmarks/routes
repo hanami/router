@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby -W0
+load File.dirname(__FILE__) + '/utils.rb'
+
+Benchmark.bm(35) do |b|
+
+  b.report 'generating routes' do
+    $routes.each do |route|
+      $router.get route, to: $endpoint
+    end
+  end
+
+   b.report 'recognizing routes' do
+     TIMES.times do
+       $app.get($routes.sample)
+     end
+   end
+
+end

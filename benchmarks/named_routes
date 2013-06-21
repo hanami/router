@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby -W0
+load File.dirname(__FILE__) + '/utils.rb'
+
+Benchmark.bm(35) do |b|
+
+  b.report 'generating named routes' do
+    $named_routes.each do |(name, as)|
+      $router.get name, to: $endpoint, as: as
+    end
+  end
+
+  b.report 'recognizing named routes' do
+    TIMES.times do
+      $app.get($named_routes.sample.first)
+    end
+  end
+
+end
+
