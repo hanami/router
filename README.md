@@ -1,6 +1,6 @@
 # Lotus::Router
 
-HTTP Router for Lotus
+Rack compatible, lightweight and fast HTTP Router for Lotus.
 
 ## Installation
 
@@ -18,7 +18,338 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Lotus::Router supports a lot of neat features:
+
+### A Beautiful DSL:
+
+    Lotus::Router.draw do
+      get '/', to: ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
+      get '/dashboard', to: DashboardController::Index
+      get '/rack-app',  to: RackApp.new
+      get '/flowers,    to: 'flowers#index'
+      
+      redirect '/legacy', to: '/'
+      
+      namespace 'admin' do
+        get '/users', to: UsersController::Index
+      end
+      
+      resource 'identity' do
+        member do
+          get '/avatar'
+        end
+        
+        collection do
+          get '/api_keys'
+        end
+      end
+      
+      resources 'robots' do
+        member do
+          patch '/activate'
+        end
+        
+        collection do
+          get '/search'
+        end
+      end
+    end
+    
+  
+
+### Fixed string matching:
+
+    router = Lotus::Router.new
+    router.get '/lotus', to: ->(env) { [200, {}, ['Hello from Lotus!']] }
+
+
+
+### String matching with variables:
+
+    router = Lotus::Router.new
+    router.get '/flowers/:id', to: ->(env) { [200, {}, ["Hello from Flower no. #{ env['router.params'][:id] }!"]] }
+
+
+
+### String matching with globbling:
+
+    router = Lotus::Router.new
+    router.get '/*', to: ->(env) { [200, {}, ["This is catch all: #{ env['router.params'].inspect }!"]] }
+
+
+
+### String matching with optional tokens:
+
+    router = Lotus::Router.new
+    router.get '/lotus(.:format)' to: ->(env) { [200, {}, ["You've requested #{ env['router.params'][:format] }!"]] }
+
+
+
+### Support for the most common HTTP methods:
+
+    router   = Lotus::Router.new
+    endpoint = ->(env) { [200, {}, ['Hello from Lotus!']] }
+
+    router.get    '/lotus', to: endpoint
+    router.post   '/lotus', to: endpoint
+    router.put    '/lotus', to: endpoint
+    router.patch  '/lotus', to: endpoint
+    router.delete '/lotus', to: endpoint
+    router.trace  '/lotus', to: endpoint
+
+
+
+### Redirect:
+
+    router = Lotus::Router.new
+    router.get '/redirect_destination', to: ->(env) { [200, {}, ['Redirect destination!']] }
+    router.redirect '/legacy', to: '/redirect_destination'
+
+
+
+### Named routes:
+
+    router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
+    router.get '/lotus', to: ->(env) { [200, {}, ['Hello from Lotus!']] }, as: :lotus
+
+    router.path(:lotus) # => "/lotus"
+    router.url(:lotus)  # => "https://lotusrb.org/lotus"
+
+
+
+### Namespaced routes:
+
+    router = Lotus::Router.new
+    router.namespace 'animals' do
+      namespace 'mammals' do
+        get '/cats', to: ->(env) { [200, {}, ['Meow!']] }, as: :cats
+      end
+    end
+
+    # or
+
+    router.get '/cats', prefix: '/animals/mammals', to:->(env) { [200, {}, ['Meow!']] }, as: :cats
+
+    # and it generates:
+
+    router.path(:animals_mammals_cats) # => "/animals/mammals/cats"
+
+
+
+### Duck typed endpoints:
+
+Everything that responds to `#call` is invoked as it is:
+
+    router = Lotus::Router.new
+    router.get '/lotus',      to: ->(env) { [200, {}, ['Hello from Lotus!']] }
+    router.get '/middleware', to: Middleware
+    router.get '/rack-app',   to: RackApp.new
+    router.get '/method',     to: ActionControllerSubclass.action(:new)
+
+
+If it's a string, it tries to instantiate a class from it:
+
+    class RackApp
+      def call(env)
+        # ...
+      end
+    end
+
+    router = Lotus::Router.new
+    router.get '/lotus', to: 'rack_app' # it will map to RackApp.new
+
+It also supports Controller + Action syntax:
+
+    class FlowersController
+      class Index
+        def call(env)
+          # ...
+        end
+      end
+    end
+
+    router = Lotus::Router.new
+    router.get '/flowers', to: 'flowers#index' # it will map to FlowersController::Index.new
+
+
+
+### Implicit Not Found (404):
+
+    router = Lotus::Router.new
+    router.call(Rack::MockRequest.env_for('/unknown')).status # => 404
+
+
+
+### RESTful Resource:
+
+    router = Lotus::Router.new
+    router.resource 'identity'
+    
+It will map:
+    
+<table>
+  <tr>
+    <th>Verb</th>
+    <th>Path</th>
+    <th>Action</th>
+    <th>Named Route</th>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/identity</td>
+    <td>IdentityController::Show</td>
+    <td>:identity</td>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/identity/new</td>
+    <td>IdentityController::New</td>
+    <td>:new_identity</td>
+  </tr>
+  <tr>
+    <td>POST</td>
+    <td>/identity</td>
+    <td>IdentityController::Create</td>
+    <td>:identity</td>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/identity/edit</td>
+    <td>IdentityController::Edit</td>
+    <td>:edit_identity</td>
+  </tr>
+  <tr>
+    <td>PATCH</td>
+    <td>/identity</td>
+    <td>IdentityController::Update</td>
+    <td>:identity</td>
+  </tr>
+  <tr>
+    <td>DELETE</td>
+    <td>/identity</td>
+    <td>IdentityController::Destroy</td>
+    <td>:identity</td>
+  </tr>
+</table>
+
+If you don't need all the default endpoints, just do:
+
+    router = Lotus::Router.new
+    router.resource 'identity', only: [:edit, :update]
+
+    # which is equivalent to:
+
+    router.resource 'identity', except: [:show, :new, :create, :destroy]
+
+
+If you need extra endpoints:
+
+    router = Lotus::Router.new
+    router.resource 'identity' do
+      member do
+        get '/avatar'           # maps to IdentityController::Avatar
+      end
+      collection do
+        get '/authorizations'   # maps to IdentityController::Authorizations
+      end
+    end
+    
+    router.path(:avatar_identity)         # => /identity/avatar
+    router.path(:authorizations_identity) # => /identity/authorizations
+   
+
+
+### RESTful Resources:
+
+    router = Lotus::Router.new
+    router.resources 'flowers'
+    
+It will map:
+    
+<table>
+  <tr>
+    <th>Verb</th>
+    <th>Path</th>
+    <th>Action</th>
+    <th>Named Route</th>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/flowers</td>
+    <td>FlowersController::Index</td>
+    <td>:flowers</td>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/flowers/:id</td>
+    <td>FlowersController::Show</td>
+    <td>:flowers</td>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/flowers/new</td>
+    <td>FlowersController::New</td>
+    <td>:new_flowers</td>
+  </tr>
+  <tr>
+    <td>POST</td>
+    <td>/flowers</td>
+    <td>FlowersController::Create</td>
+    <td>:flowers</td>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>/flowers/:id/edit</td>
+    <td>FlowersController::Edit</td>
+    <td>:edit_flowers</td>
+  </tr>
+  <tr>
+    <td>PATCH</td>
+    <td>/flowers/:id</td>
+    <td>FlowersController::Update</td>
+    <td>:flowers</td>
+  </tr>
+  <tr>
+    <td>DELETE</td>
+    <td>/flowers/:id</td>
+    <td>FlowersController::Destroy</td>
+    <td>:flowers</td>
+  </tr>
+</table>
+
+
+    router.path(:flowers)              # => /flowers
+    router.path(:flowers, id: 23)      # => /flowers/23
+    router.path(:edit_flowers, id: 23) # => /flowers/23/edit
+
+
+
+If you don't need all the default endpoints, just do:
+
+    router = Lotus::Router.new
+    router.resources 'flowers', only: [:new, :create, :show]
+
+    # which is equivalent to:
+
+    router.resources 'flowers', except: [:index, :edit, :update, :destroy]
+
+
+If you need extra endpoints:
+
+    router = Lotus::Router.new
+    router.resources 'flowers' do
+      member do
+        get '/toggle' # maps to FlowersController::Toggle
+      end
+      collection do
+        get '/search' # maps to FlowersController::Search
+      end
+    end
+
+    router.path(:toggle_flowers, id: 23)  # => /flowers/23/toggle
+    router.path(:search_flowers)          # => /flowers/search
+
+
 
 ## Contributing
 
