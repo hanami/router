@@ -24,38 +24,42 @@ Lotus::Router supports a lot of neat features:
 
     Lotus::Router.draw do
       get '/', to: ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
-      get '/dashboard', to: DashboardController::Index
-      get '/rack-app',  to: RackApp.new
-      get '/flowers,    to: 'flowers#index'
-      
+      get '/dashboard',  to: DashboardController::Index
+      get '/rack-app',   to: RackApp.new
+      get '/flowers,     to: 'flowers#index'
+      get '/flowers/:id, to: 'flowers#show'
+      get '/sinatra' do |env|
+        [200, {}, ['Hello from a Sinatra-like endpoint!']]
+      end
+
       redirect '/legacy', to: '/'
-      
+
       namespace 'admin' do
         get '/users', to: UsersController::Index
       end
-      
+
       resource 'identity' do
         member do
           get '/avatar'
         end
-        
+
         collection do
           get '/api_keys'
         end
       end
-      
+
       resources 'robots' do
         member do
           patch '/activate'
         end
-        
+
         collection do
           get '/search'
         end
       end
     end
-    
-  
+
+
 
 ### Fixed string matching:
 
@@ -68,6 +72,13 @@ Lotus::Router supports a lot of neat features:
 
     router = Lotus::Router.new
     router.get '/flowers/:id', to: ->(env) { [200, {}, ["Hello from Flower no. #{ env['router.params'][:id] }!"]] }
+
+
+
+### Variables Constraints:
+
+    router = Lotus::Router.new
+    router.get '/flowers/:id', id: /\d+/, to: ->(env) { [200, {}, [":id must be a number!"]] }
 
 
 
@@ -253,19 +264,19 @@ If you need extra endpoints:
         get '/authorizations'   # maps to IdentityController::Authorizations
       end
     end
-    
+
     router.path(:avatar_identity)         # => /identity/avatar
     router.path(:authorizations_identity) # => /identity/authorizations
-   
+
 
 
 ### RESTful Resources:
 
     router = Lotus::Router.new
     router.resources 'flowers'
-    
+
 It will map:
-    
+
 <table>
   <tr>
     <th>Verb</th>
