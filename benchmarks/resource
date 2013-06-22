@@ -1,18 +1,44 @@
 #!/usr/bin/env ruby -W0
 load File.dirname(__FILE__) + '/utils.rb'
 
-Benchmark.bm(35) do |b|
+Benchmark.bm(50) do |b|
+  ##
+  # Class
+  #
+  router = Lotus::Router.new
+  app    = Rack::MockRequest.new(router)
 
-  b.report 'generating resource' do
+  b.report 'generating resource (class endpoints)' do
     $resource.each do |r|
-      $router.resource r
+      router.resource r
     end
   end
 
-  b.report 'recognizing resource' do
+  b.report 'recognizing resource (class endpoints)' do
     TIMES.times do
-      $app.get($resource.sample)
+      app.get($resource.sample)
     end
   end
 
+  ##
+  # Lazy
+  #
+  router = Lotus::Router.new
+  app    = Rack::MockRequest.new(router)
+
+  b.report 'generating resource (lazy endpoints)' do
+    $lazy.each do |route|
+      router.resource route
+    end
+  end
+
+  $lazy.each do |w|
+    eval "#{ Lotus::Utils::String.titleize(w) }Controller = Class.new($resource_controller)"
+  end
+
+  b.report 'recognizing routes (lazy endpoints)' do
+    TIMES.times do
+      app.get($lazy.sample)
+    end
+  end
 end

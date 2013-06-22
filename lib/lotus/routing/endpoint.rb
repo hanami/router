@@ -14,7 +14,12 @@ module Lotus
         @name, @namespace = name, namespace
       end
 
-      def __getobj__
+      def call(env)
+        obj.call(env)
+      end
+
+      private
+      def obj
         @namespace.const_get(@name).new
       end
     end

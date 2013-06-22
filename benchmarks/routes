@@ -1,18 +1,67 @@
 #!/usr/bin/env ruby -W0
 load File.dirname(__FILE__) + '/utils.rb'
 
-Benchmark.bm(35) do |b|
+Benchmark.bm(50) do |b|
+
+  ##
+  # Callable
+  #
+  router = Lotus::Router.new
+  app    = Rack::MockRequest.new(router)
 
   b.report 'generating routes' do
     $routes.each do |route|
-      $router.get route, to: $endpoint
+      router.get route, to: $endpoint
     end
   end
 
-   b.report 'recognizing routes' do
-     TIMES.times do
-       $app.get($routes.sample)
-     end
-   end
+  b.report 'recognizing routes' do
+    TIMES.times do
+      app.get($routes.sample)
+    end
+  end
 
+  ##
+  # Class
+  #
+  router = Lotus::Router.new
+  app    = Rack::MockRequest.new(router)
+
+  $routes.each do |route|
+    eval "#{ Lotus::Utils::String.titleize(route) } = Class.new($controller)"
+  end
+
+  b.report 'generating routes (class endpoints)' do
+    $routes.each do |route|
+      router.get route, to: route
+    end
+  end
+
+  b.report 'recognizing routes (class endpoints)' do
+    TIMES.times do
+      app.get($routes.sample)
+    end
+  end
+
+  ##
+  # Lazy
+  #
+  router = Lotus::Router.new
+  app    = Rack::MockRequest.new(router)
+
+  b.report 'generating routes (lazy endpoints)' do
+    $lazy.each do |route|
+      router.get route, to: route
+    end
+  end
+
+  $lazy.each do |route|
+    eval "#{ Lotus::Utils::String.titleize(route) } = Class.new($controller)"
+  end
+
+  b.report 'recognizing routes (lazy endpoints)' do
+    TIMES.times do
+      app.get($lazy.sample)
+    end
+  end
 end
