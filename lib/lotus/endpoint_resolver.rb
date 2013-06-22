@@ -1,4 +1,5 @@
 require 'lotus/utils/string'
+require 'lotus/routing/endpoint'
 
 module Lotus
   class EndpointResolver
@@ -8,7 +9,7 @@ module Lotus
 
     def resolve(options, &endpoint)
       result = endpoint || find(options)
-      return result if result.respond_to?(:call)
+      return Routing::Endpoint.new(result) if result.respond_to?(:call)
 
       if result.respond_to?(:match)
         result = if result.match(/#/)
@@ -18,7 +19,7 @@ module Lotus
           Utils::String.titleize(result)
         end
 
-        return @namespace.const_get(result).new
+        return constantize(result)
       end
 
       default
@@ -34,7 +35,17 @@ module Lotus
 
     private
     def default
-      ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
+      Routing::Endpoint.new(
+        ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
+      )
+    end
+
+    def constantize(string)
+      begin
+        Routing::ClassEndpoint.new(@namespace.const_get(string))
+      rescue NameError
+        Routing::LazyEndpoint.new(string, @namespace)
+      end
     end
   end
 end

@@ -1,17 +1,29 @@
 class TestEndpoint
+  def call(env)
+    'Hi from TestEndpoint!'
+  end
 end #TestEndpoint
 
 class TestController
   class Show
+    def call(env)
+      'Hi from Test::Show!'
+    end
   end
 end #TestController
 
 class TestApp
   class TestEndpoint
+    def call(env)
+      'Hi from TestApp::TestEndpoint!'
+    end
   end
 
   class Test2Controller
     class Show
+      def call(env)
+        'Hi from TestApp::Test2Controller::Show!'
+      end
     end
   end
 end # TestApp

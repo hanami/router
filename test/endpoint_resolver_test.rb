@@ -14,14 +14,31 @@ describe Lotus::EndpointResolver do
     @resolver.resolve(options).must_equal(endpoint)
   end
 
-  it 'recognizes :to when it is a string' do
+  it 'recognizes :to when it is a string that references a class that can be retrieved now' do
     options = { to: 'test_endpoint' }
-    @resolver.resolve(options).must_be_instance_of(TestEndpoint)
+    @resolver.resolve(options).call({}).must_equal 'Hi from TestEndpoint!'
+  end
+
+  describe 'when :to references a missing class' do
+    it 'if the class is available when invoking call, it succeed' do
+      options  = { to: 'lazy_controller' }
+      endpoint = @resolver.resolve(options)
+      LazyController = Class.new(Object) { define_method(:call) {|env| env } }
+
+      endpoint.call({}).must_equal({})
+    end
+
+    it 'if the class is not available when invoking call, it raises error' do
+      options  = { to: 'missing_endpoint' }
+      endpoint = @resolver.resolve(options)
+
+      -> { endpoint.call({}) }.must_raise NameError
+    end
   end
 
   it 'recognizes :to when it is a string with separator' do
     options = { to: 'test#show' }
-    @resolver.resolve(options).must_be_instance_of(TestController::Show)
+    @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
   end
 
   describe 'namespace' do
@@ -31,12 +48,12 @@ describe Lotus::EndpointResolver do
 
     it 'recognizes :to when it is a string and an explicit namespace' do
       options = { to: 'test_endpoint' }
-      @resolver.resolve(options).must_be_instance_of(TestApp::TestEndpoint)
+      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::TestEndpoint!'
     end
 
     it 'recognizes :to when it is a string with separator and it has an explicit namespace' do
       options = { to: 'test2#show' }
-      @resolver.resolve(options).must_be_instance_of(TestApp::Test2Controller::Show)
+      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::Test2Controller::Show!'
     end
   end
 
