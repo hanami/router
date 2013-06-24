@@ -14,7 +14,7 @@ module Lotus
     attr_reader :resolver
 
     def self.draw(&blk)
-      new.instance_eval(&blk)
+      new.tap {|r| r.instance_eval(&blk) }
     end
 
     def initialize(options = {}, resolver = EndpointResolver.new)

@@ -17,6 +17,11 @@ describe Lotus::Router do
       @app = Rack::MockRequest.new(@router)
     end
 
+    it 'returns instance of Lotus::Router with empty block' do
+      router = Lotus::Router.draw { }
+      router.must_be_instance_of Lotus::Router
+    end
+
     it 'returns instance of Lotus::Router' do
       @router.must_be_instance_of Lotus::Router
     end
