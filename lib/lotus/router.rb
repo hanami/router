@@ -44,6 +44,10 @@ module Lotus
       Routing::Resources.new(self, name, options, &blk)
     end
 
+    def pass_on_response(response) #:api: private
+      super response.to_a
+    end
+
     private
     def add_with_request_method(path, method, opts = {}, &app)
       super.generate(resolver, opts, &app)
