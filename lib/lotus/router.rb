@@ -48,6 +48,14 @@ module Lotus
       super response.to_a
     end
 
+    def no_response(request, env) #:api: private
+      if request.acceptable_methods.any? && !request.acceptable_methods.include?(env['REQUEST_METHOD'])
+        [405, {'Allow' => request.acceptable_methods.sort.join(", ")}, []]
+      else
+        @default_app.call(env)
+      end
+    end
+
     private
     def add_with_request_method(path, method, opts = {}, &app)
       super.generate(resolver, opts, &app)

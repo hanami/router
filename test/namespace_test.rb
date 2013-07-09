@@ -157,9 +157,9 @@ describe Lotus::Router do
         end
 
         it 'does not recognize other paths' do
-          @app.request('GET',    '/electronics/keyboards/new').status.must_equal 405
+          @app.request('GET',    '/electronics/keyboards/new').status.must_equal 404
           @app.request('POST',   '/electronics/keyboards').status.must_equal     405
-          @app.request('GET',    '/electronics/keyboards/23').status.must_equal  405
+          @app.request('GET',    '/electronics/keyboards/23').status.must_equal  404
           @app.request('PATCH',  '/electronics/keyboards/23').status.must_equal  405
           @app.request('DELETE', '/electronics/keyboards/23').status.must_equal  405
 
@@ -186,7 +186,7 @@ describe Lotus::Router do
         end
 
         it 'does not recognize other paths' do
-          @app.request('GET',    '/electronics/keyboards/new').status.must_equal 405
+          @app.request('GET',    '/electronics/keyboards/new').status.must_equal 404
           @app.request('PATCH',  '/electronics/keyboards/23').status.must_equal  405
           @app.request('DELETE', '/electronics/keyboards/23').status.must_equal  405
 
