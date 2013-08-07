@@ -33,7 +33,7 @@ Benchmark.bm(50) do |b|
   end
 
   $lazy.each do |w|
-    eval "#{ Lotus::Utils::String.titleize(w) }Controller = Class.new($resource_controller)"
+    eval "#{ Lotus::Utils::String.new(w).titleize }Controller = Class.new($resource_controller)"
   end
 
   b.report 'recognizing routes (lazy endpoints)' do

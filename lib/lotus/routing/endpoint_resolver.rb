@@ -17,10 +17,10 @@ module Lotus
 
         if result.respond_to?(:match)
           result = if result.match(/#/)
-            controller, action = result.split(/#/).map {|token| Utils::String.titleize(token) }
+            controller, action = result.split(/#/).map {|token| Utils::String.new(token).titleize }
             controller + @suffix + action
           else
-            Utils::String.titleize(result)
+            Utils::String.new(result).titleize
           end
 
           return constantize(result)
