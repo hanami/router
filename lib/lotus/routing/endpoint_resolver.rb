@@ -4,8 +4,11 @@ require 'lotus/routing/endpoint'
 module Lotus
   module Routing
     class EndpointResolver
-      def initialize(namespace = Object)
-        @namespace = namespace
+      SUFFIX = 'Controller::'.freeze
+
+      def initialize(options = {})
+        @namespace = options[:namespace] || Object
+        @suffix    = options[:suffix]    || SUFFIX
       end
 
       def resolve(options, &endpoint)
@@ -15,7 +18,7 @@ module Lotus
         if result.respond_to?(:match)
           result = if result.match(/#/)
             controller, action = result.split(/#/).map {|token| Utils::String.titleize(token) }
-            controller + suffix + action
+            controller + @suffix + action
           else
             Utils::String.titleize(result)
           end
@@ -39,10 +42,6 @@ module Lotus
         Endpoint.new(
           ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
         )
-      end
-
-      def suffix
-        'Controller::'
       end
 
       def constantize(string)

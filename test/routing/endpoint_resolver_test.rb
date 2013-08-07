@@ -43,7 +43,7 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'namespace' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(TestApp)
+      @resolver = Lotus::Routing::EndpointResolver.new(namespace: TestApp)
     end
 
     it 'recognizes :to when it is a string and an explicit namespace' do
