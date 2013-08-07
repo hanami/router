@@ -3,6 +3,9 @@ require 'test_helper'
 describe Lotus::Router do
   describe '.draw' do
     before do
+      class MockRoute
+      end
+
       endpoint = ->(env) { [200, {}, ['']] }
       @router = Lotus::Router.draw do
         get '/route',       to: endpoint
@@ -24,6 +27,27 @@ describe Lotus::Router do
 
     it 'returns instance of Lotus::Router' do
       @router.must_be_instance_of Lotus::Router
+    end
+
+    it 'sets options' do
+      router = Lotus::Router.draw(scheme: 'https') do
+        get '/', to: ->(env) { }, as: :root
+      end
+
+      router.url(:root).must_match('https')
+    end
+
+    it 'sets resolver' do
+      resolver = Object.new
+      router   = Lotus::Router.draw(resolver: resolver) { }
+
+      router.resolver.must_equal(resolver)
+    end
+
+    it 'sets route class' do
+      router = Lotus::Router.draw(route: MockRoute) { }
+
+      router.route_class.must_equal(MockRoute)
     end
 
     it 'recognizes path' do
