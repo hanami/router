@@ -28,7 +28,7 @@ Benchmark.bm(50) do |b|
   app    = Rack::MockRequest.new(router)
 
   $named_routes.each do |(name, _)|
-    eval "#{ Lotus::Utils::String.new(name).titleize } = Class.new($controller)"
+    eval "#{ Lotus::Utils::String.new(name).classify } = Class.new($controller)"
   end
 
   b.report 'generating named routes (class endpoints)' do
@@ -60,7 +60,7 @@ Benchmark.bm(50) do |b|
   end
 
   $lazy.each do |(name, _)|
-    eval "#{ Lotus::Utils::String.new(name).titleize } = Class.new($controller)"
+    eval "#{ Lotus::Utils::String.new(name).classify } = Class.new($controller)"
   end
 
   b.report 'recognizing routes (lazy endpoints)' do

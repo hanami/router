@@ -40,7 +40,7 @@ Benchmark.bm(50) do |b|
   end
 
   $lazy.each do |w|
-    eval "#{ Lotus::Utils::String.new(w).titleize }Controller = Class.new($resources_controller)"
+    eval "#{ Lotus::Utils::String.new(w).classify }Controller = Class.new($resources_controller)"
   end
 
   b.report 'recognizing resources (lazy endpoints)' do

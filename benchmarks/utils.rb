@@ -46,11 +46,11 @@ $named_routes = $named_routes.map do |r|
 end
 
 $resource.each do |w|
-  eval "#{ Lotus::Utils::String.new(w).titleize }Controller = Class.new($resource_controller)"
+  eval "#{ Lotus::Utils::String.new(w).classify }Controller = Class.new($resource_controller)"
 end
 
 $resources.each do |w|
-  eval "#{ Lotus::Utils::String.new(w).titleize }Controller = Class.new($resources_controller)"
+  eval "#{ Lotus::Utils::String.new(w).classify }Controller = Class.new($resources_controller)"
 end
 
 GC.start
