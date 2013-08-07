@@ -1,5 +1,5 @@
 require 'http_router'
-require 'lotus/endpoint_resolver'
+require 'lotus/routing/endpoint_resolver'
 require 'lotus/routing/route'
 require 'lotus/routing/namespace'
 require 'lotus/routing/resource'
@@ -17,7 +17,7 @@ module Lotus
       new.tap {|r| r.instance_eval(&blk) }
     end
 
-    def initialize(options = {}, resolver = EndpointResolver.new)
+    def initialize(options = {}, resolver = Routing::EndpointResolver.new)
       super
 
       @default_scheme = options[:scheme] if options[:scheme]

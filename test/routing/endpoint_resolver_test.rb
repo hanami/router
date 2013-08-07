@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::EndpointResolver do
+describe Lotus::Routing::EndpointResolver do
   before do
-    @resolver = Lotus::EndpointResolver.new
+    @resolver = Lotus::Routing::EndpointResolver.new
   end
 
   it 'recognizes :to when it is a callable object' do
@@ -43,7 +43,7 @@ describe Lotus::EndpointResolver do
 
   describe 'namespace' do
     before do
-      @resolver = Lotus::EndpointResolver.new(TestApp)
+      @resolver = Lotus::Routing::EndpointResolver.new(TestApp)
     end
 
     it 'recognizes :to when it is a string and an explicit namespace' do
