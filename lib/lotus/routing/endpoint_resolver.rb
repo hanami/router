@@ -1,10 +1,11 @@
 require 'lotus/utils/string'
+require 'lotus/utils/class'
 require 'lotus/routing/endpoint'
 
 module Lotus
   module Routing
     class EndpointResolver
-      SUFFIX = 'Controller::'.freeze
+      SUFFIX = '(::Controller::|Controller::)'.freeze
 
       def initialize(options = {})
         @namespace = options[:namespace] || Object
@@ -46,7 +47,7 @@ module Lotus
 
       def constantize(string)
         begin
-          ClassEndpoint.new(@namespace.const_get(string))
+          ClassEndpoint.new(Utils::Class.load!(string, @namespace))
         rescue NameError
           LazyEndpoint.new(string, @namespace)
         end

@@ -1,3 +1,5 @@
+require 'lotus/utils/class'
+
 module Lotus
   module Routing
     class Endpoint < SimpleDelegator
@@ -20,7 +22,7 @@ module Lotus
 
       private
       def obj
-        @namespace.const_get(@name).new
+        Utils::Class.load!(@name, @namespace).new
       end
     end
   end

@@ -30,7 +30,7 @@ module Lotus
 
         private
         def self.class_for(action)
-          Resources.const_get Utils::String.new(action).classify
+          Utils::Class.load!(Utils::String.new(action).classify, Resources)
         end
 
         def path
