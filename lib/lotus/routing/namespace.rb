@@ -1,3 +1,4 @@
+require 'delegate'
 require 'lotus/utils/path_prefix'
 
 module Lotus

@@ -1,3 +1,4 @@
+require 'delegate'
 require 'lotus/utils/class'
 
 module Lotus
