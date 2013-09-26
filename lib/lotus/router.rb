@@ -43,6 +43,11 @@ module Lotus
       Routing::Resources.new(self, name, options, &blk)
     end
 
+    def reset! #:api: private
+      uncompile
+      @routes, @named_routes, @root = [], Hash.new{|h,k| h[k] = []}, Node::Root.new(self)
+    end
+
     def pass_on_response(response) #:api: private
       super response.to_a
     end
