@@ -1,11 +1,14 @@
 require 'http_router'
+require 'lotus/utils/io'
 require 'lotus/routing/endpoint_resolver'
 require 'lotus/routing/route'
 require 'lotus/routing/namespace'
 require 'lotus/routing/resource'
 require 'lotus/routing/resources'
 
-HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
+Lotus::Utils::IO.silence_warnings do
+  HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
+end
 
 module Lotus
   class Router < HttpRouter
