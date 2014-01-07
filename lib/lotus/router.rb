@@ -46,6 +46,7 @@ module Lotus
     def reset! #:api: private
       uncompile
       @routes, @named_routes, @root = [], Hash.new{|h,k| h[k] = []}, Node::Root.new(self)
+      @default_host, @default_port, @default_scheme = 'localhost', 80, 'http'
     end
 
     def pass_on_response(response) #:api: private
