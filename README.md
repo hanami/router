@@ -1,6 +1,14 @@
 # Lotus::Router
 
-Rack compatible, lightweight and fast HTTP Router for Lotus.
+Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org).
+
+## Contact
+
+* Home page: http://lotusrb.org/controller
+* Mailing List: http://lotusrb.org/ml
+* API Doc: http://rdoc.info/gems/lotus-controller
+* Bugs/Issues: https://github.com/lotus/controller/issues
+* Support: http://stackoverflow.com/questions/tagged/lotusrb
 
 ## Installation
 
@@ -21,10 +29,17 @@ Or install it yourself as:
 ```shell
 $ gem install lotus-router
 ```
+## Ruby
+
+__Lotus::Router__ supports Ruby 2+
+
 
 ## Usage
 
-Lotus::Router supports a lot of neat features:
+__Lotus::Router__ is designed to work as a standalone framework or within a
+context of a [Lotus](http://lotusrb.org) application.
+
+For the standalone usage, it supports neat features:
 
 ### A Beautiful DSL:
 
@@ -409,7 +424,9 @@ router.path(:toggle_flowers, id: 23)  # => /flowers/23/toggle
 router.path(:search_flowers)          # => /flowers/search
 ```
 
+## Versioning
 
+__Lotus::Router__ uses [Semantic Versioning](http://semver.org)
 
 ## Contributing
 
@@ -418,3 +435,7 @@ router.path(:search_flowers)          # => /flowers/search
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Copyright
+
+Copyright 2013-2014 Luca Guidi – Released under MIT License
