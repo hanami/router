@@ -3,3 +3,5 @@
 .greenbar
 .bundle
 Gemfile.lock
+.yardoc
+doc/
