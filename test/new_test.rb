@@ -1,13 +1,13 @@
 require 'test_helper'
 
 describe Lotus::Router do
-  describe '.draw' do
+  describe '.new' do
     before do
       class MockRoute
       end
 
       endpoint = ->(env) { [200, {}, ['']] }
-      @router = Lotus::Router.draw do
+      @router = Lotus::Router.new do
         get '/route',       to: endpoint
         get '/named_route', to: endpoint, as: :named_route
         resource  'avatar'
@@ -21,7 +21,7 @@ describe Lotus::Router do
     end
 
     it 'returns instance of Lotus::Router with empty block' do
-      router = Lotus::Router.draw { }
+      router = Lotus::Router.new { }
       router.must_be_instance_of Lotus::Router
     end
 
@@ -30,7 +30,7 @@ describe Lotus::Router do
     end
 
     it 'sets options' do
-      router = Lotus::Router.draw(scheme: 'https') do
+      router = Lotus::Router.new(scheme: 'https') do
         get '/', to: ->(env) { }, as: :root
       end
 
@@ -39,13 +39,13 @@ describe Lotus::Router do
 
     it 'sets resolver' do
       resolver = Object.new
-      router   = Lotus::Router.draw(resolver: resolver) { }
+      router   = Lotus::Router.new(resolver: resolver) { }
 
       router.resolver.must_equal(resolver)
     end
 
     it 'sets route class' do
-      router = Lotus::Router.draw(route: MockRoute) { }
+      router = Lotus::Router.new(route: MockRoute) { }
 
       router.route_class.must_equal(MockRoute)
     end

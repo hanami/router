@@ -29,7 +29,7 @@ Lotus::Router supports a lot of neat features:
 ### A Beautiful DSL:
 
 ```ruby
-Lotus::Router.draw do
+Lotus::Router.new do
   get '/', to: ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
   get '/dashboard',   to: DashboardController::Index
   get '/rack-app',    to: RackApp.new

@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe Lotus::Router do
   before do
-    @router = Lotus::Router.draw { get '/', to: ->(env) {} }
+    @router = Lotus::Router.new { get '/', to: ->(env) {} }
     @app    = Rack::MockRequest.new(@router)
   end
 

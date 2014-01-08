@@ -14,18 +14,16 @@ module Lotus
   class Router < HttpRouter
     attr_reader :resolver
 
-    def self.draw(options = {}, &blk)
-      new(options).tap {|r| r.instance_eval(&blk) }
-    end
-
-    def initialize(options = {})
-      super
+    def initialize(options = {}, &blk)
+      super(options, &nil)
 
       @default_scheme = options[:scheme]   if options[:scheme]
       @default_host   = options[:host]     if options[:host]
       @default_port   = options[:port]     if options[:port]
       @resolver       = options[:resolver] || Routing::EndpointResolver.new
       @route_class    = options[:route]    || Routing::Route
+
+      instance_eval(&blk) if block_given?
     end
 
     def redirect(path, options = {}, &endpoint)
