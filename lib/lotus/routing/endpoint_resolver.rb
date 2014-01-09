@@ -9,9 +9,10 @@ module Lotus
       ACTION_SEPARATOR = /#/.freeze
 
       def initialize(options = {})
-        @namespace = options[:namespace] || Object
-        @suffix    = options[:suffix]    || SUFFIX
-        @separator = options[:separator] || ACTION_SEPARATOR
+        @endpoint_class = options[:endpoint]  || Endpoint
+        @namespace      = options[:namespace] || Object
+        @suffix         = options[:suffix]    || SUFFIX
+        @separator      = options[:separator] || ACTION_SEPARATOR
       end
 
       def resolve(options, &endpoint)
@@ -29,7 +30,7 @@ module Lotus
 
       protected
       def default
-        Endpoint.new(
+        @endpoint_class.new(
           ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
         )
       end
@@ -49,7 +50,7 @@ module Lotus
       private
       def resolve_callable(callable)
         if callable.respond_to?(:call)
-          Endpoint.new(callable)
+          @endpoint_class.new(callable)
         end
       end
 

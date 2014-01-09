@@ -57,6 +57,26 @@ describe Lotus::Routing::EndpointResolver do
     end
   end
 
+  describe 'custom endpoint' do
+    before :all do
+      class CustomEndpoint
+        def initialize(endpoint)
+          @endpoint = endpoint
+        end
+      end
+
+      @resolver = Lotus::Routing::EndpointResolver.new(endpoint: CustomEndpoint)
+    end
+
+    after do
+      Object.send(:remove_const, :CustomEndpoint)
+    end
+
+    it 'returns specified endpoint instance' do
+      @resolver.resolve({}).class.must_equal(CustomEndpoint)
+    end
+  end
+
   describe 'options' do
     it 'recognizes from custom options key' # instead of :to
     it 'matches controller and action with a custom separator' # instead of /#/
