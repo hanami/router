@@ -32,7 +32,7 @@ module Lotus
   #
   #
   #
-  # @example Specify the endpoint with `:to`
+  # @example Specify an endpoint with `:to` (Rack compatible object)
   #   require 'lotus/router'
   #
   #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
@@ -42,6 +42,17 @@ module Lotus
   #
   #   # :to is mandatory for the default resolver (`Lotus::Routing::EndpointResolver.new`),
   #   # This behavior can be changed by passing a custom resolver to `Lotus::Router#initialize`
+  #
+  #
+  #
+  # @example Specify an endpoint with `:to` (controller and action string)
+  #   require 'lotus/router'
+  #
+  #   router = Lotus::Router.new do
+  #     get '/', to: 'articles#show' # => ArticlesController::Show
+  #   end
+  #
+  #   # This is a builtin feature for a Lotus::Controller convention.
   #
   #
   #
