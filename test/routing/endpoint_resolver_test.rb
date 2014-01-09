@@ -77,9 +77,29 @@ describe Lotus::Routing::EndpointResolver do
     end
   end
 
-  describe 'options' do
-    it 'recognizes from custom options key' # instead of :to
-    it 'matches controller and action with a custom separator' # instead of /#/
-    it 'adds custom controller name suffix' # 'Controller::'
+  describe 'custom separator' do
+    before do
+      @resolver = Lotus::Routing::EndpointResolver.new(separator: separator)
+    end
+
+    let(:separator) { '@' }
+
+    it 'matches controller and action with a custom separator' do
+      options = { to: "test#{ separator }show" }
+      @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
+    end
+  end
+
+  describe 'custom suffix' do
+    before do
+      @resolver = Lotus::Routing::EndpointResolver.new(suffix: suffix)
+    end
+
+    let(:suffix) { 'Controller::' }
+
+    it 'matches controller and action with a custom separator' do
+      options = { to: 'test#show' }
+      @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
+    end
   end
 end
