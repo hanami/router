@@ -41,6 +41,11 @@ describe Lotus::Routing::EndpointResolver do
     @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
   end
 
+  it 'returns the default endpoint when cannot match anything' do
+    options = { to: 23 }
+    @resolver.resolve(options).call({}).first.must_equal 404
+  end
+
   describe 'namespace' do
     before do
       @resolver = Lotus::Routing::EndpointResolver.new(namespace: TestApp)
