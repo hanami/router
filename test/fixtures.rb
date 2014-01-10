@@ -67,6 +67,24 @@ class AvatarController
 end # AvatarController
 
 class ProfileController
+  class Show
+    def call(env)
+      [200, {}, ['Profile::Show']]
+    end
+  end
+
+  class New
+    def call(env)
+      [200, {}, ['Profile::New']]
+    end
+  end
+
+  class Create
+    def call(env)
+      [200, {}, ['Profile::Create']]
+    end
+  end
+
   class Edit
     def call(env)
       [200, {}, ['Profile::Edit']]
@@ -76,6 +94,12 @@ class ProfileController
   class Update
     def call(env)
       [200, {}, ['Profile::Update']]
+    end
+  end
+
+  class Destroy
+    def call(env)
+      [200, {}, ['Profile::Destroy']]
     end
   end
 

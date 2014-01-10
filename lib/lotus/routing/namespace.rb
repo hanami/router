@@ -35,6 +35,10 @@ module Lotus
         super(@name.join(path), options, &endpoint)
       end
 
+      def resource(name, options = {})
+        super name, options.merge(prefix: @name)
+      end
+
       def resources(name, options = {})
         super name, options.merge(prefix: @name)
       end

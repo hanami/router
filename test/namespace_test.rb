@@ -194,5 +194,96 @@ describe Lotus::Router do
         end
       end
     end
+
+    describe 'restful resource' do
+      before do
+        @router.namespace 'settings' do
+          resource 'avatar'
+        end
+      end
+
+      it 'recognizes get new' do
+        @router.path(:settings_new_avatar).must_equal      '/settings/avatar/new'
+        @app.request('GET', '/settings/avatar/new').body.must_equal 'Avatar::New'
+      end
+
+      it 'recognizes post create' do
+        @router.path(:settings_avatar).must_equal              '/settings/avatar'
+        @app.request('POST', '/settings/avatar').body.must_equal 'Avatar::Create'
+      end
+
+      it 'recognizes get show' do
+        @router.path(:settings_avatar).must_equal           '/settings/avatar'
+        @app.request('GET', '/settings/avatar').body.must_equal 'Avatar::Show'
+      end
+
+      it 'recognizes get edit' do
+        @router.path(:settings_edit_avatar).must_equal      '/settings/avatar/edit'
+        @app.request('GET', '/settings/avatar/edit').body.must_equal 'Avatar::Edit'
+      end
+
+      it 'recognizes patch update' do
+        @router.path(:settings_avatar).must_equal               '/settings/avatar'
+        @app.request('PATCH', '/settings/avatar').body.must_equal 'Avatar::Update'
+      end
+
+      it 'recognizes delete destroy' do
+        @router.path(:settings_avatar).must_equal                 '/settings/avatar'
+        @app.request('DELETE', '/settings/avatar').body.must_equal 'Avatar::Destroy'
+      end
+
+      describe ':only option' do
+        before do
+          @router.namespace 'settings' do
+            resource 'profile', only: [:edit, :update]
+          end
+        end
+
+        it 'recognizes only specified paths' do
+          @router.path(:settings_edit_profile).must_equal      '/settings/profile/edit'
+          @app.request('GET', '/settings/profile/edit').body.must_equal 'Profile::Edit'
+
+          @router.path(:settings_profile).must_equal               '/settings/profile'
+          @app.request('PATCH', '/settings/profile').body.must_equal 'Profile::Update'
+        end
+
+        it 'does not recognize other paths' do
+          @app.request('GET',    '/settings/profile').status.must_equal     405
+          @app.request('GET',    '/settings/profile/new').status.must_equal 405
+          @app.request('POST',   '/settings/profile').status.must_equal     405
+          @app.request('DELETE', '/settings/profile').status.must_equal     405
+
+          -> { @router.path(:settings_new_profile) }.must_raise HttpRouter::InvalidRouteException
+        end
+      end
+
+      describe ':except option' do
+        before do
+          @router.namespace 'settings' do
+            resource 'profile', except: [:edit, :update]
+          end
+        end
+
+        it 'recognizes only the non-rejected paths' do
+          @router.path(:settings_profile).must_equal           '/settings/profile'
+          @app.request('GET', '/settings/profile').body.must_equal 'Profile::Show'
+
+          @router.path(:settings_new_profile).must_equal      '/settings/profile/new'
+          @app.request('GET', '/settings/profile/new').body.must_equal 'Profile::New'
+
+          @router.path(:settings_profile).must_equal              '/settings/profile'
+          @app.request('POST', '/settings/profile').body.must_equal 'Profile::Create'
+
+          @router.path(:settings_profile).must_equal                 '/settings/profile'
+          @app.request('DELETE', '/settings/profile').body.must_equal 'Profile::Destroy'
+        end
+
+        it 'does not recognize other paths' do
+          @app.request('GET', '/settings/profile/edit').status.must_equal 404
+
+          -> { @router.path(:settings_edit_profile) }.must_raise HttpRouter::InvalidRouteException
+        end
+      end
+    end
   end
 end
