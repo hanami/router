@@ -1,10 +1,15 @@
 require 'lotus/utils/string'
 require 'lotus/utils/path_prefix'
+require 'lotus/utils/class_attribute'
 
 module Lotus
   module Routing
     class Resource
       class Action
+        include Utils::ClassAttribute
+        class_attribute :namespace
+        self.namespace = Resource
+
         def self.generate(router, action, options)
           class_for(action).new(router, options)
         end
@@ -29,7 +34,7 @@ module Lotus
 
         private
         def self.class_for(action)
-          Utils::Class.load!(Utils::String.new(action).classify, Resource)
+          Utils::Class.load!(Utils::String.new(action).classify, namespace)
         end
 
         def path
