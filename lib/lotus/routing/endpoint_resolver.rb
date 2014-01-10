@@ -130,6 +130,8 @@ module Lotus
       end
 
       # Resolve the given set of HTTP verb, path, endpoint and options.
+      # If it fails to resolve, it will mount the default endpoint to the given
+      # path, which returns an 404 (Not Found).
       #
       # @param options [Hash] the options required to resolve the endpoint
       #
