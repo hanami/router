@@ -5,29 +5,79 @@ require 'lotus/utils/class_attribute'
 module Lotus
   module Routing
     class Resource
+      # Action for RESTful resource
+      #
+      # @since 0.1.0
+      #
+      # @api private
+      #
+      # @see Lotus::Router#resource
       class Action
         include Utils::ClassAttribute
+
+        # Ruby namespace where lookup for default subclasses.
+        #
+        # @api private
+        # @since 0.1.0
         class_attribute :namespace
         self.namespace = Resource
 
+        # Generate an action for the given router
+        #
+        # @param router [Lotus::Router]
+        # @param action [Lotus::Routing::Resource::Action]
+        # @param options [Hash]
+        #
+        # @api private
+        #
+        # @since 0.1.0
         def self.generate(router, action, options)
           class_for(action).new(router, options)
         end
 
+        # Initialize an action
+        #
+        # @param router [Lotus::Router]
+        # @param options [Hash]
+        # @param blk [Proc]
+        #
+        # @api private
+        #
+        # @since 0.1.0
         def initialize(router, options, &blk)
           @router, @options = router, options
           generate(&blk)
         end
 
+        # Generate an action for the given router
+        #
+        # @param blk [Proc]
+        #
+        # @api private
+        #
+        # @since 0.1.0
         def generate(&blk)
           @router.send verb, path, to: endpoint, as: as
           instance_eval(&blk) if block_given?
         end
 
+        # Action name
+        #
+        # @api private
+        # @since 0.1.0
+        #
+        # @example
+        #   :index
+        #   :edit
+        #   :create
         def name
           @options[:name]
         end
 
+        # Path prefix
+        #
+        # @api private
+        # @since 0.1.0
         def prefix
           @prefix ||= Utils::PathPrefix.new @options[:prefix]
         end
@@ -46,6 +96,12 @@ module Lotus
         end
       end
 
+      # Collection action
+      # It implements #collection within a #resource block.
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class CollectionAction < Action
         def generate(&blk)
           instance_eval(&blk) if block_given?
@@ -71,9 +127,20 @@ module Lotus
         end
       end
 
+      # Collection action
+      # It implements #member within a #resource block.
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class MemberAction < CollectionAction
       end
 
+      # New action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class New < Action
         private
         def verb
@@ -93,6 +160,11 @@ module Lotus
         end
       end
 
+      # Create action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class Create < Action
         private
         def verb
@@ -112,6 +184,11 @@ module Lotus
         end
       end
 
+      # Show action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class Show < Action
         private
         def verb
@@ -131,6 +208,11 @@ module Lotus
         end
       end
 
+      # Edit action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class Edit < Action
         private
         def verb
@@ -150,6 +232,11 @@ module Lotus
         end
       end
 
+      # Update action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class Update < Action
         private
         def verb
@@ -169,6 +256,11 @@ module Lotus
         end
       end
 
+      # Destroy action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
       class Destroy < Action
         private
         def verb
