@@ -436,6 +436,11 @@ __Lotus::Router__ uses [Semantic Versioning](http://semver.org)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+## Acknowledgements
+
+Thanks to Joshua Hull ([@joshbuddy](https://github.com/joshbuddy)) for his
+[http_router](http://rubygems.org/gems/http_router)
+
 ## Copyright
 
 Copyright 2013-2014 Luca Guidi – Released under MIT License
