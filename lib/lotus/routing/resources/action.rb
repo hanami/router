@@ -49,11 +49,6 @@ module Lotus
       # @see Lotus::Router#resources
       class Index < Action
         self.verb = :get
-
-        private
-        def named_route
-          resource_name
-        end
       end
 
       # New action

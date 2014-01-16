@@ -153,21 +153,38 @@ module Lotus
           "/#{ resource_name }"
         end
 
-        # The name of the action within the whole context of the router.
+        # The prefixed name of the action within the whole context of the router.
         #
         # @example
         #   require 'lotus/router'
         #
         #   Lotus::Router.new do
         #     resources 'flowers'
+        #
+        #     prefix 'animals' do
+        #       resources 'mammals'
+        #     end
         #   end
         #
         #   # It will generate named routes like :flowers, :new_flowers ..
+        #   # It will generate named routes like :animals_mammals, :animals_new_mammals ..
         #
         # @api private
         # @since 0.1.0
         def as
           prefix.relative_join(named_route, '_').to_sym
+        end
+
+        # The name of the action within the whole context of the router.
+        #
+        # @example
+        #   :flowers
+        #   :new_flowers
+        #
+        # @api private
+        # @since 0.1.0
+        def named_route
+          resource_name
         end
 
         # The name of the RESTful action.
@@ -263,7 +280,7 @@ module Lotus
         end
 
         def named_route
-          "new_#{ resource_name }"
+          "#{ action_name }_#{ resource_name }"
         end
       end
 
@@ -274,11 +291,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Create < Action
         self.verb = :post
-
-        private
-        def named_route
-          resource_name
-        end
       end
 
       # Show action
@@ -287,10 +299,6 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resource
       class Show < Action
-        private
-        def named_route
-          resource_name
-        end
       end
 
       # Edit action
@@ -305,7 +313,7 @@ module Lotus
         end
 
         def named_route
-          "edit_#{ resource_name }"
+          "#{ action_name }_#{ resource_name }"
         end
       end
 
@@ -316,11 +324,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Update < Action
         self.verb = :patch
-
-        private
-        def named_route
-          resource_name
-        end
       end
 
       # Destroy action
@@ -330,11 +333,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Destroy < Action
         self.verb = :delete
-
-        private
-        def named_route
-          resource_name
-        end
       end
     end
   end
