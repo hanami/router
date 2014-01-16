@@ -48,7 +48,9 @@ module Lotus
       #   router = Lotus::Router.new do
       #     get '/', to: 'articles#show'
       #   end
-      ACTION_SEPARATOR = /#/.freeze
+      ACTION_SEPARATOR = '#'.freeze
+
+      attr_reader :separator
 
       # Initialize an endpoint resolver
       #

@@ -94,20 +94,102 @@ module Lotus
         end
 
         private
+        # Load a subclass, according to the given action name
+        #
+        # @param action [String] the action name
+        #
+        # @example
+        #   Lotus::Routing::Resource::Action.send(:class_for, 'New') # =>
+        #     Lotus::Routing::Resource::New
+        #
+        # @api private
+        # @since 0.1.0
         def self.class_for(action)
           Utils::Class.load!(Utils::String.new(action).classify, namespace)
         end
 
+        # Accepted HTTP verb
+        #
+        # @see Lotus::Routing::Resource::Action.verb
+        #
+        # @api private
+        # @since 0.1.0
         def verb
           self.class.verb
         end
 
+        # The URL relative path
+        #
+        # @example
+        #   require 'lotus/router'
+        #
+        #   Lotus::Router.new do
+        #     resources 'flowers'
+        #   end
+        #
+        #   # It will generate paths like '/flowers', '/flowers/:id' ..
+        #
+        # @api private
+        # @since 0.1.0
         def path
           prefix.join(rest_path)
         end
 
+        # The name of the action within the whole context of the router.
+        #
+        # @example
+        #   require 'lotus/router'
+        #
+        #   Lotus::Router.new do
+        #     resources 'flowers'
+        #   end
+        #
+        #   # It will generate named routes like :flowers, :new_flowers ..
+        #
+        # @api private
+        # @since 0.1.0
         def as
           prefix.relative_join(named_route, '_').to_sym
+        end
+
+        # The name of the RESTful action.
+        #
+        # @example
+        #   'index'
+        #   'new'
+        #   'create'
+        #
+        # @api private
+        # @since 0.1.0
+        def action_name
+          self.class.name.split('::').last.downcase
+        end
+
+        # A string that represents the endpoint to be loaded.
+        # It is composed by controller and action name.
+        #
+        # @see Lotus::Routing::Resource::Action#separator
+        #
+        # @example
+        #   'flowers#index'
+        #
+        # @api private
+        # @since 0.1.0
+        def endpoint
+          [ resource_name, action_name ].join separator
+        end
+
+        # Separator between controller and action name
+        #
+        # @see Lotus::Routing::EndpointResolver#separator
+        #
+        # @example
+        #   '#' # default
+        #
+        # @api private
+        # @since 0.1.0
+        def separator
+          @options[:separator]
         end
       end
 
@@ -158,10 +240,6 @@ module Lotus
       # @see Lotus::Router#resource
       class New < Action
         private
-        def endpoint
-          "#{ resource_name }#new"
-        end
-
         def rest_path
           "/#{ resource_name }/new"
         end
@@ -180,10 +258,6 @@ module Lotus
         self.verb = :post
 
         private
-        def endpoint
-          "#{ resource_name }#create"
-        end
-
         def rest_path
           "/#{ resource_name }"
         end
@@ -200,10 +274,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Show < Action
         private
-        def endpoint
-          "#{ resource_name }#show"
-        end
-
         def rest_path
           "/#{ resource_name }"
         end
@@ -220,10 +290,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Edit < Action
         private
-        def endpoint
-          "#{ resource_name }#edit"
-        end
-
         def rest_path
           "/#{ resource_name }/edit"
         end
@@ -242,10 +308,6 @@ module Lotus
         self.verb = :patch
 
         private
-        def endpoint
-          "#{ resource_name }#update"
-        end
-
         def rest_path
           "/#{ resource_name }"
         end
@@ -264,10 +326,6 @@ module Lotus
         self.verb = :delete
 
         private
-        def endpoint
-          "#{ resource_name }#destroy"
-        end
-
         def rest_path
           "/#{ resource_name }"
         end

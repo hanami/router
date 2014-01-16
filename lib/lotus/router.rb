@@ -323,7 +323,7 @@ module Lotus
     #   # | GET  | /identity/keys | IdentityController::Keys |      | :keys_identity |
     #   # +------+----------------+--------------------------+------+----------------+
     def resource(name, options = {}, &blk)
-      Routing::Resource.new(self, name, options, &blk)
+      Routing::Resource.new(self, name, options.merge(separator: resolver.separator), &blk)
     end
 
     # Defines a set of named routes for a plural RESTful resource.
@@ -446,7 +446,7 @@ module Lotus
     #   # | GET  | /articles/search | ArticlesController::Search |      | :search_articles |
     #   # +------+------------------+----------------------------+------+------------------+
     def resources(name, options = {}, &blk)
-      Routing::Resources.new(self, name, options, &blk)
+      Routing::Resources.new(self, name, options.merge(separator: resolver.separator), &blk)
     end
 
     # @api private

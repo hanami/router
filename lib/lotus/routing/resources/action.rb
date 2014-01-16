@@ -51,10 +51,6 @@ module Lotus
         self.verb = :get
 
         private
-        def endpoint
-          "#{ resource_name }#index"
-        end
-
         def rest_path
           "/#{ resource_name }"
         end
