@@ -4,10 +4,10 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 
 ## Contact
 
-* Home page: http://lotusrb.org/controller
+* Home page: http://lotusrb.org/router
 * Mailing List: http://lotusrb.org/ml
-* API Doc: http://rdoc.info/gems/lotus-controller
-* Bugs/Issues: https://github.com/lotus/controller/issues
+* API Doc: http://rdoc.info/gems/lotus-router
+* Bugs/Issues: https://github.com/lotus/router/issues
 * Support: http://stackoverflow.com/questions/tagged/lotusrb
 
 ## Installation
