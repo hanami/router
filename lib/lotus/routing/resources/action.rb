@@ -52,15 +52,15 @@ module Lotus
 
         private
         def endpoint
-          "#{ name }#index"
+          "#{ resource_name }#index"
         end
 
         def rest_path
-          "/#{ name }"
+          "/#{ resource_name }"
         end
 
         def named_route
-          name
+          resource_name
         end
       end
 
@@ -88,7 +88,7 @@ module Lotus
       class Show < Resource::Show
         private
         def rest_path
-          "/#{ name }/:id"
+          "/#{ resource_name }/:id"
         end
       end
 
@@ -100,7 +100,7 @@ module Lotus
       class Edit < Resource::Edit
         private
         def rest_path
-          "/#{ name }/:id/edit"
+          "/#{ resource_name }/:id/edit"
         end
       end
 
@@ -112,7 +112,7 @@ module Lotus
       class Update < Resource::Update
         private
         def rest_path
-          "/#{ name }/:id"
+          "/#{ resource_name }/:id"
         end
       end
 
@@ -124,7 +124,7 @@ module Lotus
       class Destroy < Resource::Destroy
         private
         def rest_path
-          "/#{ name }/:id"
+          "/#{ resource_name }/:id"
         end
       end
     end

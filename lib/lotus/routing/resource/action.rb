@@ -68,16 +68,20 @@ module Lotus
           instance_eval(&blk) if block_given?
         end
 
-        # Action name
+        # Resource name
         #
         # @api private
         # @since 0.1.0
         #
         # @example
-        #   :index
-        #   :edit
-        #   :create
-        def name
+        #   require 'lotus/router'
+        #
+        #   Lotus::Router.new do
+        #     resource 'identity'
+        #   end
+        #
+        #   # 'identity' is the name passed in the @options
+        def resource_name
           @options[:name]
         end
 
@@ -130,11 +134,11 @@ module Lotus
         end
 
         def endpoint(path)
-          "#{ name }##{ path }"
+          "#{ resource_name }##{ path }"
         end
 
         def as(path)
-          Utils::PathPrefix.new(path).relative_join(name, '_').to_sym
+          Utils::PathPrefix.new(path).relative_join(resource_name, '_').to_sym
         end
       end
 
@@ -155,15 +159,15 @@ module Lotus
       class New < Action
         private
         def endpoint
-          "#{ name }#new"
+          "#{ resource_name }#new"
         end
 
         def rest_path
-          "/#{ name }/new"
+          "/#{ resource_name }/new"
         end
 
         def named_route
-          "new_#{ name }"
+          "new_#{ resource_name }"
         end
       end
 
@@ -177,15 +181,15 @@ module Lotus
 
         private
         def endpoint
-          "#{ name }#create"
+          "#{ resource_name }#create"
         end
 
         def rest_path
-          "/#{ name }"
+          "/#{ resource_name }"
         end
 
         def named_route
-          name
+          resource_name
         end
       end
 
@@ -197,15 +201,15 @@ module Lotus
       class Show < Action
         private
         def endpoint
-          "#{ name }#show"
+          "#{ resource_name }#show"
         end
 
         def rest_path
-          "/#{ name }"
+          "/#{ resource_name }"
         end
 
         def named_route
-          name
+          resource_name
         end
       end
 
@@ -217,15 +221,15 @@ module Lotus
       class Edit < Action
         private
         def endpoint
-          "#{ name }#edit"
+          "#{ resource_name }#edit"
         end
 
         def rest_path
-          "/#{ name }/edit"
+          "/#{ resource_name }/edit"
         end
 
         def named_route
-          "edit_#{ name }"
+          "edit_#{ resource_name }"
         end
       end
 
@@ -239,15 +243,15 @@ module Lotus
 
         private
         def endpoint
-          "#{ name }#update"
+          "#{ resource_name }#update"
         end
 
         def rest_path
-          "/#{ name }"
+          "/#{ resource_name }"
         end
 
         def named_route
-          name
+          resource_name
         end
       end
 
@@ -261,15 +265,15 @@ module Lotus
 
         private
         def endpoint
-          "#{ name }#destroy"
+          "#{ resource_name }#destroy"
         end
 
         def rest_path
-          "/#{ name }"
+          "/#{ resource_name }"
         end
 
         def named_route
-          name
+          resource_name
         end
       end
     end
