@@ -268,12 +268,11 @@ module Lotus
       class MemberAction < CollectionAction
       end
 
-      # New action
+      # Implementation of common methods for concrete member actions
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
-      class New < Action
+      module DefaultMemberAction
         private
         def rest_path
           "/#{ resource_name }/#{ action_name }"
@@ -282,6 +281,15 @@ module Lotus
         def named_route
           "#{ action_name }_#{ resource_name }"
         end
+      end
+
+      # New action
+      #
+      # @api private
+      # @since 0.1.0
+      # @see Lotus::Router#resource
+      class New < Action
+        include DefaultMemberAction
       end
 
       # Create action
@@ -307,14 +315,7 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resource
       class Edit < Action
-        private
-        def rest_path
-          "/#{ resource_name }/#{ action_name }"
-        end
-
-        def named_route
-          "#{ action_name }_#{ resource_name }"
-        end
+        include DefaultMemberAction
       end
 
       # Update action

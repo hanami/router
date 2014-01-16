@@ -42,6 +42,17 @@ module Lotus
         end
       end
 
+      # Implementation of common methods for concrete member actions
+      #
+      # @api private
+      # @since 0.1.0
+      module DefaultMemberAction
+        private
+        def rest_path
+          "/#{ resource_name }/:id"
+        end
+      end
+
       # Index action
       #
       # @api private
@@ -73,10 +84,7 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Show < Resource::Show
-        private
-        def rest_path
-          "/#{ resource_name }/:id"
-        end
+        include DefaultMemberAction
       end
 
       # Edit action
@@ -85,9 +93,11 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Edit < Resource::Edit
+        include DefaultMemberAction
+
         private
         def rest_path
-          "/#{ resource_name }/:id/#{ action_name }"
+          "#{ super }/#{ action_name }"
         end
       end
 
@@ -97,10 +107,7 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Update < Resource::Update
-        private
-        def rest_path
-          "/#{ resource_name }/:id"
-        end
+        include DefaultMemberAction
       end
 
       # Destroy action
@@ -109,10 +116,7 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Destroy < Resource::Destroy
-        private
-        def rest_path
-          "/#{ resource_name }/:id"
-        end
+        include DefaultMemberAction
       end
     end
   end
