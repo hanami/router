@@ -51,10 +51,6 @@ module Lotus
         self.verb = :get
 
         private
-        def rest_path
-          "/#{ resource_name }"
-        end
-
         def named_route
           resource_name
         end
@@ -96,7 +92,7 @@ module Lotus
       class Edit < Resource::Edit
         private
         def rest_path
-          "/#{ resource_name }/:id/edit"
+          "/#{ resource_name }/:id/#{ action_name }"
         end
       end
 

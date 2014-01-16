@@ -118,21 +118,39 @@ module Lotus
           self.class.verb
         end
 
-        # The URL relative path
+        # The prefixed URL relative path
         #
         # @example
         #   require 'lotus/router'
         #
         #   Lotus::Router.new do
         #     resources 'flowers'
+        #
+        #     prefix 'animals' do
+        #       resources 'mammals'
+        #     end
         #   end
         #
         #   # It will generate paths like '/flowers', '/flowers/:id' ..
+        #   # It will generate paths like '/animals/mammals', '/animals/mammals/:id' ..
         #
         # @api private
         # @since 0.1.0
         def path
           prefix.join(rest_path)
+        end
+
+        # The URL relative path
+        #
+        # @example
+        #   '/flowers'
+        #   '/flowers/new'
+        #   '/flowers/:id'
+        #
+        # @api private
+        # @since 0.1.0
+        def rest_path
+          "/#{ resource_name }"
         end
 
         # The name of the action within the whole context of the router.
@@ -241,7 +259,7 @@ module Lotus
       class New < Action
         private
         def rest_path
-          "/#{ resource_name }/new"
+          "/#{ resource_name }/#{ action_name }"
         end
 
         def named_route
@@ -258,10 +276,6 @@ module Lotus
         self.verb = :post
 
         private
-        def rest_path
-          "/#{ resource_name }"
-        end
-
         def named_route
           resource_name
         end
@@ -274,10 +288,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Show < Action
         private
-        def rest_path
-          "/#{ resource_name }"
-        end
-
         def named_route
           resource_name
         end
@@ -291,7 +301,7 @@ module Lotus
       class Edit < Action
         private
         def rest_path
-          "/#{ resource_name }/edit"
+          "/#{ resource_name }/#{ action_name }"
         end
 
         def named_route
@@ -308,10 +318,6 @@ module Lotus
         self.verb = :patch
 
         private
-        def rest_path
-          "/#{ resource_name }"
-        end
-
         def named_route
           resource_name
         end
@@ -326,10 +332,6 @@ module Lotus
         self.verb = :delete
 
         private
-        def rest_path
-          "/#{ resource_name }"
-        end
-
         def named_route
           resource_name
         end
