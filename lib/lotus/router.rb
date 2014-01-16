@@ -1,14 +1,7 @@
-require 'http_router'
-require 'lotus/utils/io'
-require 'lotus/routing/endpoint_resolver'
-require 'lotus/routing/route'
+require 'lotus/routing/http_router'
 require 'lotus/routing/namespace'
 require 'lotus/routing/resource'
 require 'lotus/routing/resources'
-
-Lotus::Utils::IO.silence_warnings do
-  HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
-end
 
 module Lotus
   # Rack compatible, lightweight and fast HTTP Router.
@@ -82,17 +75,18 @@ module Lotus
   #
   #   # This isn't mandatory for the default route class (`Lotus::Routing::Route`),
   #   # This behavior can be changed by passing a custom route to `Lotus::Router#initialize`
-  class Router < HttpRouter
-    attr_reader :resolver
-
+  class Router
     # Initialize the router.
     #
     # @param options [Hash] the options to initialize the router
+    #
     # @option options [String] :scheme The HTTP scheme (defaults to `"http"`)
     # @option options [String] :host The URL host (defaults to `"localhost"`)
     # @option options [String] :port The URL port (defaults to `"80"`)
-    # @option options [Object, #resolve, #find] :resolver the route resolver (defaults to `Lotus::Routing::EndpointResolver.new`)
-    # @option options [Object, #generate] :route the route class (defaults to `Lotus::Routing::Route`)
+    # @option options [Object, #resolve, #find, #action_separator] :resolver
+    #   the route resolver (defaults to `Lotus::Routing::EndpointResolver.new`)
+    # @option options [Object, #generate] :route the route class
+    #   (defaults to `Lotus::Routing::Route`)
     #
     # @param blk [Proc] the optional block to define the routes
     #
@@ -114,21 +108,244 @@ module Lotus
     #     get '/', to: endpoint
     #   end
     def initialize(options = {}, &blk)
-      super(options, &nil)
-
-      @default_scheme = options[:scheme]   if options[:scheme]
-      @default_host   = options[:host]     if options[:host]
-      @default_port   = options[:port]     if options[:port]
-      @resolver       = options[:resolver] || Routing::EndpointResolver.new
-      @route_class    = options[:route]    || Routing::Route
-
+      @router = Routing::HttpRouter.new(options)
       instance_eval(&blk) if block_given?
+    end
+
+    # Defines a route that accepts a GET request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @since 0.1.0
+    #
+    # @example Fixed matching string
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/lotus', to: ->(env) { [200, {}, ['Hello from Lotus!']] }
+    #
+    # @example String matching with variables
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/flowers/:id',
+    #     to: ->(env) {
+    #       [
+    #         200,
+    #         {},
+    #         ["Hello from Flower no. #{ env['router.params'][:id] }!"]
+    #       ]
+    #     }
+    #
+    # @example Variables Constraints
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/flowers/:id',
+    #     id: /\d+/,
+    #     to: ->(env) { [200, {}, [":id must be a number!"]] }
+    #
+    # @example String matching with globbling
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/*',
+    #     to: ->(env) {
+    #       [
+    #         200,
+    #         {},
+    #         ["This is catch all: #{ env['router.params'].inspect }!"]
+    #       ]
+    #     }
+    #
+    # @example String matching with optional tokens
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/lotus(.:format)',
+    #     to: ->(env) {
+    #       [200, {}, ["You've requested #{ env['router.params'][:format] }!"]]
+    #     }
+    #
+    # @example Named routes
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
+    #   router.get '/lotus',
+    #     to: ->(env) { [200, {}, ['Hello from Lotus!']] },
+    #     as: :lotus
+    #
+    #   router.path(:lotus) # => "/lotus"
+    #   router.url(:lotus)  # => "https://lotusrb.org/lotus"
+    #
+    # @example Prefixed routes
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/cats',
+    #     prefix: '/animals/mammals',
+    #     to: ->(env) { [200, {}, ['Meow!']] },
+    #     as: :cats
+    #
+    #   router.path(:animals_mammals_cats) # => "/animals/mammals/cats"
+    #
+    # @example Duck typed endpoints (Rack compatible objects)
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new
+    #
+    #   router.get '/lotus',      to: ->(env) { [200, {}, ['Hello from Lotus!']] }
+    #   router.get '/middleware', to: Middleware
+    #   router.get '/rack-app',   to: RackApp.new
+    #   router.get '/method',     to: ActionControllerSubclass.action(:new)
+    #
+    #   # Everything that responds to #call is invoked as it is
+    #
+    # @example Duck typed endpoints (strings)
+    #   require 'lotus/router'
+    #
+    #   class RackApp
+    #     def call(env)
+    #       # ...
+    #     end
+    #   end
+    #
+    #   router = Lotus::Router.new
+    #   router.get '/lotus', to: 'rack_app' # it will map to RackApp.new
+    #
+    # @example Duck typed endpoints (string: controller + action)
+    #   require 'lotus/router'
+    #
+    #   class FlowersController
+    #     class Index
+    #       def call(env)
+    #         # ...
+    #       end
+    #     end
+    #    end
+    #
+    #    router = Lotus::Router.new
+    #    router.get '/flowers', to: 'flowers#index'
+    #
+    #    # It will map to FlowersController::Index.new, which is the
+    #    # Lotus::Controller convention.
+    def get(path, options = {}, &blk)
+      @router.get(path, options, &blk)
+    end
+
+    # Defines a route that accepts a POST request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Lotus::Router#get
+    #
+    # @since 0.1.0
+    def post(path, options = {}, &blk)
+      @router.post(path, options, &blk)
+    end
+
+    # Defines a route that accepts a PUT request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Lotus::Router#get
+    #
+    # @since 0.1.0
+    def put(path, options = {}, &blk)
+      @router.put(path, options, &blk)
+    end
+
+    # Defines a route that accepts a PATCH request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Lotus::Router#get
+    #
+    # @since 0.1.0
+    def patch(path, options = {}, &blk)
+      @router.patch(path, options, &blk)
+    end
+
+    # Defines a route that accepts a DELETE request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Lotus::Router#get
+    #
+    # @since 0.1.0
+    def delete(path, options = {}, &blk)
+      @router.delete(path, options, &blk)
+    end
+
+    # Defines a route that accepts a TRACE request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Lotus::Router#get
+    #
+    # @since 0.1.0
+    def trace(path, options = {}, &blk)
+      @router.trace(path, options, &blk)
     end
 
     # Defines an HTTP redirect
     #
     # @param path [String] the path that needs to be redirected
-    # @param options [Hash] the path that needs to be redirected
+    # @param options [Hash] the options to customize the redirect behavior
     # @option options [Fixnum] the HTTP status to return (defaults to `302`)
     #
     # @return [Lotus::Routing::Route] the generated route.
@@ -152,7 +369,7 @@ module Lotus
     #   router = Lotus::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
     def redirect(path, options = {}, &endpoint)
-      get(path).redirect resolver.find(options), options[:code] || 302
+      get(path).redirect @router.find(options), options[:code] || 302
     end
 
     # Defines a Ruby block: all the routes defined within it will be namespaced
@@ -323,7 +540,7 @@ module Lotus
     #   # | GET  | /identity/keys | IdentityController::Keys |      | :keys_identity |
     #   # +------+----------------+--------------------------+------+----------------+
     def resource(name, options = {}, &blk)
-      Routing::Resource.new(self, name, options.merge(separator: resolver.separator), &blk)
+      Routing::Resource.new(self, name, options.merge(separator: @router.action_separator), &blk)
     end
 
     # Defines a set of named routes for a plural RESTful resource.
@@ -446,33 +663,66 @@ module Lotus
     #   # | GET  | /articles/search | ArticlesController::Search |      | :search_articles |
     #   # +------+------------------+----------------------------+------+------------------+
     def resources(name, options = {}, &blk)
-      Routing::Resources.new(self, name, options.merge(separator: resolver.separator), &blk)
+      Routing::Resources.new(self, name, options.merge(separator: @router.action_separator), &blk)
     end
 
-    # @api private
-    def reset!
-      uncompile
-      @routes, @named_routes, @root = [], Hash.new{|h,k| h[k] = []}, Node::Root.new(self)
-      @default_host, @default_port, @default_scheme = 'localhost', 80, 'http'
+    # Resolve the given Rack env to a registered endpoint and invoke it.
+    #
+    # @param env [Hash] a Rack env instance
+    #
+    # @return [Rack::Response, Array]
+    #
+    # @since 0.1.0
+    def call(env)
+      @router.call(env)
     end
 
-    # @api private
-    def pass_on_response(response)
-      super response.to_a
+    # Generate an relative URL for a specified named route.
+    # The additional arguments will be used to compose the relative URL - in
+    #   case it has tokens to match - and for compose the query string.
+    #
+    # @param route [Symbol] the route name
+    #
+    # @return [String]
+    #
+    # @since 0.1.0
+    #
+    # @example
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
+    #   router.get '/login', to: 'sessions#new',    as: :login
+    #   router.get '/:name', to: 'frameworks#show', as: :framework
+    #
+    #   router.path(:login)                          # => "/login"
+    #   router.path(:login, return_to: '/dashboard') # => "/login?return_to=%2Fdashboard"
+    #   router.path(:framework, name: 'router')      # => "/router"
+    def path(route, *args)
+      @router.path(route, *args)
     end
 
-    # @api private
-    def no_response(request, env)
-      if request.acceptable_methods.any? && !request.acceptable_methods.include?(env['REQUEST_METHOD'])
-        [405, {'Allow' => request.acceptable_methods.sort.join(", ")}, []]
-      else
-        @default_app.call(env)
-      end
-    end
-
-    private
-    def add_with_request_method(path, method, opts = {}, &app)
-      super.generate(resolver, opts, &app)
+    # Generate a URL for a specified named route.
+    # The additional arguments will be used to compose the relative URL - in
+    #   case it has tokens to match - and for compose the query string.
+    #
+    # @param route [Symbol] the route name
+    #
+    # @return [String]
+    #
+    # @since 0.1.0
+    #
+    # @example
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
+    #   router.get '/login', to: 'sessions#new', as: :login
+    #   router.get '/:name', to: 'frameworks#show', as: :framework
+    #
+    #   router.url(:login)                          # => "https://lotusrb.org/login"
+    #   router.url(:login, return_to: '/dashboard') # => "https://lotusrb.org/login?return_to=%2Fdashboard"
+    #   router.url(:framework, name: 'router')      # => "https://lotusrb.org/router"
+    def url(route, *args)
+      @router.url(route, *args)
     end
   end
 end

@@ -23,3 +23,9 @@ Rack::MockResponse.class_eval do
       body    == other.body
   end
 end
+
+Lotus::Router.class_eval do
+  def reset!
+    @router.reset!
+  end
+end

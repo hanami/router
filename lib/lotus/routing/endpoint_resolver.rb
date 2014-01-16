@@ -50,7 +50,7 @@ module Lotus
       #   end
       ACTION_SEPARATOR = '#'.freeze
 
-      attr_reader :separator
+      attr_reader :action_separator
 
       # Initialize an endpoint resolver
       #
@@ -125,10 +125,10 @@ module Lotus
       #   #  * Articles::Controller::Show
       #   #  * ArticlesController::Show
       def initialize(options = {})
-        @endpoint_class = options[:endpoint]  || Endpoint
-        @namespace      = options[:namespace] || Object
-        @suffix         = options[:suffix]    || SUFFIX
-        @separator      = options[:separator] || ACTION_SEPARATOR
+        @endpoint_class   = options[:endpoint]  || Endpoint
+        @namespace        = options[:namespace] || Object
+        @suffix           = options[:suffix]    || SUFFIX
+        @action_separator = options[:separator] || ACTION_SEPARATOR
       end
 
       # Resolve the given set of HTTP verb, path, endpoint and options.
@@ -241,8 +241,8 @@ module Lotus
       end
 
       def resolve_action(string)
-        if string.match(@separator)
-          controller, action = string.split(@separator).map {|token| classify(token) }
+        if string.match(action_separator)
+          controller, action = string.split(action_separator).map {|token| classify(token) }
           controller + @suffix + action
         end
       end

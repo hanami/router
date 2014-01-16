@@ -1,8 +1,5 @@
-class HttpRouter
-end unless defined?(HttpRouter)
-
 module Lotus
-  class Router < HttpRouter
+  class Router
     VERSION = '0.1.0'
   end
 end

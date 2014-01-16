@@ -37,19 +37,6 @@ describe Lotus::Router do
       router.url(:root).must_match('https')
     end
 
-    it 'sets resolver' do
-      resolver = Object.new
-      router   = Lotus::Router.new(resolver: resolver) { }
-
-      router.resolver.must_equal(resolver)
-    end
-
-    it 'sets route class' do
-      router = Lotus::Router.new(route: MockRoute) { }
-
-      router.route_class.must_equal(MockRoute)
-    end
-
     it 'recognizes path' do
       @app.get('/route').status.must_equal 200
     end
