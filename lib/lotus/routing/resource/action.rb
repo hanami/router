@@ -197,7 +197,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def action_name
-          self.class.name.split('::').last.downcase
+          Utils::String.new(self.class.name).demodulize.downcase
         end
 
         # A string that represents the endpoint to be loaded.
