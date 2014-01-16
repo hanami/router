@@ -251,7 +251,7 @@ module Lotus
         end
 
         def endpoint(path)
-          "#{ resource_name }##{ path }"
+          [ resource_name, path ].join separator
         end
 
         def as(path)
