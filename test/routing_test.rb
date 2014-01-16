@@ -47,10 +47,10 @@ describe Lotus::Router do
         end
 
         it 'accepts a block' do
-          response = [200, {}, ['Sinatra!']]
-          @router.send(verb, '/sinatra') {|e| response }
+          response = [200, {}, ['Block!']]
+          @router.send(verb, '/block') {|e| response }
 
-          response.must_be_same_as @app.request(verb.upcase, '/sinatra')
+          response.must_be_same_as @app.request(verb.upcase, '/block')
         end
       end
 

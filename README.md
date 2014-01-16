@@ -50,9 +50,6 @@ Lotus::Router.new do
   get '/rack-app',    to: RackApp.new
   get '/flowers',     to: 'flowers#index'
   get '/flowers/:id', to: 'flowers#show'
-  get '/sinatra' do |env|
-    [200, {}, ['Hello from a Sinatra-like endpoint!']]
-  end
 
   redirect '/legacy', to: '/'
 
