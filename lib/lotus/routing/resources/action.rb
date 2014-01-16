@@ -48,11 +48,9 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Index < Action
-        private
-        def verb
-          :get
-        end
+        self.verb = :get
 
+        private
         def endpoint
           "#{ name }#index"
         end

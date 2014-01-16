@@ -22,6 +22,13 @@ module Lotus
         class_attribute :namespace
         self.namespace = Resource
 
+        # Accepted HTTP verb
+        #
+        # @api private
+        # @since 0.1.0
+        class_attribute :verb
+        self.verb = :get
+
         # Generate an action for the given router
         #
         # @param router [Lotus::Router]
@@ -87,6 +94,10 @@ module Lotus
           Utils::Class.load!(Utils::String.new(action).classify, namespace)
         end
 
+        def verb
+          self.class.verb
+        end
+
         def path
           prefix.join(rest_path)
         end
@@ -143,10 +154,6 @@ module Lotus
       # @see Lotus::Router#resource
       class New < Action
         private
-        def verb
-          :get
-        end
-
         def endpoint
           "#{ name }#new"
         end
@@ -166,11 +173,9 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resource
       class Create < Action
-        private
-        def verb
-          :post
-        end
+        self.verb = :post
 
+        private
         def endpoint
           "#{ name }#create"
         end
@@ -191,10 +196,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Show < Action
         private
-        def verb
-          :get
-        end
-
         def endpoint
           "#{ name }#show"
         end
@@ -215,10 +216,6 @@ module Lotus
       # @see Lotus::Router#resource
       class Edit < Action
         private
-        def verb
-          :get
-        end
-
         def endpoint
           "#{ name }#edit"
         end
@@ -238,11 +235,9 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resource
       class Update < Action
-        private
-        def verb
-          :patch
-        end
+        self.verb = :patch
 
+        private
         def endpoint
           "#{ name }#update"
         end
@@ -262,11 +257,9 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resource
       class Destroy < Action
-        private
-        def verb
-          :delete
-        end
+        self.verb = :delete
 
+        private
         def endpoint
           "#{ name }#destroy"
         end
