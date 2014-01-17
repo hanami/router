@@ -32,7 +32,7 @@ describe Lotus::Routing::EndpointResolver do
       options  = { to: 'missing_endpoint' }
       endpoint = @resolver.resolve(options)
 
-      -> { endpoint.call({}) }.must_raise NameError
+      -> { endpoint.call({}) }.must_raise Lotus::Routing::EndpointNotFound
     end
   end
 

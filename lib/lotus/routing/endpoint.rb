@@ -3,6 +3,13 @@ require 'lotus/utils/class'
 
 module Lotus
   module Routing
+    # Endpoint not found
+    # This is raised when the router fails to load an endpoint at the runtime.
+    #
+    # @since 0.1.0
+    class EndpointNotFound < ::Exception
+    end
+
     # Routing endpoint
     # This is the object that responds to an HTTP request made against a certain
     # path.
@@ -89,6 +96,8 @@ module Lotus
 
       # Rack interface
       #
+      # @raise [EndpointNotFound] when the endpoint can't be found.
+      #
       # @since 0.1.0
       def call(env)
         obj.call(env)
@@ -97,6 +106,8 @@ module Lotus
       private
       def obj
         Utils::Class.load!(@name, @namespace).new
+      rescue NameError => e
+        raise EndpointNotFound.new(e.message)
       end
     end
   end
