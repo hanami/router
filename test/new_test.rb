@@ -37,6 +37,13 @@ describe Lotus::Router do
       router.url(:root).must_match('https')
     end
 
+    it 'sets custom separator' do
+      router = Lotus::Router.new(action_separator: '^')
+      route  = router.get('/', to: 'test^show', as: :root)
+
+      route.dest.must_equal(TestController::Show)
+    end
+
     it 'recognizes path' do
       @app.get('/route').status.must_equal 200
     end

@@ -87,6 +87,8 @@ module Lotus
     #   the route resolver (defaults to `Lotus::Routing::EndpointResolver.new`)
     # @option options [Object, #generate] :route the route class
     #   (defaults to `Lotus::Routing::Route`)
+    # @option options [String] :action_separator the separator between controller
+    #   and action name (eg. 'dashboard#show', where '#' is the :action_separator)
     #
     # @param blk [Proc] the optional block to define the routes
     #

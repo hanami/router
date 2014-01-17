@@ -84,13 +84,13 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'custom separator' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(separator: separator)
+      @resolver = Lotus::Routing::EndpointResolver.new(action_separator: action_separator)
     end
 
-    let(:separator) { '@' }
+    let(:action_separator) { '@' }
 
     it 'matches controller and action with a custom separator' do
-      options = { to: "test#{ separator }show" }
+      options = { to: "test#{ action_separator }show" }
       @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
     end
   end

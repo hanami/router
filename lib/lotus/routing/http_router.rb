@@ -39,8 +39,8 @@ module Lotus
         @default_scheme = options[:scheme]   if options[:scheme]
         @default_host   = options[:host]     if options[:host]
         @default_port   = options[:port]     if options[:port]
-        @resolver       = options[:resolver] || Routing::EndpointResolver.new
         @route_class    = options[:route]    || Routing::Route
+        @resolver       = options[:resolver] || Routing::EndpointResolver.new(options)
       end
 
       # Separator between controller and action name.

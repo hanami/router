@@ -65,7 +65,7 @@ module Lotus
       # @option options [String] :suffix the suffix appended to the controller
       #   name during the lookup. (defaults to `SUFFIX`)
       #
-      # @option options [String] :separator the sepatator between controller and
+      # @option options [String] :action_separator the sepatator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
       #
       #
@@ -125,10 +125,10 @@ module Lotus
       #   #  * Articles::Controller::Show
       #   #  * ArticlesController::Show
       def initialize(options = {})
-        @endpoint_class   = options[:endpoint]  || Endpoint
-        @namespace        = options[:namespace] || Object
-        @suffix           = options[:suffix]    || SUFFIX
-        @action_separator = options[:separator] || ACTION_SEPARATOR
+        @endpoint_class   = options[:endpoint]         || Endpoint
+        @namespace        = options[:namespace]        || Object
+        @suffix           = options[:suffix]           || SUFFIX
+        @action_separator = options[:action_separator] || ACTION_SEPARATOR
       end
 
       # Resolve the given set of HTTP verb, path, endpoint and options.
