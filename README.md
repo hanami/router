@@ -452,7 +452,7 @@ app.get('/') # => #<Rack::MockResponse:0x007fc4540dc238 ...>
 
 ## Versioning
 
-__Lotus::Router__ uses [Semantic Versioning](http://semver.org)
+__Lotus::Router__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Contributing
 
