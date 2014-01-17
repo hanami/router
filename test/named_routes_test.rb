@@ -27,7 +27,7 @@ describe Lotus::Router do
     it "raises error when variables aren't satisfied" do
       -> {
         @router.path(:variables)
-      }.must_raise(HttpRouter::InvalidRouteException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
 
     it 'recognizes string with variables and constraints' do
@@ -37,7 +37,7 @@ describe Lotus::Router do
     it "raises error when constraints aren't satisfied" do
       -> {
         @router.path(:constraints, id: 'x')
-      }.must_raise(HttpRouter::InvalidRouteException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
 
     it 'recognizes optional variables' do
@@ -58,13 +58,13 @@ describe Lotus::Router do
     it 'raises error when insufficient params are passed' do
       -> {
         @router.path(nil)
-      }.must_raise(HttpRouter::InvalidRouteException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
 
     it 'raises error when too many params are passed' do
       -> {
         @router.path(:fixed, 'x')
-      }.must_raise(HttpRouter::TooManyParametersException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
   end
 
@@ -80,7 +80,7 @@ describe Lotus::Router do
     it "raises error when variables aren't satisfied" do
       -> {
         @router.url(:variables)
-      }.must_raise(HttpRouter::InvalidRouteException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
 
     it 'recognizes string with variables and constraints' do
@@ -90,7 +90,7 @@ describe Lotus::Router do
     it "raises error when constraints aren't satisfied" do
       -> {
         @router.url(:constraints, id: 'x')
-      }.must_raise(HttpRouter::InvalidRouteException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
 
     it 'recognizes optional variables' do
@@ -111,13 +111,13 @@ describe Lotus::Router do
     it 'raises error when insufficient params are passed' do
       -> {
         @router.url(nil)
-      }.must_raise(HttpRouter::InvalidRouteException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
 
     it 'raises error when too many params are passed' do
       -> {
         @router.url(:fixed, 'x')
-      }.must_raise(HttpRouter::TooManyParametersException)
+      }.must_raise(Lotus::Routing::InvalidRouteException)
     end
   end
 end

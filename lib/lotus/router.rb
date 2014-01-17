@@ -685,6 +685,9 @@ module Lotus
     #
     # @return [String]
     #
+    # @raise [Lotus::Routing::InvalidRouteException] when the router fails to
+    #   recognize a route, because of the given arguments.
+    #
     # @since 0.1.0
     #
     # @example
@@ -708,6 +711,9 @@ module Lotus
     # @param route [Symbol] the route name
     #
     # @return [String]
+    #
+    # @raise [Lotus::Routing::InvalidRouteException] when the router fails to
+    #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
     #

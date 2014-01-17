@@ -9,6 +9,14 @@ end
 
 module Lotus
   module Routing
+    # Invalid route
+    # This is raised when the router fails to recognize a route, because of the
+    # given arguments.
+    #
+    # @since 0.1.0
+    class InvalidRouteException < ::Exception
+    end
+
     # HTTP router
     #
     # This implementation is based on ::HttpRouter (http_router gem).
@@ -55,6 +63,26 @@ module Lotus
         @resolver.find(options)
       end
 
+      # Generate a relative URL for a specified named route.
+      #
+      # @see Lotus::Router#path
+      #
+      # @since 0.1.0
+      # @api private
+      def path(route, *args)
+        _rescue_url_recognition { super }
+      end
+
+      # Generate an absolute URL for a specified named route.
+      #
+      # @see Lotus::Router#path
+      #
+      # @since 0.1.0
+      # @api private
+      def url(route, *args)
+        _rescue_url_recognition { super }
+      end
+
       # @api private
       def reset!
         uncompile
@@ -79,6 +107,13 @@ module Lotus
       private
       def add_with_request_method(path, method, opts = {}, &app)
         super.generate(@resolver, opts, &app)
+      end
+
+      def _rescue_url_recognition
+        yield
+      rescue ::HttpRouter::InvalidRouteException,
+             ::HttpRouter::TooManyParametersException => e
+        raise Routing::InvalidRouteException.new(e.message)
       end
     end
   end
