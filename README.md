@@ -2,6 +2,13 @@
 
 Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org).
 
+## Status
+
+[![Gem Version](https://badge.fury.io/rb/lotus-router.png)](http://badge.fury.io/rb/lotus-router)
+[![Build Status](https://secure.travis-ci.org/lotus/router.png?branch=master)](http://travis-ci.org/lotus/router?branch=master)
+[![Coverage](https://coveralls.io/repos/lotus/router/badge.png?branch=master)](https://coveralls.io/r/lotus/router)
+[![Code Climate](https://codeclimate.com/github/lotus/router.png)](https://codeclimate.com/github/lotus/router)
+
 ## Contact
 
 * Home page: http://lotusrb.org/router
