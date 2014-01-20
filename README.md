@@ -17,6 +17,11 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 * Bugs/Issues: https://github.com/lotus/router/issues
 * Support: http://stackoverflow.com/questions/tagged/lotusrb
 
+## Rubies
+
+__Lotus::Router__ supports Ruby (MRI) 2+
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -36,10 +41,18 @@ Or install it yourself as:
 ```shell
 $ gem install lotus-router
 ```
-## Ruby
 
-__Lotus::Router__ supports Ruby 2+
+## Getting Started
 
+```ruby
+require 'lotus/router'
+
+app = Lotus::Router.new do
+  get '/', to: ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
+end
+
+Rack::Server.start app: app, Port: 2306
+```
 
 ## Usage
 
@@ -52,7 +65,7 @@ For the standalone usage, it supports neat features:
 
 ```ruby
 Lotus::Router.new do
-  get '/', to: ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
+  get '/', to: ->(env) { [200, {}, ['Hi!']] }
   get '/dashboard',   to: DashboardController::Index
   get '/rack-app',    to: RackApp.new
   get '/flowers',     to: 'flowers#index'
