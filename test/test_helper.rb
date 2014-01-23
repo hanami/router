@@ -8,11 +8,12 @@ end
 
 require 'rubygems'
 require 'bundler/setup'
+require 'coveralls'
+Coveralls.wear!
 require 'minitest/autorun'
-require 'minitest/spec'
 require 'fixtures'
 $:.unshift 'lib'
-require 'lotus/router'
+require 'lotus-router'
 
 Rack::MockResponse.class_eval do
   def equal?(other)
