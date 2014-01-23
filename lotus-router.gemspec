@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Luca Guidi']
   spec.email         = ['me@lucaguidi.com']
   spec.description   = %q{HTTP Router for Lotus}
-  spec.summary       = %q{HTTP Router for Lotus}
-  spec.homepage      = 'http://lotusrb.org/lotus-router'
+  spec.summary       = %q{Ruby HTTP Router for Lotus}
+  spec.homepage      = 'http://lotusrb.org'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
@@ -19,8 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'http_router'
+  spec.add_dependency 'lotus-utils'
 
-  spec.add_development_dependency 'bundler',  '~> 1.3'
+  spec.add_development_dependency 'bundler',  '~> 1.5'
   spec.add_development_dependency 'minitest', '~> 5'
-  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rake',     '~> 10'
 end
