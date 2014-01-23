@@ -14,7 +14,7 @@ describe Lotus::Router do
     ->(env) { response }
   end
 
-  [ 'get', 'post', 'delete', 'put', 'patch', 'trace' ].each do |verb|
+  [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options' ].each do |verb|
 
     describe "##{ verb }" do
       describe 'path recognition' do

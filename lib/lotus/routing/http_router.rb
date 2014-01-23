@@ -83,6 +83,16 @@ module Lotus
         _rescue_url_recognition { super }
       end
 
+      # Support for OPTIONS HTTP verb
+      #
+      # @see Lotus::Router#options
+      #
+      # @since 0.1.0
+      # @api private
+      def options(path, options = {}, &blk)
+        add_with_request_method(path, :options, options, &blk)
+      end
+
       # @api private
       def reset!
         uncompile

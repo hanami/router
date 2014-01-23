@@ -344,6 +344,26 @@ module Lotus
       @router.trace(path, options, &blk)
     end
 
+    # Defines a route that accepts a OPTIONS request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    # @option options [String] :prefix an optional path prefix
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Lotus::Roting::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Lotus::Router#get
+    #
+    # @since 0.1.0
+    def options(path, options = {}, &blk)
+      @router.options(path, options, &blk)
+    end
+
     # Defines an HTTP redirect
     #
     # @param path [String] the path that needs to be redirected
