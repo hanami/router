@@ -8,10 +8,11 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 [![Build Status](https://secure.travis-ci.org/lotus/router.png?branch=master)](http://travis-ci.org/lotus/router?branch=master)
 [![Coverage](https://coveralls.io/repos/lotus/router/badge.png?branch=master)](https://coveralls.io/r/lotus/router)
 [![Code Climate](https://codeclimate.com/github/lotus/router.png)](https://codeclimate.com/github/lotus/router)
+[![Dependencies](https://gemnasium.com/lotus/router.png)](https://gemnasium.com/lotus/router)
 
 ## Contact
 
-* Home page: http://lotusrb.org/router
+* Home page: http://lotusrb.org
 * Mailing List: http://lotusrb.org/ml
 * API Doc: http://rdoc.info/gems/lotus-router
 * Bugs/Issues: https://github.com/lotus/router/issues
@@ -485,8 +486,8 @@ __Lotus::Router__ uses [Semantic Versioning 2.0.0](http://semver.org)
 ## Acknowledgements
 
 Thanks to Joshua Hull ([@joshbuddy](https://github.com/joshbuddy)) for his
-[http_router](http://rubygems.org/gems/http_router)
+[http_router](http://rubygems.org/gems/http_router).
 
 ## Copyright
 
-Copyright 2013-2014 Luca Guidi – Released under MIT License
+Copyright 2014 Luca Guidi – Released under MIT License
