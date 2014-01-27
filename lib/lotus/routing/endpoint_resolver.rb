@@ -26,7 +26,7 @@ module Lotus
       #   end
       #
       #   # That string is transformed into "Articles(::Controller::|Controller::)Show"
-      #   # because the risolver is able to lookup (in the given order) for:
+      #   # because the resolver is able to lookup (in the given order) for:
       #   #
       #   #  * Articles::Controller::Show
       #   #  * ArticlesController::Show
