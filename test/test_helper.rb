@@ -12,16 +12,7 @@ if ENV['COVERAGE'] == 'true'
 
   SimpleCov.start do
     command_name 'test'
-
-    add_filter 'test'
-  end
-end
-
-if ENV['COVERAGE']
-  require 'simplecov'
-  SimpleCov.start do
-    add_filter 'test'
-    command_name 'Mintest'
+    add_filter   'test'
   end
 end
 
