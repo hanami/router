@@ -17,7 +17,8 @@ if ENV['COVERAGE'] == 'true'
 end
 
 require 'minitest/autorun'
-require 'fixtures'
+require 'support/fixtures'
+require 'support/generation_test_case'
 $:.unshift 'lib'
 require 'lotus-router'
 
