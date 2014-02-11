@@ -19,6 +19,7 @@ end
 require 'minitest/autorun'
 require 'support/fixtures'
 require 'support/generation_test_case'
+require 'support/recognition_test_case'
 $:.unshift 'lib'
 require 'lotus-router'
 
