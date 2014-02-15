@@ -7,7 +7,7 @@ module Lotus
     # This is raised when the router fails to load an endpoint at the runtime.
     #
     # @since 0.1.0
-    class EndpointNotFound < ::Exception
+    class EndpointNotFound < ::StandardError
     end
 
     # Routing endpoint
