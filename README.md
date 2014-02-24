@@ -9,6 +9,7 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 [![Coverage](https://coveralls.io/repos/lotus/router/badge.png?branch=master)](https://coveralls.io/r/lotus/router)
 [![Code Climate](https://codeclimate.com/github/lotus/router.png)](https://codeclimate.com/github/lotus/router)
 [![Dependencies](https://gemnasium.com/lotus/router.png)](https://gemnasium.com/lotus/router)
+[![Inline docs](http://inch-pages.github.io/github/lotus/router.png)](http://inch-pages.github.io/github/lotus/router)
 [![Trending](https://d2weczhvl823v0.cloudfront.net/lotus/router/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ## Contact
