@@ -1,6 +1,7 @@
 class RecognitionTestCase
-  HEADER_ENV    = '_env'.freeze
-  ROUTER_PARAMS = 'router.params'.freeze
+  HEADER_ENV     = '_env'.freeze
+  ROUTER_PARAMS  = 'router.params'.freeze
+  REQUEST_METHOD = 'REQUEST_METHOD'.freeze
 
   def self.endpoint(body)
     ->(env) {[200, {HEADER_ENV => env}, [body]]}
@@ -11,8 +12,10 @@ class RecognitionTestCase
   end
 
   def run!(tests)
-    tests.each do |(name, request, params)|
+    tests.each do |(name, request, params, verb)|
       env                   = Rack::MockRequest.env_for(request)
+      env[REQUEST_METHOD]   = verb unless verb.nil?
+
       status, headers, body = *@router.call(env)
 
       case status
