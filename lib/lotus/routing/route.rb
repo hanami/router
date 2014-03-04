@@ -16,6 +16,16 @@ module Lotus
     #   router = Lotus::Router.new
     #   router.get('/', to: endpoint) # => #<Lotus::Routing::Route:0x007f83083ba028 ...>
     class Route < HttpRouter::Route
+      DEFAULT_VERBS = [:get, :head]
+
+      attr_accessor :_path, :_verbs, :_endpoint
+
+      def initialize(path: nil, verbs: DEFAULT_VERBS, options: {})
+        @_path     = path
+        @_verbs    = Array(verbs)
+        @_endpoint = options[:endpoint]
+      end
+
       # Asks the given resolver to return an endpoint that will be associated
       #   with the other options.
       #
@@ -43,6 +53,11 @@ module Lotus
         self.name = options[:as].to_sym if options[:as]
         self
       end
+
+      # def redirect(path, status = 302)
+      #   redirect = Endpoint.new(->(env) {[status, {'Location' => path},[]]})
+      #   self.to redirect
+      # end
 
       private
       def to=(dest = nil, &blk)

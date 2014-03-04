@@ -189,6 +189,11 @@ module Lotus
         resolve_callable(result) || resolve_matchable(result) || default
       end
 
+      def _resolve(options, &endpoint)
+        result = endpoint || find(options)
+        resolve_callable(result) || resolve_matchable(result)
+      end
+
       # Finds a path from the given options.
       #
       # @param options [Hash] the path description

@@ -1,6 +1,7 @@
 require 'http_router'
 require 'lotus/utils/io'
 require 'lotus/routing/endpoint_resolver'
+require 'lotus/routing/route_set'
 require 'lotus/routing/route'
 
 Lotus::Utils::IO.silence_warnings do
@@ -41,6 +42,8 @@ module Lotus
         @default_port   = options[:port]     if options[:port]
         @route_class    = options[:route]    || Routing::Route
         @resolver       = options[:resolver] || Routing::EndpointResolver.new(options)
+
+        @route_set = RouteSet.new
       end
 
       # Separator between controller and action name.
@@ -93,6 +96,10 @@ module Lotus
         add_with_request_method(path, :options, options, &blk)
       end
 
+      def call(env)
+        @route_set.call(env) || super
+      end
+
       # @api private
       def reset!
         uncompile
@@ -116,6 +123,10 @@ module Lotus
 
       private
       def add_with_request_method(path, method, opts = {}, &app)
+        o = opts.dup
+        o = o.merge(endpoint: @resolver._resolve(opts, &app))
+        @route_set.add Route.new(path: path, verbs: method, options: o)
+
         super.generate(@resolver, opts, &app)
       end
 
