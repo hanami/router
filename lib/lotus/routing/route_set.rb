@@ -9,22 +9,25 @@ module Lotus
 
       def initialize
         @routes = {
-          'get' => {},
-          'head' => {},
-          'post' => {},
-          'put' => {},
-          'patch' => {},
-          'delete' => {},
-          'trace' => {},
-          'options' => {}
+          'get' => { fixed: {}, wandering: {} },
+          'head' => { fixed: {}, wandering: {} },
+          'post' => { fixed: {}, wandering: {} },
+          'put' => { fixed: {}, wandering: {} },
+          'patch' => { fixed: {}, wandering: {} },
+          'delete' => { fixed: {}, wandering: {} },
+          'trace' => { fixed: {}, wandering: {} },
+          'options' => { fixed: {}, wandering: {} }
         }
       end
 
       def call(env)
         @routes.freeze
         env[ROUTER_PARAMS] ||= {}
-        endpoint = @routes[env[REQUEST_METHOD].downcase][env[PATH_INFO]]
-        endpoint.call(env) if endpoint
+
+        if endpoint = match_fixed(env) || match_wandering(env)
+          puts 'found'
+          endpoint.call(env)
+        end
       end
 
       def add(route)
@@ -35,7 +38,38 @@ module Lotus
 
       private
       def add_with_verb(verb, route)
-        @routes[verb.to_s].store(route._path, route._endpoint)
+        if route.fixed?
+          @routes[verb.to_s][:fixed].store(route._path, route._endpoint)
+        else
+          #FIXME remove this condition once the refactoring will be done
+          unless route._compiled_path.nil?
+            @routes[verb.to_s][:wandering].store(route._compiled_path, route._endpoint)
+          end
+        end
+      end
+
+      def match_fixed(env)
+        @routes[env[REQUEST_METHOD].downcase][:fixed][env[PATH_INFO]]
+      end
+
+      def match_wandering(env)
+        match = nil
+        route = @routes[env[REQUEST_METHOD].downcase][:wandering].find do |path,_|
+          match = path.match(env[PATH_INFO])
+        end
+
+        if route
+          route.first.names.each do |name|
+            value = match[name]
+            value = value.chop if value.match(/\.\z/)
+            if value.match('/')
+              value = value.split('/').reject {|e| e.nil? || e == '' }
+            end
+            env[ROUTER_PARAMS].merge!(name.to_sym => value) if value && value != ''
+          end
+
+          route.last
+        end
       end
     end
   end

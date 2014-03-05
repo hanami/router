@@ -1,4 +1,5 @@
 require 'http_router/route'
+require 'lotus/routing/path'
 
 module Lotus
   module Routing
@@ -18,12 +19,21 @@ module Lotus
     class Route < HttpRouter::Route
       DEFAULT_VERBS = [:get, :head]
 
-      attr_accessor :_path, :_verbs, :_endpoint
+      attr_accessor :_path, :_verbs, :_endpoint, :_compiled_path
 
       def initialize(path: nil, verbs: DEFAULT_VERBS, options: {})
         @_path     = path
         @_verbs    = Array(verbs)
         @_endpoint = options[:endpoint]
+        @_compiled_path = nil
+        @_fixed         = true
+
+        # TODO remove this conditional once the refactoring will be done
+        if @_path
+          path = Path.new(@_path, options)
+          @_compiled_path = path.compiled
+          @_fixed         = path.fixed?
+        end
       end
 
       # Asks the given resolver to return an endpoint that will be associated
@@ -54,10 +64,9 @@ module Lotus
         self
       end
 
-      # def redirect(path, status = 302)
-      #   redirect = Endpoint.new(->(env) {[status, {'Location' => path},[]]})
-      #   self.to redirect
-      # end
+      def fixed?
+        @_fixed
+      end
 
       private
       def to=(dest = nil, &blk)

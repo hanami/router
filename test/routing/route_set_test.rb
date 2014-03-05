@@ -16,8 +16,8 @@ describe Lotus::Routing::RouteSet do
       let(:route) { Lotus::Routing::Route.new(path: '/', options: {endpoint: endpoint}) }
 
       it 'should be added in the fixed route set' do
-        @routes.routes['get'].values.must_include endpoint
-        @routes.routes['head'].values.must_include endpoint
+        @routes.routes['get'][:fixed].values.must_include endpoint
+        @routes.routes['head'][:fixed].values.must_include endpoint
       end
     end
   end
