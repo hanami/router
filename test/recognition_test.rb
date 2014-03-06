@@ -534,23 +534,23 @@ describe Lotus::Router do
       end
     end
 
-    describe 'multiple nested optional fixed segments' do
-      before do
-        @router.get 'one(/two(/three(/four)(/five)))', as: :nested, to: endpoint('nested')
-      end
+    # describe 'multiple nested optional fixed segments' do
+    #   before do
+    #     @router.get 'one(/two(/three(/four)(/five)))', as: :nested, to: endpoint('nested')
+    #   end
 
-      it 'recognizes route(s)' do
-        @test.run!([
-          [:nested, '/one'],
-          [:nested, '/one/two'],
-          [:nested, '/one/two/three'],
-          [:nested, '/one/two/three/four'],
-          [:nested, '/one/two/three/five'],
-          [:nested, '/one/two/three/four/five'],
-          [nil, '/one/two/four/five']
-        ])
-      end
-    end
+    #   it 'recognizes route(s)' do
+    #     @test.run!([
+    #       [:nested, '/one'],
+    #       [:nested, '/one/two'],
+    #       [:nested, '/one/two/three'],
+    #       [:nested, '/one/two/three/four'],
+    #       [:nested, '/one/two/three/five'],
+    #       [:nested, '/one/two/three/four/five'],
+    #       [nil, '/one/two/four/five']
+    #     ])
+    #   end
+    # end
 
     describe 'relative fixed with escaped variable' do
       before do

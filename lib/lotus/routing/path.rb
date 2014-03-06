@@ -15,7 +15,12 @@ module Lotus
       def _compile(raw, options)
         #FIXME remove this exceptions suppression once the refactoring will be done.
         begin
-          variables.each do |var|
+          optional_variables.each do |var|
+            raw.gsub!(/#{ Regexp.escape(var) }/, _token(var, options))
+            raw.chop!
+          end
+
+          mandatory_variables.each do |var|
             raw.gsub! var, _token(var, options)
           end
 
@@ -27,7 +32,15 @@ module Lotus
 
       private
       def variables
-        raw.scan(/\(?[\.]*[:*][a-z0-9_]+\)?/).flatten
+        (mandatory_variables + optional_variables).uniq
+      end
+
+      def mandatory_variables
+        raw.scan(/[\.]*[:*][a-z0-9_]+/).flatten
+      end
+
+      def optional_variables
+        raw.scan(/(?=\(((?:[^()]++|\(\g<1>\))++)\))/).flatten.map {|el| "(#{ el.gsub(/\((.*)\)\z/, '')}" }
       end
 
       def _token(var, options)
@@ -35,18 +48,22 @@ module Lotus
       end
 
       def _variable_name(string)
-        string.gsub(/[\(\)\:\.\*]*/, '').to_sym
+        string.gsub(/[\(\)\:\.\*\/]*/, '').to_sym
       end
 
       def _regexp(variable, regexp)
         if regexp
           %r{(?<#{ _variable_name(variable) }>#{ regexp })}
         else
+          require 'byebug'
+          byebug if variable.include?('world')
           case variable
           when /\A\*/
             /(?<#{ _variable_name(variable) }>(.*?))/
           when /\A\(\./
             /[\.]*(?<#{ _variable_name(variable) }>[a-z0-9_]*)/
+          when /\A\(\//
+            /[\/]*(?<#{ _variable_name(variable) }>[a-z0-9_]*)/
           when /\A\(/
             /(?<#{ _variable_name(variable) }>[a-z0-9_]*)/
           else
