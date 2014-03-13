@@ -18,7 +18,7 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 * Mailing List: http://lotusrb.org/mailing-list
 * API Doc: http://rdoc.info/gems/lotus-router
 * Bugs/Issues: https://github.com/lotus/router/issues
-* Support: http://stackoverflow.com/questions/tagged/lotusrb
+* Support: http://stackoverflow.com/questions/tagged/lotus-ruby
 
 ## Rubies
 
