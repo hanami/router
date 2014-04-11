@@ -1,10 +1,9 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 gemspec
 
 unless ENV['TRAVIS']
-  gem 'byebug',      require: false, platforms: :ruby
-  gem 'yard',        require: false
-  gem 'lotus-utils', require: false, path: '../lotus-utils'
+  gem 'byebug', require: false, platforms: :ruby if RUBY_VERSION == '2.1.1'
+  gem 'yard',   require: false
 end
 
 gem 'simplecov', require: false
