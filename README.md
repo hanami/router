@@ -4,12 +4,12 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 
 ## Status
 
-[![Gem Version](https://badge.fury.io/rb/lotus-router.png)](http://badge.fury.io/rb/lotus-router)
-[![Build Status](https://secure.travis-ci.org/lotus/router.png?branch=master)](http://travis-ci.org/lotus/router?branch=master)
-[![Coverage](https://coveralls.io/repos/lotus/router/badge.png?branch=master)](https://coveralls.io/r/lotus/router)
-[![Code Climate](https://codeclimate.com/github/lotus/router.png)](https://codeclimate.com/github/lotus/router)
-[![Dependencies](https://gemnasium.com/lotus/router.png)](https://gemnasium.com/lotus/router)
-[![Inline docs](http://inch-pages.github.io/github/lotus/router.png)](http://inch-pages.github.io/github/lotus/router)
+[![Gem Version](http://img.shields.io/gem/v/lotus-router.svg)](https://badge.fury.io/rb/lotus-router)
+[![Build Status](http://img.shields.io/travis/lotus/router/master.svg)](https://travis-ci.org/lotus/router?branch=master)
+[![Coverage](http://img.shields.io/coveralls/lotus/router/master.svg)](https://coveralls.io/r/lotus/router)
+[![Code Climate](http://img.shields.io/codeclimate/github/lotus/router.svg)](https://codeclimate.com/github/lotus/router)
+[![Dependencies](http://img.shields.io/gemnasium/lotus/router.svg)](https://gemnasium.com/lotus/router)
+[![Inline Docs](http://inch-pages.github.io/github/lotus/router.svg)](http://inch-pages.github.io/github/lotus/router)
 [![Trending](https://d2weczhvl823v0.cloudfront.net/lotus/router/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ## Contact
