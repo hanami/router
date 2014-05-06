@@ -131,7 +131,7 @@ router.get '/flowers/:id', id: /\d+/, to: ->(env) { [200, {}, [":id must be a nu
 
 
 
-### String matching with globbling:
+### String matching with globbing:
 
 ```ruby
 router = Lotus::Router.new
@@ -269,57 +269,14 @@ router.resource 'identity'
 
 It will map:
 
-<table>
-  <tr>
-    <th>Verb</th>
-    <th>Path</th>
-    <th>Action</th>
-    <th>Name</th>
-    <th>Named Route</th>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/identity</td>
-    <td>IdentityController::Show</td>
-    <td>:show</td>
-    <td>:identity</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/identity/new</td>
-    <td>IdentityController::New</td>
-    <td>:new</td>
-    <td>:new_identity</td>
-  </tr>
-  <tr>
-    <td>POST</td>
-    <td>/identity</td>
-    <td>IdentityController::Create</td>
-    <td>:create</td>
-    <td>:identity</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/identity/edit</td>
-    <td>IdentityController::Edit</td>
-    <td>:edit</td>
-    <td>:edit_identity</td>
-  </tr>
-  <tr>
-    <td>PATCH</td>
-    <td>/identity</td>
-    <td>IdentityController::Update</td>
-    <td>:update</td>
-    <td>:identity</td>
-  </tr>
-  <tr>
-    <td>DELETE</td>
-    <td>/identity</td>
-    <td>IdentityController::Destroy</td>
-    <td>:destroy</td>
-    <td>:identity</td>
-  </tr>
-</table>
+| Verb   | Path           | Action                      | Name     | Named Route
+|--------|----------------|-----------------------------|----------|------------
+| GET    | /identity      | IdentityController::Show    | :show    | :identity
+| GET    | /identity/new  | IdentityController::New     | :new     | :new_identity
+| POST   | /identity      | IdentityController::Create  | :create  | :identity
+| GET    | /identity/edit | IdentityController::Edit    | :edit    | :edit_identity
+| PATCH  | /identity      | IdentityController::Update  | :update  | :identity
+| DELETE | /identity      | IdentityController::Destroy | :destroy | :identity
 
 If you don't need all the default endpoints, just do:
 
@@ -327,7 +284,7 @@ If you don't need all the default endpoints, just do:
 router = Lotus::Router.new
 router.resource 'identity', only: [:edit, :update]
 
-# which is equivalent to:
+#### which is equivalent to:
 
 router.resource 'identity', except: [:show, :new, :create, :destroy]
 ```
@@ -362,65 +319,15 @@ router.resources 'flowers'
 
 It will map:
 
-<table>
-  <tr>
-    <th>Verb</th>
-    <th>Path</th>
-    <th>Action</th>
-    <th>Name</th>
-    <th>Named Route</th>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/flowers</td>
-    <td>FlowersController::Index</td>
-    <td>:index</td>
-    <td>:flowers</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/flowers/:id</td>
-    <td>FlowersController::Show</td>
-    <td>:show</td>
-    <td>:flowers</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/flowers/new</td>
-    <td>FlowersController::New</td>
-    <td>:new</td>
-    <td>:new_flowers</td>
-  </tr>
-  <tr>
-    <td>POST</td>
-    <td>/flowers</td>
-    <td>FlowersController::Create</td>
-    <td>:create</td>
-    <td>:flowers</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/flowers/:id/edit</td>
-    <td>FlowersController::Edit</td>
-    <td>:edit</td>
-    <td>:edit_flowers</td>
-  </tr>
-  <tr>
-    <td>PATCH</td>
-    <td>/flowers/:id</td>
-    <td>FlowersController::Update</td>
-    <td>:update</td>
-    <td>:flowers</td>
-  </tr>
-  <tr>
-    <td>DELETE</td>
-    <td>/flowers/:id</td>
-    <td>FlowersController::Destroy</td>
-    <td>:destroy</td>
-    <td>:flowers</td>
-  </tr>
-</table>
-
+| Verb   | Path              | Action                     | Name     | Named Route
+|--------|-------------------|----------------------------|----------|------------
+| GET    | /flowers          | FlowersController::Index   | :index   | :flowers
+| GET    | /flowers/:id      | FlowersController::Show    | :show    | :flowers
+| GET    | /flowers/new      | FlowersController::New     | :new     | :new_flowers
+| POST   | /flowers          | FlowersController::Create  | :create  | :flowers
+| GET    | /flowers/:id/edit | FlowersController::Edit    | :edit    | :edit_flowers
+| PATCH  | /flowers/:id      | FlowersController::Update  | :update  | :flowers
+| DELETE | /flowers/:id      | FlowersController::Destroy | :destroy | :flowers
 
 ```ruby
 router.path(:flowers)              # => /flowers
@@ -436,7 +343,7 @@ If you don't need all the default endpoints, just do:
 router = Lotus::Router.new
 router.resources 'flowers', only: [:new, :create, :show]
 
-# which is equivalent to:
+#### which is equivalent to:
 
 router.resources 'flowers', except: [:index, :edit, :update, :destroy]
 ```
