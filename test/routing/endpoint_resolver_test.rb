@@ -107,4 +107,17 @@ describe Lotus::Routing::EndpointResolver do
       @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
     end
   end
+
+  describe 'custom pattern' do
+    before do
+      @resolver = Lotus::Routing::EndpointResolver.new(pattern: pattern)
+    end
+
+    let(:pattern) { 'Controllers::%{controller}::%{action}' }
+
+    it 'matches controller and action with a custom pattern' do
+      options = { to: 'test#show' }
+      @resolver.resolve(options).call({}).must_equal 'Hi from Controllers::Test::Show!'
+    end
+  end
 end

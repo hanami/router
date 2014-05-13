@@ -65,6 +65,11 @@ module Lotus
       # @option options [String] :suffix the suffix appended to the controller
       #   name during the lookup. (defaults to `SUFFIX`)
       #
+      # @option options [String] :pattern the string to interpolate in order
+      #   to return an action name. Please note that this option override
+      #   :suffix. This string SHOULD contain `'%{controller}'` and `'%{action}'`,
+      #   all the other keys will be ignored. See the examples below.
+      #
       # @option options [String] :action_separator the sepatator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
       #
@@ -114,6 +119,18 @@ module Lotus
       #
       #
       #
+      # @example Specify custom simple pattern
+      #   require 'lotus/router'
+      #
+      #   resolver = Lotus::Routing::EndpointResolver.new(pattern: 'Controllers::%{controller}::%{action}')
+      #   router   = Lotus::Router.new(resolver: resolver)
+      #
+      #   router.get('/', to: 'articles#show')
+      #   # => Will look for:
+      #   #  * Controllers::Articles::Show
+      #
+      #
+      #
       # @example Specify custom controller-action separator
       #   require 'lotus/router'
       #
@@ -127,8 +144,9 @@ module Lotus
       def initialize(options = {})
         @endpoint_class   = options[:endpoint]         || Endpoint
         @namespace        = options[:namespace]        || Object
-        @suffix           = options[:suffix]           || SUFFIX
         @action_separator = options[:action_separator] || ACTION_SEPARATOR
+        @pattern          = options[:pattern]          ||
+          "%{controller}#{options[:suffix] || SUFFIX}%{action}"
       end
 
       # Resolve the given set of HTTP verb, path, endpoint and options.
@@ -243,7 +261,7 @@ module Lotus
       def resolve_action(string)
         if string.match(action_separator)
           controller, action = string.split(action_separator).map {|token| classify(token) }
-          controller + @suffix + action
+          @pattern % {controller: controller, action: action}
         end
       end
     end

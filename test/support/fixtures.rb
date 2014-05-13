@@ -28,6 +28,16 @@ class TestApp
   end
 end # TestApp
 
+module Controllers
+  class Test
+    class Show
+      def call(env)
+        'Hi from Controllers::Test::Show!'
+      end
+    end
+  end
+end
+
 class AvatarController
   class New
     def call(env)
