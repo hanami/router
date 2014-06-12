@@ -9,8 +9,7 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 [![Coverage](http://img.shields.io/coveralls/lotus/router/master.svg)](https://coveralls.io/r/lotus/router)
 [![Code Climate](http://img.shields.io/codeclimate/github/lotus/router.svg)](https://codeclimate.com/github/lotus/router)
 [![Dependencies](http://img.shields.io/gemnasium/lotus/router.svg)](https://gemnasium.com/lotus/router)
-[![Inline Docs](http://inch-pages.github.io/github/lotus/router.svg)](http://inch-pages.github.io/github/lotus/router)
-[![Trending](https://d2weczhvl823v0.cloudfront.net/lotus/router/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Inline docs](http://inch-ci.org/github/lotus/router.png)](http://inch-ci.org/github/lotus/router)
 
 ## Contact
 
@@ -19,6 +18,7 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 * API Doc: http://rdoc.info/gems/lotus-router
 * Bugs/Issues: https://github.com/lotus/router/issues
 * Support: http://stackoverflow.com/questions/tagged/lotus-ruby
+* Chat: https://gitter.im/lotus/chat
 
 ## Rubies
 
