@@ -75,6 +75,15 @@ module Lotus
   #
   #   # This isn't mandatory for the default route class (`Lotus::Routing::Route`),
   #   # This behavior can be changed by passing a custom route to `Lotus::Router#initialize`
+  #
+  # @example Mount an application
+  #   require 'lotus/router'
+  #
+  #   router = Lotus::Router.new do
+  #     mount Api::App, at: '/api'
+  #   end
+  #
+  #   # All the requests starting with "/api" will be forwarded to Api::App
   class Router
     # Initialize the router.
     #
@@ -686,6 +695,95 @@ module Lotus
     #   # +------+------------------+----------------------------+------+------------------+
     def resources(name, options = {}, &blk)
       Routing::Resources.new(self, name, options.merge(separator: @router.action_separator), &blk)
+    end
+
+    # Mount a Rack application at the specified path.
+    # All the requests starting with the specified path, will be forwarded to
+    # the given application.
+    #
+    # All the other methods (eg #get) support callable objects, but they
+    # restrict the range of the acceptable HTTP verb. Mounting an application
+    # with #mount doesn't apply this kind of restriction at the router level,
+    # but let the application to decide.
+    #
+    # @param app [#call] a class or an object that responds to #call
+    # @param options [Hash] the options to customize the mount
+    # @option options [:at] the path prefix where to mount the app
+    #
+    # @since 0.1.1
+    #
+    # @example Basic usage
+    #   require 'lotus/router'
+    #
+    #   Lotus::Router.new do
+    #     mount Api::App.new, at: '/api'
+    #   end
+    #
+    #   # Requests:
+    #   #
+    #   # GET  /api          # => 200
+    #   # GET  /api/articles # => 200
+    #   # POST /api/articles # => 200
+    #   # GET  /api/unknown  # => 404
+    #
+    # @example Difference between #get and #mount
+    #   require 'lotus/router'
+    #
+    #   Lotus::Router.new do
+    #     get '/rack1',      to: RackOne.new
+    #     mount RackTwo.new, at: '/rack2'
+    #   end
+    #
+    #   # Requests:
+    #   #
+    #   # # /rack1 will only accept GET
+    #   # GET  /rack1        # => 200 (RackOne.new)
+    #   # POST /rack1        # => 405
+    #   #
+    #   # # /rack2 accepts all the verbs and delegate the decision to RackTwo
+    #   # GET  /rack2        # => 200 (RackTwo.new)
+    #   # POST /rack2        # => 200 (RackTwo.new)
+    #
+    # @example Types of mountable applications
+    #   require 'lotus/router'
+    #
+    #   class RackOne
+    #     def self.call(env)
+    #     end
+    #   end
+    #
+    #   class RackTwo
+    #     def call(env)
+    #     end
+    #   end
+    #
+    #   class RackThree
+    #     def call(env)
+    #     end
+    #   end
+    #
+    #   class DashboardController
+    #     class Index
+    #       def call(env)
+    #       end
+    #     end
+    #   end
+    #
+    #   Lotus::Router.new do
+    #     mount RackOne,                             at: '/rack1'
+    #     mount RackTwo,                             at: '/rack2'
+    #     mount RackThree.new,                       at: '/rack3'
+    #     mount ->(env) {[200, {}, ['Rack Four']]},  at: '/rack4'
+    #     mount 'dashboard#index',                   at: '/dashboard'
+    #   end
+    #
+    #   # 1. RackOne is used as it is (class), because it respond to .call
+    #   # 2. RackTwo is initialized, because it respond to #call
+    #   # 3. RackThree is used as it is (object), because it respond to #call
+    #   # 4. That Proc is used as it is, because it respond to #call
+    #   # 5. That string is resolved as DashboardController::Index (Lotus::Controller)
+    def mount(app, options)
+      @router.mount(app, options)
     end
 
     # Resolve the given Rack env to a registered endpoint and invoke it.

@@ -93,6 +93,18 @@ module Lotus
         add_with_request_method(path, :options, options, &blk)
       end
 
+      # Allow to mount a Rack app
+      #
+      # @see Lotus::Router#mount
+      #
+      # @since 0.1.1
+      # @api private
+      def mount(app, options)
+        add("#{ options.fetch(:at) }*").to(
+          @resolver.resolve(to: app)
+        )
+      end
+
       # @api private
       def reset!
         uncompile

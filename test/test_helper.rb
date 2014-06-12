@@ -38,3 +38,5 @@ Lotus::Router.class_eval do
     @router.reset!
   end
 end
+
+require_relative 'fixtures'

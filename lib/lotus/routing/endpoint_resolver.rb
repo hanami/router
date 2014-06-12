@@ -247,6 +247,8 @@ module Lotus
       def resolve_callable(callable)
         if callable.respond_to?(:call)
           @endpoint_class.new(callable)
+        elsif callable.is_a?(Class) && callable.instance_methods.include?(:call)
+          @endpoint_class.new(callable.new)
         end
       end
 
