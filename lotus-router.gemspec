@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'http://lotusrb.org'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files`.split($/)
+  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md lotus-router.gemspec`.split($/)
   spec.executables   = []
   spec.test_files    = spec.files.grep(%r{^(test)/})
   spec.require_paths = ['lib']
