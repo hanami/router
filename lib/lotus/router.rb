@@ -133,7 +133,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @since 0.1.0
@@ -263,7 +263,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @see Lotus::Router#get
@@ -283,7 +283,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @see Lotus::Router#get
@@ -303,7 +303,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @see Lotus::Router#get
@@ -323,7 +323,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @see Lotus::Router#get
@@ -343,7 +343,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @see Lotus::Router#get
@@ -363,7 +363,7 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Roting::Route] this may vary according to the :route
+    # @return [Lotus::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @see Lotus::Router#get
