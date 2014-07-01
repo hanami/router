@@ -1,5 +1,5 @@
 language: ruby
-script: 'bundle exec rake test:coverage'
+script: 'bundle exec rake test:coverage --trace'
 rvm:
   - 2.0.0
   - 2.1.0
@@ -8,5 +8,11 @@ rvm:
   - rbx-2
 
 matrix:
+  include:
+    - rvm: jruby
+      env: JRUBY_OPTS="--2.0"
+    - rvm: jruby-head
+      env: JRUBY_OPTS="--2.1"
   allow_failures:
     - rvm: rbx-2
+    - rvm: jruby-head
