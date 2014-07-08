@@ -123,6 +123,24 @@ module Lotus
       instance_eval(&blk) if block_given?
     end
 
+    # To support defining routes in the `define` wrapper.
+    #
+    # @example In Lotus framework
+    #   class Application < Lotus::Application
+    #     configure do
+    #       routes 'config/routes'
+    #     end
+    #   end
+    #
+    #   # In `config/routes`
+    #
+    #   define do
+    #     get # ...
+    #   end
+    def define(&blk)
+      instance_eval(&blk) if block_given?
+    end
+
     # Defines a route that accepts a GET request for the given path.
     #
     # @param path [String] the relative URL to be matched

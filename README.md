@@ -210,6 +210,28 @@ router.path(:animals_mammals_cats) # => "/animals/mammals/cats"
 
 
 
+### Define routes in #defined block:
+
+If you use Lotus framework and define your routing definitions in a separate file such as `config/routes.rb`, you might want to capture all routing definitions within a top level DSL. For example:
+
+```ruby
+# In Lotus framework
+
+class Application < Lotus::Application
+  configure do
+    routes 'config/routes'
+  end
+end
+
+# In `config/routes`
+
+define do
+  get # ...
+end
+```
+
+
+
 ### Mount Rack applications:
 
 ```ruby
