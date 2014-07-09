@@ -1,3 +1,5 @@
+require 'test_helper'
+
 describe Lotus::Router do
   before do
     @router = Lotus::Router.new(scheme: 'https', host: 'test.com', port: 443)
