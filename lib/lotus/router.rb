@@ -129,7 +129,7 @@ module Lotus
     #
     # @return [Lotus::Routing::Route]
     #
-    # @since 0.1.1
+    # @since x.x.x
     #
     # @example In Lotus framework
     #   class Application < Lotus::Application
