@@ -125,6 +125,12 @@ module Lotus
 
     # To support defining routes in the `define` wrapper.
     #
+    # @param blk [Proc] the block to define the routes
+    #
+    # @return [Lotus::Routing::Route]
+    #
+    # @since 0.1.1
+    #
     # @example In Lotus framework
     #   class Application < Lotus::Application
     #     configure do
