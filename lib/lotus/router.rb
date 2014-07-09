@@ -120,7 +120,7 @@ module Lotus
     #   end
     def initialize(options = {}, &blk)
       @router = Routing::HttpRouter.new(options)
-      instance_eval(&blk) if block_given?
+      define(&blk)
     end
 
     # To support defining routes in the `define` wrapper.
