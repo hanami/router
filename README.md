@@ -210,35 +210,6 @@ router.path(:animals_mammals_cats) # => "/animals/mammals/cats"
 
 
 
-### Define routes in #defined block:
-
-```ruby
-router = Lotus::Router.new
-router.define do
-  get # ...
-end
-```
-
-This is useful when you use Lotus framework and define your routing definitions in a separate file such as `config/routes.rb`, you could then capture all routing definitions within the top level DSL `#define`. For example:
-
-```ruby
-# In Lotus framework
-
-class Application < Lotus::Application
-  configure do
-    routes 'config/routes'
-  end
-end
-
-# In `config/routes`
-
-define do
-  get # ...
-end
-```
-
-
-
 ### Mount Rack applications:
 
 ```ruby
