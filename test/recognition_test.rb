@@ -671,5 +671,21 @@ describe Lotus::Router do
         ])
       end
     end
+
+    describe '#define' do
+      before do
+        endpoint = endpoint('defined_variable')
+
+        @router.define do
+          get '/foo/:id', as: :variable, to: endpoint
+        end
+      end
+
+      it 'recognizes route(s) in the define block' do
+        @test.run!([
+          [:defined_variable, '/foo/id', {id: 'id'}]
+        ])
+      end
+    end
   end
 end

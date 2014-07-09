@@ -120,6 +120,30 @@ module Lotus
     #   end
     def initialize(options = {}, &blk)
       @router = Routing::HttpRouter.new(options)
+      define(&blk)
+    end
+
+    # To support defining routes in the `define` wrapper.
+    #
+    # @param blk [Proc] the block to define the routes
+    #
+    # @return [Lotus::Routing::Route]
+    #
+    # @since 0.1.1
+    #
+    # @example In Lotus framework
+    #   class Application < Lotus::Application
+    #     configure do
+    #       routes 'config/routes'
+    #     end
+    #   end
+    #
+    #   # In `config/routes`
+    #
+    #   define do
+    #     get # ...
+    #   end
+    def define(&blk)
       instance_eval(&blk) if block_given?
     end
 
