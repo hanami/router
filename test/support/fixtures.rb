@@ -189,6 +189,12 @@ class KeyboardsController
     end
   end
 
+  class Show
+    def call(env)
+      [200, {}, ['Keyboards::Show ' + env['router.params'][:id]]]
+    end
+  end
+
   class Search
     def call(env)
       [200, {}, ['Keyboards::Search']]

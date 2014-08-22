@@ -54,11 +54,11 @@ module Lotus
 
       private
       def generate(&blk)
+        instance_eval(&blk) if block_given?
+
         @options.actions.each do |action|
           self.class.action.generate(@router, action, @options)
         end
-
-        instance_eval(&blk) if block_given?
       end
 
       def member(&blk)

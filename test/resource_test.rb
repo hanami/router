@@ -97,7 +97,7 @@ describe Lotus::Router do
 
     describe 'member' do
       before do
-        @router.resource 'profile', only: [] do
+        @router.resource 'profile', only: [:new] do
           member do
             patch 'activate'
           end
@@ -112,7 +112,7 @@ describe Lotus::Router do
 
     describe 'collection' do
       before do
-        @router.resource 'profile', only: [] do
+        @router.resource 'profile', only: [:new] do
           collection do
             get 'keys'
           end

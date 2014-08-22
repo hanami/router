@@ -105,7 +105,7 @@ describe Lotus::Router do
 
     describe 'member' do
       before do
-        @router.resources 'keyboards', only: [] do
+        @router.resources 'keyboards', only: [:show] do
           member do
             get 'screenshot'
           end
@@ -120,7 +120,7 @@ describe Lotus::Router do
 
     describe 'collection' do
       before do
-        @router.resources 'keyboards', only: [] do
+        @router.resources 'keyboards', only: [:show] do
           collection do
             get 'search'
           end
