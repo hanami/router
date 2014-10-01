@@ -6,7 +6,7 @@ describe Lotus::Routing::Parsers do
     it 'raises error when unknown parser is given' do
       begin
         Lotus::Routing::Parsers.new(:a_parser)
-      rescue Lotus::Routing::Parsers::UnknownParserError => e
+      rescue Lotus::Routing::Parsing::UnknownParserError => e
         e.message.must_equal "Unknown Parser: `a_parser'"
       end
     end

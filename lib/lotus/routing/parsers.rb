@@ -1,64 +1,59 @@
+require 'lotus/routing/parsing/parser'
+
 module Lotus
   module Routing
     class Parsers
-      class UnknownParserError < ::StandardError
-        def initialize(parser)
-          super("Unknown Parser: `#{ parser }'")
-        end
-      end
-
       CONTENT_TYPE       = 'CONTENT_TYPE'.freeze
       MEDIA_TYPE_MATCHER = /\s*[;,]\s*/.freeze
 
       RACK_INPUT    = 'rack.input'.freeze
       ROUTER_PARAMS = 'router.params'.freeze
 
-      # Supported Content-Types
-      #
-      APPLICATION_JSON = 'application/json'.freeze
-      IMPLEMENTATIONS  = {
-        json: 'when APPLICATION_JSON then Rack::Utils::OkJson.decode(body)'
-      }.freeze
-
       def initialize(parsers)
-        _compile!(parsers)
+        @parsers = prepare(parsers)
+        _redefine_call
       end
 
       def call(env)
         env
       end
 
-
       private
-      def _compile!(parsers)
-        parsers = Array(parsers)
-        return if parsers.empty?
+      def prepare(args)
+        result  = Hash.new
+        args    = Array(args)
+        return result if args.empty?
 
-        implementations = parsers.map do |parser|
-          IMPLEMENTATIONS.fetch(parser.to_sym) do
-            raise UnknownParserError.new(parser)
+        args.each do |arg|
+          parser = Parsing::Parser.for(arg)
+
+          parser.mime_types.each do |mime|
+            result[mime] = parser
           end
         end
 
-        instance_eval %{
-          def call(env)
-            body = env[RACK_INPUT].read
-            return env if body.length == 0
+        result.default = Parsing::Parser.new
+        result
+      end
 
-            env[RACK_INPUT].rewind    # somebody might try to read this stream
-            env[ROUTER_PARAMS] ||= {} # prepare params
+      def _redefine_call
+        return if @parsers.empty?
 
-            body = case media_type(env)
-              #{ implementations.join("\n") }
-            else
-              {}
-            end
+        define_singleton_method :call do |env|
+          body = env[RACK_INPUT].read
+          return env if body.empty?
 
-            env[ROUTER_PARAMS].merge!(body)
+          env[RACK_INPUT].rewind    # somebody might try to read this stream
+          env[ROUTER_PARAMS] ||= {} # prepare params
 
-            env
-          end
-        }
+          env[ROUTER_PARAMS].merge!(
+            @parsers[
+              media_type(env)
+            ].parse(body)
+          )
+
+          env
+        end
       end
 
       def media_type(env)

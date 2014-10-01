@@ -1,3 +1,6 @@
+require 'rexml/document'
+require 'lotus/routing/parsing/parser'
+
 class TestEndpoint
   def call(env)
     'Hi from TestEndpoint!'
@@ -207,3 +210,18 @@ class KeyboardsController
     end
   end
 end # KeyboardsController
+
+class XmlParser < Lotus::Routing::Parsing::Parser
+  def mime_types
+    ['application/xml', 'text/xml']
+  end
+
+  def parse(body)
+    result = {}
+
+    xml = REXML::Document.new(body)
+    xml.elements.each('*') {|el| result[el.name] = el.text }
+
+    result
+  end
+end
