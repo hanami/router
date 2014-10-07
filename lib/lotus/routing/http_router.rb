@@ -2,6 +2,7 @@ require 'http_router'
 require 'lotus/utils/io'
 require 'lotus/routing/endpoint_resolver'
 require 'lotus/routing/route'
+require 'lotus/routing/parsers'
 
 Lotus::Utils::IO.silence_warnings do
   HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
@@ -41,6 +42,7 @@ module Lotus
         @default_port   = options[:port]     if options[:port]
         @route_class    = options[:route]    || Routing::Route
         @resolver       = options[:resolver] || Routing::EndpointResolver.new(options)
+        @parsers        = Routing::Parsers.new(options[:parsers])
       end
 
       # Separator between controller and action name.
@@ -103,6 +105,10 @@ module Lotus
         add("#{ options.fetch(:at) }*").to(
           @resolver.resolve(to: app)
         )
+      end
+
+      def call(env)
+        super(@parsers.call(env))
       end
 
       # @api private

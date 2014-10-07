@@ -98,6 +98,8 @@ module Lotus
     #   (defaults to `Lotus::Routing::Route`)
     # @option options [String] :action_separator the separator between controller
     #   and action name (eg. 'dashboard#show', where '#' is the :action_separator)
+    # @option options [Array<Symbol,String,Object #mime_types, parse>] :parsers
+    #   the body parsers for mime types
     #
     # @param blk [Proc] the optional block to define the routes
     #
@@ -105,7 +107,7 @@ module Lotus
     #
     # @since 0.1.0
     #
-    # @example
+    # @example Basic example
     #   require 'lotus/router'
     #
     #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
@@ -118,6 +120,64 @@ module Lotus
     #   router = Lotus::Router.new do
     #     get '/', to: endpoint
     #   end
+    #
+    # @example Body parsers
+    #   require 'json'
+    #   require 'lotus/router'
+    #
+    #   # It parses JSON body and makes the attributes available to the params
+    #
+    #   endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
+    #
+    #   router = Lotus::Router.new(parsers: [:json]) do
+    #     patch '/books/:id', to: endpoint
+    #   end
+    #
+    #   # From the shell
+    #
+    #   curl http://localhost:2300/books/1    \
+    #     -H "Content-Type: application/json" \
+    #     -H "Accept: application/json"       \
+    #     -d '{"published":"true"}'           \
+    #     -X PATCH
+    #
+    #   # It returns
+    #
+    #   [200, {}, ["{:published=>\"true\",:id=>\"1\"}"]]
+    #
+    # @example Custom body parser
+    #   require 'lotus/router'
+    #
+    #   class XmlParser
+    #     def mime_types
+    #       ['application/xml', 'text/xml']
+    #     end
+    #
+    #     # Parse body and return a Hash
+    #     def parse(body)
+    #       # ...
+    #     end
+    #   end
+    #
+    #   # It parses XML body and makes the attributes available to the params
+    #
+    #   endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
+    #
+    #   router = Lotus::Router.new(parsers: [XmlParser.new]) do
+    #     patch '/authors/:id', to: endpoint
+    #   end
+    #
+    #   # From the shell
+    #
+    #   curl http://localhost:2300/authors/1 \
+    #     -H "Content-Type: application/xml" \
+    #     -H "Accept: application/xml"       \
+    #     -d '<name>LG</name>'               \
+    #     -X PATCH
+    #
+    #   # It returns
+    #
+    #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     def initialize(options = {}, &blk)
       @router = Routing::HttpRouter.new(options)
       define(&blk)
