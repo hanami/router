@@ -1,4 +1,4 @@
-require 'rack/utils/okjson'
+require 'json'
 
 module Lotus
   module Routing
@@ -9,7 +9,7 @@ module Lotus
         end
 
         def parse(body)
-          Rack::Utils::OkJson.decode(body)
+          JSON.parse(body)
         end
       end
     end
