@@ -461,7 +461,7 @@ module Lotus
     #
     # @param path [String] the path that needs to be redirected
     # @param options [Hash] the options to customize the redirect behavior
-    # @option options [Fixnum] the HTTP status to return (defaults to `302`)
+    # @option options [Fixnum] the HTTP status to return (defaults to `301`)
     #
     # @return [Lotus::Routing::Route] the generated route.
     #   This may vary according to the `:route` option passed to the initializer
@@ -475,7 +475,7 @@ module Lotus
     #
     #   Lotus::Router.new do
     #     redirect '/legacy',  to: '/new_endpoint'
-    #     redirect '/legacy2', to: '/new_endpoint2', code: 301
+    #     redirect '/legacy2', to: '/new_endpoint2', code: 302
     #   end
     #
     # @example
@@ -484,7 +484,7 @@ module Lotus
     #   router = Lotus::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
     def redirect(path, options = {}, &endpoint)
-      get(path).redirect @router.find(options), options[:code] || 302
+      get(path).redirect @router.find(options), options[:code] || 301
     end
 
     # Defines a Ruby block: all the routes defined within it will be namespaced

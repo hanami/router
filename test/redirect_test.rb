@@ -14,19 +14,19 @@ describe Lotus::Router do
       env = Rack::MockRequest.env_for('/redirect')
       status, headers, _ = @router.call(env)
 
-      status.must_equal 302
+      status.must_equal 301
       headers['Location'].must_equal '/redirect_destination'
     end
 
     it 'recognizes string endpoint with custom http code' do
       endpoint = ->(env) { [200, {}, ['Redirect destination!']] }
       @router.get('/redirect_destination', to: endpoint)
-      @router.redirect('/redirect', to: '/redirect_destination', code: 301)
+      @router.redirect('/redirect', to: '/redirect_destination', code: 302)
 
       env = Rack::MockRequest.env_for('/redirect')
       status, headers, _ = @router.call(env)
 
-      status.must_equal 301
+      status.must_equal 302
       headers['Location'].must_equal '/redirect_destination'
     end
   end
