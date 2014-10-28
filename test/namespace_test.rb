@@ -95,7 +95,7 @@ describe Lotus::Router do
 
       it 'recognizes get path' do
         @app.request('GET', '/users/dashboard').headers['Location'].must_equal '/users/home'
-        @app.request('GET', '/users/dashboard').status.must_equal 302
+        @app.request('GET', '/users/dashboard').status.must_equal 301
       end
     end
 
