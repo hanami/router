@@ -15,7 +15,7 @@ module Lotus
     # given arguments.
     #
     # @since 0.1.0
-    class InvalidRouteException < ::Exception
+    class InvalidRouteException < ::StandardError
     end
 
     # HTTP router
