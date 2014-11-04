@@ -22,6 +22,16 @@ describe 'Body parsing' do
     response.body.must_equal %({"published"=>"true", :id=>"23"})
   end
 
+  it 'is idempotent' do
+    2.times do
+      body     = StringIO.new( %({"published":"true"}) )
+      response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body)
+
+      response.status.must_equal 200
+      response.body.must_equal %({"published"=>"true", :id=>"23"})
+    end
+  end
+
   it 'is successful (XML)' do
     body     = StringIO.new( %(<name>LG</name>) )
     response = @app.patch('/authors/23', 'CONTENT_TYPE' => 'application/xml', 'rack.input' => body)

@@ -107,7 +107,8 @@ module Lotus
         )
       end
 
-      def call(env)
+      # @api private
+      def raw_call(env, &blk)
         super(@parsers.call(env))
       end
 
