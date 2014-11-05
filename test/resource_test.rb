@@ -10,10 +10,6 @@ describe Lotus::Router do
     @router.reset!
   end
 
-  def endpoint(response)
-    ->(env) { response }
-  end
-
   describe '#resource' do
     before do
       @router.resource 'avatar'

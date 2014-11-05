@@ -10,10 +10,6 @@ describe Lotus::Router do
     @router.reset!
   end
 
-  def endpoint(response)
-    ->(env) { response }
-  end
-
   describe '#resources' do
     before do
       @router.resources 'flowers'

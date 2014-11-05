@@ -10,60 +10,50 @@ describe Lotus::Router do
     @router.reset!
   end
 
-  def endpoint(response)
-    ->(env) { response }
-  end
-
   describe '#namespace' do
     it 'recognizes get path' do
-      endpoint = endpoint([200, {}, ['Trees (GET)!']])
       @router.namespace 'trees' do
-        get '/plane-tree', to: endpoint
+        get '/plane-tree', to: ->(env) { [200, {}, ['Trees (GET)!']] }
       end
 
       @app.request('GET', '/trees/plane-tree').body.must_equal 'Trees (GET)!'
     end
 
     it 'recognizes post path' do
-      endpoint = endpoint([200, {}, ['Trees (POST)!']])
       @router.namespace 'trees' do
-        post '/sequoia', to: endpoint
+        post '/sequoia', to: ->(env) { [200, {}, ['Trees (POST)!']] }
       end
 
       @app.request('POST', '/trees/sequoia').body.must_equal 'Trees (POST)!'
     end
 
     it 'recognizes put path' do
-      endpoint = endpoint([200, {}, ['Trees (PUT)!']])
       @router.namespace 'trees' do
-        put '/cherry-tree', to: endpoint
+        put '/cherry-tree', to: ->(env) { [200, {}, ['Trees (PUT)!']] }
       end
 
       @app.request('PUT', '/trees/cherry-tree').body.must_equal 'Trees (PUT)!'
     end
 
     it 'recognizes patch path' do
-      endpoint = endpoint([200, {}, ['Trees (PATCH)!']])
       @router.namespace 'trees' do
-        patch '/cedar', to: endpoint
+        patch '/cedar', to: ->(env) { [200, {}, ['Trees (PATCH)!']] }
       end
 
       @app.request('PATCH', '/trees/cedar').body.must_equal 'Trees (PATCH)!'
     end
 
     it 'recognizes delete path' do
-      endpoint = endpoint([200, {}, ['Trees (DELETE)!']])
       @router.namespace 'trees' do
-        delete '/pine', to: endpoint
+        delete '/pine', to: ->(env) { [200, {}, ['Trees (DELETE)!']] }
       end
 
       @app.request('DELETE', '/trees/pine').body.must_equal 'Trees (DELETE)!'
     end
 
     it 'recognizes trace path' do
-      endpoint = endpoint([200, {}, ['Trees (TRACE)!']])
       @router.namespace 'trees' do
-        trace '/cypress', to: endpoint
+        trace '/cypress', to: ->(env) { [200, {}, ['Trees (TRACE)!']] }
       end
 
       @app.request('TRACE', '/trees/cypress').body.must_equal 'Trees (TRACE)!'
@@ -71,10 +61,9 @@ describe Lotus::Router do
 
     describe 'nested' do
       before do
-        endpoint = endpoint([200, {}, ['Meow!']])
         @router.namespace 'animals' do
           namespace 'mammals' do
-            get '/cats', to: endpoint
+            get '/cats', to: ->(env) { [200, {}, ['Meow!']] }
           end
         end
       end
@@ -86,9 +75,8 @@ describe Lotus::Router do
 
     describe 'redirect' do
       before do
-        endpoint = endpoint([200, {}, ['New Home!']])
         @router.namespace 'users' do
-          get '/home', to: endpoint
+          get '/home', to: ->(env) { [200, {}, ['New Home!']] }
           redirect '/dashboard', to: '/home'
         end
       end
