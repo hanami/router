@@ -221,11 +221,7 @@ module Lotus
       #
       # @return [Object]
       def find(options)
-        if namespace = options[:namespace]
-          namespace.join(options[:to])
-        else
-          options[:to]
-        end
+        options[:to]
       end
 
       protected

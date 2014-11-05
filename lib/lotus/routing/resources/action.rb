@@ -37,8 +37,8 @@ module Lotus
       # @see Lotus::Router#resources
       class MemberAction < Resource::MemberAction
         private
-        def path(path)
-          namespace.join("/:id/#{ path }")
+        def path(action_name)
+          "#{ rest_path }/:id/#{ action_name }"
         end
       end
 
@@ -48,8 +48,8 @@ module Lotus
       # @since 0.1.0
       module DefaultMemberAction
         private
-        def rest_path
-          "/#{ resource_name }/:id"
+        def path
+          "#{ rest_path }/:id"
         end
       end
 
@@ -96,7 +96,7 @@ module Lotus
         include DefaultMemberAction
 
         private
-        def rest_path
+        def path
           "#{ super }/#{ action_name }"
         end
       end

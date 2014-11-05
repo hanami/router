@@ -137,7 +137,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def path
-          namespace.join(rest_path)
+          rest_path
         end
 
         # The URL relative path
@@ -150,7 +150,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def rest_path
-          "/#{ resource_name }"
+          namespace.join(resource_name)
         end
 
         # The namespaced name of the action within the whole context of the router.
@@ -172,19 +172,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def as
-          namespace.relative_join(named_route, '_').to_sym
-        end
-
-        # The name of the action within the whole context of the router.
-        #
-        # @example
-        #   :flowers
-        #   :new_flowers
-        #
-        # @api private
-        # @since 0.1.0
-        def named_route
-          resource_name
+          namespace.relative_join(resource_name).gsub("/", "_").to_sym
         end
 
         # The name of the RESTful action.
@@ -241,21 +229,22 @@ module Lotus
 
         protected
         def method_missing(m, *args, &blk)
-          verb, path, _ = m, *args
-          @router.send verb, path(path), to: endpoint(path), as: as(path)
+          verb, action_name, _ = m, *args
+          @router.send verb, path(action_name),
+            to: endpoint(action_name), as: as(action_name)
         end
 
         private
-        def path(path)
-          namespace.join(path)
+        def path(action_name)
+          "#{ rest_path }/#{ action_name }"
         end
 
-        def endpoint(path)
-          [ resource_name, path ].join separator
+        def endpoint(action_name)
+          [ resource_name, action_name ].join separator
         end
 
-        def as(path)
-          Utils::PathPrefix.new(path).relative_join(resource_name, '_').to_sym
+        def as(action_name)
+          "#{ action_name }_#{ super() }".to_sym
         end
       end
 
@@ -274,12 +263,12 @@ module Lotus
       # @since 0.1.0
       module DefaultMemberAction
         private
-        def rest_path
-          "/#{ resource_name }/#{ action_name }"
+        def path
+          "#{ rest_path }/#{ action_name }"
         end
 
-        def named_route
-          "#{ action_name }_#{ resource_name }"
+        def as
+          "#{ action_name }_#{ super }".to_sym
         end
       end
 

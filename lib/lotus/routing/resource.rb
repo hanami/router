@@ -62,11 +62,11 @@ module Lotus
       end
 
       def member(&blk)
-        self.class.member.new(@router, @options.merge(namespace: @name), &blk)
+        self.class.member.new(@router, @options, &blk)
       end
 
       def collection(&blk)
-        self.class.collection.new(@router, @options.merge(namespace: @name), &blk)
+        self.class.collection.new(@router, @options, &blk)
       end
     end
   end
