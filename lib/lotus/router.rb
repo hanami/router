@@ -49,19 +49,6 @@ module Lotus
   #
   #
   #
-  # @example Specify a prefix with `:prefix`
-  #   require 'lotus/router'
-  #
-  #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
-  #   router = Lotus::Router.new do
-  #     get '/welcome', to: endpoint, prefix: 'dashboard' # => '/dashboard/welcome'
-  #   end
-  #
-  #   # :prefix isn't mandatory for the default resolver (`Lotus::Routing::EndpointResolver.new`),
-  #   # This behavior can be changed by passing a custom resolver to `Lotus::Router#initialize`
-  #
-  #
-  #
   # @example Specify a named route with `:as`
   #   require 'lotus/router'
   #
@@ -213,7 +200,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -282,17 +268,6 @@ module Lotus
     #   router.path(:lotus) # => "/lotus"
     #   router.url(:lotus)  # => "https://lotusrb.org/lotus"
     #
-    # @example Prefixed routes
-    #   require 'lotus/router'
-    #
-    #   router = Lotus::Router.new
-    #   router.get '/cats',
-    #     prefix: '/animals/mammals',
-    #     to: ->(env) { [200, {}, ['Meow!']] },
-    #     as: :cats
-    #
-    #   router.path(:animals_mammals_cats) # => "/animals/mammals/cats"
-    #
     # @example Duck typed endpoints (Rack compatible objects)
     #   require 'lotus/router'
     #
@@ -343,7 +318,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -363,7 +337,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -383,7 +356,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -403,7 +375,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -423,7 +394,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -443,7 +413,6 @@ module Lotus
     #
     # @param options [Hash] the options to customize the route
     # @option options [String,Proc,Class,Object#call] :to the endpoint
-    # @option options [String] :prefix an optional path prefix
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
@@ -488,11 +457,12 @@ module Lotus
     end
 
     # Defines a Ruby block: all the routes defined within it will be namespaced
-    #   with the given prefix.
+    # with the given relative path.
     #
     # Namespaces blocks can be nested multiple times.
     #
-    # @param prefix [String] the path prefix
+    # @param namespace [String] the relative path where the nested routes will
+    #   be mounted
     # @param blk [Proc] the block that defines the resources
     #
     # @return [Lotus::Routing::Namespace] the generated namespace.
@@ -508,10 +478,6 @@ module Lotus
     #     namespace 'trees' do
     #       get '/sequoia', to: endpoint # => '/trees/sequoia'
     #     end
-    #
-    #     # equivalent to
-    #
-    #     get '/sequoia', to: endpoint, prefix: 'trees' # => '/trees/sequoia'
     #   end
     #
     # @example Nested namespaces
@@ -532,8 +498,8 @@ module Lotus
     #   router.namespace 'trees' do
     #     get '/sequoia', to: endpoint # => '/trees/sequoia'
     #   end
-    def namespace(prefix, &blk)
-      Routing::Namespace.new(self, prefix, &blk)
+    def namespace(namespace, &blk)
+      Routing::Namespace.new(self, namespace, &blk)
     end
 
     # Defines a set of named routes for a single RESTful resource.
@@ -792,7 +758,7 @@ module Lotus
     #
     # @param app [#call] a class or an object that responds to #call
     # @param options [Hash] the options to customize the mount
-    # @option options [:at] the path prefix where to mount the app
+    # @option options [:at] the relative path where to mount the app
     #
     # @since 0.1.1
     #

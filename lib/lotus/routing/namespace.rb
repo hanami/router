@@ -60,19 +60,19 @@ module Lotus
       # @api private
       # @since 0.1.0
       def resource(name, options = {})
-        super name, options.merge(prefix: @name)
+        super name, options.merge(namespace: @name)
       end
 
       # @api private
       # @since 0.1.0
       def resources(name, options = {})
-        super name, options.merge(prefix: @name)
+        super name, options.merge(namespace: @name)
       end
 
       # @api private
       # @since 0.1.0
       def redirect(path, options = {}, &endpoint)
-        super(@name.join(path), options.merge(prefix: @name), &endpoint)
+        super(@name.join(path), options.merge(namespace: @name), &endpoint)
       end
 
       # Supports nested namespaces

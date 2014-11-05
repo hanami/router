@@ -85,12 +85,12 @@ module Lotus
           @options[:name]
         end
 
-        # Path prefix
+        # Namespace
         #
         # @api private
-        # @since 0.1.0
-        def prefix
-          @prefix ||= Utils::PathPrefix.new @options[:prefix]
+        # @since x.x.x
+        def namespace
+          @namespace ||= Utils::PathPrefix.new @options[:namespace]
         end
 
         private
@@ -118,7 +118,7 @@ module Lotus
           self.class.verb
         end
 
-        # The prefixed URL relative path
+        # The namespaced URL relative path
         #
         # @example
         #   require 'lotus/router'
@@ -126,7 +126,7 @@ module Lotus
         #   Lotus::Router.new do
         #     resources 'flowers'
         #
-        #     prefix 'animals' do
+        #     namespace 'animals' do
         #       resources 'mammals'
         #     end
         #   end
@@ -137,7 +137,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def path
-          prefix.join(rest_path)
+          namespace.join(rest_path)
         end
 
         # The URL relative path
@@ -153,7 +153,7 @@ module Lotus
           "/#{ resource_name }"
         end
 
-        # The prefixed name of the action within the whole context of the router.
+        # The namespaced name of the action within the whole context of the router.
         #
         # @example
         #   require 'lotus/router'
@@ -161,7 +161,7 @@ module Lotus
         #   Lotus::Router.new do
         #     resources 'flowers'
         #
-        #     prefix 'animals' do
+        #     namespace 'animals' do
         #       resources 'mammals'
         #     end
         #   end
@@ -172,7 +172,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def as
-          prefix.relative_join(named_route, '_').to_sym
+          namespace.relative_join(named_route, '_').to_sym
         end
 
         # The name of the action within the whole context of the router.
@@ -247,7 +247,7 @@ module Lotus
 
         private
         def path(path)
-          prefix.join(path)
+          namespace.join(path)
         end
 
         def endpoint(path)
