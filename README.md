@@ -199,10 +199,6 @@ router.namespace 'animals' do
   end
 end
 
-# or
-
-router.get '/cats', prefix: '/animals/mammals', to:->(env) { [200, {}, ['Meow!']] }, as: :cats
-
 # and it generates:
 
 router.path(:animals_mammals_cats) # => "/animals/mammals/cats"

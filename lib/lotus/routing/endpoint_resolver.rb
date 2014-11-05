@@ -156,7 +156,7 @@ module Lotus
       # @param options [Hash] the options required to resolve the endpoint
       #
       # @option options [String,Proc,Class,Object#call] :to the endpoint
-      # @option options [String] :prefix an optional path prefix
+      # @option options [String] :namespace an optional routing namespace
       #
       # @return [Endpoint] this may vary according to the :endpoint option
       #   passed to #initialize
@@ -196,12 +196,16 @@ module Lotus
       #   router = Lotus::Router.new
       #   router.get '/', to: ArticlesController::Show
       #
-      # @example Resolve with a path prefix
+      # @example Resolve a redirect with a namespace
       #   require 'lotus/router'
       #
       #   router = Lotus::Router.new
-      #   router.get '/dashboard', to: BackendApp.new, prefix: 'backend'
-      #     # => Will be available under '/backend/dashboard'
+      #   router.namespace 'users' do
+      #     get '/home',           to: ->(env) { ... }
+      #     redirect '/dashboard', to: '/home'
+      #   end
+      #
+      #   # GET /users/dashboard => 301 Location: "/users/home"
       def resolve(options, &endpoint)
         result = endpoint || find(options)
         resolve_callable(result) || resolve_matchable(result) || default
@@ -211,14 +215,14 @@ module Lotus
       #
       # @param options [Hash] the path description
       # @option options [String,Proc,Class,Object#call] :to the endpoint
-      # @option options [String] :prefix an optional path prefix
+      # @option options [String] :namespace an optional namespace
       #
       # @since 0.1.0
       #
       # @return [Object]
       def find(options)
-        if prefix = options[:prefix]
-          prefix.join(options[:to])
+        if namespace = options[:namespace]
+          namespace.join(options[:to])
         else
           options[:to]
         end

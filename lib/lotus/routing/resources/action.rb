@@ -38,7 +38,7 @@ module Lotus
       class MemberAction < Resource::MemberAction
         private
         def path(path)
-          prefix.join("/:id/#{ path }")
+          namespace.join("/:id/#{ path }")
         end
       end
 
