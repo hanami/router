@@ -225,3 +225,18 @@ class XmlParser < Lotus::Routing::Parsing::Parser
     result
   end
 end
+
+class RackMiddleware
+  def self.call(env)
+  end
+end
+
+class RackMiddlewareInstanceMethod
+  def call(env)
+  end
+end
+
+module WelcomeController
+  class Index
+  end
+end
