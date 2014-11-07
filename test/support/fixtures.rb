@@ -122,9 +122,21 @@ class ProfileController
     end
   end
 
+  class Deactivate
+    def call(env)
+      [200, {}, ['Profile::Deactivate']]
+    end
+  end
+
   class Keys
     def call(env)
       [200, {}, ['Profile::Keys']]
+    end
+  end
+
+  class Activities
+    def call(env)
+      [200, {}, ['Profile::Activities']]
     end
   end
 end # ProfileController
@@ -207,6 +219,18 @@ class KeyboardsController
   class Screenshot
     def call(env)
       [200, {}, ['Keyboards::Screenshot ' + env['router.params'][:id]]]
+    end
+  end
+
+  class Print
+    def call(env)
+      [200, {}, ['Keyboards::Print ' + env['router.params'][:id]]]
+    end
+  end
+
+  class Characters
+    def call(env)
+      [200, {}, ['Keyboards::Characters']]
     end
   end
 end # KeyboardsController

@@ -96,6 +96,7 @@ describe Lotus::Router do
         @router.resource 'profile', only: [:new] do
           member do
             patch 'activate'
+            patch '/deactivate'
           end
         end
       end
@@ -104,6 +105,11 @@ describe Lotus::Router do
         @router.path(:activate_profile).must_equal                 '/profile/activate'
         @app.request('PATCH', '/profile/activate').body.must_equal 'Profile::Activate'
       end
+
+      it 'recognizes the path with a leading slash' do
+        @router.path(:deactivate_profile).must_equal                 '/profile/deactivate'
+        @app.request('PATCH', '/profile/deactivate').body.must_equal 'Profile::Deactivate'
+      end
     end
 
     describe 'collection' do
@@ -111,6 +117,7 @@ describe Lotus::Router do
         @router.resource 'profile', only: [:new] do
           collection do
             get 'keys'
+            get '/activities'
           end
         end
       end
@@ -118,6 +125,11 @@ describe Lotus::Router do
       it 'recognizes the path' do
         @router.path(:keys_profile).must_equal               '/profile/keys'
         @app.request('GET', '/profile/keys').body.must_equal 'Profile::Keys'
+      end
+
+      it 'recognizes the path with a leading slash' do
+        @router.path(:activities_profile).must_equal               '/profile/activities'
+        @app.request('GET', '/profile/activities').body.must_equal 'Profile::Activities'
       end
     end
   end

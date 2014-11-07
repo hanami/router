@@ -235,8 +235,9 @@ module Lotus
         end
 
         protected
-        def method_missing(m, *args, &blk)
-          verb, action_name, _ = m, *args
+        def method_missing(m, *args)
+          verb        = m
+          action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
 
           @router.__send__ verb, path(action_name),
             to: endpoint(action_name), as: as(action_name)

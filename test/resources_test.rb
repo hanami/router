@@ -104,6 +104,7 @@ describe Lotus::Router do
         @router.resources 'keyboards', only: [:show] do
           member do
             get 'screenshot'
+            get '/print'
           end
         end
       end
@@ -112,6 +113,11 @@ describe Lotus::Router do
         @router.path(:screenshot_keyboards, id: 23).must_equal          '/keyboards/23/screenshot'
         @app.request('GET', '/keyboards/23/screenshot').body.must_equal 'Keyboards::Screenshot 23'
       end
+
+      it 'recognizes the path with a leading slash' do
+        @router.path(:print_keyboards, id: 23).must_equal          '/keyboards/23/print'
+        @app.request('GET', '/keyboards/23/print').body.must_equal 'Keyboards::Print 23'
+      end
     end
 
     describe 'collection' do
@@ -119,6 +125,7 @@ describe Lotus::Router do
         @router.resources 'keyboards', only: [:show] do
           collection do
             get 'search'
+            get '/characters'
           end
         end
       end
@@ -126,6 +133,11 @@ describe Lotus::Router do
       it 'recognizes the path' do
         @router.path(:search_keyboards).must_equal               '/keyboards/search'
         @app.request('GET', '/keyboards/search').body.must_equal 'Keyboards::Search'
+      end
+
+      it 'recognizes the path with a leading slash' do
+        @router.path(:characters_keyboards).must_equal               '/keyboards/characters'
+        @app.request('GET', '/keyboards/characters').body.must_equal 'Keyboards::Characters'
       end
     end
   end
