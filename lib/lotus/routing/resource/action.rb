@@ -29,6 +29,13 @@ module Lotus
         class_attribute :verb
         self.verb = :get
 
+        # Separator for named routes
+        #
+        # @api private
+        # @since x.x.x
+        class_attribute :named_route_separator
+        self.named_route_separator = '_'.freeze
+
         # Generate an action for the given router
         #
         # @param router [Lotus::Router]
@@ -172,7 +179,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def as
-          namespace.relative_join(resource_name).gsub("/", "_").to_sym
+          namespace.relative_join(resource_name, self.class.named_route_separator).to_sym
         end
 
         # The name of the RESTful action.
@@ -230,13 +237,14 @@ module Lotus
         protected
         def method_missing(m, *args, &blk)
           verb, action_name, _ = m, *args
-          @router.send verb, path(action_name),
+
+          @router.__send__ verb, path(action_name),
             to: endpoint(action_name), as: as(action_name)
         end
 
         private
         def path(action_name)
-          "#{ rest_path }/#{ action_name }"
+          rest_path.join(action_name)
         end
 
         def endpoint(action_name)
@@ -244,7 +252,7 @@ module Lotus
         end
 
         def as(action_name)
-          "#{ action_name }_#{ super() }".to_sym
+          [ action_name, super() ].join(self.class.named_route_separator).to_sym
         end
       end
 
@@ -264,11 +272,11 @@ module Lotus
       module DefaultMemberAction
         private
         def path
-          "#{ rest_path }/#{ action_name }"
+          rest_path.join(action_name)
         end
 
         def as
-          "#{ action_name }_#{ super }".to_sym
+          [ action_name, super ].join(self.class.named_route_separator).to_sym
         end
       end
 

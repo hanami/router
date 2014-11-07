@@ -18,6 +18,13 @@ module Lotus
         # @api private
         # @since 0.1.0
         self.namespace = Resources
+
+        # Id route variable
+        #
+        # @since x.x.x
+        # @api private
+        class_attribute :identifier
+        self.identifier = ':id'.freeze
       end
 
       # Collection action
@@ -38,7 +45,7 @@ module Lotus
       class MemberAction < Resource::MemberAction
         private
         def path(action_name)
-          "#{ rest_path }/:id/#{ action_name }"
+          rest_path.join(Action.identifier, action_name)
         end
       end
 
@@ -49,7 +56,7 @@ module Lotus
       module DefaultMemberAction
         private
         def path
-          "#{ rest_path }/:id"
+          rest_path.join(Action.identifier)
         end
       end
 
@@ -97,7 +104,7 @@ module Lotus
 
         private
         def path
-          "#{ super }/#{ action_name }"
+          super.join(action_name)
         end
       end
 

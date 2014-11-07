@@ -60,22 +60,19 @@ module Lotus
       # @api private
       # @since 0.1.0
       def resource(name, options = {})
-        namespace = options[:namespace] ? @name.relative_join(options[:namespace]) : @name
-        super name, options.merge(namespace: namespace)
+        super name, options.merge(namespace: @name.relative_join(options[:namespace]))
       end
 
       # @api private
       # @since 0.1.0
       def resources(name, options = {})
-        namespace = options[:namespace] ? @name.relative_join(options[:namespace]) : @name
-        super name, options.merge(namespace: namespace)
+        super name, options.merge(namespace: @name.relative_join(options[:namespace]))
       end
 
       # @api private
       # @since 0.1.0
       def redirect(path, options = {}, &endpoint)
-        to = @name.join(options[:to])
-        super(@name.join(path), options.merge(to: to), &endpoint)
+        super(@name.join(path), options.merge(to: @name.join(options[:to])), &endpoint)
       end
 
       # Supports nested namespaces
