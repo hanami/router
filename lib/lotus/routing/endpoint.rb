@@ -30,6 +30,20 @@ module Lotus
     #     get '/rack-app', to: RackApp.new
     #   end
     class Endpoint < SimpleDelegator
+      # @since x.x.x
+      def inspect
+        case __getobj__
+        when Proc
+          source, line     = __getobj__.source_location
+          lambda_inspector = " (lambda)"  if  __getobj__.lambda?
+
+          "#<Proc@#{ source }:#{ line }#{ lambda_inspector }>"
+        when Class
+          __getobj__
+        else
+          "#<#{ __getobj__.class }>"
+        end
+      end
     end
 
     # Routing endpoint
@@ -103,9 +117,31 @@ module Lotus
         obj.call(env)
       end
 
+      # @since x.x.x
+      def inspect
+        # TODO review this implementation once the namespace feature will be
+        # cleaned up.
+        result = klass rescue nil
+
+        if result.nil?
+          result = @name
+          result = "#{ @namespace }::#{ result }" if @namespace != Object
+        end
+
+        result
+      end
+
       private
+      # @since 0.1.0
+      # @api private
       def obj
-        Utils::Class.load!(@name, @namespace).new
+        klass.new
+      end
+
+      # @since x.x.x
+      # @api private
+      def klass
+        Utils::Class.load!(@name, @namespace)
       rescue NameError => e
         raise EndpointNotFound.new(e.message)
       end

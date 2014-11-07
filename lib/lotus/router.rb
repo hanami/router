@@ -900,5 +900,31 @@ module Lotus
     def url(route, *args)
       @router.url(route, *args)
     end
+
+    # Returns an routes inspector
+    #
+    # @since x.x.x
+    #
+    # @see Lotus::Routing::RoutesInspector
+    #
+    # @example
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get    '/',       to: 'home#index'
+    #     get    '/login',  to: 'sessions#new',     as: :login
+    #     post   '/login',  to: 'sessions#create'
+    #     delete '/logout', to: 'sessions#destroy', as: :logout
+    #   end
+    #
+    #   puts router.inspector
+    #     # =>        GET, HEAD  /                        Home::Index
+    #          login  GET, HEAD  /login                   Sessions::New
+    #                 POST       /login                   Sessions::Create
+    #          logout GET, HEAD  /logout                  Sessions::Destroy
+    def inspector
+      require 'lotus/routing/routes_inspector'
+      Routing::RoutesInspector.new(@router.routes)
+    end
   end
 end
