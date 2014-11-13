@@ -10,29 +10,9 @@ module Lotus
     #
     # @api private
     class EndpointResolver
-      # Default suffix appended to the controller#action string.
-      # A different suffix can be passed to #initialize with the `:suffix` option.
-      #
-      # @see #initialize
-      # @see #resolve
-      #
-      # @since 0.1.0
-      #
-      # @example
-      #   require 'lotus/router'
-      #
-      #   router = Lotus::Router.new do
-      #     get '/', to: 'articles#show'
-      #   end
-      #
-      #   # That string is transformed into "Articles(::Controller::|Controller::)Show"
-      #   # because the resolver is able to lookup (in the given order) for:
-      #   #
-      #   #  * Articles::Controller::Show
-      #   #  * ArticlesController::Show
-      #   #
-      #   # When it finds a class, it stops the lookup and returns the result.
-      SUFFIX = '(::Controller::|Controller::)'.freeze
+      # @since x.x.x
+      # @api private
+      NAMING_PATTERN = '%{controller}::%{action}'.freeze
 
       # Default separator for controller and action.
       # A different separator can be passed to #initialize with the `:separator` option.
@@ -62,13 +42,10 @@ module Lotus
       # @option options [Class,Module] :namespace the Ruby namespace where to
       #   lookup for controllers and actions. (defaults to `Object`)
       #
-      # @option options [String] :suffix the suffix appended to the controller
-      #   name during the lookup. (defaults to `SUFFIX`)
-      #
       # @option options [String] :pattern the string to interpolate in order
-      #   to return an action name. Please note that this option override
-      #   :suffix. This string SHOULD contain `'%{controller}'` and `'%{action}'`,
-      #   all the other keys will be ignored. See the examples below.
+      #   to return an action name. This string SHOULD contain `'%{controller}'`
+      #   and `'%{action}'`, all the other keys will be ignored.
+      #   See the examples below.
       #
       # @option options [String] :action_separator the sepatator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
@@ -100,34 +77,18 @@ module Lotus
       #   router   = Lotus::Router.new(resolver: resolver)
       #
       #   router.get('/', to: 'articles#show')
-      #   # => Will look for:
-      #   #  * MyApp::Articles::Controller::Show
-      #   #  * MyApp::ArticlesController::Show
+      #     # => Will look for: MyApp::Articles::Show
       #
       #
       #
-      # @example Specify custom controller suffix
+      # @example Specify custom pattern
       #   require 'lotus/router'
       #
-      #   resolver = Lotus::Routing::EndpointResolver.new(suffix: '(Controller::|Ctrl::)')
+      #   resolver = Lotus::Routing::EndpointResolver.new(pattern: '%{controller}Controller::%{action}')
       #   router   = Lotus::Router.new(resolver: resolver)
       #
       #   router.get('/', to: 'articles#show')
-      #   # => Will look for:
-      #   #  * ArticlesController::Show
-      #   #  * ArticlesCtrl::Show
-      #
-      #
-      #
-      # @example Specify custom simple pattern
-      #   require 'lotus/router'
-      #
-      #   resolver = Lotus::Routing::EndpointResolver.new(pattern: 'Controllers::%{controller}::%{action}')
-      #   router   = Lotus::Router.new(resolver: resolver)
-      #
-      #   router.get('/', to: 'articles#show')
-      #   # => Will look for:
-      #   #  * Controllers::Articles::Show
+      #     # => Will look for: ArticlesController::Show
       #
       #
       #
@@ -138,15 +99,12 @@ module Lotus
       #   router   = Lotus::Router.new(resolver: resolver)
       #
       #   router.get('/', to: 'articles@show')
-      #   # => Will look for:
-      #   #  * Articles::Controller::Show
-      #   #  * ArticlesController::Show
+      #     # => Will look for: Articles::Show
       def initialize(options = {})
         @endpoint_class   = options[:endpoint]         || Endpoint
         @namespace        = options[:namespace]        || Object
         @action_separator = options[:action_separator] || ACTION_SEPARATOR
-        @pattern          = options[:pattern]          ||
-          "%{controller}#{options[:suffix] || SUFFIX}%{action}"
+        @pattern          = options[:pattern]          || NAMING_PATTERN
       end
 
       # Resolve the given set of HTTP verb, path, endpoint and options.
@@ -194,7 +152,7 @@ module Lotus
       #   require 'lotus/router'
       #
       #   router = Lotus::Router.new
-      #   router.get '/', to: ArticlesController::Show
+      #   router.get '/', to: Articles::Show
       #
       # @example Resolve a redirect with a namespace
       #   require 'lotus/router'

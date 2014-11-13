@@ -37,7 +37,7 @@ module Lotus
           source, line     = __getobj__.source_location
           lambda_inspector = " (lambda)"  if  __getobj__.lambda?
 
-          "#<Proc@#{ source }:#{ line }#{ lambda_inspector }>"
+          "#<Proc@#{ ::File.expand_path(source) }:#{ line }#{ lambda_inspector }>"
         when Class
           __getobj__
         else
@@ -66,7 +66,7 @@ module Lotus
     #
     #   Lotus::Router.new do
     #     get '/class',               to: RackMiddleware
-    #     get '/lotus-action-class',  to: DashboardController::Index
+    #     get '/lotus-action-class',  to: Dashboard::Index
     #     get '/lotus-action-string', to: 'dashboard#index'
     #
     #     resource  'identity'

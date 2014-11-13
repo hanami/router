@@ -16,12 +16,15 @@ describe Lotus::Routing::RoutesInspector do
       end
 
       it 'inspects routes' do
-        expected = <<-ROUTES
-               login GET, HEAD  /login                         #<Proc@#{ @path }:13 (lambda)>
-              logout GET, HEAD  /logout                        #<Proc@#{ @path }:14>
-ROUTES
+        expectations = [
+          %( login GET, HEAD  /login                         #<Proc@#{ @path }:13 (lambda)>),
+          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:14>)
+        ]
 
-        @router.inspector.to_s.must_equal(expected)
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
       end
     end
 
@@ -32,14 +35,16 @@ ROUTES
         end
       end
 
-      it 'inspects routes'
-      # it 'inspects routes' do
-      #   expected = <<-ROUTES
-      #                GET, HEAD  /controller/action             WelcomeController::Index
-# ROUTES
+      it 'inspects routes' do
+        expectations = [
+          %(GET, HEAD  /controller/action             Welcome::Index)
+        ]
 
-      #   @router.inspector.to_s.must_equal(expected)
-      # end
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
     end
 
     describe 'lazy controller and action' do
@@ -48,24 +53,26 @@ ROUTES
           get '/lazy', to: 'sleepy#index'
         end
 
-        module SleepyController
+        module Sleepy
           class Index
           end
         end
       end
 
       after do
-        Object.__send__(:remove_const, :SleepyController)
+        Object.__send__(:remove_const, :Sleepy)
       end
 
-      it 'inspects routes'
-      # it 'inspects routes' do
-      #   expected = <<-ROUTES
-      #                GET, HEAD  /lazy                          LazyController::Index
-# ROUTES
+      it 'inspects routes' do
+        expectations = [
+          %(GET, HEAD  /lazy                          Sleepy::Index)
+        ]
 
-      #   @router.inspector.to_s.must_equal(expected)
-      # end
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
     end
 
     describe 'missing controller and action' do
@@ -76,11 +83,14 @@ ROUTES
       end
 
       it 'inspects routes' do
-        expected = <<-ROUTES
-                     GET, HEAD  /missing                       Missing(::Controller::|Controller::)Index
-ROUTES
+        expectations = [
+          %(GET, HEAD  /missing                       Missing::Index)
+        ]
 
-        @router.inspector.to_s.must_equal(expected)
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
       end
     end
 
@@ -91,14 +101,16 @@ ROUTES
         end
       end
 
-      it 'inspects routes'
-      # it 'inspects routes' do
-      #   expected = <<-ROUTES
-      #                GET, HEAD  /class                         RackMiddleware
-# ROUTES
+      it 'inspects routes' do
+        expectations = [
+          %(GET, HEAD  /class                         RackMiddleware)
+        ]
 
-      #   @router.inspector.to_s.must_equal(expected)
-      # end
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
     end
 
     describe 'object' do
@@ -110,12 +122,15 @@ ROUTES
       end
 
       it 'inspects routes' do
-        expected = <<-ROUTES
-                     GET, HEAD  /class                         #<RackMiddlewareInstanceMethod>
-                     GET, HEAD  /object                        #<RackMiddlewareInstanceMethod>
-ROUTES
+        expectations = [
+          %(GET, HEAD  /class                         #<RackMiddlewareInstanceMethod>),
+          %(GET, HEAD  /object                        #<RackMiddlewareInstanceMethod>)
+        ]
 
-        @router.inspector.to_s.must_equal(expected)
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
       end
     end
 
@@ -127,16 +142,19 @@ ROUTES
       end
 
       it 'inspects routes' do
-        expected = <<-ROUTES
-        new_identity GET, HEAD  /identity/new                  Identity(::Controller::|Controller::)New
-            identity POST       /identity                      Identity(::Controller::|Controller::)Create
-            identity GET, HEAD  /identity                      Identity(::Controller::|Controller::)Show
-       edit_identity GET, HEAD  /identity/edit                 Identity(::Controller::|Controller::)Edit
-            identity PATCH      /identity                      Identity(::Controller::|Controller::)Update
-            identity DELETE     /identity                      Identity(::Controller::|Controller::)Destroy
-ROUTES
+        expectations = [
+          %( new_identity GET, HEAD  /identity/new                  Identity::New),
+          %(     identity POST       /identity                      Identity::Create),
+          %(     identity GET, HEAD  /identity                      Identity::Show),
+          %(edit_identity GET, HEAD  /identity/edit                 Identity::Edit),
+          %(     identity PATCH      /identity                      Identity::Update),
+          %(     identity DELETE     /identity                      Identity::Destroy)
+        ]
 
-        @router.inspector.to_s.must_equal(expected)
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
       end
     end
 
@@ -148,17 +166,20 @@ ROUTES
       end
 
       it 'inspects routes' do
-        expected = <<-ROUTES
-               books GET, HEAD  /books                         Books(::Controller::|Controller::)Index
-           new_books GET, HEAD  /books/new                     Books(::Controller::|Controller::)New
-               books POST       /books                         Books(::Controller::|Controller::)Create
-               books GET, HEAD  /books/:id                     Books(::Controller::|Controller::)Show
-          edit_books GET, HEAD  /books/:id/edit                Books(::Controller::|Controller::)Edit
-               books PATCH      /books/:id                     Books(::Controller::|Controller::)Update
-               books DELETE     /books/:id                     Books(::Controller::|Controller::)Destroy
-ROUTES
+        expectations = [
+          %(     books GET, HEAD  /books                         Books::Index),
+          %( new_books GET, HEAD  /books/new                     Books::New),
+          %(     books POST       /books                         Books::Create),
+          %(     books GET, HEAD  /books/:id                     Books::Show),
+          %(edit_books GET, HEAD  /books/:id/edit                Books::Edit),
+          %(     books PATCH      /books/:id                     Books::Update),
+          %(     books DELETE     /books/:id                     Books::Destroy)
+        ]
 
-        @router.inspector.to_s.must_equal(expected)
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
       end
     end
 
@@ -170,12 +191,15 @@ ROUTES
       end
 
       it 'inspects routes' do
-        formatter = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
-        expected  = <<-ROUTES
-| GET, HEAD | login | /login | #<Proc@#{ @path }:168 (lambda)> |
-ROUTES
+        formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
+        expectations  = [
+          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:189 (lambda)> |)
+        ]
 
-        @router.inspector.to_s(formatter).must_equal(expected)
+        actual = @router.inspector.to_s(formatter)
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
       end
     end
   end
