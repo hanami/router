@@ -290,3 +290,23 @@ class RackMiddlewareInstanceMethod
   def call(env)
   end
 end
+
+module CreditCards
+  class Index
+    def call(env)
+      [200, {}, ['Hello from CreditCards::Index']]
+    end
+  end
+end
+
+module Travels
+  module Controllers
+    module Journeys
+      class Index
+        def call(env)
+          [200, {}, ['Hello from Travels::Controllers::Journeys::Index']]
+        end
+      end
+    end
+  end
+end
