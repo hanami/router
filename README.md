@@ -22,7 +22,7 @@ Rack compatible, lightweight and fast HTTP Router for [Lotus](http://lotusrb.org
 
 ## Rubies
 
-__Lotus::Router__ supports Ruby (MRI) 2+ and JRuby 1.7 (with 2.0 mode)
+__Lotus::Router__ supports Ruby (MRI) 2+, JRuby 1.7 (with 2.0 mode) and Rubinius 2.3.0+.
 
 
 ## Installation
@@ -69,7 +69,7 @@ For the standalone usage, it supports neat features:
 ```ruby
 Lotus::Router.new do
   get '/', to: ->(env) { [200, {}, ['Hi!']] }
-  get '/dashboard',   to: DashboardController::Index
+  get '/dashboard',   to: Dashboard::Index
   get '/rack-app',    to: RackApp.new
   get '/flowers',     to: 'flowers#index'
   get '/flowers/:id', to: 'flowers#show'
@@ -79,7 +79,7 @@ Lotus::Router.new do
   mount Api::App, to: '/api'
 
   namespace 'admin' do
-    get '/users', to: UsersController::Index
+    get '/users', to: Users::Index
   end
 
   resource 'identity' do
@@ -222,7 +222,7 @@ end
 2. `RackTwo` is initialized, because it respond to `#call`
 3. `RackThree` is used as it is (object), because it respond to `#call`
 4. That Proc is used as it is, because it respond to `#call`
-5. That string is resolved as `DashboardController::Index` ([Lotus::Controller](https://github.com/lotus/controller) integration)
+5. That string is resolved as `Dashboard::Index` ([Lotus::Controller](https://github.com/lotus/controller) integration)
 
 
 
@@ -255,7 +255,7 @@ router.get '/lotus', to: 'rack_app' # it will map to RackApp.new
 It also supports Controller + Action syntax:
 
 ```ruby
-class FlowersController
+module Flowers
   class Index
     def call(env)
       # ...
@@ -264,7 +264,7 @@ class FlowersController
 end
 
 router = Lotus::Router.new
-router.get '/flowers', to: 'flowers#index' # it will map to FlowersController::Index.new
+router.get '/flowers', to: 'flowers#index' # it will map to Flowers::Index.new
 ```
 
 
@@ -276,7 +276,35 @@ router = Lotus::Router.new
 router.call(Rack::MockRequest.env_for('/unknown')).status # => 404
 ```
 
+### Controllers:
 
+`Lotus::Router` has a special convention for controllers naming.
+It allows to declare an action as an endpoint, with a special syntax: `<controller>#<action>`.
+
+```ruby
+Lotus::Router.new do
+  get '/', to: 'welcome#index'
+end
+```
+
+In the example above, the router will look for the `Welcome::Index` action.
+
+#### Namespaces
+
+In applications where for maintainability or technical reasons, this convention
+can't work, `Lotus::Router` can accept a `:namespace` option, which defines the
+Ruby namespace where to look for actions.
+
+For instance, given a Lotus full stack application called `Bookshelf`, the
+controllers are available under `Bookshelf::Controllers`.
+
+```ruby
+Lotus::Router.new(namespace: Bookshelf::Controllers) do
+  get '/', to: 'welcome#index'
+end
+```
+
+In the example above, the router will look for the `Bookshelf::Controllers::Welcome::Index` action.
 
 ### RESTful Resource:
 
@@ -298,42 +326,42 @@ It will map:
   <tr>
     <td>GET</td>
     <td>/identity</td>
-    <td>IdentityController::Show</td>
+    <td>Identity::Show</td>
     <td>:show</td>
     <td>:identity</td>
   </tr>
   <tr>
     <td>GET</td>
     <td>/identity/new</td>
-    <td>IdentityController::New</td>
+    <td>Identity::New</td>
     <td>:new</td>
     <td>:new_identity</td>
   </tr>
   <tr>
     <td>POST</td>
     <td>/identity</td>
-    <td>IdentityController::Create</td>
+    <td>Identity::Create</td>
     <td>:create</td>
     <td>:identity</td>
   </tr>
   <tr>
     <td>GET</td>
     <td>/identity/edit</td>
-    <td>IdentityController::Edit</td>
+    <td>Identity::Edit</td>
     <td>:edit</td>
     <td>:edit_identity</td>
   </tr>
   <tr>
     <td>PATCH</td>
     <td>/identity</td>
-    <td>IdentityController::Update</td>
+    <td>Identity::Update</td>
     <td>:update</td>
     <td>:identity</td>
   </tr>
   <tr>
     <td>DELETE</td>
     <td>/identity</td>
-    <td>IdentityController::Destroy</td>
+    <td>Identity::Destroy</td>
     <td>:destroy</td>
     <td>:identity</td>
   </tr>
@@ -357,11 +385,11 @@ If you need extra endpoints:
 router = Lotus::Router.new
 router.resource 'identity' do
   member do
-   get '/avatar'            # maps to IdentityController::Avatar
+    get 'avatar'           # maps to Identity::Avatar
   end
 
   collection do
-    get '/authorizations'   # maps to IdentityController::Authorizations
+    get 'authorizations'   # maps to Identity::Authorizations
   end
 end
 
@@ -391,49 +419,49 @@ It will map:
   <tr>
     <td>GET</td>
     <td>/flowers</td>
-    <td>FlowersController::Index</td>
+    <td>Flowers::Index</td>
     <td>:index</td>
     <td>:flowers</td>
   </tr>
   <tr>
     <td>GET</td>
     <td>/flowers/:id</td>
-    <td>FlowersController::Show</td>
+    <td>Flowers::Show</td>
     <td>:show</td>
     <td>:flowers</td>
   </tr>
   <tr>
     <td>GET</td>
     <td>/flowers/new</td>
-    <td>FlowersController::New</td>
+    <td>Flowers::New</td>
     <td>:new</td>
     <td>:new_flowers</td>
   </tr>
   <tr>
     <td>POST</td>
     <td>/flowers</td>
-    <td>FlowersController::Create</td>
+    <td>Flowers::Create</td>
     <td>:create</td>
     <td>:flowers</td>
   </tr>
   <tr>
     <td>GET</td>
     <td>/flowers/:id/edit</td>
-    <td>FlowersController::Edit</td>
+    <td>Flowers::Edit</td>
     <td>:edit</td>
     <td>:edit_flowers</td>
   </tr>
   <tr>
     <td>PATCH</td>
     <td>/flowers/:id</td>
-    <td>FlowersController::Update</td>
+    <td>Flowers::Update</td>
     <td>:update</td>
     <td>:flowers</td>
   </tr>
   <tr>
     <td>DELETE</td>
     <td>/flowers/:id</td>
-    <td>FlowersController::Destroy</td>
+    <td>Flowers::Destroy</td>
     <td>:destroy</td>
     <td>:flowers</td>
   </tr>
@@ -466,10 +494,11 @@ If you need extra endpoints:
 router = Lotus::Router.new
 router.resources 'flowers' do
   member do
-    get '/toggle' # maps to FlowersController::Toggle
+    get 'toggle' # maps to Flowers::Toggle
   end
+
   collection do
-    get '/search' # maps to FlowersController::Search
+    get 'search' # maps to Flowers::Search
   end
 end
 

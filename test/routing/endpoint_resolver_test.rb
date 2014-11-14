@@ -58,7 +58,7 @@ describe Lotus::Routing::EndpointResolver do
 
     it 'recognizes :to when it is a string with separator and it has an explicit namespace' do
       options = { to: 'test2#show' }
-      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::Test2Controller::Show!'
+      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::Test2::Show!'
     end
   end
 
