@@ -41,7 +41,7 @@ describe Lotus::Router do
       router = Lotus::Router.new(action_separator: '^')
       route  = router.get('/', to: 'test^show', as: :root)
 
-      route.dest.must_equal(TestController::Show)
+      route.dest.must_equal(Test::Show)
     end
 
     it 'recognizes path' do

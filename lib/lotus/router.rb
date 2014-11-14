@@ -42,7 +42,7 @@ module Lotus
   #   require 'lotus/router'
   #
   #   router = Lotus::Router.new do
-  #     get '/', to: 'articles#show' # => ArticlesController::Show
+  #     get '/', to: 'articles#show' # => Articles::Show
   #   end
   #
   #   # This is a builtin feature for a Lotus::Controller convention.
@@ -295,18 +295,18 @@ module Lotus
     # @example Duck typed endpoints (string: controller + action)
     #   require 'lotus/router'
     #
-    #   class FlowersController
+    #   module Flowers
     #     class Index
     #       def call(env)
     #         # ...
     #       end
     #     end
-    #    end
+    #   end
     #
     #    router = Lotus::Router.new
     #    router.get '/flowers', to: 'flowers#index'
     #
-    #    # It will map to FlowersController::Index.new, which is the
+    #    # It will map to Flowers::Index.new, which is the
     #    # Lotus::Controller convention.
     def get(path, options = {}, &blk)
       @router.get(path, options, &blk)
@@ -530,16 +530,16 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+----------------+-----------------------------+----------+----------------+
-    #   # | Verb   | Path           | Action                      | Name     | Named Route    |
-    #   # +--------+----------------+-----------------------------+----------+----------------+
-    #   # | GET    | /identity      | IdentityController::Show    | :show    | :identity      |
-    #   # | GET    | /identity/new  | IdentityController::New     | :new     | :new_identity  |
-    #   # | POST   | /identity      | IdentityController::Create  | :create  | :identity      |
-    #   # | GET    | /identity/edit | IdentityController::Edit    | :edit    | :edit_identity |
-    #   # | PATCH  | /identity      | IdentityController::Update  | :update  | :identity      |
-    #   # | DELETE | /identity      | IdentityController::Destroy | :destroy | :identity      |
-    #   # +--------+----------------+-----------------------------+----------+----------------+
+    #   # +--------+----------------+-------------------+----------+----------------+
+    #   # | Verb   | Path           | Action            | Name     | Named Route    |
+    #   # +--------+----------------+-------------------+----------+----------------+
+    #   # | GET    | /identity      | Identity::Show    | :show    | :identity      |
+    #   # | GET    | /identity/new  | Identity::New     | :new     | :new_identity  |
+    #   # | POST   | /identity      | Identity::Create  | :create  | :identity      |
+    #   # | GET    | /identity/edit | Identity::Edit    | :edit    | :edit_identity |
+    #   # | PATCH  | /identity      | Identity::Update  | :update  | :identity      |
+    #   # | DELETE | /identity      | Identity::Destroy | :destroy | :identity      |
+    #   # +--------+----------------+-------------------+----------+----------------+
     #
     #
     #
@@ -552,13 +552,13 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+----------------+-----------------------------+----------+----------------+
-    #   # | Verb   | Path           | Action                      | Name     | Named Route    |
-    #   # +--------+----------------+-----------------------------+----------+----------------+
-    #   # | GET    | /identity      | IdentityController::Show    | :show    | :identity      |
-    #   # | GET    | /identity/new  | IdentityController::New     | :new     | :new_identity  |
-    #   # | POST   | /identity      | IdentityController::Create  | :create  | :identity      |
-    #   # +--------+----------------+-----------------------------+----------+----------------+
+    #   # +--------+----------------+------------------+----------+----------------+
+    #   # | Verb   | Path           | Action           | Name     | Named Route    |
+    #   # +--------+----------------+------------------+----------+----------------+
+    #   # | GET    | /identity      | Identity::Show   | :show    | :identity      |
+    #   # | GET    | /identity/new  | Identity::New    | :new     | :new_identity  |
+    #   # | POST   | /identity      | Identity::Create | :create  | :identity      |
+    #   # +--------+----------------+------------------+----------+----------------+
     #
     #
     #
@@ -571,13 +571,13 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+----------------+-----------------------------+----------+----------------+
-    #   # | Verb   | Path           | Action                      | Name     | Named Route    |
-    #   # +--------+----------------+-----------------------------+----------+----------------+
-    #   # | GET    | /identity      | IdentityController::Show    | :show    | :identity      |
-    #   # | GET    | /identity/new  | IdentityController::New     | :new     | :new_identity  |
-    #   # | POST   | /identity      | IdentityController::Create  | :create  | :identity      |
-    #   # +--------+----------------+-----------------------------+----------+----------------+
+    #   # +--------+----------------+------------------+----------+----------------+
+    #   # | Verb   | Path           | Action           | Name     | Named Route    |
+    #   # +--------+----------------+------------------+----------+----------------+
+    #   # | GET    | /identity      | Identity::Show   | :show    | :identity      |
+    #   # | GET    | /identity/new  | Identity::New    | :new     | :new_identity  |
+    #   # | POST   | /identity      | Identity::Create | :create  | :identity      |
+    #   # +--------+----------------+------------------+----------+----------------+
     #
     #
     #
@@ -594,11 +594,11 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+--------------------+------------------------------+------+--------------------+
-    #   # | Verb   | Path               | Action                       | Name | Named Route        |
-    #   # +--------+--------------------+------------------------------+------+--------------------+
-    #   # | PATCH  | /identity/activate | IdentityController::Activate |      | :activate_identity |
-    #   # +--------+--------------------+------------------------------+------+--------------------+
+    #   # +--------+--------------------+--------------------+------+--------------------+
+    #   # | Verb   | Path               | Action             | Name | Named Route        |
+    #   # +--------+--------------------+--------------------+------+--------------------+
+    #   # | PATCH  | /identity/activate | Identity::Activate |      | :activate_identity |
+    #   # +--------+--------------------+--------------------+------+--------------------+
     #
     #
     #
@@ -615,11 +615,11 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +------+----------------+--------------------------+------+----------------+
-    #   # | Verb | Path           | Action                   | Name | Named Route    |
-    #   # +------+----------------+--------------------------+------+----------------+
-    #   # | GET  | /identity/keys | IdentityController::Keys |      | :keys_identity |
-    #   # +------+----------------+--------------------------+------+----------------+
+    #   # +------+----------------+----------------+------+----------------+
+    #   # | Verb | Path           | Action         | Name | Named Route    |
+    #   # +------+----------------+----------------+------+----------------+
+    #   # | GET  | /identity/keys | Identity::Keys |      | :keys_identity |
+    #   # +------+----------------+----------------+------+----------------+
     def resource(name, options = {}, &blk)
       Routing::Resource.new(self, name, options.merge(separator: @router.action_separator), &blk)
     end
@@ -652,17 +652,17 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+--------------------+-----------------------------+----------+----------------+
-    #   # | Verb   | Path               | Action                      | Name     | Named Route    |
-    #   # +--------+--------------------+-----------------------------+----------+----------------+
-    #   # | GET    | /articles          | ArticlesController::Index   | :index   | :articles      |
-    #   # | GET    | /articles/:id      | ArticlesController::Show    | :show    | :articles      |
-    #   # | GET    | /articles/new      | ArticlesController::New     | :new     | :new_articles  |
-    #   # | POST   | /articles          | ArticlesController::Create  | :create  | :articles      |
-    #   # | GET    | /articles/:id/edit | ArticlesController::Edit    | :edit    | :edit_articles |
-    #   # | PATCH  | /articles/:id      | ArticlesController::Update  | :update  | :articles      |
-    #   # | DELETE | /articles/:id      | ArticlesController::Destroy | :destroy | :articles      |
-    #   # +--------+--------------------+-----------------------------+----------+----------------+
+    #   # +--------+--------------------+-------------------+----------+----------------+
+    #   # | Verb   | Path               | Action            | Name     | Named Route    |
+    #   # +--------+--------------------+-------------------+----------+----------------+
+    #   # | GET    | /articles          | Articles::Index   | :index   | :articles      |
+    #   # | GET    | /articles/:id      | Articles::Show    | :show    | :articles      |
+    #   # | GET    | /articles/new      | Articles::New     | :new     | :new_articles  |
+    #   # | POST   | /articles          | Articles::Create  | :create  | :articles      |
+    #   # | GET    | /articles/:id/edit | Articles::Edit    | :edit    | :edit_articles |
+    #   # | PATCH  | /articles/:id      | Articles::Update  | :update  | :articles      |
+    #   # | DELETE | /articles/:id      | Articles::Destroy | :destroy | :articles      |
+    #   # +--------+--------------------+-------------------+----------+----------------+
     #
     #
     #
@@ -675,11 +675,11 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +------+-----------+---------------------------+--------+-------------+
-    #   # | Verb | Path      | Action                    | Name   | Named Route |
-    #   # +------+-----------+---------------------------+--------+-------------+
-    #   # | GET  | /articles | ArticlesController::Index | :index | :articles   |
-    #   # +------+-----------+---------------------------+--------+-------------+
+    #   # +------+-----------+-----------------+--------+-------------+
+    #   # | Verb | Path      | Action          | Name   | Named Route |
+    #   # +------+-----------+-----------------+--------+-------------+
+    #   # | GET  | /articles | Articles::Index | :index | :articles   |
+    #   # +------+-----------+-----------------+--------+-------------+
     #
     #
     #
@@ -692,15 +692,15 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+--------------------+-----------------------------+----------+----------------+
-    #   # | Verb   | Path               | Action                      | Name     | Named Route    |
-    #   # +--------+--------------------+-----------------------------+----------+----------------+
-    #   # | GET    | /articles          | ArticlesController::Index   | :index   | :articles      |
-    #   # | GET    | /articles/:id      | ArticlesController::Show    | :show    | :articles      |
-    #   # | GET    | /articles/new      | ArticlesController::New     | :new     | :new_articles  |
-    #   # | POST   | /articles          | ArticlesController::Create  | :create  | :articles      |
-    #   # | DELETE | /articles/:id      | ArticlesController::Destroy | :destroy | :articles      |
-    #   # +--------+--------------------+-----------------------------+----------+----------------+
+    #   # +--------+--------------------+-------------------+----------+----------------+
+    #   # | Verb   | Path               | Action            | Name     | Named Route    |
+    #   # +--------+--------------------+-------------------+----------+----------------+
+    #   # | GET    | /articles          | Articles::Index   | :index   | :articles      |
+    #   # | GET    | /articles/:id      | Articles::Show    | :show    | :articles      |
+    #   # | GET    | /articles/new      | Articles::New     | :new     | :new_articles  |
+    #   # | POST   | /articles          | Articles::Create  | :create  | :articles      |
+    #   # | DELETE | /articles/:id      | Articles::Destroy | :destroy | :articles      |
+    #   # +--------+--------------------+-------------------+----------+----------------+
     #
     #
     #
@@ -717,11 +717,11 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +--------+-----------------------+-----------------------------+------+-------------------+
-    #   # | Verb   | Path                  | Action                      | Name | Named Route       |
-    #   # +--------+-----------------------+-----------------------------+------+-------------------+
-    #   # | PATCH  | /articles/:id/publish | ArticlesController::Publish |      | :publish_articles |
-    #   # +--------+-----------------------+-----------------------------+------+-------------------+
+    #   # +--------+-----------------------+-------------------+------+-------------------+
+    #   # | Verb   | Path                  | Action            | Name | Named Route       |
+    #   # +--------+-----------------------+-------------------+------+-------------------+
+    #   # | PATCH  | /articles/:id/publish | Articles::Publish |      | :publish_articles |
+    #   # +--------+-----------------------+-------------------+------+-------------------+
     #
     #
     #
@@ -738,11 +738,11 @@ module Lotus
     #
     #   # It generates:
     #   #
-    #   # +------+------------------+----------------------------+------+------------------+
-    #   # | Verb | Path             | Action                     | Name | Named Route      |
-    #   # +------+------------------+----------------------------+------+------------------+
-    #   # | GET  | /articles/search | ArticlesController::Search |      | :search_articles |
-    #   # +------+------------------+----------------------------+------+------------------+
+    #   # +------+------------------+------------------+------+------------------+
+    #   # | Verb | Path             | Action           | Name | Named Route      |
+    #   # +------+------------------+------------------+------+------------------+
+    #   # | GET  | /articles/search | Articles::Search |      | :search_articles |
+    #   # +------+------------------+------------------+------+------------------+
     def resources(name, options = {}, &blk)
       Routing::Resources.new(self, name, options.merge(separator: @router.action_separator), &blk)
     end
@@ -812,7 +812,7 @@ module Lotus
     #     end
     #   end
     #
-    #   class DashboardController
+    #   module Dashboard
     #     class Index
     #       def call(env)
     #       end
@@ -831,7 +831,7 @@ module Lotus
     #   # 2. RackTwo is initialized, because it respond to #call
     #   # 3. RackThree is used as it is (object), because it respond to #call
     #   # 4. That Proc is used as it is, because it respond to #call
-    #   # 5. That string is resolved as DashboardController::Index (Lotus::Controller)
+    #   # 5. That string is resolved as Dashboard::Index (Lotus::Controller)
     def mount(app, options)
       @router.mount(app, options)
     end
