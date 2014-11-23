@@ -76,7 +76,7 @@ Lotus::Router.new do
 
   redirect '/legacy', to: '/'
 
-  mount Api::App, to: '/api'
+  mount Api::App, at: '/api'
 
   namespace 'admin' do
     get '/users', to: Users::Index
