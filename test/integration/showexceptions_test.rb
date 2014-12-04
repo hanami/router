@@ -11,8 +11,15 @@ describe Lotus::Router do
       @app = Rack::MockRequest.new(builder)
     end
 
-    it 'shows exceptions page' do
+    it 'shows textual exception stack trace by default' do
       response = @app.get('/')
+
+      response.status.must_equal 500
+      response.body.must_match 'Lotus::Routing::EndpointNotFound'
+    end
+
+    it 'shows exceptions page (when requesting HTML)' do
+      response = @app.get('/', 'HTTP_ACCEPT' => 'text/html')
 
       response.status.must_equal 500
       response.body.must_match '<body>'
