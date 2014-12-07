@@ -202,5 +202,45 @@ describe Lotus::Routing::RoutesInspector do
         end
       end
     end
+
+    describe 'nested routes' do
+      before do
+        class AdminLotusApp
+          def call(env)
+          end
+          def routes
+            Lotus::Router.new do 
+              get '/home', to: 'home#index'
+            end
+          end
+        end
+
+        @router = Lotus::Router.new do
+          get '/fakeroute', to: 'fake#index'
+          mount AdminLotusApp, at: '/admin'
+          mount Lotus::Router.new {
+            get '/posts', to: 'posts#index'
+            mount Lotus::Router.new {
+              get '/comments', to: 'comments#index'
+            }, at: '/second_mount'
+          }, at: '/api'
+        end
+      end
+
+      it 'inspect routes' do
+        formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
+        expectations  = [
+          %(| GET, HEAD |  | /fakeroute | Fake::Index |),
+          %(| GET, HEAD |  | /admin/home | Home::Index |),
+          %(| GET, HEAD |  | /api/posts | Posts::Index |),
+          %(| GET, HEAD |  | /api/second_mount/comments | Comments::Index |)
+        ]
+
+        actual = @router.inspector.to_s(formatter)
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
+    end
   end
 end
