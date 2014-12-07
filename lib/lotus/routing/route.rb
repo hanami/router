@@ -44,6 +44,15 @@ module Lotus
         self
       end
 
+      # Introspect the given route to understand if there is a wrapped
+      # Lotus::Router
+      #
+      # @since x.x.x
+      # @api private
+      def nested_router
+        dest.routes if dest.respond_to?(:routes)
+      end
+
       private
       def to=(dest = nil, &blk)
         self.to dest, &blk

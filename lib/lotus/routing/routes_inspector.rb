@@ -1,3 +1,5 @@
+require 'lotus/utils/path_prefix'
+
 module Lotus
   module Routing
     # Routes inspector
@@ -9,6 +11,12 @@ module Lotus
       # @since x.x.x
       # @api private
       FORMATTER = "%<name>20s %<methods>-10s %<path>-30s %<endpoint>-30s\n".freeze
+
+      # Default HTTP methods separator
+      #
+      # @since x.x.x
+      # @api private
+      HTTP_METHODS_SEPARATOR = ', '.freeze
 
       # Instantiate a new inspector
       #
@@ -96,41 +104,64 @@ module Lotus
       #          | GET, HEAD |  | /admin/home                | Home::Index     |
       #          | GET, HEAD |  | /api/posts                 | Posts::Index    |
       #          | GET, HEAD |  | /api/second_mount/comments | Comments::Index |
-      def to_s(formatter = FORMATTER, base_path = '')
-        @routes.each_with_object("") do |route, result|
-          destination = destination(route)
-          result << if destination && destination.respond_to?(:routes)
-            destination.routes.inspector.to_s(formatter, [base_path, route.path_for_generation].join)
+      def to_s(formatter = FORMATTER, base_path = nil)
+        base_path = Utils::PathPrefix.new(base_path)
+        result    = ''
+
+        # TODO refactoring: replace conditional with polymorphism
+        # We're exposing too much knowledge from Routing::Route:
+        # #path_for_generation and #base_path
+        @routes.each do |route|
+          result << if router = route.nested_router
+            inspect_router(formatter, router, route, base_path)
           else
-            formatter % inspect_route(route, base_path)
+            inspect_route(formatter, route, base_path)
           end
         end
+
+        result
       end
 
       private
 
-      def destination(route)
-        route.dest.__getobj__ 
-      rescue
-        nil
-      end
-
-      # Return a Hash compatible with formatter
+      # Returns a string representation of the given route
       #
-      # @return [Hash] serialized route
+      # @param formatter [String] the template for the output
+      # @param route [Lotus::Routing::Route] a route
+      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      #
+      # @return [String] serialized route
       #
       # @since x.x.x
       # @api private
       #
       # @see Lotus::Routing::RoutesInspector#FORMATTER
       # @see Lotus::Routing::RoutesInspector#to_s
-      def inspect_route(route, base_path = '')
-        Hash[
+      def inspect_route(formatter, route, base_path)
+        formatter % Hash[
           name:     route.name,
-          methods:  route.request_methods.to_a.join(", "),
-          path:     [base_path, route.original_path].join,
+          methods:  route.request_methods.to_a.join(HTTP_METHODS_SEPARATOR),
+          path:     base_path.join(route.path_for_generation),
           endpoint: route.dest.inspect
         ]
+      end
+
+      # Returns a string representation of the given router
+      #
+      # @param formatter [String] the template for the output
+      # @param route [Lotus::Routing::Route] a route
+      # @param route [Lotus::Router] a router
+      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      #
+      # @return [String] serialized routes from router
+      #
+      # @since x.x.x
+      # @api private
+      #
+      # @see Lotus::Routing::RoutesInspector#FORMATTER
+      # @see Lotus::Routing::RoutesInspector#to_s
+      def inspect_router(formatter, router, route, base_path)
+        router.inspector.to_s(formatter, base_path.join(route.path_for_generation))
       end
     end
   end
