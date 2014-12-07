@@ -170,6 +170,10 @@ module Lotus
       define(&blk)
     end
 
+    def routes
+      self
+    end
+
     # To support defining routes in the `define` wrapper.
     #
     # @param blk [Proc] the block to define the routes
