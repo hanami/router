@@ -202,5 +202,55 @@ describe Lotus::Routing::RoutesInspector do
         end
       end
     end
+
+    describe 'nested routes' do
+      before do
+        class AdminLotusApp
+          def call(env)
+          end
+
+          def routes
+            Lotus::Router.new do
+              get '/home', to: 'home#index'
+            end
+          end
+        end
+
+        inner_router = Lotus::Router.new {
+          get '/comments', to: 'comments#index'
+        }
+        nested_router = Lotus::Router.new {
+          get '/posts', to: 'posts#index'
+          mount inner_router, at: '/second_mount'
+        }
+
+        @router = Lotus::Router.new do
+          get '/fakeroute', to: 'fake#index'
+          mount AdminLotusApp,  at: '/admin'
+          mount nested_router,  at: '/api'
+          mount RackMiddleware, at: '/class'
+          mount RackMiddlewareInstanceMethod,     at: '/instance_from_class'
+          mount RackMiddlewareInstanceMethod.new, at: '/instance'
+        end
+      end
+
+      it 'inspect routes' do
+        formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
+        expectations  = [
+          %(| GET, HEAD |  | /fakeroute | Fake::Index |),
+          %(| GET, HEAD |  | /admin/home | Home::Index |),
+          %(| GET, HEAD |  | /api/posts | Posts::Index |),
+          %(| GET, HEAD |  | /api/second_mount/comments | Comments::Index |),
+          %(|  |  | /class | RackMiddleware |),
+          %(|  |  | /instance_from_class | #<RackMiddlewareInstanceMethod> |),
+          %(|  |  | /instance | #<RackMiddlewareInstanceMethod> |)
+        ]
+
+        actual = @router.inspector.to_s(formatter)
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
+    end
   end
 end

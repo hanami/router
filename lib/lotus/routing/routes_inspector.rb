@@ -1,3 +1,5 @@
+require 'lotus/utils/path_prefix'
+
 module Lotus
   module Routing
     # Routes inspector
@@ -9,6 +11,12 @@ module Lotus
       # @since x.x.x
       # @api private
       FORMATTER = "%<name>20s %<methods>-10s %<path>-30s %<endpoint>-30s\n".freeze
+
+      # Default HTTP methods separator
+      #
+      # @since x.x.x
+      # @api private
+      HTTP_METHODS_SEPARATOR = ', '.freeze
 
       # Instantiate a new inspector
       #
@@ -23,6 +31,7 @@ module Lotus
       # Return a formatted string that describes all the routes
       #
       # @param formatter [String] the optional formatter for a route
+      # @param base_path [String] the base path of a nested route
       #
       # @return [String] routes pretty print
       #
@@ -63,33 +72,96 @@ module Lotus
       #          | GET, HEAD | login  | /login  | Sessions::New     |
       #          | POST      |        | /login  | Sessions::Create  |
       #          | GET, HEAD | logout | /logout | Sessions::Destroy |
-      def to_s(formatter = FORMATTER)
-        result = ""
+      #
+      # @example Nested routes
+      #   require 'lotus/router'
+      #
+      #   class AdminLotusApp
+      #     def call(env)
+      #     end
+      #     def routes
+      #       Lotus::Router.new {
+      #         get '/home', to: 'home#index'
+      #       }
+      #     end
+      #   end
+      #
+      #   router = Lotus::Router.new {
+      #     get '/fakeroute', to: 'fake#index'
+      #     mount AdminLotusApp, at: '/admin'
+      #     mount Lotus::Router.new {
+      #       get '/posts', to: 'posts#index'
+      #       mount Lotus::Router.new {
+      #         get '/comments', to: 'comments#index'
+      #       }, at: '/second_mount'
+      #     }, at: '/api'
+      #   }
+      #
+      #   formatter = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
+      #
+      #   puts router.inspector.to_s(formatter)
+      #     # => | GET, HEAD |  | /fakeroute                 | Fake::Index     |
+      #          | GET, HEAD |  | /admin/home                | Home::Index     |
+      #          | GET, HEAD |  | /api/posts                 | Posts::Index    |
+      #          | GET, HEAD |  | /api/second_mount/comments | Comments::Index |
+      def to_s(formatter = FORMATTER, base_path = nil)
+        base_path = Utils::PathPrefix.new(base_path)
+        result    = ''
 
+        # TODO refactoring: replace conditional with polymorphism
+        # We're exposing too much knowledge from Routing::Route:
+        # #path_for_generation and #base_path
         @routes.each do |route|
-          result << formatter % inspect_route(route)
+          result << if router = route.nested_router
+            inspect_router(formatter, router, route, base_path)
+          else
+            inspect_route(formatter, route, base_path)
+          end
         end
 
         result
       end
 
       private
-      # Return a Hash compatible with formatter
+
+      # Returns a string representation of the given route
       #
-      # @return [Hash] serialized route
+      # @param formatter [String] the template for the output
+      # @param route [Lotus::Routing::Route] a route
+      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      #
+      # @return [String] serialized route
       #
       # @since x.x.x
       # @api private
       #
       # @see Lotus::Routing::RoutesInspector#FORMATTER
       # @see Lotus::Routing::RoutesInspector#to_s
-      def inspect_route(route)
-        Hash[
+      def inspect_route(formatter, route, base_path)
+        formatter % Hash[
           name:     route.name,
-          methods:  route.request_methods.to_a.join(", "),
-          path:     route.original_path,
+          methods:  route.request_methods.to_a.join(HTTP_METHODS_SEPARATOR),
+          path:     base_path.join(route.path_for_generation),
           endpoint: route.dest.inspect
         ]
+      end
+
+      # Returns a string representation of the given router
+      #
+      # @param formatter [String] the template for the output
+      # @param route [Lotus::Routing::Route] a route
+      # @param route [Lotus::Router] a router
+      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      #
+      # @return [String] serialized routes from router
+      #
+      # @since x.x.x
+      # @api private
+      #
+      # @see Lotus::Routing::RoutesInspector#FORMATTER
+      # @see Lotus::Routing::RoutesInspector#to_s
+      def inspect_router(formatter, router, route, base_path)
+        router.inspector.to_s(formatter, base_path.join(route.path_for_generation))
       end
     end
   end
