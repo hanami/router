@@ -198,6 +198,24 @@ module Lotus
       instance_eval(&blk) if block_given?
     end
 
+    # Check if there are defined routes
+    #
+    # @return [TrueClass,FalseClass] the result of the check
+    #
+    # @since x.x.x
+    # @api private
+    #
+    # @example
+    #
+    #   router = Lotus::Router.new
+    #   router.defined? # => false
+    #
+    #   router = Lotus::Router.new { get '/', to: ->(env) { } }
+    #   router.defined? # => true
+    def defined?
+      @router.routes.any?
+    end
+
     # Defines a route that accepts a GET request for the given path.
     #
     # @param path [String] the relative URL to be matched
