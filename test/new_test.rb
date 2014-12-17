@@ -44,6 +44,14 @@ describe Lotus::Router do
       route.dest.must_equal(Test::Show)
     end
 
+    it 'checks if there are defined routes' do
+      router = Lotus::Router.new
+      router.wont_be :defined?
+
+      router = Lotus::Router.new { get '/', to: ->(env) { } }
+      router.must_be :defined?
+    end
+
     it 'recognizes path' do
       @app.get('/route').status.must_equal 200
     end
