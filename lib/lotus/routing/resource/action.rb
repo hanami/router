@@ -32,7 +32,7 @@ module Lotus
         # Separator for named routes
         #
         # @api private
-        # @since x.x.x
+        # @since 0.2.0
         class_attribute :named_route_separator
         self.named_route_separator = '_'.freeze
 
@@ -95,7 +95,7 @@ module Lotus
         # Namespace
         #
         # @api private
-        # @since x.x.x
+        # @since 0.2.0
         def namespace
           @namespace ||= Utils::PathPrefix.new @options[:namespace]
         end

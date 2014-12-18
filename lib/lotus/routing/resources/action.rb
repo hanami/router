@@ -21,7 +21,7 @@ module Lotus
 
         # Id route variable
         #
-        # @since x.x.x
+        # @since 0.2.0
         # @api private
         class_attribute :identifier
         self.identifier = ':id'.freeze

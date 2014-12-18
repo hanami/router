@@ -4,17 +4,17 @@ module Lotus
   module Routing
     # Routes inspector
     #
-    # @since x.x.x
+    # @since 0.2.0
     class RoutesInspector
       # Default route formatter
       #
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       FORMATTER = "%<name>20s %<methods>-10s %<path>-30s %<endpoint>-30s\n".freeze
 
       # Default HTTP methods separator
       #
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       HTTP_METHODS_SEPARATOR = ', '.freeze
 
@@ -22,7 +22,7 @@ module Lotus
       #
       # @return [Lotus::Routing::RoutesInspector] the new instance
       #
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       def initialize(routes)
         @routes = routes
@@ -35,7 +35,7 @@ module Lotus
       #
       # @return [String] routes pretty print
       #
-      # @since x.x.x
+      # @since 0.2.0
       #
       # @see Lotus::Routing::RoutesInspector::FORMATTER
       #
@@ -132,7 +132,7 @@ module Lotus
       #
       # @return [String] serialized route
       #
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       #
       # @see Lotus::Routing::RoutesInspector#FORMATTER
@@ -155,7 +155,7 @@ module Lotus
       #
       # @return [String] serialized routes from router
       #
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       #
       # @see Lotus::Routing::RoutesInspector#FORMATTER

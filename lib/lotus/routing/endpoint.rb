@@ -30,7 +30,7 @@ module Lotus
     #     get '/rack-app', to: RackApp.new
     #   end
     class Endpoint < SimpleDelegator
-      # @since x.x.x
+      # @since 0.2.0
       def inspect
         case __getobj__
         when Proc
@@ -117,7 +117,7 @@ module Lotus
         obj.call(env)
       end
 
-      # @since x.x.x
+      # @since 0.2.0
       def inspect
         # TODO review this implementation once the namespace feature will be
         # cleaned up.
@@ -138,7 +138,7 @@ module Lotus
         klass.new
       end
 
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       def klass
         Utils::Class.load!(@name, @namespace)

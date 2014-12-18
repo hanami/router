@@ -47,7 +47,7 @@ module Lotus
       # Introspect the given route to understand if there is a wrapped
       # Lotus::Router
       #
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       def nested_router
         dest.routes if dest.respond_to?(:routes)
