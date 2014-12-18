@@ -170,6 +170,16 @@ module Lotus
       define(&blk)
     end
 
+    # Returns self
+    #
+    # This is a duck-typing trick for compatibility with `Lotus::Application`.
+    # It's used by `Lotus::Routing::RoutesInspector` to inspect both apps and
+    # routers.
+    #
+    # @return [self]
+    #
+    # @since 0.2.0
+    # @api private
     def routes
       self
     end
@@ -180,7 +190,7 @@ module Lotus
     #
     # @return [Lotus::Routing::Route]
     #
-    # @since x.x.x
+    # @since 0.2.0
     #
     # @example In Lotus framework
     #   class Application < Lotus::Application
@@ -202,7 +212,7 @@ module Lotus
     #
     # @return [TrueClass,FalseClass] the result of the check
     #
-    # @since x.x.x
+    # @since 0.2.0
     # @api private
     #
     # @example
@@ -925,7 +935,7 @@ module Lotus
 
     # Returns an routes inspector
     #
-    # @since x.x.x
+    # @since 0.2.0
     #
     # @see Lotus::Routing::RoutesInspector
     #

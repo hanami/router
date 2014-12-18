@@ -10,7 +10,7 @@ module Lotus
     #
     # @api private
     class EndpointResolver
-      # @since x.x.x
+      # @since 0.2.0
       # @api private
       NAMING_PATTERN = '%{controller}::%{action}'.freeze
 
@@ -50,15 +50,9 @@ module Lotus
       # @option options [String] :action_separator the sepatator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
       #
-      #
-      #
       # @return [Lotus::Routing::EndpointResolver] self
       #
-      #
-      #
       # @since 0.1.0
-      #
-      #
       #
       # @example Specify custom endpoint class
       #   require 'lotus/router'
@@ -67,8 +61,6 @@ module Lotus
       #   router   = Lotus::Router.new(resolver: resolver)
       #
       #   router.get('/', to: endpoint).dest # => #<CustomEndpoint:0x007f97f3359570 ...>
-      #
-      #
       #
       # @example Specify custom Ruby namespace
       #   require 'lotus/router'
