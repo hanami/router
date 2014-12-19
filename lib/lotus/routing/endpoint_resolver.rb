@@ -43,8 +43,9 @@ module Lotus
       #   lookup for controllers and actions. (defaults to `Object`)
       #
       # @option options [String] :pattern the string to interpolate in order
-      #   to return an action name. This string SHOULD contain `'%{controller}'`
-      #   and `'%{action}'`, all the other keys will be ignored.
+      #   to return an action name. This string SHOULD contain
+      #   <tt>'%{controller}'</tt> and <tt>'%{action}'</tt>, all the other keys
+      #   will be ignored.
       #   See the examples below.
       #
       # @option options [String] :action_separator the sepatator between controller and

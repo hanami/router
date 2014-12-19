@@ -149,8 +149,8 @@ module Lotus
       # Returns a string representation of the given router
       #
       # @param formatter [String] the template for the output
+      # @param router [Lotus::Router] a router
       # @param route [Lotus::Routing::Route] a route
-      # @param route [Lotus::Router] a router
       # @param base_path [Lotus::Utils::PathPrefix] the base path
       #
       # @return [String] serialized routes from router
