@@ -62,6 +62,22 @@ describe Lotus::Routing::EndpointResolver do
     end
   end
 
+  describe 'endpoint' do
+    before do
+      @resolver = Lotus::Routing::EndpointResolver.new(namespace: Web::Controllers)
+    end
+
+    it 'if :to is an action without middleware' do
+      options = { to: 'dashboard#index' }
+      @resolver.resolve(options).class.must_equal Lotus::Routing::ClassEndpoint
+    end
+
+    it 'if :to is an action with middleware' do
+      options = { to: 'home#index' }
+      @resolver.resolve(options).class.must_equal Lotus::Routing::Endpoint
+    end
+  end
+
   describe 'custom endpoint' do
     before :all do
       class CustomEndpoint

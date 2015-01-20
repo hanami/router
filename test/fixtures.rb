@@ -1,6 +1,32 @@
 require 'rexml/document'
 require 'lotus/routing/parsing/parser'
 
+module Web
+  module Controllers
+    module Home
+      class Index
+        # mocking class call method for middleware
+        def self.call(env)
+          code, headers, body = self.new.call(env)
+          [code, headers.merge('X-Middleware' => 'CALLED'), body]
+        end
+
+        def call(params)
+          [200, {}, ['Hello from Web::Controllers::Home::Index']]
+        end
+      end
+    end # Home
+
+    module Dashboard
+      class Index
+        def call(params)
+          [200, {}, ['Hello from Web::Controllers::Dashboard::Index']]
+        end
+      end
+    end # Dashboard
+  end
+end # Web
+
 module Api
   class App
     def call(env)
