@@ -183,11 +183,14 @@ module Lotus
       end
 
       def constantize(string)
-        begin
-          ClassEndpoint.new(Utils::Class.load!(string, @namespace))
-        rescue NameError
-          LazyEndpoint.new(string, @namespace)
+        klass = Utils::Class.load!(string, @namespace)
+        if klass.respond_to?(:call)
+          Endpoint.new(klass)
+        else
+          ClassEndpoint.new(klass)
         end
+      rescue NameError
+        LazyEndpoint.new(string, @namespace)
       end
 
       def classify(string)
