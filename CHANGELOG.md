@@ -1,6 +1,10 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.2.1 - 2015-01-30
+### Added
+- [Alfonso Uceda Pompa] Lotus::Action compat: invoke `.call` if defined, otherwise fall back to `#call`.
+
 ## v0.2.0 - 2014-12-23
 ### Added
 - [Luca Guidi & Alfonso Uceda Pompa] Introduced routes inspector for CLI
