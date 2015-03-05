@@ -21,6 +21,7 @@ module Lotus
         # @param options [Hash]
         # @option options [Hash] :only white list of the default actions
         # @option options [Hash] :except black list of the default actions
+        # @option options [String] :controller namespace for an actions
         #
         # @api private
         # @since 0.1.0

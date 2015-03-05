@@ -140,5 +140,37 @@ describe Lotus::Router do
         @app.request('GET', '/keyboards/characters').body.must_equal 'Keyboards::Characters'
       end
     end
+
+    describe ':controller option' do
+      before do
+        @router.resources 'keyboards', controller: 'keys' do
+          collection do
+            get 'search'
+          end
+
+          member do
+            get 'screenshot'
+          end
+        end
+      end
+
+      it 'recognizes path with different controller' do
+        @router.path(:keyboards).must_equal '/keyboards'
+        @router.path(:keyboards, id: 3).must_equal '/keyboards/3'
+        @router.path(:new_keyboards).must_equal '/keyboards/new'
+        @router.path(:edit_keyboards, id: 5).must_equal '/keyboards/5/edit'
+        @router.path(:search_keyboards).must_equal '/keyboards/search'
+        @router.path(:screenshot_keyboards, id: 8).must_equal '/keyboards/8/screenshot'
+
+        @app.request('GET', '/keyboards').body.must_equal 'Keys::Index'
+        @app.request('GET', '/keyboards/new').body.must_equal 'Keys::New'
+        @app.request('GET', '/keyboards/1/edit').body.must_equal 'Keys::Edit 1'
+        @app.request('POST', '/keyboards').body.must_equal 'Keys::Create'
+        @app.request('PATCH', '/keyboards/1').body.must_equal 'Keys::Update 1'
+        @app.request('DELETE', '/keyboards/1').body.must_equal 'Keys::Destroy 1'
+        @app.request('GET', '/keyboards/search').body.must_equal 'Keys::Search'
+        @app.request('GET', '/keyboards/8/screenshot').body.must_equal 'Keys::Screenshot 8'
+      end
+    end
   end
 end

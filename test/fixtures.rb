@@ -292,6 +292,62 @@ module Keyboards
   end
 end # Keyboards
 
+module Keys
+  class Index
+    def call(env)
+      [200, {}, ['Keys::Index']]
+    end
+  end
+
+  class New
+    def call(env)
+      [200, {}, ['Keys::New']]
+    end
+  end
+
+  class Create
+    def call(env)
+      [200, {}, ['Keys::Create']]
+    end
+  end
+
+  class Edit
+    def call(env)
+      [200, {}, ['Keys::Edit ' + env['router.params'][:id]]]
+    end
+  end
+
+  class Update
+    def call(env)
+      [200, {}, ['Keys::Update ' + env['router.params'][:id]]]
+    end
+  end
+
+  class Show
+    def call(env)
+      [200, {}, ['Keys::Show ' + env['router.params'][:id]]]
+    end
+  end
+
+  class Destroy
+    def call(env)
+      [200, {}, ['Keys::Destroy ' + env['router.params'][:id]]]
+    end
+  end
+
+  class Search
+    def call(env)
+      [200, {}, ['Keys::Search']]
+    end
+  end
+
+  class Screenshot
+    def call(env)
+      [200, {}, ['Keys::Screenshot ' + env['router.params'][:id]]]
+    end
+  end
+end # Keyboards
+
 class XmlParser < Lotus::Routing::Parsing::Parser
   def mime_types
     ['application/xml', 'text/xml']
