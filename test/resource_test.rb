@@ -132,5 +132,16 @@ describe Lotus::Router do
         @app.request('GET', '/profile/activities').body.must_equal 'Profile::Activities'
       end
     end
+
+    describe 'controller' do
+      before do
+        @router.resource 'profile', controller: 'keys', only: [:new]
+      end
+
+      it 'recognizes path with different controller' do
+        @router.path(:new_profile).must_equal               '/profile/new'
+        @app.request('GET', '/profile/new').body.must_equal 'Keys::New'
+      end
+    end
   end
 end

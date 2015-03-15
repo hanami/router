@@ -206,7 +206,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def endpoint
-          [ resource_name, action_name ].join separator
+          [ controller_name, action_name ].join separator
         end
 
         # Separator between controller and action name
@@ -220,6 +220,22 @@ module Lotus
         # @since 0.1.0
         def separator
           @options[:separator]
+        end
+
+        # Resource controller name
+        #
+        # @example
+        #   Lotus::Router.new do
+        #     resources 'flowers', controller: 'rocks'
+        #   end
+        #
+        #   # It will mount path 'flowers/new' to Rocks::New instead of Flowers::New
+        #   # Same for other action names
+        #
+        # @api private
+        # @since 0.2.1
+        def controller_name
+          @options[:controller] || resource_name
         end
       end
 
@@ -249,7 +265,7 @@ module Lotus
         end
 
         def endpoint(action_name)
-          [ resource_name, action_name ].join separator
+          [ controller_name, action_name ].join separator
         end
 
         def as(action_name)
