@@ -398,6 +398,16 @@ router.path(:authorizations_identity) # => /identity/authorizations
 ```
 
 
+Configure controller:
+
+```ruby
+router = Lotus::Router.new
+router.resource 'profile', controller: 'identity'
+
+router.path(:profile) # => /profile # Will route to Identity::Show
+```
+
+
 
 ### RESTful Resources:
 
@@ -504,6 +514,16 @@ end
 
 router.path(:toggle_flowers, id: 23)  # => /flowers/23/toggle
 router.path(:search_flowers)          # => /flowers/search
+```
+
+
+Configure controller:
+
+```ruby
+router = Lotus::Router.new
+router.resources 'blossoms', controller: 'flowers'
+
+router.path(:blossoms, id: 23) # => /blossoms/23 # Will route to Flowers::Show
 ```
 
 ## Testing

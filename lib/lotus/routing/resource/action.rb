@@ -233,7 +233,7 @@ module Lotus
         #   # Same for other action names
         #
         # @api private
-        # @since 0.2.1
+        # @since x.x.x
         def controller_name
           @options[:controller] || resource_name
         end
