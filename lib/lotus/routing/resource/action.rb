@@ -15,6 +15,12 @@ module Lotus
       class Action
         include Utils::ClassAttribute
 
+        # Nested routes separator
+        #
+        # @api private
+        # @since x.x.x
+        NESTED_ROUTES_SEPARATOR = '/'.freeze
+
         # Ruby namespace where lookup for default subclasses.
         #
         # @api private
@@ -157,7 +163,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def rest_path
-          namespace.join(resource_name)
+          namespace.join(_nested_rest_path || resource_name.to_s)
         end
 
         # The namespaced name of the action within the whole context of the router.
@@ -179,7 +185,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def as
-          namespace.relative_join(resource_name, self.class.named_route_separator).to_sym
+          namespace.relative_join(resource_name.to_s.gsub(NESTED_ROUTES_SEPARATOR, self.class.named_route_separator), self.class.named_route_separator).to_sym
         end
 
         # The name of the RESTful action.
@@ -236,6 +242,23 @@ module Lotus
         # @since x.x.x
         def controller_name
           @options[:controller] || resource_name
+        end
+
+        private
+
+        # Create nested rest path
+        #
+        # @api private
+        # @since x.x.x
+        def _nested_rest_path
+          temp_rest_path = resource_name.to_s
+          if temp_rest_path.include? NESTED_ROUTES_SEPARATOR
+            temp_path = temp_rest_path.split NESTED_ROUTES_SEPARATOR
+            resource = temp_path.pop
+            temp_path.map do |nested|
+              nested.concat("#{NESTED_ROUTES_SEPARATOR}:#{nested}_id#{NESTED_ROUTES_SEPARATOR}")
+            end.push(resource).join
+          end
         end
       end
 

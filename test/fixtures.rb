@@ -392,3 +392,63 @@ module Travels
     end
   end
 end
+
+module Nested
+  module Controllers
+    module Users
+      module Posts
+        class Index
+          def call(env)
+            [200, {}, ['Hello from Nested::Controllers::Users::Posts::Index']]
+          end
+        end
+      end
+      module Avatar
+        class Show
+          def call(env)
+            [200, {}, ['Hello from Nested::Controllers::Users::Avatar::Show']]
+          end
+        end
+      end
+      module Posts
+        module Comments
+          class Index
+            def call(env)
+              [200, {}, ['Hello from Nested::Controllers::Users::Posts::Comments::Index']]
+            end
+          end
+        end
+      end
+    end
+    module User
+      module Comments
+        class Index
+          def call(env)
+            [200, {}, ['Hello from Nested::Controllers::User::Comments::Index']]
+          end
+        end
+      end
+      module ApiKey
+        class Show
+          def call(env)
+            [200, {}, ['Hello from Nested::Controllers::User::ApiKey::Show']]
+          end
+        end
+      end
+    end
+    module Products
+      module Variants
+        class Index
+          def call(env)
+            [200, {}, ['Hello from Nested::Controllers::Products::Variants::Index']]
+          end
+        end
+        class Show
+          def call(env)
+            [200, {}, ['Hello from Nested::Controllers::Products::Variants::Show']]
+          end
+        end
+      end
+    end
+  end
+end

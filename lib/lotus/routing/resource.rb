@@ -52,7 +52,30 @@ module Lotus
         generate(&blk)
       end
 
+      # Allow nested resources inside resource or resources
+      #
+      # @since x.x.x
+      #
+      # @see Lotus::Router#resources
+      def resources(name, options = {}, &blk)
+        _resource(Resources, name, options, &blk)
+      end
+
+      # Allow nested resource inside resource or resources
+      #
+      # @since x.x.x
+      #
+      # @see Lotus::Router#resource
+      def resource(name, options = {}, &blk)
+        _resource(Resource, name, options, &blk)
+      end
+
       private
+
+      def _resource(klass, name, options, &blk)
+        klass.new(@router, "#{@name}#{Resource::Action::NESTED_ROUTES_SEPARATOR}#{name}", options.merge(separator: @options[:separator], namespace: @options[:namespace]), &blk)
+      end
+
       def generate(&blk)
         instance_eval(&blk) if block_given?
 
