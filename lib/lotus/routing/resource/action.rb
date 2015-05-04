@@ -185,7 +185,8 @@ module Lotus
         # @api private
         # @since 0.1.0
         def as
-          namespace.relative_join(resource_name.to_s.gsub(NESTED_ROUTES_SEPARATOR, self.class.named_route_separator), self.class.named_route_separator).to_sym
+          singularized_as = resource_name.to_s.split(NESTED_ROUTES_SEPARATOR).map { |name| Lotus::Utils::String.new(name).singularize }.join(self.class.named_route_separator)
+          namespace.relative_join(singularized_as, self.class.named_route_separator).to_sym
         end
 
         # The name of the RESTful action.
@@ -256,7 +257,8 @@ module Lotus
             temp_path = temp_rest_path.split NESTED_ROUTES_SEPARATOR
             resource = temp_path.pop
             temp_path.map do |nested|
-              nested.concat("#{NESTED_ROUTES_SEPARATOR}:#{nested}_id#{NESTED_ROUTES_SEPARATOR}")
+              sigularized_param = Lotus::Utils::String.new(nested).singularize
+              nested.concat("#{NESTED_ROUTES_SEPARATOR}:#{sigularized_param}_id#{NESTED_ROUTES_SEPARATOR}")
             end.push(resource).join
           end
         end

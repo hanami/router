@@ -130,7 +130,7 @@ describe Lotus::Router do
       end
 
       it 'recognizes get new' do
-        @router.path(:new_vegetals_flowers).must_equal          '/vegetals/flowers/new'
+        @router.path(:new_vegetals_flower).must_equal          '/vegetals/flowers/new'
         @app.request('GET', '/vegetals/flowers/new').body.must_equal     'Flowers::New'
       end
 
@@ -140,22 +140,22 @@ describe Lotus::Router do
       end
 
       it 'recognizes get show' do
-        @router.path(:vegetals_flowers, id: 23).must_equal               '/vegetals/flowers/23'
+        @router.path(:vegetals_flower, id: 23).must_equal               '/vegetals/flowers/23'
         @app.request('GET', '/vegetals/flowers/23').body.must_equal      'Flowers::Show 23'
       end
 
       it 'recognizes get edit' do
-        @router.path(:edit_vegetals_flowers, id: 23).must_equal          '/vegetals/flowers/23/edit'
+        @router.path(:edit_vegetals_flower, id: 23).must_equal          '/vegetals/flowers/23/edit'
         @app.request('GET', '/vegetals/flowers/23/edit').body.must_equal 'Flowers::Edit 23'
       end
 
       it 'recognizes patch update' do
-        @router.path(:vegetals_flowers, id: 23).must_equal               '/vegetals/flowers/23'
+        @router.path(:vegetals_flower, id: 23).must_equal               '/vegetals/flowers/23'
         @app.request('PATCH', '/vegetals/flowers/23').body.must_equal    'Flowers::Update 23'
       end
 
       it 'recognizes delete destroy' do
-        @router.path(:vegetals_flowers, id: 23).must_equal               '/vegetals/flowers/23'
+        @router.path(:vegetals_flower, id: 23).must_equal               '/vegetals/flowers/23'
         @app.request('DELETE', '/vegetals/flowers/23').body.must_equal   'Flowers::Destroy 23'
       end
 
@@ -170,7 +170,7 @@ describe Lotus::Router do
           @router.path(:electronics_keyboards).must_equal                       '/electronics/keyboards'
           @app.request('GET', '/electronics/keyboards').body.must_equal         'Keyboards::Index'
 
-          @router.path(:edit_electronics_keyboards, id: 23).must_equal          '/electronics/keyboards/23/edit'
+          @router.path(:edit_electronics_keyboard, id: 23).must_equal          '/electronics/keyboards/23/edit'
           @app.request('GET', '/electronics/keyboards/23/edit').body.must_equal 'Keyboards::Edit 23'
         end
 
@@ -196,7 +196,7 @@ describe Lotus::Router do
           @router.path(:electronics_keyboards).must_equal                       '/electronics/keyboards'
           @app.request('GET', '/electronics/keyboards').body.must_equal         'Keyboards::Index'
 
-          @router.path(:edit_electronics_keyboards, id: 23).must_equal          '/electronics/keyboards/23/edit'
+          @router.path(:edit_electronics_keyboard, id: 23).must_equal          '/electronics/keyboards/23/edit'
           @app.request('GET', '/electronics/keyboards/23/edit').body.must_equal 'Keyboards::Edit 23'
 
           @router.path(:electronics_keyboards).must_equal                       '/electronics/keyboards'
@@ -228,7 +228,7 @@ describe Lotus::Router do
         end
 
         it 'recognizes member actions' do
-          @router.path(:screenshot_electronics_keyboards, id: 23).must_equal          '/electronics/keyboards/23/screenshot'
+          @router.path(:screenshot_electronics_keyboard, id: 23).must_equal          '/electronics/keyboards/23/screenshot'
           @app.request('GET', "/electronics/keyboards/23/screenshot").body.must_equal 'Keyboards::Screenshot 23'
         end
       end

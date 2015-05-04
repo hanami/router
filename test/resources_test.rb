@@ -21,7 +21,7 @@ describe Lotus::Router do
     end
 
     it 'recognizes get new' do
-      @router.path(:new_flowers).must_equal                   '/flowers/new'
+      @router.path(:new_flower).must_equal                   '/flowers/new'
       @app.request('GET', '/flowers/new').body.must_equal     'Flowers::New'
     end
 
@@ -31,22 +31,22 @@ describe Lotus::Router do
     end
 
     it 'recognizes get show' do
-      @router.path(:flowers, id: 23).must_equal               '/flowers/23'
+      @router.path(:flower, id: 23).must_equal               '/flowers/23'
       @app.request('GET', '/flowers/23').body.must_equal      'Flowers::Show 23'
     end
 
     it 'recognizes get edit' do
-      @router.path(:edit_flowers, id: 23).must_equal          '/flowers/23/edit'
+      @router.path(:edit_flower, id: 23).must_equal          '/flowers/23/edit'
       @app.request('GET', '/flowers/23/edit').body.must_equal 'Flowers::Edit 23'
     end
 
     it 'recognizes patch update' do
-      @router.path(:flowers, id: 23).must_equal               '/flowers/23'
+      @router.path(:flower, id: 23).must_equal               '/flowers/23'
       @app.request('PATCH', '/flowers/23').body.must_equal    'Flowers::Update 23'
     end
 
     it 'recognizes delete destroy' do
-      @router.path(:flowers, id: 23).must_equal               '/flowers/23'
+      @router.path(:flower, id: 23).must_equal               '/flowers/23'
       @app.request('DELETE', '/flowers/23').body.must_equal   'Flowers::Destroy 23'
     end
 
@@ -59,7 +59,7 @@ describe Lotus::Router do
         @router.path(:keyboards).must_equal                       '/keyboards'
         @app.request('GET', '/keyboards').body.must_equal         'Keyboards::Index'
 
-        @router.path(:edit_keyboards, id: 23).must_equal          '/keyboards/23/edit'
+        @router.path(:edit_keyboard, id: 23).must_equal          '/keyboards/23/edit'
         @app.request('GET', '/keyboards/23/edit').body.must_equal 'Keyboards::Edit 23'
       end
 
@@ -83,7 +83,7 @@ describe Lotus::Router do
         @router.path(:keyboards).must_equal                       '/keyboards'
         @app.request('GET', '/keyboards').body.must_equal         'Keyboards::Index'
 
-        @router.path(:edit_keyboards, id: 23).must_equal          '/keyboards/23/edit'
+        @router.path(:edit_keyboard, id: 23).must_equal          '/keyboards/23/edit'
         @app.request('GET', '/keyboards/23/edit').body.must_equal 'Keyboards::Edit 23'
 
         @router.path(:keyboards).must_equal                       '/keyboards'
@@ -110,12 +110,12 @@ describe Lotus::Router do
       end
 
       it 'recognizes the path' do
-        @router.path(:screenshot_keyboards, id: 23).must_equal          '/keyboards/23/screenshot'
+        @router.path(:screenshot_keyboard, id: 23).must_equal          '/keyboards/23/screenshot'
         @app.request('GET', '/keyboards/23/screenshot').body.must_equal 'Keyboards::Screenshot 23'
       end
 
       it 'recognizes the path with a leading slash' do
-        @router.path(:print_keyboards, id: 23).must_equal          '/keyboards/23/print'
+        @router.path(:print_keyboard, id: 23).must_equal          '/keyboards/23/print'
         @app.request('GET', '/keyboards/23/print').body.must_equal 'Keyboards::Print 23'
       end
     end
@@ -156,11 +156,11 @@ describe Lotus::Router do
 
       it 'recognizes path with different controller' do
         @router.path(:keyboards).must_equal '/keyboards'
-        @router.path(:keyboards, id: 3).must_equal '/keyboards/3'
-        @router.path(:new_keyboards).must_equal '/keyboards/new'
-        @router.path(:edit_keyboards, id: 5).must_equal '/keyboards/5/edit'
+        @router.path(:keyboard, id: 3).must_equal '/keyboards/3'
+        @router.path(:new_keyboard).must_equal '/keyboards/new'
+        @router.path(:edit_keyboard, id: 5).must_equal '/keyboards/5/edit'
         @router.path(:search_keyboards).must_equal '/keyboards/search'
-        @router.path(:screenshot_keyboards, id: 8).must_equal '/keyboards/8/screenshot'
+        @router.path(:screenshot_keyboard, id: 8).must_equal '/keyboards/8/screenshot'
 
         @app.request('GET', '/keyboards').body.must_equal 'Keys::Index'
         @app.request('GET', '/keyboards/new').body.must_equal 'Keys::New'

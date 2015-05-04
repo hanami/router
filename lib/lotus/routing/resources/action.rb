@@ -27,6 +27,21 @@ module Lotus
         self.identifier = ':id'.freeze
       end
 
+      # Pluralize concrete actions
+      #
+      # @api private
+      # @since x.x.x
+      module PluralizedAction
+        private
+        # The name of the RESTful action.
+        #
+        # @api private
+        # @since x.x.x
+        def as
+         Lotus::Utils::String.new(super).pluralize
+        end
+      end
+
       # Collection action
       # It implements #collection within a #resources block.
       #
@@ -34,6 +49,9 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class CollectionAction < Resource::CollectionAction
+        def as(action_name)
+         Lotus::Utils::String.new(super(action_name)).pluralize
+        end
       end
 
       # Member action
@@ -66,6 +84,7 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Index < Action
+        include PluralizedAction
         self.verb = :get
       end
 
@@ -83,6 +102,7 @@ module Lotus
       # @since 0.1.0
       # @see Lotus::Router#resources
       class Create < Resource::Create
+        include PluralizedAction
       end
 
       # Show action
