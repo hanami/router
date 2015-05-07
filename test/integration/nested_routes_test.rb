@@ -77,22 +77,22 @@ describe 'Nested resources' do
       end
 
       it 'for resource -> resources' do
-        @inspector.must_match 'user_comments GET, HEAD  /user/:user_id/comments        Nested::Controllers::User::Comments::Index'
-        @inspector.must_match 'new_user_comment GET, HEAD  /user/:user_id/comments/new    Nested::Controllers::User::Comments::New'
-        @inspector.must_match 'user_comments POST       /user/:user_id/comments        Nested::Controllers::User::Comments::Create'
-        @inspector.must_match 'user_comment GET, HEAD  /user/:user_id/comments/:id    Nested::Controllers::User::Comments::Show'
-        @inspector.must_match 'edit_user_comment GET, HEAD  /user/:user_id/comments/:id/edit Nested::Controllers::User::Comments::Edit'
-        @inspector.must_match 'user_comment PATCH      /user/:user_id/comments/:id    Nested::Controllers::User::Comments::Update'
-        @inspector.must_match 'user_comment DELETE     /user/:user_id/comments/:id    Nested::Controllers::User::Comments::Destroy'
+        @inspector.must_match 'user_comments GET, HEAD  /user/comments                 Nested::Controllers::User::Comments::Index'
+        @inspector.must_match 'new_user_comment GET, HEAD  /user/comments/new             Nested::Controllers::User::Comments::New'
+        @inspector.must_match 'user_comments POST       /user/comments                 Nested::Controllers::User::Comments::Create'
+        @inspector.must_match 'user_comment GET, HEAD  /user/comments/:id             Nested::Controllers::User::Comments::Show'
+        @inspector.must_match 'edit_user_comment GET, HEAD  /user/comments/:id/edit        Nested::Controllers::User::Comments::Edit'
+        @inspector.must_match 'user_comment PATCH      /user/comments/:id             Nested::Controllers::User::Comments::Update'
+        @inspector.must_match 'user_comment DELETE     /user/comments/:id             Nested::Controllers::User::Comments::Destroy'
       end
 
       it 'for resource -> resource' do
-        @inspector.must_match 'new_user_api_key GET, HEAD  /user/:user_id/api_key/new     Nested::Controllers::User::ApiKey::New'
-        @inspector.must_match 'user_api_key POST       /user/:user_id/api_key         Nested::Controllers::User::ApiKey::Create'
-        @inspector.must_match 'user_api_key GET, HEAD  /user/:user_id/api_key         Nested::Controllers::User::ApiKey::Show'
-        @inspector.must_match 'edit_user_api_key GET, HEAD  /user/:user_id/api_key/edit    Nested::Controllers::User::ApiKey::Edit'
-        @inspector.must_match 'user_api_key PATCH      /user/:user_id/api_key         Nested::Controllers::User::ApiKey::Update'
-        @inspector.must_match 'user_api_key DELETE     /user/:user_id/api_key         Nested::Controllers::User::ApiKey::Destroy'
+        @inspector.must_match 'new_user_api_key GET, HEAD  /user/api_key/new              Nested::Controllers::User::ApiKey::New'
+        @inspector.must_match 'user_api_key POST       /user/api_key                  Nested::Controllers::User::ApiKey::Create'
+        @inspector.must_match 'user_api_key GET, HEAD  /user/api_key                  Nested::Controllers::User::ApiKey::Show'
+        @inspector.must_match 'edit_user_api_key GET, HEAD  /user/api_key/edit             Nested::Controllers::User::ApiKey::Edit'
+        @inspector.must_match 'user_api_key PATCH      /user/api_key                  Nested::Controllers::User::ApiKey::Update'
+        @inspector.must_match 'user_api_key DELETE     /user/api_key                  Nested::Controllers::User::ApiKey::Destroy'
       end
 
       it 'for deep nested routes' do
@@ -181,14 +181,14 @@ describe 'Nested resources' do
 
     describe 'user -> comments' do
       it 'should match body' do
-        response = @app.get('/user/1/comments')
+        response = @app.get('/user/comments')
         response.body.must_equal 'Hello from Nested::Controllers::User::Comments::Index'
       end
     end
 
-    describe 'user -> api_keys' do
+    describe 'user -> api_key' do
       it 'should match body' do
-        response = @app.get('/user/1/api_key')
+        response = @app.get('/user/api_key')
         response.body.must_equal 'Hello from Nested::Controllers::User::ApiKey::Show'
       end
     end
