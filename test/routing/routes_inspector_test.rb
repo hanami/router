@@ -167,13 +167,13 @@ describe Lotus::Routing::RoutesInspector do
 
       it 'inspects routes' do
         expectations = [
-          %(     books GET, HEAD  /books                         Books::Index),
-          %( new_books GET, HEAD  /books/new                     Books::New),
-          %(     books POST       /books                         Books::Create),
-          %(     books GET, HEAD  /books/:id                     Books::Show),
-          %(edit_books GET, HEAD  /books/:id/edit                Books::Edit),
-          %(     books PATCH      /books/:id                     Books::Update),
-          %(     books DELETE     /books/:id                     Books::Destroy)
+         %(     books GET, HEAD  /books                         Books::Index),
+          %( new_book GET, HEAD  /books/new                     Books::New),
+         %(     books POST       /books                         Books::Create),
+          %(     book GET, HEAD  /books/:id                     Books::Show),
+          %(edit_book GET, HEAD  /books/:id/edit                Books::Edit),
+          %(     book PATCH      /books/:id                     Books::Update),
+          %(     book DELETE     /books/:id                     Books::Destroy)
         ]
 
         actual = @router.inspector.to_s
