@@ -1,7 +1,7 @@
 require 'lotus/utils/string'
 require 'lotus/utils/path_prefix'
 require 'lotus/utils/class_attribute'
-require 'lotus/routing/nested'
+require 'lotus/routing/resource/nested'
 
 module Lotus
   module Routing
@@ -48,6 +48,7 @@ module Lotus
         # @param router [Lotus::Router]
         # @param action [Lotus::Routing::Resource::Action]
         # @param options [Hash]
+        # @param resource [Lotus::Routing::Resource, Lotus::Routing::Resources]
         #
         # @api private
         #
@@ -60,6 +61,7 @@ module Lotus
         #
         # @param router [Lotus::Router]
         # @param options [Hash]
+        # @param resource [Lotus::Routing::Resource, Lotus::Routing::Resources]
         # @param blk [Proc]
         #
         # @api private
@@ -86,6 +88,8 @@ module Lotus
 
         # Resource name
         #
+        # @return [String]
+        #
         # @api private
         # @since 0.1.0
         #
@@ -98,7 +102,7 @@ module Lotus
         #
         #   # 'identity' is the name passed in the @options
         def resource_name
-          @options[:name]
+          @resource_name ||= @options[:name].to_s
         end
 
         # Namespace
@@ -254,9 +258,9 @@ module Lotus
         # @api private
         # @since x.x.x
         def _singularized_as
-          resource_name.to_s.split(NESTED_ROUTES_SEPARATOR).map do |name|
+          resource_name.split(NESTED_ROUTES_SEPARATOR).map do |name|
             Lotus::Utils::String.new(name).singularize
-          end.join(self.class.named_route_separator)
+          end
         end
 
         # Create nested rest path
@@ -264,9 +268,7 @@ module Lotus
         # @api private
         # @since x.x.x
         def _nested_rest_path
-          nested = Nested.new(resource_name, @resource)
-          nested.calculate_nested_path
-          nested.nested_path
+          Nested.new(resource_name, @resource).to_path
         end
       end
 

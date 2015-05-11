@@ -41,8 +41,7 @@ module Lotus
       # @api private
       # @since x.x.x
       def wildcard_param(route_param = nil)
-        sigularized_param = Lotus::Utils::String.new(route_param).singularize
-        "#{SLASH}:#{sigularized_param}_id#{SLASH}"
+        "/:#{ Lotus::Utils::String.new(route_param).singularize }_id/"
       end
     end
   end

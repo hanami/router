@@ -38,7 +38,7 @@ module Lotus
         # @api private
         # @since x.x.x
         def as
-         Lotus::Utils::String.new(super).pluralize
+          Lotus::Utils::String.new(super).pluralize
         end
       end
 
@@ -50,7 +50,7 @@ module Lotus
       # @see Lotus::Router#resources
       class CollectionAction < Resource::CollectionAction
         def as(action_name)
-         Lotus::Utils::String.new(super(action_name)).pluralize
+          Lotus::Utils::String.new(super(action_name)).pluralize
         end
       end
 

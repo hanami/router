@@ -17,7 +17,7 @@ module Lotus
 
       # @api private
       # @since x.x.x
-      SLASH = '/'.freeze
+      NESTED_ROUTES_SEPARATOR = '/'.freeze
 
       # Set of default routes
       #
@@ -49,15 +49,15 @@ module Lotus
 
       # @api private
       # @since x.x.x
-      attr_reader :parent_resource
+      attr_reader :parent
 
       # @api private
       # @since 0.1.0
-      def initialize(router, name, options = {}, parent_resource = nil, &blk)
-        @router          = router
-        @name            = name
-        @parent_resource = parent_resource
-        @options         = Options.new(self.class.actions, options.merge(name: @name))
+      def initialize(router, name, options = {}, parent = nil, &blk)
+        @router  = router
+        @name    = name
+        @parent  = parent
+        @options = Options.new(self.class.actions, options.merge(name: @name))
         generate(&blk)
       end
 
@@ -79,20 +79,21 @@ module Lotus
         _resource(Resource, name, options, &blk)
       end
 
-      # Return slash, no wildcard param
+      # Return separator
       #
       # @api private
       # @since x.x.x
       def wildcard_param(route_param = nil)
-        SLASH
+        NESTED_ROUTES_SEPARATOR
       end
 
       private
 
+      # @api private
+      # @since x.x.x
       def _resource(klass, name, options, &blk)
-        merged_options = options.merge(separator: @options[:separator], namespace: @options[:namespace])
-        nested_name = "#{@name}#{Resource::Action::NESTED_ROUTES_SEPARATOR}#{name}"
-        klass.new(@router, nested_name, merged_options, self, &blk)
+        options = options.merge(separator: @options[:separator], namespace: @options[:namespace])
+        klass.new(@router, [@name, name].join(NESTED_ROUTES_SEPARATOR), options, self, &blk)
       end
 
       def generate(&blk)
