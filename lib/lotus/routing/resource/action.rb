@@ -1,6 +1,7 @@
 require 'lotus/utils/string'
 require 'lotus/utils/path_prefix'
 require 'lotus/utils/class_attribute'
+require 'lotus/routing/nested'
 
 module Lotus
   module Routing
@@ -14,6 +15,12 @@ module Lotus
       # @see Lotus::Router#resource
       class Action
         include Utils::ClassAttribute
+
+        # Nested routes separator
+        #
+        # @api private
+        # @since x.x.x
+        NESTED_ROUTES_SEPARATOR = '/'.freeze
 
         # Ruby namespace where lookup for default subclasses.
         #
@@ -45,8 +52,8 @@ module Lotus
         # @api private
         #
         # @since 0.1.0
-        def self.generate(router, action, options)
-          class_for(action).new(router, options)
+        def self.generate(router, action, options = {}, resource = nil)
+          class_for(action).new(router, options, resource)
         end
 
         # Initialize an action
@@ -58,8 +65,10 @@ module Lotus
         # @api private
         #
         # @since 0.1.0
-        def initialize(router, options, &blk)
-          @router, @options = router, options
+        def initialize(router, options = {}, resource = nil, &blk)
+          @router = router
+          @options = options
+          @resource = resource
           generate(&blk)
         end
 
@@ -157,7 +166,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def rest_path
-          namespace.join(resource_name)
+          namespace.join(_nested_rest_path || resource_name.to_s)
         end
 
         # The namespaced name of the action within the whole context of the router.
@@ -179,7 +188,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def as
-          namespace.relative_join(resource_name, self.class.named_route_separator).to_sym
+          namespace.relative_join(_singularized_as, self.class.named_route_separator).to_sym
         end
 
         # The name of the RESTful action.
@@ -236,6 +245,28 @@ module Lotus
         # @since x.x.x
         def controller_name
           @options[:controller] || resource_name
+        end
+
+        private
+
+        # Singularize as (helper route)
+        #
+        # @api private
+        # @since x.x.x
+        def _singularized_as
+          resource_name.to_s.split(NESTED_ROUTES_SEPARATOR).map do |name|
+            Lotus::Utils::String.new(name).singularize
+          end.join(self.class.named_route_separator)
+        end
+
+        # Create nested rest path
+        #
+        # @api private
+        # @since x.x.x
+        def _nested_rest_path
+          nested = Nested.new(resource_name, @resource)
+          nested.calculate_nested_path
+          nested.nested_path
         end
       end
 

@@ -13,6 +13,10 @@ module Lotus
         # @since 0.1.0
         attr_reader :actions
 
+        # @api private
+        # @since x.x.x
+        attr_reader :options
+
         # Initialize the options for:
         #   * Lotus::Router#resource
         #   * Lotus::Router#resources
