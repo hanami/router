@@ -16,7 +16,7 @@ module Lotus
       include Utils::ClassAttribute
 
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       NESTED_ROUTES_SEPARATOR = '/'.freeze
 
       # Set of default routes
@@ -48,7 +48,7 @@ module Lotus
       self.collection = Resource::CollectionAction
 
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       attr_reader :parent
 
       # @api private
@@ -63,7 +63,7 @@ module Lotus
 
       # Allow nested resources inside resource or resources
       #
-      # @since x.x.x
+      # @since 0.4.0
       #
       # @see Lotus::Router#resources
       def resources(name, options = {}, &blk)
@@ -72,7 +72,7 @@ module Lotus
 
       # Allow nested resource inside resource or resources
       #
-      # @since x.x.x
+      # @since 0.4.0
       #
       # @see Lotus::Router#resource
       def resource(name, options = {}, &blk)
@@ -82,7 +82,7 @@ module Lotus
       # Return separator
       #
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       def wildcard_param(route_param = nil)
         NESTED_ROUTES_SEPARATOR
       end
@@ -90,7 +90,7 @@ module Lotus
       private
 
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       def _resource(klass, name, options, &blk)
         options = options.merge(separator: @options[:separator], namespace: @options[:namespace])
         klass.new(@router, [@name, name].join(NESTED_ROUTES_SEPARATOR), options, self, &blk)

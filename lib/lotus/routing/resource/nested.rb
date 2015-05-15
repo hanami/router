@@ -4,14 +4,14 @@ module Lotus
       # Helper class to calculate nested path
       #
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       class Nested
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         SEPARATOR = '/'.freeze
 
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         def initialize(resource_name, resource)
           @resource_name = resource_name.to_s.split(SEPARATOR)
           @resource      = resource
@@ -20,7 +20,7 @@ module Lotus
         end
 
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         def to_path
           @path.reverse!.pop
           @resource_name.zip(@path).flatten.join

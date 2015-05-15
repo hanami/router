@@ -407,6 +407,27 @@ router.resource 'profile', controller: 'identity'
 router.path(:profile) # => /profile # Will route to Identity::Show
 ```
 
+#### Nested Resources
+
+We can nest resource(s):
+
+```ruby
+router = Lotus::Router.new
+router.resource :identity do
+  resource  :avatar
+  resources :api_keys
+end
+
+router.path(:identity_avatar)       # => /identity/avatar
+router.path(:new_identity_avatar)   # => /identity/avatar/new
+router.path(:edit_identity_avatar)  # => /identity/avatar/new
+
+router.path(:identity_api_keys)     # => /identity/api_keys
+router.path(:identity_api_key)      # => /identity/api_keys/:id
+router.path(:new_identity_api_key)  # => /identity/api_keys/new
+router.path(:edit_identity_api_key) # => /identity/api_keys/:id/edit
+```
+
 
 
 ### RESTful Resources:
@@ -438,14 +459,14 @@ It will map:
     <td>/flowers/:id</td>
     <td>Flowers::Show</td>
     <td>:show</td>
-    <td>:flowers</td>
+    <td>:flower</td>
   </tr>
   <tr>
     <td>GET</td>
     <td>/flowers/new</td>
     <td>Flowers::New</td>
     <td>:new</td>
-    <td>:new_flowers</td>
+    <td>:new_flower</td>
   </tr>
   <tr>
     <td>POST</td>
@@ -459,29 +480,29 @@ It will map:
     <td>/flowers/:id/edit</td>
     <td>Flowers::Edit</td>
     <td>:edit</td>
-    <td>:edit_flowers</td>
+    <td>:edit_flower</td>
   </tr>
   <tr>
     <td>PATCH</td>
     <td>/flowers/:id</td>
     <td>Flowers::Update</td>
     <td>:update</td>
-    <td>:flowers</td>
+    <td>:flower</td>
   </tr>
   <tr>
     <td>DELETE</td>
     <td>/flowers/:id</td>
     <td>Flowers::Destroy</td>
     <td>:destroy</td>
-    <td>:flowers</td>
+    <td>:flower</td>
   </tr>
 </table>
 
 
 ```ruby
-router.path(:flowers)              # => /flowers
-router.path(:flowers, id: 23)      # => /flowers/23
-router.path(:edit_flowers, id: 23) # => /flowers/23/edit
+router.path(:flowers)             # => /flowers
+router.path(:flower, id: 23)      # => /flowers/23
+router.path(:edit_flower, id: 23) # => /flowers/23/edit
 ```
 
 
@@ -512,8 +533,8 @@ router.resources 'flowers' do
   end
 end
 
-router.path(:toggle_flowers, id: 23)  # => /flowers/23/toggle
-router.path(:search_flowers)          # => /flowers/search
+router.path(:toggle_flower, id: 23)  # => /flowers/23/toggle
+router.path(:search_flowers)         # => /flowers/search
 ```
 
 
@@ -523,7 +544,28 @@ Configure controller:
 router = Lotus::Router.new
 router.resources 'blossoms', controller: 'flowers'
 
-router.path(:blossoms, id: 23) # => /blossoms/23 # Will route to Flowers::Show
+router.path(:blossom, id: 23) # => /blossoms/23 # Will route to Flowers::Show
+```
+
+#### Nested Resources
+
+We can nest resource(s):
+
+```ruby
+router = Lotus::Router.new
+router.resources :users do
+  resource  :avatar
+  resources :favorites
+end
+
+router.path(:user_avatar,      user_id: 1)  # => /users/1/avatar
+router.path(:new_user_avatar,  user_id: 1)  # => /users/1/avatar/new
+router.path(:edit_user_avatar, user_id: 1)  # => /users/1/avatar/edit
+
+router.path(:user_favorites, user_id: 1)             # => /users/1/favorites
+router.path(:user_favorite, user_id: 1, id: 2)       # => /users/1/favorites/2
+router.path(:new_user_favorites, user_id: 1)         # => /users/1/favorites/new
+router.path(:edit_user_favorites, user_id: 1, id: 2) # => /users/1/favorites/2/edit
 ```
 
 ## Testing

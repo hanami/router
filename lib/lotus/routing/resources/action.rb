@@ -30,13 +30,13 @@ module Lotus
       # Pluralize concrete actions
       #
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       module PluralizedAction
         private
         # The name of the RESTful action.
         #
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         def as
           Lotus::Utils::String.new(super).pluralize
         end

@@ -19,7 +19,7 @@ module Lotus
         # Nested routes separator
         #
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         NESTED_ROUTES_SEPARATOR = '/'.freeze
 
         # Ruby namespace where lookup for default subclasses.
@@ -246,7 +246,7 @@ module Lotus
         #   # Same for other action names
         #
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         def controller_name
           @options[:controller] || resource_name
         end
@@ -256,7 +256,7 @@ module Lotus
         # Singularize as (helper route)
         #
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         def _singularized_as
           resource_name.split(NESTED_ROUTES_SEPARATOR).map do |name|
             Lotus::Utils::String.new(name).singularize
@@ -266,7 +266,7 @@ module Lotus
         # Create nested rest path
         #
         # @api private
-        # @since x.x.x
+        # @since 0.4.0
         def _nested_rest_path
           Nested.new(resource_name, @resource).to_path
         end

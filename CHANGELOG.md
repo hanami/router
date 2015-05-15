@@ -1,6 +1,13 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.4.0 - 2015-05-15
+### Added
+- [Alfonso Uceda Pompa] Nested RESTful resource(s)
+
+### Changed
+- [Alfonso Uceda Pompa] RESTful resource(s) have a correct pluralization/singularization for variables and named routes (eg. `/books/:id` is now `:book` instead of `:books`)
+
 ## v0.3.0 - 2015-03-23
 
 ## v0.2.1 - 2015-01-30

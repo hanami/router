@@ -36,10 +36,10 @@ module Lotus
       # @since 0.1.0
       self.collection = Resources::CollectionAction
 
-      # Return wildcard param between slashs
+      # Return wildcard param between separators
       #
       # @api private
-      # @since x.x.x
+      # @since 0.4.0
       def wildcard_param(route_param = nil)
         "/:#{ Lotus::Utils::String.new(route_param).singularize }_id/"
       end
