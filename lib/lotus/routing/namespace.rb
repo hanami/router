@@ -18,7 +18,7 @@ module Lotus
         @router = router
         @name   = Utils::PathPrefix.new(name)
         __setobj__(@router)
-        instance_eval(&blk)
+        instance_eval(&blk) if block_given?
       end
 
       # @api private
@@ -54,6 +54,12 @@ module Lotus
       # @api private
       # @since 0.1.0
       def trace(path, options = {}, &endpoint)
+        super(@name.join(path), options, &endpoint)
+      end
+
+      # @api private
+      # @since 0.1.0
+      def options(path, options = {}, &endpoint)
         super(@name.join(path), options, &endpoint)
       end
 

@@ -43,6 +43,7 @@ module Lotus
         @route_class    = options[:route]    || Routing::Route
         @resolver       = options[:resolver] || Routing::EndpointResolver.new(options)
         @parsers        = Routing::Parsers.new(options[:parsers])
+        @prefix         = Routing::Namespace.new(self, options[:prefix]) if options[:prefix]
       end
 
       # Separator between controller and action name.
@@ -131,6 +132,14 @@ module Lotus
         else
           @default_app.call(env)
         end
+      end
+
+      # Returns a prefix namespace or the current router
+      #
+      # @since x.x.x
+      # @api private
+      def prefixed_namespace
+        @prefix || self
       end
 
       private
