@@ -18,7 +18,7 @@ module Lotus
         @router = router
         @name   = Utils::PathPrefix.new(name)
         __setobj__(@router)
-        instance_eval(&blk) if block_given?
+        instance_eval(&blk)
       end
 
       # @api private

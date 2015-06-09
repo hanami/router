@@ -341,7 +341,7 @@ module Lotus
     #    # It will map to Flowers::Index.new, which is the
     #    # Lotus::Controller convention.
     def get(path, options = {}, &blk)
-      @router.prefixed_namespace.get(path, options, &blk)
+      @router.get(path, options, &blk)
     end
 
     # Defines a route that accepts a POST request for the given path.
@@ -360,7 +360,7 @@ module Lotus
     #
     # @since 0.1.0
     def post(path, options = {}, &blk)
-      @router.prefixed_namespace.post(path, options, &blk)
+      @router.post(path, options, &blk)
     end
 
     # Defines a route that accepts a PUT request for the given path.
@@ -379,7 +379,7 @@ module Lotus
     #
     # @since 0.1.0
     def put(path, options = {}, &blk)
-      @router.prefixed_namespace.put(path, options, &blk)
+      @router.put(path, options, &blk)
     end
 
     # Defines a route that accepts a PATCH request for the given path.
@@ -398,7 +398,7 @@ module Lotus
     #
     # @since 0.1.0
     def patch(path, options = {}, &blk)
-      @router.prefixed_namespace.patch(path, options, &blk)
+      @router.patch(path, options, &blk)
     end
 
     # Defines a route that accepts a DELETE request for the given path.
@@ -417,7 +417,7 @@ module Lotus
     #
     # @since 0.1.0
     def delete(path, options = {}, &blk)
-      @router.prefixed_namespace.delete(path, options, &blk)
+      @router.delete(path, options, &blk)
     end
 
     # Defines a route that accepts a TRACE request for the given path.
@@ -436,7 +436,7 @@ module Lotus
     #
     # @since 0.1.0
     def trace(path, options = {}, &blk)
-      @router.prefixed_namespace.trace(path, options, &blk)
+      @router.trace(path, options, &blk)
     end
 
     # Defines a route that accepts a OPTIONS request for the given path.
@@ -455,7 +455,7 @@ module Lotus
     #
     # @since 0.1.0
     def options(path, options = {}, &blk)
-      @router.prefixed_namespace.options(path, options, &blk)
+      @router.options(path, options, &blk)
     end
 
     # Defines an HTTP redirect
