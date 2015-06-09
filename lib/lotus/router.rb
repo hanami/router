@@ -13,12 +13,11 @@ module Lotus
   #
   #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
   #   router = Lotus::Router.new do
-  #     get     '/', to: endpoint
+  #     get     '/', to: endpoint # => get and head requests
   #     post    '/', to: endpoint
   #     put     '/', to: endpoint
   #     patch   '/', to: endpoint
   #     delete  '/', to: endpoint
-  #     head    '/', to: endpoint
   #     options '/', to: endpoint
   #     trace   '/', to: endpoint
   #   end
