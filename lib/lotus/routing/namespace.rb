@@ -59,6 +59,12 @@ module Lotus
 
       # @api private
       # @since 0.1.0
+      def options(path, options = {}, &endpoint)
+        super(@name.join(path), options, &endpoint)
+      end
+
+      # @api private
+      # @since 0.1.0
       def resource(name, options = {})
         super name, options.merge(namespace: @name.relative_join(options[:namespace]))
       end
