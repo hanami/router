@@ -1,9 +1,37 @@
 require 'test_helper'
 
+module Prefix
+  module Controllers
+    module Home
+      class Index
+        def call(env)
+          [200, {}, ['home']]
+        end
+      end
+    end
+
+    module Users
+      class Index
+        def call(env)
+          [200, {}, ['users']]
+        end
+      end
+    end
+
+    module Asteroid
+      class Show
+        def call(env)
+          [200, {}, ['asteroid']]
+        end
+      end
+    end
+  end
+end
+
 describe Lotus::Router do
   describe 'with prefix option' do
-    it 'generates routes with prefix' do
-      router = Lotus::Router.new(prefix: '/admin') do
+    before do
+      @router = Lotus::Router.new(scheme: 'https', host: 'lotus.test', port: 443, prefix: '/admin', namespace: Prefix::Controllers) do
         get     '/home', to: 'home#index', as: :get_home
         post    '/home', to: 'home#index', as: :post_home
         put     '/home', to: 'home#index', as: :put_home
@@ -12,7 +40,6 @@ describe Lotus::Router do
         trace   '/home', to: 'home#index', as: :trace_home
         options '/home', to: 'home#index', as: :options_home
 
-
         resources :users
         resource :asteroid
 
@@ -20,31 +47,83 @@ describe Lotus::Router do
           get '/home', to: 'dashboard#index', as: :dashboard_home
         end
       end
-      router.path(:get_home).must_equal    '/admin/home'
-      router.path(:post_home).must_equal   '/admin/home'
-      router.path(:put_home).must_equal    '/admin/home'
-      router.path(:patch_home).must_equal  '/admin/home'
-      router.path(:delete_home).must_equal '/admin/home'
-      router.path(:trace_home).must_equal  '/admin/home'
-      router.path(:options_home).must_equal'/admin/home'
+    end
 
-      router.path(:users).must_equal            '/admin/users'
-      router.path(:new_user).must_equal         '/admin/users/new'
-      router.path(:users).must_equal            '/admin/users'
-      router.path(:user, id: 1).must_equal      '/admin/users/1'
-      router.path(:edit_user, id: 1).must_equal '/admin/users/1/edit'
+    it 'generates relative URLs with prefix' do
+      @router.path(:get_home).must_equal     '/admin/home'
+      @router.path(:post_home).must_equal    '/admin/home'
+      @router.path(:put_home).must_equal     '/admin/home'
+      @router.path(:patch_home).must_equal   '/admin/home'
+      @router.path(:delete_home).must_equal  '/admin/home'
+      @router.path(:trace_home).must_equal   '/admin/home'
+      @router.path(:options_home).must_equal '/admin/home'
 
-      router.path(:new_asteroid).must_equal  '/admin/asteroid/new'
-      router.path(:asteroid).must_equal      '/admin/asteroid'
-      router.path(:edit_asteroid).must_equal '/admin/asteroid/edit'
+      @router.path(:users).must_equal            '/admin/users'
+      @router.path(:new_user).must_equal         '/admin/users/new'
+      @router.path(:users).must_equal            '/admin/users'
+      @router.path(:user, id: 1).must_equal      '/admin/users/1'
+      @router.path(:edit_user, id: 1).must_equal '/admin/users/1/edit'
 
-      router.path(:dashboard_home).must_equal '/admin/dashboard/home'
+      @router.path(:new_asteroid).must_equal  '/admin/asteroid/new'
+      @router.path(:asteroid).must_equal      '/admin/asteroid'
+      @router.path(:edit_asteroid).must_equal '/admin/asteroid/edit'
+
+      @router.path(:dashboard_home).must_equal '/admin/dashboard/home'
+    end
+
+    it 'generates absolute URLs with prefix' do
+      @router.url(:get_home).must_equal     'https://lotus.test/admin/home'
+      @router.url(:post_home).must_equal    'https://lotus.test/admin/home'
+      @router.url(:put_home).must_equal     'https://lotus.test/admin/home'
+      @router.url(:patch_home).must_equal   'https://lotus.test/admin/home'
+      @router.url(:delete_home).must_equal  'https://lotus.test/admin/home'
+      @router.url(:trace_home).must_equal   'https://lotus.test/admin/home'
+      @router.url(:options_home).must_equal 'https://lotus.test/admin/home'
+
+      @router.url(:users).must_equal            'https://lotus.test/admin/users'
+      @router.url(:new_user).must_equal         'https://lotus.test/admin/users/new'
+      @router.url(:users).must_equal            'https://lotus.test/admin/users'
+      @router.url(:user, id: 1).must_equal      'https://lotus.test/admin/users/1'
+      @router.url(:edit_user, id: 1).must_equal 'https://lotus.test/admin/users/1/edit'
+
+      @router.url(:new_asteroid).must_equal  'https://lotus.test/admin/asteroid/new'
+      @router.url(:asteroid).must_equal      'https://lotus.test/admin/asteroid'
+      @router.url(:edit_asteroid).must_equal 'https://lotus.test/admin/asteroid/edit'
+
+      @router.url(:dashboard_home).must_equal 'https://lotus.test/admin/dashboard/home'
+    end
+
+    %w(GET POST PUT PATCH DELETE TRACE OPTIONS).each do |verb|
+      it "recognizes requests (#{ verb })" do
+        env = Rack::MockRequest.env_for('/admin/home', method: verb)
+        status, _, body = @router.call(env)
+
+        status.must_equal 200
+        body.must_equal  ['home']
+      end
+    end
+
+    it "recognizes RESTful resources" do
+      env = Rack::MockRequest.env_for('/admin/users')
+      status, _, body = @router.call(env)
+
+      status.must_equal 200
+      body.must_equal  ['users']
+    end
+
+    it "recognizes RESTful resource" do
+      env = Rack::MockRequest.env_for('/admin/asteroid')
+      status, _, body = @router.call(env)
+
+      status.must_equal 200
+      body.must_equal  ['asteroid']
     end
 
     it 'redirect works with prefix' do
-      router = Lotus::Router.new(prefix: '/admin')
-      endpoint = ->(env) { [200, {}, ['Redirect destination!']] }
-      router.redirect('/redirect', to: '/redirect_destination')
+      router = Lotus::Router.new(prefix: '/admin') do
+        redirect '/redirect', to: '/redirect_destination'
+        get '/redirect_destination', to: ->(env) { [200, {}, ['Redirect destination!']] }
+      end
 
       env = Rack::MockRequest.env_for('/admin/redirect')
       status, headers, _ = router.call(env)
