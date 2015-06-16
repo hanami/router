@@ -3,6 +3,8 @@ require 'lotus/utils/io'
 require 'lotus/routing/endpoint_resolver'
 require 'lotus/routing/route'
 require 'lotus/routing/parsers'
+require 'lotus/routing/force_ssl'
+require 'lotus/utils/path_prefix'
 
 Lotus::Utils::IO.silence_warnings do
   HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
@@ -37,12 +39,14 @@ module Lotus
       def initialize(options = {}, &blk)
         super(options, &nil)
 
-        @default_scheme = options[:scheme]   if options[:scheme]
-        @default_host   = options[:host]     if options[:host]
-        @default_port   = options[:port]     if options[:port]
-        @route_class    = options[:route]    || Routing::Route
-        @resolver       = options[:resolver] || Routing::EndpointResolver.new(options)
-        @parsers        = Routing::Parsers.new(options[:parsers])
+        @default_scheme   = options[:scheme]   if options[:scheme]
+        @default_host     = options[:host]     if options[:host]
+        @default_port     = options[:port]     if options[:port]
+        @route_class      = options[:route]    || Routing::Route
+        @resolver         = options[:resolver] || Routing::EndpointResolver.new(options)
+        @parsers          = Routing::Parsers.new(options[:parsers])
+        @prefix           = Utils::PathPrefix.new(options[:prefix] || '')
+        @force_ssl        = Lotus::Routing::ForceSsl.new(!!options[:force_ssl], host: @default_host, port: @default_port)
       end
 
       # Separator between controller and action name.
@@ -85,6 +89,66 @@ module Lotus
         _rescue_url_recognition { super }
       end
 
+      # Support for GET HTTP verb
+      #
+      # @see Lotus::Router#options
+      #
+      # @since 0.4.1
+      # @api private
+      def get(path, options = {}, &blk)
+        super(@prefix.join(path), options, &blk)
+      end
+
+      # Support for POST HTTP verb
+      #
+      # @see Lotus::Router#post
+      #
+      # @since 0.4.1
+      # @api private
+      def post(path, options = {}, &blk)
+        super(@prefix.join(path), options, &blk)
+      end
+
+      # Support for PUT HTTP verb
+      #
+      # @see Lotus::Router#put
+      #
+      # @since 0.4.1
+      # @api private
+      def put(path, options = {}, &blk)
+        super(@prefix.join(path), options, &blk)
+      end
+
+      # Support for PATCH HTTP verb
+      #
+      # @see Lotus::Router#patch
+      #
+      # @since 0.4.1
+      # @api private
+      def patch(path, options = {}, &blk)
+        super(@prefix.join(path), options, &blk)
+      end
+
+      # Support for DELETE HTTP verb
+      #
+      # @see Lotus::Router#delete
+      #
+      # @since 0.4.1
+      # @api private
+      def delete(path, options = {}, &blk)
+        super(@prefix.join(path), options, &blk)
+      end
+
+      # Support for TRACE HTTP verb
+      #
+      # @see Lotus::Router#trace
+      #
+      # @since 0.4.1
+      # @api private
+      def trace(path, options = {}, &blk)
+        super(@prefix.join(path), options, &blk)
+      end
+
       # Support for OPTIONS HTTP verb
       #
       # @see Lotus::Router#options
@@ -92,7 +156,7 @@ module Lotus
       # @since 0.1.0
       # @api private
       def options(path, options = {}, &blk)
-        add_with_request_method(path, :options, options, &blk)
+        add_with_request_method(@prefix.join(path), :options, options, &blk)
       end
 
       # Allow to mount a Rack app
@@ -109,7 +173,11 @@ module Lotus
 
       # @api private
       def raw_call(env, &blk)
-        super(@parsers.call(env))
+        if response = @force_ssl.call(env)
+          response
+        else
+          super(@parsers.call(env))
+        end
       end
 
       # @api private
