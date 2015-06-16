@@ -1,3 +1,5 @@
+require 'rack/request'
+
 module Lotus
   module Routing
     # Force ssl
@@ -12,6 +14,14 @@ module Lotus
       # @since x.x.x
       # @api private
       SSL_SCHEME = 'https'.freeze
+
+      # @since x.x.x
+      # @api private
+      HTTPS = 'HTTPS'.freeze
+
+      # @since x.x.x
+      # @api private
+      ON    = 'on'.freeze
 
       # Location header
       #
@@ -43,24 +53,54 @@ module Lotus
       # @api private
       TEMPORARY_REDIRECT_HTTP_CODE = 307
 
-      # Initialize force ssl class.
+      # @since x.x.x
+      # @api private
+      HTTP_X_FORWARDED_SSL = 'HTTP_X_FORWARDED_SSL'.freeze
+
+      # @since x.x.x
+      # @api private
+      HTTP_X_FORWARDED_SCHEME = 'HTTP_X_FORWARDED_SCHEME'.freeze
+
+      # @since x.x.x
+      # @api private
+      HTTP_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO'.freeze
+
+      # @since x.x.x
+      # @api private
+      HTTP_X_FORWARDED_PROTO_SEPARATOR = ','.freeze
+
+      # @since x.x.x
+      # @api private
+      RACK_URL_SCHEME = 'rack.url_scheme'.freeze
+
+      # @since x.x.x
+      # @api private
+      REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+
+      # @since x.x.x
+      # @api private
+      IDEMPOTENT_METHODS = ['GET', 'HEAD'].freeze
+
+      EMPTY_BODY = ''.freeze
+
+      # Initialize ForceSsl.
       #
-      # @param force_ssl [Boolean] activate redirection to ssl
-      # @param options [Hash] activate redirection to ssl
-      # @option options [String] :default_host
-      # @option options [Integer] :default_port
-      # @option options [String] :scheme
+      # @param force [Boolean] activate redirection to SSL
+      # @param options [Hash] set of options
+      # @option options [String] :host
+      # @option options [Integer] :port
       #
       # @since x.x.x
       # @api private
-      def initialize(force_ssl, options = {})
-        @force_ssl      = force_ssl
-        @default_host   = options[:host]
-        @default_port   = options[:port]
-        @default_scheme = options[:scheme]
+      def initialize(active, options = {})
+        @active = active
+        @host   = options[:host]
+        @port   = options[:port]
+
+        _redefine_call
       end
 
-      # Set 301 status and Location header if force_ssl is activated.
+      # Set 301 status and Location header if this feature is activated.
       #
       # @param env [Hash] a Rack env instance
       #
@@ -71,8 +111,6 @@ module Lotus
       # @since x.x.x
       # @api private
       def call(env)
-        rack_request = ::Rack::Request.new(env)
-        [redirect_code(rack_request), { LOCATION_HEADER => full_url(rack_request) }, '']
       end
 
       # Check if router has to force the response with ssl
@@ -82,11 +120,14 @@ module Lotus
       # @since x.x.x
       # @api private
       def force?(env)
-        rack_request = ::Rack::Request.new(env)
-        @force_ssl && !rack_request.scheme.eql?(SSL_SCHEME)
+        !ssl?(env)
       end
 
       private
+
+      # @since x.x.x
+      # @api private
+      attr_reader :host
 
       # Return full url to redirect
       #
@@ -96,10 +137,8 @@ module Lotus
       #
       # @since x.x.x
       # @api private
-      def full_url(request)
-        url = "https://#{@default_host}"
-        url.concat(":#{default_port}")
-        url.concat(request.fullpath)
+      def full_url(env)
+        "#{ SSL_SCHEME }://#{ host }:#{ port }#{ ::Rack::Request.new(env).fullpath }"
       end
 
       # Return redirect code
@@ -110,8 +149,8 @@ module Lotus
       #
       # @since x.x.x
       # @api private
-      def redirect_code(request)
-        if %w(GET HEAD).include? request.request_method
+      def redirect_code(env)
+        if IDEMPOTENT_METHODS.include?(env[REQUEST_METHOD])
           MOVED_PERMANENTLY_HTTP_CODE
         else
           TEMPORARY_REDIRECT_HTTP_CODE
@@ -124,12 +163,46 @@ module Lotus
       #
       # @since x.x.x
       # @api private
-      def default_port
-        if @default_port.eql? DEFAULT_HTTP_PORT
+      def port
+        if @port == DEFAULT_HTTP_PORT
           DEFAULT_SSL_PORT
         else
-          @default_port
+          @port
         end
+      end
+
+      # @since x.x.x
+      # @api private
+      def _redefine_call
+        return unless @active
+
+        define_singleton_method :call do |env|
+          [redirect_code(env), { LOCATION_HEADER => full_url(env) }, EMPTY_BODY] if force?(env)
+        end
+      end
+
+      # Adapted from Rack::Request#scheme
+      #
+      # @since x.x.x
+      # @api private
+      def scheme(env)
+        if env[HTTPS] == ON
+          SSL_SCHEME
+        elsif env[HTTP_X_FORWARDED_SSL] == ON
+          SSL_SCHEME
+        elsif env[HTTP_X_FORWARDED_SCHEME]
+          env[HTTP_X_FORWARDED_SCHEME]
+        elsif env[HTTP_X_FORWARDED_PROTO]
+          env[HTTP_X_FORWARDED_PROTO].split(HTTP_X_FORWARDED_PROTO_SEPARATOR)[0]
+        else
+          env[RACK_URL_SCHEME]
+        end
+      end
+
+      # @since x.x.x
+      # @api private
+      def ssl?(env)
+        scheme(env) == SSL_SCHEME
       end
     end
   end

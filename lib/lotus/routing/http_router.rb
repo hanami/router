@@ -46,8 +46,7 @@ module Lotus
         @resolver         = options[:resolver] || Routing::EndpointResolver.new(options)
         @parsers          = Routing::Parsers.new(options[:parsers])
         @prefix           = Utils::PathPrefix.new(options[:prefix] || '')
-        force_ssl_options = { host: @default_host, scheme: @default_scheme, port: @default_port }
-        @force_ssl        = Lotus::Routing::ForceSsl.new(!!options[:force_ssl], force_ssl_options)
+        @force_ssl        = Lotus::Routing::ForceSsl.new(!!options[:force_ssl], host: @default_host, port: @default_port)
       end
 
       # Separator between controller and action name.
@@ -174,23 +173,11 @@ module Lotus
 
       # @api private
       def raw_call(env, &blk)
-        if @force_ssl.force?(env)
-          @force_ssl.call(env)
+        if response = @force_ssl.call(env)
+          response
         else
           super(@parsers.call(env))
         end
-      end
-
-      # Resolve the given Rack env to a registered endpoint and invoke it.
-      #
-      # @param env [Hash] a Rack env instance
-      #
-      # @return [Rack::Response, Array]
-      #
-      # @since x.x.x
-      # @api private
-      def call(env)
-        super(env)
       end
 
       # @api private
