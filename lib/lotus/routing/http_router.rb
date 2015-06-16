@@ -3,6 +3,7 @@ require 'lotus/utils/io'
 require 'lotus/routing/endpoint_resolver'
 require 'lotus/routing/route'
 require 'lotus/routing/parsers'
+require 'lotus/routing/force_ssl'
 require 'lotus/utils/path_prefix'
 
 Lotus::Utils::IO.silence_warnings do
@@ -38,13 +39,15 @@ module Lotus
       def initialize(options = {}, &blk)
         super(options, &nil)
 
-        @default_scheme = options[:scheme]   if options[:scheme]
-        @default_host   = options[:host]     if options[:host]
-        @default_port   = options[:port]     if options[:port]
-        @route_class    = options[:route]    || Routing::Route
-        @resolver       = options[:resolver] || Routing::EndpointResolver.new(options)
-        @parsers        = Routing::Parsers.new(options[:parsers])
-        @prefix         = Utils::PathPrefix.new(options[:prefix] || '')
+        @default_scheme   = options[:scheme]   if options[:scheme]
+        @default_host     = options[:host]     if options[:host]
+        @default_port     = options[:port]     if options[:port]
+        @route_class      = options[:route]    || Routing::Route
+        @resolver         = options[:resolver] || Routing::EndpointResolver.new(options)
+        @parsers          = Routing::Parsers.new(options[:parsers])
+        @prefix           = Utils::PathPrefix.new(options[:prefix] || '')
+        force_ssl_options = { host: @default_host, scheme: @default_scheme, port: @default_port }
+        @force_ssl        = Lotus::Routing::ForceSsl.new(!!options[:force_ssl], force_ssl_options)
       end
 
       # Separator between controller and action name.
@@ -171,7 +174,23 @@ module Lotus
 
       # @api private
       def raw_call(env, &blk)
-        super(@parsers.call(env))
+        if @force_ssl.force?(env)
+          @force_ssl.call(env)
+        else
+          super(@parsers.call(env))
+        end
+      end
+
+      # Resolve the given Rack env to a registered endpoint and invoke it.
+      #
+      # @param env [Hash] a Rack env instance
+      #
+      # @return [Rack::Response, Array]
+      #
+      # @since x.x.x
+      # @api private
+      def call(env)
+        super(env)
       end
 
       # @api private
