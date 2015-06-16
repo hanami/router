@@ -6,78 +6,78 @@ module Lotus
     #
     # Redirect response to the secure equivalent resource (https)
     #
-    # @since x.x.x
+    # @since 0.4.1
     # @api private
     class ForceSsl
       # Https scheme
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       SSL_SCHEME = 'https'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       HTTPS = 'HTTPS'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       ON    = 'on'.freeze
 
       # Location header
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       LOCATION_HEADER = 'Location'.freeze
 
       # Default http port
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       DEFAULT_HTTP_PORT = 80
 
       # Default ssl port
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       DEFAULT_SSL_PORT = 443
 
       # Moved Permanently http code
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       MOVED_PERMANENTLY_HTTP_CODE = 301
 
       # Temporary Redirect http code
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       TEMPORARY_REDIRECT_HTTP_CODE = 307
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       HTTP_X_FORWARDED_SSL = 'HTTP_X_FORWARDED_SSL'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       HTTP_X_FORWARDED_SCHEME = 'HTTP_X_FORWARDED_SCHEME'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       HTTP_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       HTTP_X_FORWARDED_PROTO_SEPARATOR = ','.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       RACK_URL_SCHEME = 'rack.url_scheme'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       IDEMPOTENT_METHODS = ['GET', 'HEAD'].freeze
 
@@ -85,12 +85,12 @@ module Lotus
 
       # Initialize ForceSsl.
       #
-      # @param force [Boolean] activate redirection to SSL
+      # @param active [Boolean] activate redirection to SSL
       # @param options [Hash] set of options
       # @option options [String] :host
       # @option options [Integer] :port
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def initialize(active, options = {})
         @active = active
@@ -108,7 +108,7 @@ module Lotus
       #
       # @see Lotus::Routing::HttpRouter#call
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def call(env)
       end
@@ -117,7 +117,7 @@ module Lotus
       #
       # @return [Boolean]
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def force?(env)
         !ssl?(env)
@@ -125,17 +125,17 @@ module Lotus
 
       private
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       attr_reader :host
 
       # Return full url to redirect
       #
-      # @param request [Rack::Request] a Rack request
+      # @param env [Hash] Rack env
       #
       # @return [String]
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def full_url(env)
         "#{ SSL_SCHEME }://#{ host }:#{ port }#{ ::Rack::Request.new(env).fullpath }"
@@ -143,11 +143,11 @@ module Lotus
 
       # Return redirect code
       #
-      # @param request [Rack::Request] a Rack request
+      # @param env [Hash] Rack env
       #
       # @return [Integer]
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def redirect_code(env)
         if IDEMPOTENT_METHODS.include?(env[REQUEST_METHOD])
@@ -161,7 +161,7 @@ module Lotus
       #
       # @return [Integer]
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def port
         if @port == DEFAULT_HTTP_PORT
@@ -171,7 +171,7 @@ module Lotus
         end
       end
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def _redefine_call
         return unless @active
@@ -183,7 +183,7 @@ module Lotus
 
       # Adapted from Rack::Request#scheme
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def scheme(env)
         if env[HTTPS] == ON
@@ -199,7 +199,7 @@ module Lotus
         end
       end
 
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def ssl?(env)
         scheme(env) == SSL_SCHEME

@@ -1,6 +1,11 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.4.1 - 2015-06-23
+### Added
+- [Alfonso Uceda Pompa] Force SSL (eg `Lotus::Router.new(force_ssl: true`).
+- [Alfonso Uceda Pompa] Allow router to accept a `:prefix` option, in order to generate prefixed routes.
+
 ## v0.4.0 - 2015-05-15
 ### Added
 - [Alfonso Uceda Pompa] Nested RESTful resource(s)

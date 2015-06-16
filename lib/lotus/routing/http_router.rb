@@ -93,7 +93,7 @@ module Lotus
       #
       # @see Lotus::Router#options
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def get(path, options = {}, &blk)
         super(@prefix.join(path), options, &blk)
@@ -103,7 +103,7 @@ module Lotus
       #
       # @see Lotus::Router#post
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def post(path, options = {}, &blk)
         super(@prefix.join(path), options, &blk)
@@ -113,7 +113,7 @@ module Lotus
       #
       # @see Lotus::Router#put
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def put(path, options = {}, &blk)
         super(@prefix.join(path), options, &blk)
@@ -123,7 +123,7 @@ module Lotus
       #
       # @see Lotus::Router#patch
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def patch(path, options = {}, &blk)
         super(@prefix.join(path), options, &blk)
@@ -133,7 +133,7 @@ module Lotus
       #
       # @see Lotus::Router#delete
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def delete(path, options = {}, &blk)
         super(@prefix.join(path), options, &blk)
@@ -143,7 +143,7 @@ module Lotus
       #
       # @see Lotus::Router#trace
       #
-      # @since x.x.x
+      # @since 0.4.1
       # @api private
       def trace(path, options = {}, &blk)
         super(@prefix.join(path), options, &blk)
