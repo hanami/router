@@ -97,7 +97,7 @@ describe Lotus::Routing::EndpointResolver do
     end
 
     after do
-      Object.send(:remove_const, :AdminLotusApp)
+      Object.send(:remove_const, :NestedRoutesApp)
     end
   end
 
