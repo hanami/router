@@ -75,8 +75,10 @@ module Lotus
       #
       # @since 0.1.0
       # @api private
-      def path(route, *args)
-        _rescue_url_recognition { super }
+      def custom_path(route, *args)
+        _rescue_url_recognition do
+          _custom_path(path(route, *args))
+        end
       end
 
       # Generate an absolute URL for a specified named route.
@@ -85,68 +87,10 @@ module Lotus
       #
       # @since 0.1.0
       # @api private
-      def url(route, *args)
-        _rescue_url_recognition { super }
-      end
-
-      # Support for GET HTTP verb
-      #
-      # @see Lotus::Router#options
-      #
-      # @since 0.4.1
-      # @api private
-      def get(path, options = {}, &blk)
-        super(@prefix.join(path), options, &blk)
-      end
-
-      # Support for POST HTTP verb
-      #
-      # @see Lotus::Router#post
-      #
-      # @since 0.4.1
-      # @api private
-      def post(path, options = {}, &blk)
-        super(@prefix.join(path), options, &blk)
-      end
-
-      # Support for PUT HTTP verb
-      #
-      # @see Lotus::Router#put
-      #
-      # @since 0.4.1
-      # @api private
-      def put(path, options = {}, &blk)
-        super(@prefix.join(path), options, &blk)
-      end
-
-      # Support for PATCH HTTP verb
-      #
-      # @see Lotus::Router#patch
-      #
-      # @since 0.4.1
-      # @api private
-      def patch(path, options = {}, &blk)
-        super(@prefix.join(path), options, &blk)
-      end
-
-      # Support for DELETE HTTP verb
-      #
-      # @see Lotus::Router#delete
-      #
-      # @since 0.4.1
-      # @api private
-      def delete(path, options = {}, &blk)
-        super(@prefix.join(path), options, &blk)
-      end
-
-      # Support for TRACE HTTP verb
-      #
-      # @see Lotus::Router#trace
-      #
-      # @since 0.4.1
-      # @api private
-      def trace(path, options = {}, &blk)
-        super(@prefix.join(path), options, &blk)
+      def custom_url(route, *args)
+        _rescue_url_recognition do
+          _custom_path(url(route, *args))
+        end
       end
 
       # Support for OPTIONS HTTP verb
@@ -156,7 +100,7 @@ module Lotus
       # @since 0.1.0
       # @api private
       def options(path, options = {}, &blk)
-        add_with_request_method(@prefix.join(path), :options, options, &blk)
+        add_with_request_method(path, :options, options, &blk)
       end
 
       # Allow to mount a Rack app
@@ -211,6 +155,12 @@ module Lotus
       rescue ::HttpRouter::InvalidRouteException,
              ::HttpRouter::TooManyParametersException => e
         raise Routing::InvalidRouteException.new(e.message)
+      end
+
+      def _custom_path(uri_string)
+        uri = URI.parse(uri_string)
+        uri.path = @prefix.join(uri.path)
+        uri.to_s
       end
     end
   end

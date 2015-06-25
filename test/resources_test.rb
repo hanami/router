@@ -70,7 +70,7 @@ describe Lotus::Router do
         @app.request('PATCH',  '/keyboards/23').status.must_equal  405
         @app.request('DELETE', '/keyboards/23').status.must_equal  405
 
-        -> { @router.path(:new_keyboards) }.must_raise HttpRouter::InvalidRouteException
+        -> { @router.path(:new_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
       end
     end
 
@@ -95,7 +95,7 @@ describe Lotus::Router do
         @app.request('PATCH',  '/keyboards/23').status.must_equal  405
         @app.request('DELETE', '/keyboards/23').status.must_equal  405
 
-        -> { @router.path(:new_keyboards) }.must_raise HttpRouter::InvalidRouteException
+        -> { @router.path(:new_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
       end
     end
 

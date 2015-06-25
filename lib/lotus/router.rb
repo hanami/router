@@ -902,7 +902,7 @@ module Lotus
     #   router.path(:login, return_to: '/dashboard') # => "/login?return_to=%2Fdashboard"
     #   router.path(:framework, name: 'router')      # => "/router"
     def path(route, *args)
-      @router.path(route, *args)
+      @router.custom_path(route, *args)
     end
 
     # Generate a URL for a specified named route.
@@ -929,7 +929,7 @@ module Lotus
     #   router.url(:login, return_to: '/dashboard') # => "https://lotusrb.org/login?return_to=%2Fdashboard"
     #   router.url(:framework, name: 'router')      # => "https://lotusrb.org/router"
     def url(route, *args)
-      @router.url(route, *args)
+      @router.custom_url(route, *args)
     end
 
     # Returns an routes inspector
