@@ -78,6 +78,29 @@ describe Lotus::Routing::EndpointResolver do
     end
   end
 
+  describe 'endpoint with nested routes' do
+    before :all do
+      class NestedRoutesApp
+        def call(env)
+        end
+
+        def routes
+          Lotus::Router.new do
+            get '/home', to: 'home#index'
+          end
+        end
+      end
+    end
+
+    it 'reponds to :routes' do
+      @resolver.resolve(to: NestedRoutesApp).respond_to?(:routes).must_equal true
+    end
+
+    after do
+      Object.send(:remove_const, :AdminLotusApp)
+    end
+  end
+
   describe 'custom endpoint' do
     before :all do
       class CustomEndpoint
