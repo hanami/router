@@ -92,7 +92,7 @@ describe Lotus::Routing::EndpointResolver do
       end
     end
 
-    it 'reponds to :routes' do
+    it 'responds to :routes' do
       @resolver.resolve(to: NestedRoutesApp).respond_to?(:routes).must_equal true
     end
 
