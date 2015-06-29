@@ -27,6 +27,32 @@ module Web
   end
 end # Web
 
+module Front
+  class App
+    def call(env)
+      case env['PATH_INFO']
+      when '/home'
+        [200, {}, ['front']]
+      else
+        [404, {}, ['Not Found']]
+      end
+    end
+  end
+end # Front
+
+module Back
+  class App
+    def call(env)
+      case env['PATH_INFO']
+      when '/home'
+        [200, {}, ['back']]
+      else
+        [404, {}, ['Not Found']]
+      end
+    end
+  end
+end # Back
+
 module Api
   class App
     def call(env)

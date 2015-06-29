@@ -95,7 +95,7 @@ describe Lotus::Router do
 
     %w(GET POST PUT PATCH DELETE TRACE OPTIONS).each do |verb|
       it "recognizes requests (#{ verb })" do
-        env = Rack::MockRequest.env_for('/admin/home', method: verb)
+        env = Rack::MockRequest.env_for('/home', method: verb)
         status, _, body = @router.call(env)
 
         status.must_equal 200
@@ -104,7 +104,7 @@ describe Lotus::Router do
     end
 
     it "recognizes RESTful resources" do
-      env = Rack::MockRequest.env_for('/admin/users')
+      env = Rack::MockRequest.env_for('/users')
       status, _, body = @router.call(env)
 
       status.must_equal 200
@@ -112,7 +112,7 @@ describe Lotus::Router do
     end
 
     it "recognizes RESTful resource" do
-      env = Rack::MockRequest.env_for('/admin/asteroid')
+      env = Rack::MockRequest.env_for('/asteroid')
       status, _, body = @router.call(env)
 
       status.must_equal 200
@@ -125,7 +125,7 @@ describe Lotus::Router do
         get '/redirect_destination', to: ->(env) { [200, {}, ['Redirect destination!']] }
       end
 
-      env = Rack::MockRequest.env_for('/admin/redirect')
+      env = Rack::MockRequest.env_for('/redirect')
       status, headers, _ = router.call(env)
 
       status.must_equal 301
