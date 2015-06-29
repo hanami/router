@@ -75,9 +75,9 @@ module Lotus
       #
       # @since 0.1.0
       # @api private
-      def custom_path(route, *args)
+      def raw_path(route, *args)
         _rescue_url_recognition do
-          _custom_path(path(route, *args))
+          _custom_path(super(route, *args))
         end
       end
 
@@ -87,9 +87,9 @@ module Lotus
       #
       # @since 0.1.0
       # @api private
-      def custom_url(route, *args)
+      def raw_url(route, *args)
         _rescue_url_recognition do
-          _custom_path(url(route, *args))
+          _custom_path(super(route, *args))
         end
       end
 
