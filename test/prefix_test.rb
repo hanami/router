@@ -40,6 +40,12 @@ describe Lotus::Router do
         trace   '/home', to: 'home#index', as: :trace_home
         options '/home', to: 'home#index', as: :options_home
 
+        get  '/admin',      to: 'home#index', as: :get_admin
+        get  '/admin/new',  to: 'home#index', as: :new_admin
+        get  '/admin/edit', to: 'home#index', as: :edit_admin
+        post '/admin',      to: 'home#index', as: :create_admin
+        put  '/admin',      to: 'home#index', as: :put_admin
+
         resources :users
         resource :asteroid
 
@@ -63,6 +69,12 @@ describe Lotus::Router do
       @router.path(:users).must_equal            '/admin/users'
       @router.path(:user, id: 1).must_equal      '/admin/users/1'
       @router.path(:edit_user, id: 1).must_equal '/admin/users/1/edit'
+
+      @router.path(:get_admin).must_equal    '/admin/admin'
+      @router.path(:new_admin).must_equal    '/admin/admin/new'
+      @router.path(:create_admin).must_equal '/admin/admin'
+      @router.path(:edit_admin).must_equal   '/admin/admin/edit'
+      @router.path(:put_admin).must_equal    '/admin/admin'
 
       @router.path(:new_asteroid).must_equal  '/admin/asteroid/new'
       @router.path(:asteroid).must_equal      '/admin/asteroid'
