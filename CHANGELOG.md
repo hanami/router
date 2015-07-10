@@ -1,6 +1,11 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.4.2 - 2015-07-10
+### Fixed
+- [Alfonso Uceda Pompa] Ensure mounted applications to not repeat their prefix (eg `/admin/admin`)
+- [Thiago Felippe] Ensure router inspector properly prints routes with repeated entries (eg `/admin/dashboard/admin`)
+
 ## v0.4.1 - 2015-06-23
 ### Added
 - [Alfonso Uceda Pompa] Force SSL (eg `Lotus::Router.new(force_ssl: true`).

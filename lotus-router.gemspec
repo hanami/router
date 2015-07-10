@@ -6,8 +6,8 @@ require 'lotus/router/version'
 Gem::Specification.new do |spec|
   spec.name          = 'lotus-router'
   spec.version       = Lotus::Router::VERSION
-  spec.authors       = ['Luca Guidi']
-  spec.email         = ['me@lucaguidi.com']
+  spec.authors       = ['Luca Guidi', 'Trung Lê', 'Alfonso Uceda Pompa']
+  spec.email         = ['me@lucaguidi.com', 'trung.le@ruby-journal.com', 'uceda73@gmail.com']
   spec.description   = %q{Rack compatible HTTP router for Ruby}
   spec.summary       = %q{Rack compatible HTTP router for Ruby and Lotus}
   spec.homepage      = 'http://lotusrb.org'
