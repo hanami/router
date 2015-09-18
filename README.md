@@ -22,7 +22,7 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Lotus](http://lo
 
 ## Rubies
 
-__Lotus::Router__ supports Ruby (MRI) 2+, JRuby 1.7 (with 2.0 mode)
+__Lotus::Router__ supports Ruby (MRI) 2+, JRuby 9k+
 
 
 ## Installation

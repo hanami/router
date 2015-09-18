@@ -1,6 +1,10 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.4.3 - 2015-09-23
+### Added
+- [Luca Guidi] Official support for JRuby 9k+
+
 ## v0.4.2 - 2015-07-10
 ### Fixed
 - [Alfonso Uceda Pompa] Ensure mounted applications to not repeat their prefix (eg `/admin/admin`)
