@@ -146,15 +146,16 @@ module Lotus
       end
 
       private
-      def add_with_request_method(path, method, opts = {}, &app)
-        super.generate(@resolver, opts, &app)
-      end
 
       def _rescue_url_recognition
         yield
       rescue ::HttpRouter::InvalidRouteException,
              ::HttpRouter::TooManyParametersException => e
-        raise Routing::InvalidRouteException.new(e.message)
+        raise Routing::InvalidRouteException.new("#{ e.message } - please check given arguments")
+      end
+
+      def add_with_request_method(path, method, opts = {}, &app)
+        super.generate(@resolver, opts, &app)
       end
 
       def _custom_path(uri_string)

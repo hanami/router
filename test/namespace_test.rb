@@ -181,7 +181,8 @@ describe Lotus::Router do
           @app.request('PATCH',  '/electronics/keyboards/23').status.must_equal  405
           @app.request('DELETE', '/electronics/keyboards/23').status.must_equal  405
 
-          -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+          exception.message.must_equal 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments'
         end
       end
 
@@ -208,7 +209,8 @@ describe Lotus::Router do
           @app.request('PATCH',  '/electronics/keyboards/23').status.must_equal  405
           @app.request('DELETE', '/electronics/keyboards/23').status.must_equal  405
 
-          -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+          exception.message.must_equal 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments'
         end
       end
 
@@ -292,7 +294,8 @@ describe Lotus::Router do
           @app.request('POST',   '/settings/profile').status.must_equal     405
           @app.request('DELETE', '/settings/profile').status.must_equal     405
 
-          -> { @router.path(:new_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:new_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
+          exception.message.must_equal 'No route (path) could be generated for :new_settings_profile - please check given arguments'
         end
       end
 
@@ -320,7 +323,8 @@ describe Lotus::Router do
         it 'does not recognize other paths' do
           @app.request('GET', '/settings/profile/edit').status.must_equal 404
 
-          -> { @router.path(:edit_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:edit_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
+          exception.message.must_equal 'No route (path) could be generated for :edit_settings_profile - please check given arguments'
         end
       end
     end

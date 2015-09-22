@@ -27,9 +27,11 @@ describe Lotus::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      -> {
+      exception = -> {
         @router.path(:variables)
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'No route (path) could be generated for :variables - please check given arguments'
     end
 
     it 'recognizes string with variables and constraints' do
@@ -37,9 +39,11 @@ describe Lotus::Router do
     end
 
     it "raises error when constraints aren't satisfied" do
-      -> {
+      exception = -> {
         @router.path(:constraints, id: 'x')
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'No route (path) could be generated for :constraints - please check given arguments'
     end
 
     it 'recognizes optional variables' do
@@ -58,15 +62,19 @@ describe Lotus::Router do
     end
 
     it 'raises error when insufficient params are passed' do
-      -> {
+      exception = -> {
         @router.path(nil)
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'No route (path) could be generated for nil - please check given arguments'
     end
 
     it 'raises error when too many params are passed' do
-      -> {
+      exception = -> {
         @router.path(:fixed, 'x')
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'HttpRouter::TooManyParametersException - please check given arguments'
     end
   end
 
@@ -80,9 +88,11 @@ describe Lotus::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      -> {
+      exception = -> {
         @router.url(:variables)
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'No route (url) could be generated for :variables - please check given arguments'
     end
 
     it 'recognizes string with variables and constraints' do
@@ -90,9 +100,11 @@ describe Lotus::Router do
     end
 
     it "raises error when constraints aren't satisfied" do
-      -> {
+      exception = -> {
         @router.url(:constraints, id: 'x')
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'No route (url) could be generated for :constraints - please check given arguments'
     end
 
     it 'recognizes optional variables' do
@@ -111,15 +123,19 @@ describe Lotus::Router do
     end
 
     it 'raises error when insufficient params are passed' do
-      -> {
+      exception = -> {
         @router.url(nil)
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'No route (url) could be generated for nil - please check given arguments'
     end
 
     it 'raises error when too many params are passed' do
-      -> {
+      exception = -> {
         @router.url(:fixed, 'x')
       }.must_raise(Lotus::Routing::InvalidRouteException)
+
+      exception.message.must_equal 'HttpRouter::TooManyParametersException - please check given arguments'
     end
   end
 end

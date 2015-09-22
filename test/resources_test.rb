@@ -70,7 +70,8 @@ describe Lotus::Router do
         @app.request('PATCH',  '/keyboards/23').status.must_equal  405
         @app.request('DELETE', '/keyboards/23').status.must_equal  405
 
-        -> { @router.path(:new_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+        exception = -> { @router.path(:new_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+        exception.message.must_equal 'No route (path) could be generated for :new_keyboards - please check given arguments'
       end
     end
 
@@ -95,7 +96,8 @@ describe Lotus::Router do
         @app.request('PATCH',  '/keyboards/23').status.must_equal  405
         @app.request('DELETE', '/keyboards/23').status.must_equal  405
 
-        -> { @router.path(:new_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+        exception = -> { @router.path(:new_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+        exception.message.must_equal 'No route (path) could be generated for :new_keyboards - please check given arguments'
       end
     end
 
