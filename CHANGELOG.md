@@ -1,7 +1,7 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
-## v0.4.3 - 2015-09-23
+## v0.4.3 - 2015-09-30
 ### Added
 - [Luca Guidi] Official support for JRuby 9k+
 
