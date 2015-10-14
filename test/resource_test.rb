@@ -64,7 +64,8 @@ describe Lotus::Router do
         @app.request('GET',    '/profile').status.must_equal     405
         @app.request('DELETE', '/profile').status.must_equal     405
 
-        -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
+        exception = -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
+        exception.message.must_equal 'No route (path) could be generated for :new_profile - please check given arguments'
       end
     end
 
@@ -87,7 +88,8 @@ describe Lotus::Router do
         @app.request('GET',    '/profile').status.must_equal     405
         @app.request('DELETE', '/profile').status.must_equal     405
 
-        -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
+        exception = -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
+        exception.message.must_equal 'No route (path) could be generated for :new_profile - please check given arguments'
       end
     end
 
