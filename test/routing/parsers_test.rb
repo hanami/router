@@ -50,6 +50,16 @@ describe Lotus::Routing::Parsers do
         end
       end
 
+      describe 'and a JSON API request' do
+        let(:body)         { %({"attribute":"ok"}) }
+        let(:content_type) { 'application/vnd.api+json' }
+
+        it "parses params from body" do
+          result = @parsers.call(env)
+          result['router.params'].must_equal({"attribute" => "ok"})
+        end
+      end
+
       describe 'and a non-JSON request' do
         let(:body)         { %(<element>ok</element>) }
         let(:content_type) { 'application/xml' }

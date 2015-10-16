@@ -5,7 +5,7 @@ module Lotus
     module Parsing
       class JsonParser < Parser
         def mime_types
-          ['application/json']
+          ['application/json', 'application/vnd.api+json']
         end
 
         def parse(body)
