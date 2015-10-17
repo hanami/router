@@ -30,6 +30,12 @@ module Lotus
     # @since 0.1.0
     # @api private
     class HttpRouter < ::HttpRouter
+      # Script name - rack enviroment variable
+      #
+      # @since x.x.x
+      # @api private
+      SCRIPT_NAME = 'SCRIPT_NAME'.freeze
+
       # Initialize the router.
       #
       # @see Lotus::Router#initialize
@@ -143,6 +149,12 @@ module Lotus
         else
           @default_app.call(env)
         end
+      end
+
+      # @api private
+      def rewrite_path_info(env, request)
+        super
+        env[SCRIPT_NAME] = @prefix + env[SCRIPT_NAME]
       end
 
       private
