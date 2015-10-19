@@ -152,6 +152,7 @@ module Lotus
       end
 
       # @api private
+      # @since x.x.x
       def rewrite_path_info(env, request)
         super
         env[SCRIPT_NAME] = @prefix + env[SCRIPT_NAME]

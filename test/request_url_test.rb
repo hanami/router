@@ -7,7 +7,7 @@ describe 'SCRIPT_NAME' do
   before do
     @container = Lotus::Router.new do
       mount Lotus::Router.new(prefix: '/admin') {
-        get '/foo', to: ->(env) { [200, {}, [env['SCRIPT_NAME']]] }
+        get '/foo', to: ->(env) { [200, {}, [::Rack::Request.new(env).url]] }
       }, at: '/admin'
     end
   end
@@ -29,6 +29,6 @@ describe 'SCRIPT_NAME' do
     get script_name
 
     request.env['SCRIPT_NAME'].must_equal script_name
-    response.body.must_equal script_name
+    response.body.must_equal "http://example.org#{ script_name }"
   end
 end
