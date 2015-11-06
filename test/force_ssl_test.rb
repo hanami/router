@@ -1,6 +1,14 @@
 require 'test_helper'
 
 describe Lotus::Router do
+  it 'respects the Rack spec' do
+    router = Lotus::Router.new(force_ssl: true)
+    router.public_send(:get, '/http_destination', to: ->(env) { [200, {}, ['http destination!']] })
+    app = Rack::MockRequest.new(router)
+
+    app.get('/http_destination', lint: true)
+  end
+
   %w{get}.each do |verb|
     it "force_ssl to true and scheme is http, return 307 and new location, verb: #{verb}" do
       router = Lotus::Router.new(force_ssl: true)

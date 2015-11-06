@@ -81,7 +81,7 @@ module Lotus
       # @api private
       IDEMPOTENT_METHODS = ['GET', 'HEAD'].freeze
 
-      EMPTY_BODY = ''.freeze
+      EMPTY_BODY = [].freeze
 
       # Initialize ForceSsl.
       #
