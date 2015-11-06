@@ -3,7 +3,7 @@ require 'test_helper'
 describe 'Body parsing' do
   before do
     endpoint = ->(env) {
-      [200, {}, [env['router.params']]]
+      [200, {}, [env['router.params'].inspect]]
     }
 
     @routes = Lotus::Router.new(parsers: [:json, XmlParser.new]) {
@@ -15,8 +15,8 @@ describe 'Body parsing' do
   end
 
   it 'is successful (JSON)' do
-    body     = StringIO.new( %({"published":"true"}) )
-    response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body)
+    body     = StringIO.new( %({"published":"true"}).encode(Encoding::ASCII_8BIT) )
+    response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
     response.status.must_equal 200
     response.body.must_equal %({"published"=>"true", :id=>"23"})
@@ -24,8 +24,8 @@ describe 'Body parsing' do
 
   it 'is idempotent' do
     2.times do
-      body     = StringIO.new( %({"published":"true"}) )
-      response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body)
+      body     = StringIO.new( %({"published":"true"}).encode(Encoding::ASCII_8BIT) )
+      response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
       response.status.must_equal 200
       response.body.must_equal %({"published"=>"true", :id=>"23"})
@@ -33,16 +33,16 @@ describe 'Body parsing' do
   end
 
   it 'is successful (XML)' do
-    body     = StringIO.new( %(<name>LG</name>) )
-    response = @app.patch('/authors/23', 'CONTENT_TYPE' => 'application/xml', 'rack.input' => body)
+    body     = StringIO.new( %(<name>LG</name>).encode(Encoding::ASCII_8BIT) )
+    response = @app.patch('/authors/23', 'CONTENT_TYPE' => 'application/xml', 'rack.input' => body, lint: true)
 
     response.status.must_equal 200
     response.body.must_equal %({"name"=>"LG", :id=>"23"})
   end
 
   it 'is successful (XML aliased mime)' do
-    body     = StringIO.new( %(<name>MGF</name>) )
-    response = @app.patch('/authors/15', 'CONTENT_TYPE' => 'text/xml', 'rack.input' => body)
+    body     = StringIO.new( %(<name>MGF</name>).encode(Encoding::ASCII_8BIT) )
+    response = @app.patch('/authors/15', 'CONTENT_TYPE' => 'text/xml', 'rack.input' => body, lint: true)
 
     response.status.must_equal 200
     response.body.must_equal %({"name"=>"MGF", :id=>"15"})

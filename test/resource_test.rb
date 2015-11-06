@@ -16,33 +16,33 @@ describe Lotus::Router do
     end
 
     it 'recognizes get new' do
-      @router.path(:new_avatar).must_equal                '/avatar/new'
-      @app.request('GET', '/avatar/new').body.must_equal  'Avatar::New'
+      @router.path(:new_avatar).must_equal                           '/avatar/new'
+      @app.request('GET', '/avatar/new', lint: true).body.must_equal 'Avatar::New'
     end
 
     it 'recognizes post create' do
-      @router.path(:avatar).must_equal                    '/avatar'
-      @app.request('POST', '/avatar').body.must_equal     'Avatar::Create'
+      @router.path(:avatar).must_equal                            '/avatar'
+      @app.request('POST', '/avatar', lint: true).body.must_equal 'Avatar::Create'
     end
 
     it 'recognizes get show' do
-      @router.path(:avatar).must_equal                    '/avatar'
-      @app.request('GET', '/avatar').body.must_equal      'Avatar::Show'
+      @router.path(:avatar).must_equal                           '/avatar'
+      @app.request('GET', '/avatar', lint: true).body.must_equal 'Avatar::Show'
     end
 
     it 'recognizes get edit' do
-      @router.path(:edit_avatar).must_equal               '/avatar/edit'
-      @app.request('GET', '/avatar/edit').body.must_equal 'Avatar::Edit'
+      @router.path(:edit_avatar).must_equal                           '/avatar/edit'
+      @app.request('GET', '/avatar/edit', lint: true).body.must_equal 'Avatar::Edit'
     end
 
     it 'recognizes patch update' do
-      @router.path(:avatar).must_equal                    '/avatar'
-      @app.request('PATCH', '/avatar').body.must_equal    'Avatar::Update'
+      @router.path(:avatar).must_equal                             '/avatar'
+      @app.request('PATCH', '/avatar', lint: true).body.must_equal 'Avatar::Update'
     end
 
     it 'recognizes delete destroy' do
-      @router.path(:avatar).must_equal                    '/avatar'
-      @app.request('DELETE', '/avatar').body.must_equal   'Avatar::Destroy'
+      @router.path(:avatar).must_equal                              '/avatar'
+      @app.request('DELETE', '/avatar', lint: true).body.must_equal 'Avatar::Destroy'
     end
 
     describe ':only option' do
@@ -51,18 +51,18 @@ describe Lotus::Router do
       end
 
       it 'recognizes only specified paths' do
-        @router.path(:edit_profile).must_equal               '/profile/edit'
-        @app.request('GET', '/profile/edit').body.must_equal 'Profile::Edit'
+        @router.path(:edit_profile).must_equal                           '/profile/edit'
+        @app.request('GET', '/profile/edit', lint: true).body.must_equal 'Profile::Edit'
 
-        @router.path(:profile).must_equal                    '/profile'
-        @app.request('PATCH', '/profile').body.must_equal    'Profile::Update'
+        @router.path(:profile).must_equal                             '/profile'
+        @app.request('PATCH', '/profile', lint: true).body.must_equal 'Profile::Update'
       end
 
       it 'does not recognize other paths' do
-        @app.request('GET',    '/profile/new').status.must_equal 405
-        @app.request('POST',   '/profile').status.must_equal     405
-        @app.request('GET',    '/profile').status.must_equal     405
-        @app.request('DELETE', '/profile').status.must_equal     405
+        @app.request('GET',    '/profile/new', lint: true).status.must_equal 405
+        @app.request('POST',   '/profile', lint: true).status.must_equal     405
+        @app.request('GET',    '/profile', lint: true).status.must_equal     405
+        @app.request('DELETE', '/profile', lint: true).status.must_equal     405
 
         exception = -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
         exception.message.must_equal 'No route (path) could be generated for :new_profile - please check given arguments'
@@ -75,18 +75,18 @@ describe Lotus::Router do
       end
 
       it 'recognizes only the non-rejected paths' do
-        @router.path(:edit_profile).must_equal               '/profile/edit'
-        @app.request('GET', '/profile/edit').body.must_equal 'Profile::Edit'
+        @router.path(:edit_profile).must_equal                           '/profile/edit'
+        @app.request('GET', '/profile/edit', lint: true).body.must_equal 'Profile::Edit'
 
-        @router.path(:profile).must_equal                    '/profile'
-        @app.request('PATCH', '/profile').body.must_equal    'Profile::Update'
+        @router.path(:profile).must_equal                             '/profile'
+        @app.request('PATCH', '/profile', lint: true).body.must_equal 'Profile::Update'
       end
 
       it 'does not recognize other paths' do
-        @app.request('GET',    '/profile/new').status.must_equal 405
-        @app.request('POST',   '/profile').status.must_equal     405
-        @app.request('GET',    '/profile').status.must_equal     405
-        @app.request('DELETE', '/profile').status.must_equal     405
+        @app.request('GET',    '/profile/new', lint: true).status.must_equal 405
+        @app.request('POST',   '/profile', lint: true).status.must_equal     405
+        @app.request('GET',    '/profile', lint: true).status.must_equal     405
+        @app.request('DELETE', '/profile', lint: true).status.must_equal     405
 
         exception = -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
         exception.message.must_equal 'No route (path) could be generated for :new_profile - please check given arguments'
@@ -104,13 +104,13 @@ describe Lotus::Router do
       end
 
       it 'recognizes the path' do
-        @router.path(:activate_profile).must_equal                 '/profile/activate'
-        @app.request('PATCH', '/profile/activate').body.must_equal 'Profile::Activate'
+        @router.path(:activate_profile).must_equal                             '/profile/activate'
+        @app.request('PATCH', '/profile/activate', lint: true).body.must_equal 'Profile::Activate'
       end
 
       it 'recognizes the path with a leading slash' do
-        @router.path(:deactivate_profile).must_equal                 '/profile/deactivate'
-        @app.request('PATCH', '/profile/deactivate').body.must_equal 'Profile::Deactivate'
+        @router.path(:deactivate_profile).must_equal                             '/profile/deactivate'
+        @app.request('PATCH', '/profile/deactivate', lint: true).body.must_equal 'Profile::Deactivate'
       end
     end
 
@@ -125,13 +125,13 @@ describe Lotus::Router do
       end
 
       it 'recognizes the path' do
-        @router.path(:keys_profile).must_equal               '/profile/keys'
-        @app.request('GET', '/profile/keys').body.must_equal 'Profile::Keys'
+        @router.path(:keys_profile).must_equal                           '/profile/keys'
+        @app.request('GET', '/profile/keys', lint: true).body.must_equal 'Profile::Keys'
       end
 
       it 'recognizes the path with a leading slash' do
-        @router.path(:activities_profile).must_equal               '/profile/activities'
-        @app.request('GET', '/profile/activities').body.must_equal 'Profile::Activities'
+        @router.path(:activities_profile).must_equal                           '/profile/activities'
+        @app.request('GET', '/profile/activities', lint: true).body.must_equal 'Profile::Activities'
       end
     end
 
@@ -141,8 +141,8 @@ describe Lotus::Router do
       end
 
       it 'recognizes path with different controller' do
-        @router.path(:new_profile).must_equal               '/profile/new'
-        @app.request('GET', '/profile/new').body.must_equal 'Keys::New'
+        @router.path(:new_profile).must_equal                           '/profile/new'
+        @app.request('GET', '/profile/new', lint: true).body.must_equal 'Keys::New'
       end
     end
   end

@@ -16,7 +16,7 @@ describe Lotus::Router do
         get '/plane-tree', to: ->(env) { [200, {}, ['Trees (GET)!']] }
       end
 
-      @app.request('GET', '/trees/plane-tree').body.must_equal 'Trees (GET)!'
+      @app.request('GET', '/trees/plane-tree', lint: true).body.must_equal 'Trees (GET)!'
     end
 
     it 'recognizes post path' do
@@ -24,7 +24,7 @@ describe Lotus::Router do
         post '/sequoia', to: ->(env) { [200, {}, ['Trees (POST)!']] }
       end
 
-      @app.request('POST', '/trees/sequoia').body.must_equal 'Trees (POST)!'
+      @app.request('POST', '/trees/sequoia', lint: true).body.must_equal 'Trees (POST)!'
     end
 
     it 'recognizes put path' do
@@ -32,7 +32,7 @@ describe Lotus::Router do
         put '/cherry-tree', to: ->(env) { [200, {}, ['Trees (PUT)!']] }
       end
 
-      @app.request('PUT', '/trees/cherry-tree').body.must_equal 'Trees (PUT)!'
+      @app.request('PUT', '/trees/cherry-tree', lint: true).body.must_equal 'Trees (PUT)!'
     end
 
     it 'recognizes patch path' do
@@ -40,7 +40,7 @@ describe Lotus::Router do
         patch '/cedar', to: ->(env) { [200, {}, ['Trees (PATCH)!']] }
       end
 
-      @app.request('PATCH', '/trees/cedar').body.must_equal 'Trees (PATCH)!'
+      @app.request('PATCH', '/trees/cedar', lint: true).body.must_equal 'Trees (PATCH)!'
     end
 
     it 'recognizes delete path' do
@@ -48,7 +48,7 @@ describe Lotus::Router do
         delete '/pine', to: ->(env) { [200, {}, ['Trees (DELETE)!']] }
       end
 
-      @app.request('DELETE', '/trees/pine').body.must_equal 'Trees (DELETE)!'
+      @app.request('DELETE', '/trees/pine', lint: true).body.must_equal 'Trees (DELETE)!'
     end
 
     it 'recognizes trace path' do
@@ -56,7 +56,7 @@ describe Lotus::Router do
         trace '/cypress', to: ->(env) { [200, {}, ['Trees (TRACE)!']] }
       end
 
-      @app.request('TRACE', '/trees/cypress').body.must_equal 'Trees (TRACE)!'
+      @app.request('TRACE', '/trees/cypress', lint: true).body.must_equal 'Trees (TRACE)!'
     end
 
     describe 'nested' do
@@ -67,7 +67,7 @@ describe Lotus::Router do
           end
         end
 
-        @app.request('GET', '/animals/mammals/cats').body.must_equal 'Meow!'
+        @app.request('GET', '/animals/mammals/cats', lint: true).body.must_equal 'Meow!'
       end
 
       it 'defines #resource correctly' do
@@ -77,7 +77,7 @@ describe Lotus::Router do
           end
         end
 
-        @app.request('GET', '/users/management/avatar').body.must_equal 'Avatar::Show'
+        @app.request('GET', '/users/management/avatar', lint: true).body.must_equal 'Avatar::Show'
         @router.path(:users_management_avatar).must_equal "/users/management/avatar"
       end
 
@@ -88,7 +88,7 @@ describe Lotus::Router do
           end
         end
 
-        @app.request('GET', '/vegetals/pretty/flowers').body.must_equal 'Flowers::Index'
+        @app.request('GET', '/vegetals/pretty/flowers', lint: true).body.must_equal 'Flowers::Index'
         @router.path(:vegetals_pretty_flowers).must_equal "/vegetals/pretty/flowers"
       end
 
@@ -99,7 +99,7 @@ describe Lotus::Router do
           end
         end
 
-        @app.request('GET', 'users/settings/image').headers['Location'].must_equal '/users/settings/avatar'
+        @app.request('GET', 'users/settings/image', lint: true).headers['Location'].must_equal '/users/settings/avatar'
       end
     end
 
@@ -112,8 +112,8 @@ describe Lotus::Router do
       end
 
       it 'recognizes get path' do
-        @app.request('GET', '/users/dashboard').headers['Location'].must_equal '/users/home'
-        @app.request('GET', '/users/dashboard').status.must_equal 301
+        @app.request('GET', '/users/dashboard', lint: true).headers['Location'].must_equal '/users/home'
+        @app.request('GET', '/users/dashboard', lint: true).status.must_equal 301
       end
     end
 
@@ -126,37 +126,37 @@ describe Lotus::Router do
 
       it 'recognizes get index' do
         @router.path(:vegetals_flowers).must_equal              '/vegetals/flowers'
-        @app.request('GET', '/vegetals/flowers').body.must_equal         'Flowers::Index'
+        @app.request('GET', '/vegetals/flowers', lint: true).body.must_equal         'Flowers::Index'
       end
 
       it 'recognizes get new' do
         @router.path(:new_vegetals_flower).must_equal          '/vegetals/flowers/new'
-        @app.request('GET', '/vegetals/flowers/new').body.must_equal     'Flowers::New'
+        @app.request('GET', '/vegetals/flowers/new', lint: true).body.must_equal     'Flowers::New'
       end
 
       it 'recognizes post create' do
         @router.path(:vegetals_flowers).must_equal                       '/vegetals/flowers'
-        @app.request('POST', '/vegetals/flowers').body.must_equal        'Flowers::Create'
+        @app.request('POST', '/vegetals/flowers', lint: true).body.must_equal        'Flowers::Create'
       end
 
       it 'recognizes get show' do
         @router.path(:vegetals_flower, id: 23).must_equal               '/vegetals/flowers/23'
-        @app.request('GET', '/vegetals/flowers/23').body.must_equal      'Flowers::Show 23'
+        @app.request('GET', '/vegetals/flowers/23', lint: true).body.must_equal      'Flowers::Show 23'
       end
 
       it 'recognizes get edit' do
         @router.path(:edit_vegetals_flower, id: 23).must_equal          '/vegetals/flowers/23/edit'
-        @app.request('GET', '/vegetals/flowers/23/edit').body.must_equal 'Flowers::Edit 23'
+        @app.request('GET', '/vegetals/flowers/23/edit', lint: true).body.must_equal 'Flowers::Edit 23'
       end
 
       it 'recognizes patch update' do
         @router.path(:vegetals_flower, id: 23).must_equal               '/vegetals/flowers/23'
-        @app.request('PATCH', '/vegetals/flowers/23').body.must_equal    'Flowers::Update 23'
+        @app.request('PATCH', '/vegetals/flowers/23', lint: true).body.must_equal    'Flowers::Update 23'
       end
 
       it 'recognizes delete destroy' do
         @router.path(:vegetals_flower, id: 23).must_equal               '/vegetals/flowers/23'
-        @app.request('DELETE', '/vegetals/flowers/23').body.must_equal   'Flowers::Destroy 23'
+        @app.request('DELETE', '/vegetals/flowers/23', lint: true).body.must_equal   'Flowers::Destroy 23'
       end
 
       describe ':only option' do
@@ -168,18 +168,18 @@ describe Lotus::Router do
 
         it 'recognizes only specified paths' do
           @router.path(:electronics_keyboards).must_equal                       '/electronics/keyboards'
-          @app.request('GET', '/electronics/keyboards').body.must_equal         'Keyboards::Index'
+          @app.request('GET', '/electronics/keyboards', lint: true).body.must_equal         'Keyboards::Index'
 
           @router.path(:edit_electronics_keyboard, id: 23).must_equal          '/electronics/keyboards/23/edit'
-          @app.request('GET', '/electronics/keyboards/23/edit').body.must_equal 'Keyboards::Edit 23'
+          @app.request('GET', '/electronics/keyboards/23/edit', lint: true).body.must_equal 'Keyboards::Edit 23'
         end
 
         it 'does not recognize other paths' do
-          @app.request('GET',    '/electronics/keyboards/new').status.must_equal 404
-          @app.request('POST',   '/electronics/keyboards').status.must_equal     405
-          @app.request('GET',    '/electronics/keyboards/23').status.must_equal  404
-          @app.request('PATCH',  '/electronics/keyboards/23').status.must_equal  405
-          @app.request('DELETE', '/electronics/keyboards/23').status.must_equal  405
+          @app.request('GET',    '/electronics/keyboards/new', lint: true).status.must_equal 404
+          @app.request('POST',   '/electronics/keyboards', lint: true).status.must_equal     405
+          @app.request('GET',    '/electronics/keyboards/23', lint: true).status.must_equal  404
+          @app.request('PATCH',  '/electronics/keyboards/23', lint: true).status.must_equal  405
+          @app.request('DELETE', '/electronics/keyboards/23', lint: true).status.must_equal  405
 
           exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments'
@@ -195,19 +195,19 @@ describe Lotus::Router do
 
         it 'recognizes only the non-rejected paths' do
           @router.path(:electronics_keyboards).must_equal                       '/electronics/keyboards'
-          @app.request('GET', '/electronics/keyboards').body.must_equal         'Keyboards::Index'
+          @app.request('GET', '/electronics/keyboards', lint: true).body.must_equal         'Keyboards::Index'
 
           @router.path(:edit_electronics_keyboard, id: 23).must_equal          '/electronics/keyboards/23/edit'
-          @app.request('GET', '/electronics/keyboards/23/edit').body.must_equal 'Keyboards::Edit 23'
+          @app.request('GET', '/electronics/keyboards/23/edit', lint: true).body.must_equal 'Keyboards::Edit 23'
 
           @router.path(:electronics_keyboards).must_equal                       '/electronics/keyboards'
-          @app.request('POST', '/electronics/keyboards').body.must_equal        'Keyboards::Create'
+          @app.request('POST', '/electronics/keyboards', lint: true).body.must_equal        'Keyboards::Create'
         end
 
         it 'does not recognize other paths' do
-          @app.request('GET',    '/electronics/keyboards/new').status.must_equal 404
-          @app.request('PATCH',  '/electronics/keyboards/23').status.must_equal  405
-          @app.request('DELETE', '/electronics/keyboards/23').status.must_equal  405
+          @app.request('GET',    '/electronics/keyboards/new', lint: true).status.must_equal 404
+          @app.request('PATCH',  '/electronics/keyboards/23', lint: true).status.must_equal  405
+          @app.request('DELETE', '/electronics/keyboards/23', lint: true).status.must_equal  405
 
           exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments'
@@ -226,12 +226,12 @@ describe Lotus::Router do
 
         it 'recognizes collection actions' do
           @router.path(:search_electronics_keyboards).must_equal               '/electronics/keyboards/search'
-          @app.request('GET', "/electronics/keyboards/search").body.must_equal 'Keyboards::Search'
+          @app.request('GET', "/electronics/keyboards/search", lint: true).body.must_equal 'Keyboards::Search'
         end
 
         it 'recognizes member actions' do
           @router.path(:screenshot_electronics_keyboard, id: 23).must_equal          '/electronics/keyboards/23/screenshot'
-          @app.request('GET', "/electronics/keyboards/23/screenshot").body.must_equal 'Keyboards::Screenshot 23'
+          @app.request('GET', "/electronics/keyboards/23/screenshot", lint: true).body.must_equal 'Keyboards::Screenshot 23'
         end
       end
     end
@@ -245,32 +245,32 @@ describe Lotus::Router do
 
       it 'recognizes get new' do
         @router.path(:new_settings_avatar).must_equal      '/settings/avatar/new'
-        @app.request('GET', '/settings/avatar/new').body.must_equal 'Avatar::New'
+        @app.request('GET', '/settings/avatar/new', lint: true).body.must_equal 'Avatar::New'
       end
 
       it 'recognizes post create' do
         @router.path(:settings_avatar).must_equal              '/settings/avatar'
-        @app.request('POST', '/settings/avatar').body.must_equal 'Avatar::Create'
+        @app.request('POST', '/settings/avatar', lint: true).body.must_equal 'Avatar::Create'
       end
 
       it 'recognizes get show' do
         @router.path(:settings_avatar).must_equal           '/settings/avatar'
-        @app.request('GET', '/settings/avatar').body.must_equal 'Avatar::Show'
+        @app.request('GET', '/settings/avatar', lint: true).body.must_equal 'Avatar::Show'
       end
 
       it 'recognizes get edit' do
         @router.path(:edit_settings_avatar).must_equal      '/settings/avatar/edit'
-        @app.request('GET', '/settings/avatar/edit').body.must_equal 'Avatar::Edit'
+        @app.request('GET', '/settings/avatar/edit', lint: true).body.must_equal 'Avatar::Edit'
       end
 
       it 'recognizes patch update' do
         @router.path(:settings_avatar).must_equal               '/settings/avatar'
-        @app.request('PATCH', '/settings/avatar').body.must_equal 'Avatar::Update'
+        @app.request('PATCH', '/settings/avatar', lint: true).body.must_equal 'Avatar::Update'
       end
 
       it 'recognizes delete destroy' do
         @router.path(:settings_avatar).must_equal                 '/settings/avatar'
-        @app.request('DELETE', '/settings/avatar').body.must_equal 'Avatar::Destroy'
+        @app.request('DELETE', '/settings/avatar', lint: true).body.must_equal 'Avatar::Destroy'
       end
 
       describe ':only option' do
@@ -282,17 +282,17 @@ describe Lotus::Router do
 
         it 'recognizes only specified paths' do
           @router.path(:edit_settings_profile).must_equal      '/settings/profile/edit'
-          @app.request('GET', '/settings/profile/edit').body.must_equal 'Profile::Edit'
+          @app.request('GET', '/settings/profile/edit', lint: true).body.must_equal 'Profile::Edit'
 
           @router.path(:settings_profile).must_equal               '/settings/profile'
-          @app.request('PATCH', '/settings/profile').body.must_equal 'Profile::Update'
+          @app.request('PATCH', '/settings/profile', lint: true).body.must_equal 'Profile::Update'
         end
 
         it 'does not recognize other paths' do
-          @app.request('GET',    '/settings/profile').status.must_equal     405
-          @app.request('GET',    '/settings/profile/new').status.must_equal 405
-          @app.request('POST',   '/settings/profile').status.must_equal     405
-          @app.request('DELETE', '/settings/profile').status.must_equal     405
+          @app.request('GET',    '/settings/profile', lint: true).status.must_equal     405
+          @app.request('GET',    '/settings/profile/new', lint: true).status.must_equal 405
+          @app.request('POST',   '/settings/profile', lint: true).status.must_equal     405
+          @app.request('DELETE', '/settings/profile', lint: true).status.must_equal     405
 
           exception = -> { @router.path(:new_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :new_settings_profile - please check given arguments'
@@ -308,20 +308,20 @@ describe Lotus::Router do
 
         it 'recognizes only the non-rejected paths' do
           @router.path(:settings_profile).must_equal           '/settings/profile'
-          @app.request('GET', '/settings/profile').body.must_equal 'Profile::Show'
+          @app.request('GET', '/settings/profile', lint: true).body.must_equal 'Profile::Show'
 
           @router.path(:new_settings_profile).must_equal      '/settings/profile/new'
-          @app.request('GET', '/settings/profile/new').body.must_equal 'Profile::New'
+          @app.request('GET', '/settings/profile/new', lint: true).body.must_equal 'Profile::New'
 
           @router.path(:settings_profile).must_equal              '/settings/profile'
-          @app.request('POST', '/settings/profile').body.must_equal 'Profile::Create'
+          @app.request('POST', '/settings/profile', lint: true).body.must_equal 'Profile::Create'
 
           @router.path(:settings_profile).must_equal                 '/settings/profile'
-          @app.request('DELETE', '/settings/profile').body.must_equal 'Profile::Destroy'
+          @app.request('DELETE', '/settings/profile', lint: true).body.must_equal 'Profile::Destroy'
         end
 
         it 'does not recognize other paths' do
-          @app.request('GET', '/settings/profile/edit').status.must_equal 404
+          @app.request('GET', '/settings/profile/edit', lint: true).status.must_equal 404
 
           exception = -> { @router.path(:edit_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :edit_settings_profile - please check given arguments'

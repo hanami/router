@@ -16,12 +16,12 @@ describe 'Lotus integration' do
   end
 
   it 'recognizes single endpoint' do
-    response = @app.get('/dashboard')
+    response = @app.get('/dashboard', lint: true)
     response.body.must_equal 'Hello from Travels::Controllers::Journeys::Index'
   end
 
   it 'recognizes RESTful endpoint' do
-    response = @app.get('/journeys')
+    response = @app.get('/journeys', lint: true)
     response.body.must_equal 'Hello from Travels::Controllers::Journeys::Index'
   end
 end

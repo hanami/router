@@ -53,23 +53,23 @@ describe Lotus::Router do
     end
 
     it 'recognizes path' do
-      @app.get('/route').status.must_equal 200
+      @app.get('/route', lint: true).status.must_equal 200
     end
 
     it 'recognizes named path' do
-      @app.get('/named_route').status.must_equal 200
+      @app.get('/named_route', lint: true).status.must_equal 200
     end
 
     it 'recognizes resource' do
-      @app.get('/avatar').status.must_equal 200
+      @app.get('/avatar', lint: true).status.must_equal 200
     end
 
     it 'recognizes resources' do
-      @app.get('/avatar').status.must_equal 200
+      @app.get('/avatar', lint: true).status.must_equal 200
     end
 
     it 'recognizes namespaced path' do
-      @app.get('/admin/dashboard').status.must_equal 200
+      @app.get('/admin/dashboard', lint: true).status.must_equal 200
     end
   end
 end

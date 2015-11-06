@@ -18,35 +18,35 @@ describe Lotus::Router do
           response = [200, {}, ['Fixed!']]
           @router.send(verb, '/lotus', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus')
+          response.must_be_same_as @app.request(verb.upcase, '/lotus', lint: true)
         end
 
         it 'recognize moving parts string' do
           response = [200, {}, ['Moving!']]
           @router.send(verb, '/lotus/:id', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/23')
+          response.must_be_same_as @app.request(verb.upcase, '/lotus/23', lint: true)
         end
 
         it 'recognize globbing string' do
           response = [200, {}, ['Globbing!']]
           @router.send(verb, '/lotus/*', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/all')
+          response.must_be_same_as @app.request(verb.upcase, '/lotus/all', lint: true)
         end
 
         it 'recognize format string' do
           response = [200, {}, ['Format!']]
           @router.send(verb, '/lotus/:id(.:format)', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/all.json')
+          response.must_be_same_as @app.request(verb.upcase, '/lotus/all.json', lint: true)
         end
 
         it 'accepts a block' do
           response = [200, {}, ['Block!']]
           @router.send(verb, '/block') {|e| response }
 
-          response.must_be_same_as @app.request(verb.upcase, '/block')
+          response.must_be_same_as @app.request(verb.upcase, '/block', lint: true)
         end
       end
 
@@ -84,9 +84,9 @@ describe Lotus::Router do
           response = [200, {}, ['Moving with constraints!']]
 
           @router.send(verb, '/lotus/:id', to: ->(env) { response }, id: /\d+/)
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/23')
+          response.must_be_same_as @app.request(verb.upcase, '/lotus/23', lint: true)
 
-          @app.request(verb.upcase, '/lotus/flower').status.must_equal 404
+          @app.request(verb.upcase, '/lotus/flower', lint: true).status.must_equal 404
         end
       end
 
