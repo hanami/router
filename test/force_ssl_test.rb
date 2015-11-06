@@ -1,13 +1,22 @@
 require 'test_helper'
 
 describe Lotus::Router do
+  # Bug https://github.com/lotus/router/issues/73
+  it 'respects the Rack spec' do
+    router = Lotus::Router.new(force_ssl: true)
+    router.public_send(:get, '/http_destination', to: ->(env) { [200, {}, ['http destination!']] })
+    app = Rack::MockRequest.new(router)
+
+    app.get('/http_destination', lint: true)
+  end
+
   %w{get}.each do |verb|
     it "force_ssl to true and scheme is http, return 307 and new location, verb: #{verb}" do
       router = Lotus::Router.new(force_ssl: true)
       router.public_send(verb, '/http_destination', to: ->(env) { [200, {}, ['http destination!']] })
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination')
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
       status.must_equal 301
       headers['Location'].must_equal 'https://localhost:443/http_destination'
@@ -19,7 +28,7 @@ describe Lotus::Router do
       router.public_send(verb, '/http_destination', to: ->(env) { [200, {}, ['http destination!']] })
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, 'https://lotus.test/http_destination')
+      status, headers, body = app.public_send(verb, 'https://lotus.test/http_destination', lint: true)
 
       status.must_equal 200
       headers['Location'].must_be_nil
@@ -33,7 +42,7 @@ describe Lotus::Router do
       router.public_send(verb, '/http_destination', to: ->(env) { [200, {}, ['http destination!']] })
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination')
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
       status.must_equal 307
       headers['Location'].must_equal 'https://localhost:443/http_destination'
@@ -46,7 +55,7 @@ describe Lotus::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar')
+      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
 
       status.must_equal 307
       headers['Location'].must_equal 'https://localhost:443/http_destination?foo=bar'
@@ -59,7 +68,7 @@ describe Lotus::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar')
+      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
 
       status.must_equal 307
       headers['Location'].must_equal 'https://localhost:4000/http_destination?foo=bar'
@@ -72,7 +81,7 @@ describe Lotus::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar')
+      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
 
       status.must_equal 307
       headers['Location'].must_equal 'https://lotusrb.org:4000/http_destination?foo=bar'
@@ -85,7 +94,7 @@ describe Lotus::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination')
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
       status.must_equal 200
       headers['Location'].must_be_nil
@@ -98,7 +107,7 @@ describe Lotus::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination')
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
       status.must_equal 200
       headers['Location'].must_be_nil

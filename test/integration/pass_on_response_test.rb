@@ -7,7 +7,7 @@ describe 'Pass on response' do
   end
 
   it 'is successful' do
-    response = @app.get('/')
+    response = @app.get('/', lint: true)
     response.status.must_equal 200
   end
 end

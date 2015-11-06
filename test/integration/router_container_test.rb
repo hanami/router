@@ -8,9 +8,9 @@ describe 'Router wrapper as container' do
     end
 
     @app = Rack::MockRequest.new(@router_container)
-    response = @app.get('/front/home')
+    response = @app.get('/front/home', lint: true)
     response.body.must_equal 'front'
-    response = @app.get('/back/home')
+    response = @app.get('/back/home', lint: true)
     response.body.must_equal 'back'
   end
 end

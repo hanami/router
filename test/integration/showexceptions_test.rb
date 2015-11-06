@@ -12,14 +12,14 @@ describe Lotus::Router do
     end
 
     it 'shows textual exception stack trace by default' do
-      response = @app.get('/')
+      response = @app.get('/', lint: true)
 
       response.status.must_equal 500
       response.body.must_match 'Lotus::Routing::EndpointNotFound'
     end
 
     it 'shows exceptions page (when requesting HTML)' do
-      response = @app.get('/', 'HTTP_ACCEPT' => 'text/html')
+      response = @app.get('/', 'HTTP_ACCEPT' => 'text/html', lint: true)
 
       response.status.must_equal 500
       response.body.must_match '<body>'

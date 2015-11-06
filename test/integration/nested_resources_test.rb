@@ -160,44 +160,44 @@ describe 'Nested resources' do
   describe 'request' do
     describe 'users -> posts' do
       it 'should match body' do
-        response = @app.get('/users/1/posts')
+        response = @app.get('/users/1/posts', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::Users::Posts::Index'
       end
     end
 
     describe 'users -> avatar' do
       it 'should match body' do
-        response = @app.get('/users/1/avatar')
+        response = @app.get('/users/1/avatar', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::Users::Avatar::Show'
       end
     end
 
     describe 'users -> posts -> comments' do
       it 'should match body' do
-        response = @app.get('/users/1/posts/1/comments')
+        response = @app.get('/users/1/posts/1/comments', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::Users::Posts::Comments::Index'
       end
     end
 
     describe 'user -> comments' do
       it 'should match body' do
-        response = @app.get('/user/comments')
+        response = @app.get('/user/comments', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::User::Comments::Index'
       end
     end
 
     describe 'user -> api_key' do
       it 'should match body' do
-        response = @app.get('/user/api_key')
+        response = @app.get('/user/api_key', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::User::ApiKey::Show'
       end
     end
 
     describe 'products -> variants' do
       it 'should match body' do
-        response = @app.get('/products/1/variants')
+        response = @app.get('/products/1/variants', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::Products::Variants::Index'
-        response = @app.get('/products/1/variants/1')
+        response = @app.get('/products/1/variants/1', lint: true)
         response.body.must_equal 'Hello from Nested::Controllers::Products::Variants::Show'
       end
     end
