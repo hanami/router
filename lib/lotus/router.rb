@@ -71,6 +71,39 @@ module Lotus
   #
   #   # All the requests starting with "/api" will be forwarded to Api::App
   class Router
+    # Returns the given block as it is.
+    #
+    # When Lotus::Router is used as a standalone gem and the routes are defined
+    # into a configuration file, some systems could raise an exception.
+    #
+    # Imagine the following file into a Ruby on Rails application:
+    #
+    #   get '/', to: 'api#index'
+    #
+    # Because Ruby on Rails in production mode use to eager load code and the
+    # routes file uses top level method calls, it crashes the application.
+    #
+    # If we wrap these routes with <tt>Lotus::Router.define</tt>, the block
+    # doesn't get yielded but just returned to the caller as it is.
+    #
+    # Usually the receiver of this block is <tt>Lotus::Router#initialize</tt>,
+    # which finally evaluates the block.
+    #
+    # @param blk [Proc] a set of route definitions
+    #
+    # @return [Proc] the given block
+    #
+    # @since x.x.x
+    #
+    # @example
+    #   # apps/web/config/routes.rb
+    #   Lotus::Router.define do
+    #     get '/', to: 'home#index'
+    #   end
+    def self.define(&blk)
+      blk
+    end
+
     # Initialize the router.
     #
     # @param options [Hash] the options to initialize the router
