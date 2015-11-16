@@ -25,6 +25,17 @@ describe Lotus::Router do
       router.must_be_instance_of Lotus::Router
     end
 
+    it 'evaluates routes passed from Lotus::Router.define' do
+      routes = Lotus::Router.define { post '/domains', to: ->(env) {[201, {}, ['Domain Created']]} }
+      router = Lotus::Router.new(&routes)
+
+      app      = Rack::MockRequest.new(router)
+      response = app.post('/domains', lint: true)
+
+      response.status.must_equal 201
+      response.body.must_equal   'Domain Created'
+    end
+
     it 'returns instance of Lotus::Router' do
       @router.must_be_instance_of Lotus::Router
     end
