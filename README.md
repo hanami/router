@@ -568,6 +568,74 @@ router.path(:new_user_favorites, user_id: 1)         # => /users/1/favorites/new
 router.path(:edit_user_favorites, user_id: 1, id: 2) # => /users/1/favorites/2/edit
 ```
 
+### Body Parsers
+
+Rack ignores request bodies unless they come from a form submission.
+If we have a JSON endpoint, the payload isn't available in the params hash:
+
+```ruby
+Rack::Request.new(env).params # => {}
+```
+
+This feature enables body parsing for specific MIME Types.
+It comes with a built-in JSON parser and allows to pass custom parsers.
+
+#### JSON Parsing
+
+```ruby
+require 'lotus/router'
+
+endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
+
+router = Lotus::Router.new(parsers: [:json]) do
+  patch '/books/:id', to: endpoint
+end
+```
+
+```shell
+curl http://localhost:2300/books/1    \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json"       \
+  -d '{"published":"true"}'           \
+  -X PATCH
+
+# => [200, {}, ["{:published=>\"true\",:id=>\"1\"}"]]
+```
+
+#### Custom Parsers
+
+```ruby
+require 'lotus/router'
+
+# See Lotus::Routing::Parsing::Parser
+class XmlParser
+  def mime_types
+    ['application/xml', 'text/xml']
+  end
+
+  # Parse body and return a Hash
+  def parse(body)
+    # ...
+  end
+end
+
+endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
+
+router = Lotus::Router.new(parsers: [XmlParser.new]) do
+  patch '/authors/:id', to: endpoint
+end
+```
+
+```shell
+curl http://localhost:2300/authors/1 \
+  -H "Content-Type: application/xml" \
+  -H "Accept: application/xml"       \
+  -d '<name>LG</name>'               \
+  -X PATCH
+
+# => [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
+````
+
 ## Testing
 
 ```ruby
