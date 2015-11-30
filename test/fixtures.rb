@@ -391,11 +391,13 @@ end
 
 class RackMiddleware
   def self.call(env)
+    [200, {}, ['RackMiddleware']]
   end
 end
 
 class RackMiddlewareInstanceMethod
   def call(env)
+    [200, {}, ['RackMiddlewareInstanceMethod']]
   end
 end
 
