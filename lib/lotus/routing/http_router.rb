@@ -36,6 +36,10 @@ module Lotus
       # @api private
       SCRIPT_NAME = 'SCRIPT_NAME'.freeze
 
+      # @since x.x.x
+      # @api private
+      attr_reader :namespace
+
       # Initialize the router.
       #
       # @see Lotus::Router#initialize
@@ -45,9 +49,10 @@ module Lotus
       def initialize(options = {}, &blk)
         super(options, &nil)
 
-        @default_scheme   = options[:scheme]   if options[:scheme]
-        @default_host     = options[:host]     if options[:host]
-        @default_port     = options[:port]     if options[:port]
+        @namespace        = options[:namespace] if options[:namespace]
+        @default_scheme   = options[:scheme]    if options[:scheme]
+        @default_host     = options[:host]      if options[:host]
+        @default_port     = options[:port]      if options[:port]
         @route_class      = options[:route]    || Routing::Route
         @resolver         = options[:resolver] || Routing::EndpointResolver.new(options)
         @parsers          = Routing::Parsers.new(options[:parsers])
