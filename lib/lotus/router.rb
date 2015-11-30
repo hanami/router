@@ -1,3 +1,4 @@
+require 'rack/request'
 require 'lotus/routing/http_router'
 require 'lotus/routing/namespace'
 require 'lotus/routing/resource'
@@ -71,6 +72,57 @@ module Lotus
   #
   #   # All the requests starting with "/api" will be forwarded to Api::App
   class Router
+    # This error is raised when <tt>#call</tt> is invoked on a non-routable
+    # recognized route.
+    #
+    # @since x.x.x
+    #
+    # @see Lotus::Router#recognize
+    # @see Lotus::Routing::RecognizedRoute
+    # @see Lotus::Routing::RecognizedRoute#call
+    # @see Lotus::Routing::RecognizedRoute#routable?
+    class NotRoutableEndpointError < ::StandardError
+      REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+      PATH_INFO      = 'PATH_INFO'.freeze
+
+      def initialize(env)
+        super %(Cannot find routable endpoint for #{ env[REQUEST_METHOD] } "#{ env[PATH_INFO] }")
+      end
+    end
+
+    # Returns the given block as it is.
+    #
+    # When Lotus::Router is used as a standalone gem and the routes are defined
+    # into a configuration file, some systems could raise an exception.
+    #
+    # Imagine the following file into a Ruby on Rails application:
+    #
+    #   get '/', to: 'api#index'
+    #
+    # Because Ruby on Rails in production mode use to eager load code and the
+    # routes file uses top level method calls, it crashes the application.
+    #
+    # If we wrap these routes with <tt>Lotus::Router.define</tt>, the block
+    # doesn't get yielded but just returned to the caller as it is.
+    #
+    # Usually the receiver of this block is <tt>Lotus::Router#initialize</tt>,
+    # which finally evaluates the block.
+    #
+    # @param blk [Proc] a set of route definitions
+    #
+    # @return [Proc] the given block
+    #
+    # @since x.x.x
+    #
+    # @example
+    #   # apps/web/config/routes.rb
+    #   Lotus::Router.define do
+    #     get '/', to: 'home#index'
+    #   end
+    def self.define(&blk)
+      blk
+    end
+
     # Initialize the router.
     #
     # @param options [Hash] the options to initialize the router
@@ -878,6 +930,125 @@ module Lotus
       @router.call(env)
     end
 
+    # Recognize the given env, path, or name and return a route for testing
+    # inspection.
+    #
+    # If the route cannot be recognized, it still returns an object for testing
+    # inspection.
+    #
+    # @param env [Hash, String, Symbol] Rack env, path or route name
+    # @param options [Hash] a set of options for Rack env or route params
+    # @param params [Hash] a set of params
+    #
+    # @return [Lotus::Routing::RecognizedRoute] the recognized route
+    #
+    # @since x.x.x
+    #
+    # @see Lotus::Router#env_for
+    # @see Lotus::Routing::RecognizedRoute
+    #
+    # @example Successful Path Recognition
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize('/books/23')
+    #   route.verb      # => "GET" (default)
+    #   route.routable? # => true
+    #   route.params    # => {:id=>"23"}
+    #
+    # @example Successful Rack Env Recognition
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize(Rack::MockRequest.env_for('/books/23'))
+    #   route.verb      # => "GET" (default)
+    #   route.routable? # => true
+    #   route.params    # => {:id=>"23"}
+    #
+    # @example Successful Named Route Recognition
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize(:book, id: 23)
+    #   route.verb      # => "GET" (default)
+    #   route.routable? # => true
+    #   route.params    # => {:id=>"23"}
+    #
+    # @example Failing Recognition For Unknown Path
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize('/books')
+    #   route.verb      # => "GET" (default)
+    #   route.routable? # => false
+    #
+    # @example Failing Recognition For Path With Wrong HTTP Verb
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize('/books/23', method: :post)
+    #   route.verb      # => "POST"
+    #   route.routable? # => false
+    #
+    # @example Failing Recognition For Rack Env With Wrong HTTP Verb
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize(Rack::MockRequest.env_for('/books/23', method: :post))
+    #   route.verb      # => "POST"
+    #   route.routable? # => false
+    #
+    # @example Failing Recognition Named Route With Wrong Params
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize(:book)
+    #   route.verb      # => "GET" (default)
+    #   route.routable? # => false
+    #
+    # @example Failing Recognition Named Route With Wrong HTTP Verb
+    #   require 'lotus/router'
+    #
+    #   router = Lotus::Router.new do
+    #     get '/books/:id', to: 'books#show', as: :book
+    #   end
+    #
+    #   route = router.recognize(:book, {method: :post}, {id: 1})
+    #   route.verb      # => "POST"
+    #   route.routable? # => false
+    #   route.params    # => {:id=>"1"}
+    def recognize(env, options = {}, params = nil)
+      require 'lotus/routing/recognized_route'
+
+      env          = env_for(env, options, params)
+      responses, _ = *@router.recognize(env)
+
+      Routing::RecognizedRoute.new(
+        responses.nil? ? responses : responses.first,
+        env, @router)
+    end
+
     # Generate an relative URL for a specified named route.
     # The additional arguments will be used to compose the relative URL - in
     #   case it has tokens to match - and for compose the query string.
@@ -956,6 +1127,37 @@ module Lotus
     def inspector
       require 'lotus/routing/routes_inspector'
       Routing::RoutesInspector.new(@router.routes)
+    end
+
+    protected
+
+    # Fabricate Rack env for the given Rack env, path or named route
+    #
+    # @param env [Hash, String, Symbol] Rack env, path or route name
+    # @param options [Hash] a set of options for Rack env or route params
+    # @param params [Hash] a set of params
+    #
+    # @return [Hash] Rack env
+    #
+    # @since x.x.x
+    # @api private
+    #
+    # @see Lotus::Router#recognize
+    # @see http://www.rubydoc.info/github/rack/rack/Rack%2FMockRequest.env_for
+    def env_for(env, options = {}, params = nil)
+      env = case env
+      when String
+        Rack::MockRequest.env_for(env, options)
+      when Symbol
+        begin
+          url = path(env, params || options)
+          return env_for(url, options)
+        rescue Lotus::Routing::InvalidRouteException
+          {}
+        end
+      else
+        env
+      end
     end
   end
 end
