@@ -640,14 +640,26 @@ curl http://localhost:2300/authors/1 \
 
 ```ruby
 require 'lotus/router'
-require 'rack/request'
 
 router = Lotus::Router.new do
-  get '/', to: ->(env) { [200, {}, ['Hi!']] }
+  get '/books/:id', to: 'books#show', as: :book
 end
 
-app = Rack::MockRequest.new(router)
-app.get('/') # => #<Rack::MockResponse:0x007fc4540dc238 ...>
+route = router.recognize('/books/23')
+route.verb      # "GET"
+route.action    # => "books#show"
+route.params    # => {:id=>"23"}
+route.routable? # => true
+
+route = router.recognize(:book, id: 23)
+route.verb      # "GET"
+route.action    # => "books#show"
+route.params    # => {:id=>"23"}
+route.routable? # => true
+
+route = router.recognize('/books/23', method: :post)
+route.verb      # "POST"
+route.routable? # => false
 ```
 
 ## Versioning
