@@ -48,6 +48,13 @@ describe Lotus::Routing::Parsers do
           result = @parsers.call(env)
           result['router.params'].must_equal({"attribute" => "ok"})
         end
+
+        describe 'with malformed json' do
+          let(:body) {  %({"lotus":"ok" "attribute":"ok"}) }
+          it 'raises an exception' do
+            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::JsonParsingException)
+          end
+        end
       end
 
       describe 'and a JSON API request' do
@@ -57,6 +64,13 @@ describe Lotus::Routing::Parsers do
         it "parses params from body" do
           result = @parsers.call(env)
           result['router.params'].must_equal({"attribute" => "ok"})
+        end
+
+        describe 'with malformed json' do
+          let(:body) {  %({"lotus":"ok" "attribute":"ok"}) }
+          it 'raises an exception' do
+            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::JsonParsingException)
+          end
         end
       end
 
