@@ -52,7 +52,7 @@ describe Lotus::Routing::Parsers do
         describe 'with malformed json' do
           let(:body) {  %({"lotus":"ok" "attribute":"ok"}) }
           it 'raises an exception' do
-            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::JsonParsingException)
+            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::BodyParsingError)
           end
         end
       end
@@ -69,7 +69,7 @@ describe Lotus::Routing::Parsers do
         describe 'with malformed json' do
           let(:body) {  %({"lotus":"ok" "attribute":"ok"}) }
           it 'raises an exception' do
-            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::JsonParsingException)
+            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::BodyParsingError)
           end
         end
       end

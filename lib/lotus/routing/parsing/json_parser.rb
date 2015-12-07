@@ -7,7 +7,7 @@ module Lotus
       # This is raised when the json parser fails to parse a json string.
       #
       # @since x.x.x
-      class JsonParsingException < ::StandardError
+      class BodyParsingError < ::StandardError
       end
 
       class JsonParser < Parser
@@ -15,10 +15,20 @@ module Lotus
           ['application/json', 'application/vnd.api+json']
         end
 
+
+        # Parse a json string
+        #
+        # @param body [String] a json string
+        #
+        # @return [Hash] the parsed json
+        #
+        # @raise [BodyParsingError] when the body can't be parsed.
+        #
+        # @since x.x.x
         def parse(body)
           JSON.parse(body)
         rescue JSON::ParserError => e
-          raise JsonParsingException.new(e.message)
+          raise BodyParsingError.new(e.message)
         end
       end
     end

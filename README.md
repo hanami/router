@@ -602,6 +602,12 @@ curl http://localhost:2300/books/1    \
 # => [200, {}, ["{:published=>\"true\",:id=>\"1\"}"]]
 ```
 
+If the json can't be parsed an exception is raised:
+
+```ruby
+Lotus::Routing::Parsing::BodyParsingError
+``
+
 #### Custom Parsers
 
 ```ruby
@@ -615,7 +621,9 @@ class XmlParser
 
   # Parse body and return a Hash
   def parse(body)
-    # ...
+    # parse xml
+  rescue Lotus::Routing::Parsing::BodyParsingError => e
+    # handle exceptions for XML
   end
 end
 
@@ -634,7 +642,7 @@ curl http://localhost:2300/authors/1 \
   -X PATCH
 
 # => [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
-````
+```
 
 ## Testing
 
