@@ -3,18 +3,10 @@ require 'json'
 module Lotus
   module Routing
     module Parsing
-      # Json parsing error
-      # This is raised when the json parser fails to parse a json string.
-      #
-      # @since x.x.x
-      class BodyParsingError < ::StandardError
-      end
-
       class JsonParser < Parser
         def mime_types
           ['application/json', 'application/vnd.api+json']
         end
-
 
         # Parse a json string
         #
@@ -22,7 +14,7 @@ module Lotus
         #
         # @return [Hash] the parsed json
         #
-        # @raise [BodyParsingError] when the body can't be parsed.
+        # @raise [Lotus::Routing::Parsing::BodyParsingError] when the body can't be parsed.
         #
         # @since x.x.x
         def parse(body)

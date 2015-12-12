@@ -606,7 +606,7 @@ If the json can't be parsed an exception is raised:
 
 ```ruby
 Lotus::Routing::Parsing::BodyParsingError
-``
+```
 
 #### Custom Parsers
 
@@ -622,8 +622,8 @@ class XmlParser
   # Parse body and return a Hash
   def parse(body)
     # parse xml
-  rescue Lotus::Routing::Parsing::BodyParsingError => e
-    # handle exceptions for XML
+  rescue SomeXmlParsingError => e
+    raise Lotus::Routing::Parsing::BodyParsingError.new(e)
   end
 end
 
