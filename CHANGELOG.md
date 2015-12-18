@@ -1,6 +1,20 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.5.0 - (unreleased)
+### Added
+- [Luca Guidi] Added `Lotus::Router#recognize` as a testing facility. Example `router.recognize('/') # => associated route`
+- [Luca Guidi] Added `Lotus::Router.define` in order to wrap routes definitions in `config/routes.rb` when `Lotus::Router` is used outside of Lotus projects
+- [David Strauß] Make `Lotus::Routing::Parsing::JsonParser` compatible with `application/vnd.api+json` MIME Type
+- [Alfonso Uceda Pompa] Improved exception messages for `Lotus::Router#path` and `#url`
+
+### Fixed
+- [Alfonso Uceda Pompa] Ensure `Lotus::Router#path` and `#url` to generate correct URL for mounted applications
+- [Vladislav Zarakovsky] Ensure Force SSL mode to respect Rack SPEC
+
+### Changed
+- [Alfonso Uceda Pompa] A failure for body parsers raises a `Lotus::Routing::Parsing::BodyParsingError` exception
+
 ## v0.4.3 - 2015-09-30
 ### Added
 - [Luca Guidi] Official support for JRuby 9k+
