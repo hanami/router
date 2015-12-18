@@ -4,6 +4,13 @@ require 'lotus/utils/string'
 module Lotus
   module Routing
     module Parsing
+      # Body parsing error
+      # This is raised when parser fails to parse the body
+      #
+      # @since x.x.x
+      class BodyParsingError < ::StandardError
+      end
+
       class UnknownParserError < ::StandardError
         def initialize(parser)
           super("Unknown Parser: `#{ parser }'")
