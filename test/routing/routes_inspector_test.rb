@@ -252,5 +252,20 @@ describe Lotus::Routing::RoutesInspector do
         end
       end
     end
+
+    describe 'with header option' do
+      before do
+        @router = Lotus::Router.new do
+          get '/controller/action', to: 'welcome#index'
+        end
+      end
+
+      it 'returns header text' do
+        expectation = %(Name Method     Path                           Action)
+
+        actual = @router.inspector.to_s
+        actual.must_include(expectation)
+      end
+    end
   end
 end

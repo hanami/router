@@ -18,6 +18,29 @@ module Lotus
       # @api private
       HTTP_METHODS_SEPARATOR = ', '.freeze
 
+      # Default inspector header hash values
+      #
+      # @since 0.5.0
+      # @api private
+      INSPECTOR_HEADER_HASH =  Hash[
+        name:     'Name',
+        methods:  'Method',
+        path:     'Path',
+        endpoint: 'Action'
+      ].freeze
+
+      # Default inspector header name values
+      #
+      # @since 0.5.0
+      # @api private
+      INSPECTOR_HEADER_NAME = 'Name'.freeze
+
+      # Empty line string
+      #
+      # @since 0.5.0
+      # @api private
+      EMPTY_LINE = "\n".freeze
+
       # Instantiate a new inspector
       #
       # @return [Lotus::Routing::RoutesInspector] the new instance
@@ -50,8 +73,10 @@ module Lotus
       #   end
       #
       #   puts router.inspector.to_s
-      #     # =>        GET, HEAD  /                        Home::Index
-      #          login  GET, HEAD  /login                   Sessions::New
+      #     # =>   Name Method     Path                     Action
+      #
+      #                 GET, HEAD  /                        Home::Index
+      #           login GET, HEAD  /login                   Sessions::New
       #                 POST       /login                   Sessions::Create
       #          logout GET, HEAD  /logout                  Sessions::Destroy
       #
@@ -68,7 +93,9 @@ module Lotus
       #   formatter = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
       #
       #   puts router.inspector.to_s(formatter)
-      #     # => | GET, HEAD |        | /       | Home::Index       |
+      #     # => | Method    | Name   | Path    | Action            |
+      #
+      #          | GET, HEAD |        | /       | Home::Index       |
       #          | GET, HEAD | login  | /login  | Sessions::New     |
       #          | POST      |        | /login  | Sessions::Create  |
       #          | GET, HEAD | logout | /logout | Sessions::Destroy |
@@ -100,10 +127,12 @@ module Lotus
       #   formatter = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
       #
       #   puts router.inspector.to_s(formatter)
-      #     # => | GET, HEAD |  | /fakeroute                 | Fake::Index     |
-      #          | GET, HEAD |  | /admin/home                | Home::Index     |
-      #          | GET, HEAD |  | /api/posts                 | Posts::Index    |
-      #          | GET, HEAD |  | /api/second_mount/comments | Comments::Index |
+      #     # => | Method    | Name | Path                       | Action          |
+      #
+      #          | GET, HEAD |      | /fakeroute                 | Fake::Index     |
+      #          | GET, HEAD |      | /admin/home                | Home::Index     |
+      #          | GET, HEAD |      | /api/posts                 | Posts::Index    |
+      #          | GET, HEAD |      | /api/second_mount/comments | Comments::Index |
       def to_s(formatter = FORMATTER, base_path = nil)
         base_path = Utils::PathPrefix.new(base_path)
         result    = ''
@@ -117,6 +146,10 @@ module Lotus
           else
             inspect_route(formatter, route, base_path)
           end
+        end
+
+        unless result.include?(INSPECTOR_HEADER_NAME)
+          result.insert(0, formatter % INSPECTOR_HEADER_HASH + EMPTY_LINE)
         end
 
         result
