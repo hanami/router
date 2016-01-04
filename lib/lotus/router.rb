@@ -3,6 +3,7 @@ require 'lotus/routing/http_router'
 require 'lotus/routing/namespace'
 require 'lotus/routing/resource'
 require 'lotus/routing/resources'
+require 'lotus/routing/error'
 
 module Lotus
   # Rack compatible, lightweight and fast HTTP Router.
@@ -81,7 +82,7 @@ module Lotus
     # @see Lotus::Routing::RecognizedRoute
     # @see Lotus::Routing::RecognizedRoute#call
     # @see Lotus::Routing::RecognizedRoute#routable?
-    class NotRoutableEndpointError < ::StandardError
+    class NotRoutableEndpointError < Lotus::Routing::Error
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
       PATH_INFO      = 'PATH_INFO'.freeze
 

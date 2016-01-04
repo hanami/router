@@ -1,4 +1,5 @@
 require 'delegate'
+require 'lotus/routing/error'
 require 'lotus/utils/class'
 
 module Lotus
@@ -7,7 +8,7 @@ module Lotus
     # This is raised when the router fails to load an endpoint at the runtime.
     #
     # @since 0.1.0
-    class EndpointNotFound < ::StandardError
+    class EndpointNotFound < Lotus::Routing::Error
     end
 
     # Routing endpoint

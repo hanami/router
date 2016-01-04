@@ -4,6 +4,7 @@ require 'lotus/routing/endpoint_resolver'
 require 'lotus/routing/route'
 require 'lotus/routing/parsers'
 require 'lotus/routing/force_ssl'
+require 'lotus/routing/error'
 require 'lotus/utils/path_prefix'
 
 Lotus::Utils::IO.silence_warnings do
@@ -17,7 +18,7 @@ module Lotus
     # given arguments.
     #
     # @since 0.1.0
-    class InvalidRouteException < ::StandardError
+    class InvalidRouteException < Lotus::Routing::Error
     end
 
     # HTTP router
