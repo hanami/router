@@ -1,5 +1,6 @@
 require 'lotus/utils/class'
 require 'lotus/utils/string'
+require 'lotus/routing/error'
 
 module Lotus
   module Routing
@@ -8,10 +9,10 @@ module Lotus
       # This is raised when parser fails to parse the body
       #
       # @since x.x.x
-      class BodyParsingError < ::StandardError
+      class BodyParsingError < Lotus::Routing::Error
       end
 
-      class UnknownParserError < ::StandardError
+      class UnknownParserError < Lotus::Routing::Error
         def initialize(parser)
           super("Unknown Parser: `#{ parser }'")
         end
