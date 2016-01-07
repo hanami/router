@@ -16,7 +16,7 @@ module Lotus
         #
         # @raise [Lotus::Routing::Parsing::BodyParsingError] when the body can't be parsed.
         #
-        # @since x.x.x
+        # @since 0.2.0
         def parse(body)
           JSON.parse(body)
         rescue JSON::ParserError => e

@@ -33,11 +33,11 @@ module Lotus
     class HttpRouter < ::HttpRouter
       # Script name - rack enviroment variable
       #
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       SCRIPT_NAME = 'SCRIPT_NAME'.freeze
 
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       attr_reader :namespace
 
@@ -158,7 +158,7 @@ module Lotus
       end
 
       # @api private
-      # @since x.x.x
+      # @since 0.5.0
       def rewrite_path_info(env, request)
         super
         env[SCRIPT_NAME] = @prefix + env[SCRIPT_NAME]

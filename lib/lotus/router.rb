@@ -76,7 +76,7 @@ module Lotus
     # This error is raised when <tt>#call</tt> is invoked on a non-routable
     # recognized route.
     #
-    # @since x.x.x
+    # @since 0.5.0
     #
     # @see Lotus::Router#recognize
     # @see Lotus::Routing::RecognizedRoute
@@ -113,7 +113,7 @@ module Lotus
     #
     # @return [Proc] the given block
     #
-    # @since x.x.x
+    # @since 0.5.0
     #
     # @example
     #   # apps/web/config/routes.rb
@@ -943,7 +943,7 @@ module Lotus
     #
     # @return [Lotus::Routing::RecognizedRoute] the recognized route
     #
-    # @since x.x.x
+    # @since 0.5.0
     #
     # @see Lotus::Router#env_for
     # @see Lotus::Routing::RecognizedRoute
@@ -1140,7 +1140,7 @@ module Lotus
     #
     # @return [Hash] Rack env
     #
-    # @since x.x.x
+    # @since 0.5.0
     # @api private
     #
     # @see Lotus::Router#recognize

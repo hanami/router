@@ -1,7 +1,7 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
-## v0.5.0 - (unreleased)
+## v0.5.0 - 2016-01-12
 ### Added
 - [Luca Guidi] Added `Lotus::Router#recognize` as a testing facility. Example `router.recognize('/') # => associated route`
 - [Luca Guidi] Added `Lotus::Router.define` in order to wrap routes definitions in `config/routes.rb` when `Lotus::Router` is used outside of Lotus projects
@@ -14,6 +14,7 @@ Rack compatible HTTP router for Ruby
 
 ### Changed
 - [Alfonso Uceda Pompa] A failure for body parsers raises a `Lotus::Routing::Parsing::BodyParsingError` exception
+- [Karim Tarek] Introduced `Lotus::Router::Error` and let all the framework exceptions to inherit from it.
 
 ## v0.4.3 - 2015-09-30
 ### Added

@@ -4,27 +4,27 @@ module Lotus
   module Routing
     # Represents a result of router path recognition.
     #
-    # @since x.x.x
+    # @since 0.5.0
     #
     # @see Lotus::Router#recognize
     class RecognizedRoute
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
 
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       NAMESPACE             = '%s::'.freeze
 
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       NAMESPACE_REPLACEMENT = ''.freeze
 
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       ACTION_PATH_SEPARATOR = '/'.freeze
 
-      # @since x.x.x
+      # @since 0.5.0
       # @api public
       attr_reader :params
 
@@ -36,7 +36,7 @@ module Lotus
       #
       # @return [Lotus::Routing::RecognizedRoute]
       #
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       def initialize(response, env, router)
         @env = env
@@ -58,7 +58,7 @@ module Lotus
       #
       # @raise [Lotus::Router::NotRoutableEndpointError] if not routable
       #
-      # @since x.x.x
+      # @since 0.5.0
       # @api public
       #
       # @see Lotus::Routing::RecognizedRoute#routable?
@@ -75,7 +75,7 @@ module Lotus
       #
       # @return [String]
       #
-      # @since x.x.x
+      # @since 0.5.0
       # @api public
       def verb
         @env[REQUEST_METHOD]
@@ -85,7 +85,7 @@ module Lotus
       #
       # @return [String]
       #
-      # @since x.x.x
+      # @since 0.5.0
       # @api public
       #
       # @see Lotus::Router#recognize
@@ -114,7 +114,7 @@ module Lotus
       #
       # @return [TrueClass,FalseClass]
       #
-      # @since x.x.x
+      # @since 0.5.0
       # @api public
       #
       # @see Lotus::Router#recognize
@@ -134,7 +134,7 @@ module Lotus
 
       private
 
-      # @since x.x.x
+      # @since 0.5.0
       # @api private
       #
       # @see Lotus::Routing::Endpoint
