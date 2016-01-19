@@ -20,7 +20,7 @@ require 'minitest/autorun'
 require 'support/generation_test_case'
 require 'support/recognition_test_case'
 $:.unshift 'lib'
-require 'lotus-router'
+require 'hanami-router'
 
 Rack::MockResponse.class_eval do
   def equal?(other)
@@ -32,7 +32,7 @@ Rack::MockResponse.class_eval do
   end
 end
 
-Lotus::Router.class_eval do
+Hanami::Router.class_eval do
   def reset!
     @router.reset!
   end

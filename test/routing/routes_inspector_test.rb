@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'lotus/routing/routes_inspector'
+require 'hanami/routing/routes_inspector'
 
-describe Lotus::Routing::RoutesInspector do
+describe Hanami::Routing::RoutesInspector do
   describe '#to_s' do
     before do
       @path = ::File.expand_path(__FILE__)
@@ -9,7 +9,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'named routes with procs' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/login',  to: ->(env) { },       as: :login
           get '/logout', to: Proc.new {|env| }, as: :logout
         end
@@ -30,7 +30,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'controller action syntax' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/controller/action', to: 'welcome#index'
         end
       end
@@ -49,7 +49,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'lazy controller and action' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/lazy', to: 'sleepy#index'
         end
 
@@ -77,7 +77,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'missing controller and action' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/missing', to: 'missing#index'
         end
       end
@@ -96,7 +96,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'class' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/class', to: RackMiddleware
         end
       end
@@ -115,7 +115,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'object' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/class',  to: RackMiddlewareInstanceMethod
           get '/object', to: RackMiddlewareInstanceMethod.new
         end
@@ -136,7 +136,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'resource' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           resource 'identity'
         end
       end
@@ -160,7 +160,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'resources' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           resources 'books'
         end
       end
@@ -185,7 +185,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'with custom formatter' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/login', to: ->(env) { }, as: :login
         end
       end
@@ -205,28 +205,28 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'nested routes' do
       before do
-        class AdminLotusApp
+        class AdminHanamiApp
           def call(env)
           end
 
           def routes
-            Lotus::Router.new do
+            Hanami::Router.new do
               get '/home', to: 'home#index'
             end
           end
         end
 
-        inner_router = Lotus::Router.new {
+        inner_router = Hanami::Router.new {
           get '/comments', to: 'comments#index'
         }
-        nested_router = Lotus::Router.new {
+        nested_router = Hanami::Router.new {
           get '/posts', to: 'posts#index'
           mount inner_router, at: '/second_mount'
         }
 
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/fakeroute', to: 'fake#index'
-          mount AdminLotusApp,  at: '/admin'
+          mount AdminHanamiApp,  at: '/admin'
           mount nested_router,  at: '/api'
           mount RackMiddleware, at: '/class'
           mount RackMiddlewareInstanceMethod,     at: '/instance_from_class'
@@ -270,7 +270,7 @@ describe Lotus::Routing::RoutesInspector do
 
     describe 'with header option' do
       before do
-        @router = Lotus::Router.new do
+        @router = Hanami::Router.new do
           get '/controller/action', to: 'welcome#index'
         end
       end

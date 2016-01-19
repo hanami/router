@@ -1,9 +1,9 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   describe 'usage with Rack::ShowExceptions' do
     before do
-      router  = Lotus::Router.new { get '/', to: 'missing#index' }
+      router  = Hanami::Router.new { get '/', to: 'missing#index' }
       builder = Rack::Builder.new
       builder.use Rack::ShowExceptions
       builder.run router
@@ -15,7 +15,7 @@ describe Lotus::Router do
       response = @app.get('/', lint: true)
 
       response.status.must_equal 500
-      response.body.must_match 'Lotus::Routing::EndpointNotFound'
+      response.body.must_match 'Hanami::Routing::EndpointNotFound'
     end
 
     it 'shows exceptions page (when requesting HTML)' do
@@ -23,7 +23,7 @@ describe Lotus::Router do
 
       response.status.must_equal 500
       response.body.must_match '<body>'
-      response.body.must_match 'Lotus::Routing::EndpointNotFound'
+      response.body.must_match 'Hanami::Routing::EndpointNotFound'
     end
   end
 end

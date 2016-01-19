@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe 'Nested resources' do
   before do
-    @router = Lotus::Router.new(namespace: Nested::Controllers) do
+    @router = Hanami::Router.new(namespace: Nested::Controllers) do
       resources :users do
         resources :posts
         resource :avatar
@@ -255,7 +255,7 @@ describe 'Nested resources' do
 
   describe 'overriding controller without namespace' do
     before do
-      @router = Lotus::Router.new do
+      @router = Hanami::Router.new do
         resources :users do
           resources :posts do
             resources :comments, controller: 'posts'

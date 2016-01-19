@@ -1,6 +1,6 @@
-require 'lotus/routing/parsing/parser'
+require 'hanami/routing/parsing/parser'
 
-module Lotus
+module Hanami
   module Routing
     class Parsers
       CONTENT_TYPE       = 'CONTENT_TYPE'.freeze

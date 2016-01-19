@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new
+    @router = Hanami::Router.new
     @app    = Rack::MockRequest.new(@router)
   end
 
@@ -64,7 +64,7 @@ describe Lotus::Router do
         @app.request('GET',    '/profile', lint: true).status.must_equal     405
         @app.request('DELETE', '/profile', lint: true).status.must_equal     405
 
-        exception = -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
+        exception = -> { @router.path(:new_profile) }.must_raise Hanami::Routing::InvalidRouteException
         exception.message.must_equal 'No route (path) could be generated for :new_profile - please check given arguments'
       end
     end
@@ -88,7 +88,7 @@ describe Lotus::Router do
         @app.request('GET',    '/profile', lint: true).status.must_equal     405
         @app.request('DELETE', '/profile', lint: true).status.must_equal     405
 
-        exception = -> { @router.path(:new_profile) }.must_raise Lotus::Routing::InvalidRouteException
+        exception = -> { @router.path(:new_profile) }.must_raise Hanami::Routing::InvalidRouteException
         exception.message.must_equal 'No route (path) could be generated for :new_profile - please check given arguments'
       end
     end

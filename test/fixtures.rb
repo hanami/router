@@ -1,5 +1,5 @@
 require 'rexml/document'
-require 'lotus/routing/parsing/parser'
+require 'hanami/routing/parsing/parser'
 
 module Web
   module Controllers
@@ -374,7 +374,7 @@ module Keys
   end
 end # Keyboards
 
-class XmlParser < Lotus::Routing::Parsing::Parser
+class XmlParser < Hanami::Routing::Parsing::Parser
   def mime_types
     ['application/xml', 'text/xml']
   end

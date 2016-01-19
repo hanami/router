@@ -1,9 +1,9 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   describe '#recognize' do
     before do
-      @router = Lotus::Router.new(namespace: Web::Controllers) do
+      @router = Hanami::Router.new(namespace: Web::Controllers) do
         get '/',              to: 'home#index',                       as: :home
         get '/dashboard',     to: Web::Controllers::Dashboard::Index, as: :dashboard
         get '/rack_class',    to: RackMiddleware,                     as: :rack_class
@@ -96,7 +96,7 @@ describe Lotus::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(env)
 
-        exception = -> { route.call(env) }.must_raise Lotus::Router::NotRoutableEndpointError
+        exception = -> { route.call(env) }.must_raise Hanami::Router::NotRoutableEndpointError
         exception.message.must_equal 'Cannot find routable endpoint for POST "/"'
       end
     end
@@ -177,7 +177,7 @@ describe Lotus::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize('/', method: :post)
 
-        exception = -> { route.call(env) }.must_raise Lotus::Router::NotRoutableEndpointError
+        exception = -> { route.call(env) }.must_raise Hanami::Router::NotRoutableEndpointError
         exception.message.must_equal 'Cannot find routable endpoint for POST "/"'
       end
     end
@@ -264,7 +264,7 @@ describe Lotus::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(:home, {method: :post}, {})
 
-        exception = -> { route.call(env) }.must_raise Lotus::Router::NotRoutableEndpointError
+        exception = -> { route.call(env) }.must_raise Hanami::Router::NotRoutableEndpointError
         exception.message.must_equal 'Cannot find routable endpoint for POST "/"'
       end
     end

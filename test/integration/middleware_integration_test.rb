@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe 'Lotus middleware integration' do
+describe 'Hanami middleware integration' do
   before do
-    @routes = Lotus::Router.new(namespace: Web::Controllers) do
+    @routes = Hanami::Router.new(namespace: Web::Controllers) do
       get '/',          to: 'home#index'
       get '/dashboard', to: 'dashboard#index'
     end

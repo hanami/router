@@ -1,19 +1,19 @@
-require 'lotus/utils/class'
-require 'lotus/utils/string'
-require 'lotus/routing/error'
+require 'hanami/utils/class'
+require 'hanami/utils/string'
+require 'hanami/routing/error'
 
-module Lotus
+module Hanami
   module Routing
     module Parsing
       # Body parsing error
       # This is raised when parser fails to parse the body
       #
       # @since 0.5.0
-      class BodyParsingError < Lotus::Routing::Error
+      class BodyParsingError < Hanami::Routing::Error
       end
 
       # @since 0.2.0
-      class UnknownParserError < Lotus::Routing::Error
+      class UnknownParserError < Hanami::Routing::Error
         def initialize(parser)
           super("Unknown Parser: `#{ parser }'")
         end
@@ -45,10 +45,10 @@ module Lotus
         # @since 0.2.0
         # @api private
         def self.require_parser(parser)
-          require "lotus/routing/parsing/#{ parser }_parser"
+          require "hanami/routing/parsing/#{ parser }_parser"
 
           parser = Utils::String.new(parser).classify
-          Utils::Class.load!("Lotus::Routing::Parsing::#{ parser }Parser").new
+          Utils::Class.load!("Hanami::Routing::Parsing::#{ parser }Parser").new
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)
         end

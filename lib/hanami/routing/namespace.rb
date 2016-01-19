@@ -1,16 +1,16 @@
 require 'delegate'
-require 'lotus/utils/path_prefix'
+require 'hanami/utils/path_prefix'
 
-module Lotus
+module Hanami
   module Routing
     # Namespace for routes.
-    # Implementation of Lotus::Router#namespace
+    # Implementation of Hanami::Router#namespace
     #
     # @since 0.1.0
     #
     # @api private
     #
-    # @see Lotus::Router#namespace
+    # @see Hanami::Router#namespace
     class Namespace < SimpleDelegator
       # @api private
       # @since 0.1.0

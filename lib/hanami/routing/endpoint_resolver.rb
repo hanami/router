@@ -1,8 +1,8 @@
-require 'lotus/utils/string'
-require 'lotus/utils/class'
-require 'lotus/routing/endpoint'
+require 'hanami/utils/string'
+require 'hanami/utils/class'
+require 'hanami/routing/endpoint'
 
-module Lotus
+module Hanami
   module Routing
     # Resolve duck-typed endpoints
     #
@@ -23,9 +23,9 @@ module Lotus
       # @since 0.1.0
       #
       # @example
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new do
+      #   router = Hanami::Router.new do
       #     get '/', to: 'articles#show'
       #   end
       ACTION_SEPARATOR = '#'.freeze
@@ -37,7 +37,7 @@ module Lotus
       # @param options [Hash] the options used to customize lookup behavior
       #
       # @option options [Class] :endpoint the endpoint class that is returned
-      #   by `#resolve`. (defaults to `Lotus::Routing::Endpoint`)
+      #   by `#resolve`. (defaults to `Hanami::Routing::Endpoint`)
       #
       # @option options [Class,Module] :namespace the Ruby namespace where to
       #   lookup for controllers and actions. (defaults to `Object`)
@@ -51,23 +51,23 @@ module Lotus
       # @option options [String] :action_separator the sepatator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
       #
-      # @return [Lotus::Routing::EndpointResolver] self
+      # @return [Hanami::Routing::EndpointResolver] self
       #
       # @since 0.1.0
       #
       # @example Specify custom endpoint class
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   resolver = Lotus::Routing::EndpointResolver.new(endpoint: CustomEndpoint)
-      #   router   = Lotus::Router.new(resolver: resolver)
+      #   resolver = Hanami::Routing::EndpointResolver.new(endpoint: CustomEndpoint)
+      #   router   = Hanami::Router.new(resolver: resolver)
       #
       #   router.get('/', to: endpoint).dest # => #<CustomEndpoint:0x007f97f3359570 ...>
       #
       # @example Specify custom Ruby namespace
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   resolver = Lotus::Routing::EndpointResolver.new(namespace: MyApp)
-      #   router   = Lotus::Router.new(resolver: resolver)
+      #   resolver = Hanami::Routing::EndpointResolver.new(namespace: MyApp)
+      #   router   = Hanami::Router.new(resolver: resolver)
       #
       #   router.get('/', to: 'articles#show')
       #     # => Will look for: MyApp::Articles::Show
@@ -75,10 +75,10 @@ module Lotus
       #
       #
       # @example Specify custom pattern
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   resolver = Lotus::Routing::EndpointResolver.new(pattern: '%{controller}Controller::%{action}')
-      #   router   = Lotus::Router.new(resolver: resolver)
+      #   resolver = Hanami::Routing::EndpointResolver.new(pattern: '%{controller}Controller::%{action}')
+      #   router   = Hanami::Router.new(resolver: resolver)
       #
       #   router.get('/', to: 'articles#show')
       #     # => Will look for: ArticlesController::Show
@@ -86,10 +86,10 @@ module Lotus
       #
       #
       # @example Specify custom controller-action separator
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   resolver = Lotus::Routing::EndpointResolver.new(separator: '@')
-      #   router   = Lotus::Router.new(resolver: resolver)
+      #   resolver = Hanami::Routing::EndpointResolver.new(separator: '@')
+      #   router   = Hanami::Router.new(resolver: resolver)
       #
       #   router.get('/', to: 'articles@show')
       #     # => Will look for: Articles::Show
@@ -118,39 +118,39 @@ module Lotus
       # @see #find
       #
       # @example Resolve to a Proc
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new
+      #   router = Hanami::Router.new
       #   router.get '/', to: ->(env) { [200, {}, ['Hi!']] }
       #
       # @example Resolve to a class
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new
+      #   router = Hanami::Router.new
       #   router.get '/', to: RackMiddleware
       #
       # @example Resolve to a Rack compatible object (respond to #call)
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new
+      #   router = Hanami::Router.new
       #   router.get '/', to: AnotherMiddleware.new
       #
-      # @example Resolve to a Lotus::Action from a string (see Lotus::Controller framework)
-      #   require 'lotus/router'
+      # @example Resolve to a Hanami::Action from a string (see Hanami::Controller framework)
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new
+      #   router = Hanami::Router.new
       #   router.get '/', to: 'articles#show'
       #
-      # @example Resolve to a Lotus::Action (see Lotus::Controller framework)
-      #   require 'lotus/router'
+      # @example Resolve to a Hanami::Action (see Hanami::Controller framework)
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new
+      #   router = Hanami::Router.new
       #   router.get '/', to: Articles::Show
       #
       # @example Resolve a redirect with a namespace
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new
+      #   router = Hanami::Router.new
       #   router.namespace 'users' do
       #     get '/home',           to: ->(env) { ... }
       #     redirect '/dashboard', to: '/home'

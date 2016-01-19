@@ -1,9 +1,9 @@
-require 'lotus/utils/string'
-require 'lotus/utils/path_prefix'
-require 'lotus/utils/class_attribute'
-require 'lotus/routing/resource/nested'
+require 'hanami/utils/string'
+require 'hanami/utils/path_prefix'
+require 'hanami/utils/class_attribute'
+require 'hanami/routing/resource/nested'
 
-module Lotus
+module Hanami
   module Routing
     class Resource
       # Action for RESTful resource
@@ -12,7 +12,7 @@ module Lotus
       #
       # @api private
       #
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class Action
         include Utils::ClassAttribute
 
@@ -45,10 +45,10 @@ module Lotus
 
         # Generate an action for the given router
         #
-        # @param router [Lotus::Router]
-        # @param action [Lotus::Routing::Resource::Action]
+        # @param router [Hanami::Router]
+        # @param action [Hanami::Routing::Resource::Action]
         # @param options [Hash]
-        # @param resource [Lotus::Routing::Resource, Lotus::Routing::Resources]
+        # @param resource [Hanami::Routing::Resource, Hanami::Routing::Resources]
         #
         # @api private
         #
@@ -59,9 +59,9 @@ module Lotus
 
         # Initialize an action
         #
-        # @param router [Lotus::Router]
+        # @param router [Hanami::Router]
         # @param options [Hash]
-        # @param resource [Lotus::Routing::Resource, Lotus::Routing::Resources]
+        # @param resource [Hanami::Routing::Resource, Hanami::Routing::Resources]
         # @param blk [Proc]
         #
         # @api private
@@ -94,9 +94,9 @@ module Lotus
         # @since 0.1.0
         #
         # @example
-        #   require 'lotus/router'
+        #   require 'hanami/router'
         #
-        #   Lotus::Router.new do
+        #   Hanami::Router.new do
         #     resource 'identity'
         #   end
         #
@@ -119,8 +119,8 @@ module Lotus
         # @param action [String] the action name
         #
         # @example
-        #   Lotus::Routing::Resource::Action.send(:class_for, 'New') # =>
-        #     Lotus::Routing::Resource::New
+        #   Hanami::Routing::Resource::Action.send(:class_for, 'New') # =>
+        #     Hanami::Routing::Resource::New
         #
         # @api private
         # @since 0.1.0
@@ -130,7 +130,7 @@ module Lotus
 
         # Accepted HTTP verb
         #
-        # @see Lotus::Routing::Resource::Action.verb
+        # @see Hanami::Routing::Resource::Action.verb
         #
         # @api private
         # @since 0.1.0
@@ -141,9 +141,9 @@ module Lotus
         # The namespaced URL relative path
         #
         # @example
-        #   require 'lotus/router'
+        #   require 'hanami/router'
         #
-        #   Lotus::Router.new do
+        #   Hanami::Router.new do
         #     resources 'flowers'
         #
         #     namespace 'animals' do
@@ -176,9 +176,9 @@ module Lotus
         # The namespaced name of the action within the whole context of the router.
         #
         # @example
-        #   require 'lotus/router'
+        #   require 'hanami/router'
         #
-        #   Lotus::Router.new do
+        #   Hanami::Router.new do
         #     resources 'flowers'
         #
         #     namespace 'animals' do
@@ -211,7 +211,7 @@ module Lotus
         # A string that represents the endpoint to be loaded.
         # It is composed by controller and action name.
         #
-        # @see Lotus::Routing::Resource::Action#separator
+        # @see Hanami::Routing::Resource::Action#separator
         #
         # @example
         #   'flowers#index'
@@ -224,7 +224,7 @@ module Lotus
 
         # Separator between controller and action name
         #
-        # @see Lotus::Routing::EndpointResolver#separator
+        # @see Hanami::Routing::EndpointResolver#separator
         #
         # @example
         #   '#' # default
@@ -238,7 +238,7 @@ module Lotus
         # Resource controller name
         #
         # @example
-        #   Lotus::Router.new do
+        #   Hanami::Router.new do
         #     resources 'flowers', controller: 'rocks'
         #   end
         #
@@ -259,7 +259,7 @@ module Lotus
         # @since 0.4.0
         def _singularized_as
           resource_name.split(NESTED_ROUTES_SEPARATOR).map do |name|
-            Lotus::Utils::String.new(name).singularize
+            Hanami::Utils::String.new(name).singularize
           end
         end
 
@@ -277,7 +277,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class CollectionAction < Action
         def generate(&blk)
           instance_eval(&blk) if block_given?
@@ -311,7 +311,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class MemberAction < CollectionAction
       end
 
@@ -334,7 +334,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class New < Action
         include DefaultMemberAction
       end
@@ -343,7 +343,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class Create < Action
         self.verb = :post
       end
@@ -352,7 +352,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class Show < Action
       end
 
@@ -360,7 +360,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class Edit < Action
         include DefaultMemberAction
       end
@@ -369,7 +369,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class Update < Action
         self.verb = :patch
       end
@@ -378,7 +378,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       class Destroy < Action
         self.verb = :delete
       end

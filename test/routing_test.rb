@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new
+    @router = Hanami::Router.new
     @app    = Rack::MockRequest.new(@router)
   end
 
@@ -16,30 +16,30 @@ describe Lotus::Router do
       describe 'path recognition' do
         it 'recognize fixed string' do
           response = [200, {}, ['Fixed!']]
-          @router.send(verb, '/lotus', to: ->(env) { response })
+          @router.send(verb, '/hanami', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus', lint: true)
+          response.must_be_same_as @app.request(verb.upcase, '/hanami', lint: true)
         end
 
         it 'recognize moving parts string' do
           response = [200, {}, ['Moving!']]
-          @router.send(verb, '/lotus/:id', to: ->(env) { response })
+          @router.send(verb, '/hanami/:id', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/23', lint: true)
+          response.must_be_same_as @app.request(verb.upcase, '/hanami/23', lint: true)
         end
 
         it 'recognize globbing string' do
           response = [200, {}, ['Globbing!']]
-          @router.send(verb, '/lotus/*', to: ->(env) { response })
+          @router.send(verb, '/hanami/*', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/all', lint: true)
+          response.must_be_same_as @app.request(verb.upcase, '/hanami/all', lint: true)
         end
 
         it 'recognize format string' do
           response = [200, {}, ['Format!']]
-          @router.send(verb, '/lotus/:id(.:format)', to: ->(env) { response })
+          @router.send(verb, '/hanami/:id(.:format)', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/all.json', lint: true)
+          response.must_be_same_as @app.request(verb.upcase, '/hanami/all.json', lint: true)
         end
 
         it 'accepts a block' do
@@ -72,10 +72,10 @@ describe Lotus::Router do
         it 'allows custom url parts' do
           response = [200, {}, ['Named route with custom parts!']]
 
-          router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org', port: 443)
+          router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org', port: 443)
           router.send(verb, '/custom_named_route', to: ->(env) { response }, as: :"#{ verb }_custom_named_route")
 
-          router.url(:"#{ verb }_custom_named_route").must_equal 'https://lotusrb.org/custom_named_route'
+          router.url(:"#{ verb }_custom_named_route").must_equal 'https://hanamirb.org/custom_named_route'
         end
       end
 
@@ -83,10 +83,10 @@ describe Lotus::Router do
         it 'recognize when called with matching constraints' do
           response = [200, {}, ['Moving with constraints!']]
 
-          @router.send(verb, '/lotus/:id', to: ->(env) { response }, id: /\d+/)
-          response.must_be_same_as @app.request(verb.upcase, '/lotus/23', lint: true)
+          @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
+          response.must_be_same_as @app.request(verb.upcase, '/hanami/23', lint: true)
 
-          @app.request(verb.upcase, '/lotus/flower', lint: true).status.must_equal 404
+          @app.request(verb.upcase, '/hanami/flower', lint: true).status.must_equal 404
         end
       end
 

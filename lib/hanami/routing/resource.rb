@@ -1,17 +1,17 @@
-require 'lotus/utils/class_attribute'
-require 'lotus/routing/resource/options'
-require 'lotus/routing/resource/action'
+require 'hanami/utils/class_attribute'
+require 'hanami/routing/resource/options'
+require 'hanami/routing/resource/action'
 
-module Lotus
+module Hanami
   module Routing
     # Set of RESTful resource routes
-    # Implementation of Lotus::Router#resource
+    # Implementation of Hanami::Router#resource
     #
     # @since 0.1.0
     #
     # @api private
     #
-    # @see Lotus::Router#resource
+    # @see Hanami::Router#resource
     class Resource
       include Utils::ClassAttribute
 
@@ -65,7 +65,7 @@ module Lotus
       #
       # @since 0.4.0
       #
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       def resources(name, options = {}, &blk)
         _resource(Resources, name, options, &blk)
       end
@@ -74,7 +74,7 @@ module Lotus
       #
       # @since 0.4.0
       #
-      # @see Lotus::Router#resource
+      # @see Hanami::Router#resource
       def resource(name, options = {}, &blk)
         _resource(Resource, name, options, &blk)
       end

@@ -1,13 +1,13 @@
 require 'test_helper'
 
-describe 'Lotus integration' do
+describe 'Hanami integration' do
   before do
-    @router_container = Lotus::Router.new(scheme: 'https', host: 'lotus.test', port: 443) do
+    @router_container = Hanami::Router.new(scheme: 'https', host: 'hanami.test', port: 443) do
       mount Dashboard::Index, at: '/dashboard'
       mount Backend::App, at: '/backend'
     end
 
-    @routes = Lotus::Router.new(namespace: Travels::Controllers) do
+    @routes = Hanami::Router.new(namespace: Travels::Controllers) do
       get '/dashboard',    to: 'journeys#index'
       resources :journeys, only: [:index]
     end

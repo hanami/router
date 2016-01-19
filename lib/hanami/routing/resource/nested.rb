@@ -1,4 +1,4 @@
-module Lotus
+module Hanami
   module Routing
     class Resource
       # Helper class to calculate nested path

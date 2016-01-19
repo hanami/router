@@ -1,12 +1,12 @@
 require 'test_helper'
 require 'rack/mock'
 
-describe Lotus::Routing::Parsers do
+describe Hanami::Routing::Parsers do
   describe '#initialize' do
     it 'raises error when unknown parser is given' do
       begin
-        Lotus::Routing::Parsers.new(:a_parser)
-      rescue Lotus::Routing::Parsing::UnknownParserError => e
+        Hanami::Routing::Parsers.new(:a_parser)
+      rescue Hanami::Routing::Parsing::UnknownParserError => e
         e.message.must_equal "Unknown Parser: `a_parser'"
       end
     end
@@ -14,7 +14,7 @@ describe Lotus::Routing::Parsers do
 
   describe '#call' do
     before do
-      @parsers = Lotus::Routing::Parsers.new(parsers)
+      @parsers = Hanami::Routing::Parsers.new(parsers)
     end
 
     let(:env)  { Rack::MockRequest.env_for('/', method: 'POST', 'CONTENT_TYPE' => content_type, input: body) }
@@ -50,9 +50,9 @@ describe Lotus::Routing::Parsers do
         end
 
         describe 'with malformed json' do
-          let(:body) {  %({"lotus":"ok" "attribute":"ok"}) }
+          let(:body) {  %({"hanami":"ok" "attribute":"ok"}) }
           it 'raises an exception' do
-            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::BodyParsingError)
+            -> { result = @parsers.call(env) }.must_raise(Hanami::Routing::Parsing::BodyParsingError)
           end
         end
       end
@@ -67,9 +67,9 @@ describe Lotus::Routing::Parsers do
         end
 
         describe 'with malformed json' do
-          let(:body) {  %({"lotus":"ok" "attribute":"ok"}) }
+          let(:body) {  %({"hanami":"ok" "attribute":"ok"}) }
           it 'raises an exception' do
-            -> { result = @parsers.call(env) }.must_raise(Lotus::Routing::Parsing::BodyParsingError)
+            -> { result = @parsers.call(env) }.must_raise(Hanami::Routing::Parsing::BodyParsingError)
           end
         end
       end

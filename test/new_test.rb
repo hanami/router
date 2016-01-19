@@ -1,13 +1,13 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   describe '.new' do
     before do
       class MockRoute
       end
 
       endpoint = ->(env) { [200, {}, ['']] }
-      @router = Lotus::Router.new do
+      @router = Hanami::Router.new do
         get '/route',       to: endpoint
         get '/named_route', to: endpoint, as: :named_route
         resource  'avatar'
@@ -20,14 +20,14 @@ describe Lotus::Router do
       @app = Rack::MockRequest.new(@router)
     end
 
-    it 'returns instance of Lotus::Router with empty block' do
-      router = Lotus::Router.new { }
-      router.must_be_instance_of Lotus::Router
+    it 'returns instance of Hanami::Router with empty block' do
+      router = Hanami::Router.new { }
+      router.must_be_instance_of Hanami::Router
     end
 
-    it 'evaluates routes passed from Lotus::Router.define' do
-      routes = Lotus::Router.define { post '/domains', to: ->(env) {[201, {}, ['Domain Created']]} }
-      router = Lotus::Router.new(&routes)
+    it 'evaluates routes passed from Hanami::Router.define' do
+      routes = Hanami::Router.define { post '/domains', to: ->(env) {[201, {}, ['Domain Created']]} }
+      router = Hanami::Router.new(&routes)
 
       app      = Rack::MockRequest.new(router)
       response = app.post('/domains', lint: true)
@@ -36,12 +36,12 @@ describe Lotus::Router do
       response.body.must_equal   'Domain Created'
     end
 
-    it 'returns instance of Lotus::Router' do
-      @router.must_be_instance_of Lotus::Router
+    it 'returns instance of Hanami::Router' do
+      @router.must_be_instance_of Hanami::Router
     end
 
     it 'sets options' do
-      router = Lotus::Router.new(scheme: 'https') do
+      router = Hanami::Router.new(scheme: 'https') do
         get '/', to: ->(env) { }, as: :root
       end
 
@@ -49,17 +49,17 @@ describe Lotus::Router do
     end
 
     it 'sets custom separator' do
-      router = Lotus::Router.new(action_separator: '^')
+      router = Hanami::Router.new(action_separator: '^')
       route  = router.get('/', to: 'test^show', as: :root)
 
       route.dest.must_equal(Test::Show)
     end
 
     it 'checks if there are defined routes' do
-      router = Lotus::Router.new
+      router = Hanami::Router.new
       router.wont_be :defined?
 
-      router = Lotus::Router.new { get '/', to: ->(env) { } }
+      router = Hanami::Router.new { get '/', to: ->(env) { } }
       router.must_be :defined?
     end
 

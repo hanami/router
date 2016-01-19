@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new
+    @router = Hanami::Router.new
     @app    = Rack::MockRequest.new(@router)
   end
 
@@ -181,7 +181,7 @@ describe Lotus::Router do
           @app.request('PATCH',  '/electronics/keyboards/23', lint: true).status.must_equal  405
           @app.request('DELETE', '/electronics/keyboards/23', lint: true).status.must_equal  405
 
-          exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Hanami::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments'
         end
       end
@@ -209,7 +209,7 @@ describe Lotus::Router do
           @app.request('PATCH',  '/electronics/keyboards/23', lint: true).status.must_equal  405
           @app.request('DELETE', '/electronics/keyboards/23', lint: true).status.must_equal  405
 
-          exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:new_electronics_keyboards) }.must_raise Hanami::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments'
         end
       end
@@ -294,7 +294,7 @@ describe Lotus::Router do
           @app.request('POST',   '/settings/profile', lint: true).status.must_equal     405
           @app.request('DELETE', '/settings/profile', lint: true).status.must_equal     405
 
-          exception = -> { @router.path(:new_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:new_settings_profile) }.must_raise Hanami::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :new_settings_profile - please check given arguments'
         end
       end
@@ -323,7 +323,7 @@ describe Lotus::Router do
         it 'does not recognize other paths' do
           @app.request('GET', '/settings/profile/edit', lint: true).status.must_equal 404
 
-          exception = -> { @router.path(:edit_settings_profile) }.must_raise Lotus::Routing::InvalidRouteException
+          exception = -> { @router.path(:edit_settings_profile) }.must_raise Hanami::Routing::InvalidRouteException
           exception.message.must_equal 'No route (path) could be generated for :edit_settings_profile - please check given arguments'
         end
       end

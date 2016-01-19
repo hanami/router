@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Routing::EndpointResolver do
+describe Hanami::Routing::EndpointResolver do
   before do
-    @resolver = Lotus::Routing::EndpointResolver.new
+    @resolver = Hanami::Routing::EndpointResolver.new
   end
 
   it 'recognizes :to when it is a callable object' do
@@ -32,7 +32,7 @@ describe Lotus::Routing::EndpointResolver do
       options  = { to: 'missing_endpoint' }
       endpoint = @resolver.resolve(options)
 
-      -> { endpoint.call({}) }.must_raise Lotus::Routing::EndpointNotFound
+      -> { endpoint.call({}) }.must_raise Hanami::Routing::EndpointNotFound
     end
   end
 
@@ -48,7 +48,7 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'namespace' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(namespace: TestApp)
+      @resolver = Hanami::Routing::EndpointResolver.new(namespace: TestApp)
     end
 
     it 'recognizes :to when it is a string and an explicit namespace' do
@@ -64,17 +64,17 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'endpoint' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(namespace: Web::Controllers)
+      @resolver = Hanami::Routing::EndpointResolver.new(namespace: Web::Controllers)
     end
 
     it 'if :to is an action without middleware' do
       options = { to: 'dashboard#index' }
-      @resolver.resolve(options).class.must_equal Lotus::Routing::ClassEndpoint
+      @resolver.resolve(options).class.must_equal Hanami::Routing::ClassEndpoint
     end
 
     it 'if :to is an action with middleware' do
       options = { to: 'home#index' }
-      @resolver.resolve(options).class.must_equal Lotus::Routing::Endpoint
+      @resolver.resolve(options).class.must_equal Hanami::Routing::Endpoint
     end
   end
 
@@ -85,7 +85,7 @@ describe Lotus::Routing::EndpointResolver do
         end
 
         def routes
-          Lotus::Router.new do
+          Hanami::Router.new do
             get '/home', to: 'home#index'
           end
         end
@@ -109,7 +109,7 @@ describe Lotus::Routing::EndpointResolver do
         end
       end
 
-      @resolver = Lotus::Routing::EndpointResolver.new(endpoint: CustomEndpoint)
+      @resolver = Hanami::Routing::EndpointResolver.new(endpoint: CustomEndpoint)
     end
 
     after do
@@ -123,7 +123,7 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'custom separator' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(action_separator: action_separator)
+      @resolver = Hanami::Routing::EndpointResolver.new(action_separator: action_separator)
     end
 
     let(:action_separator) { '@' }
@@ -136,7 +136,7 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'custom suffix' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(suffix: suffix)
+      @resolver = Hanami::Routing::EndpointResolver.new(suffix: suffix)
     end
 
     let(:suffix) { 'Controller::' }
@@ -149,7 +149,7 @@ describe Lotus::Routing::EndpointResolver do
 
   describe 'custom pattern' do
     before do
-      @resolver = Lotus::Routing::EndpointResolver.new(pattern: pattern)
+      @resolver = Hanami::Routing::EndpointResolver.new(pattern: pattern)
     end
 
     let(:pattern) { 'Controllers::%{controller}::%{action}' }

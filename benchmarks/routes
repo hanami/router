@@ -6,7 +6,7 @@ Benchmark.bm(50) do |b|
   ##
   # Callable
   #
-  router = Lotus::Router.new
+  router = Hanami::Router.new
   app    = Rack::MockRequest.new(router)
 
   b.report 'generating routes' do
@@ -24,11 +24,11 @@ Benchmark.bm(50) do |b|
   ##
   # Class
   #
-  router = Lotus::Router.new
+  router = Hanami::Router.new
   app    = Rack::MockRequest.new(router)
 
   $routes.each do |route|
-    eval "#{ Lotus::Utils::String.new(route).classify } = Class.new($controller)"
+    eval "#{ Hanami::Utils::String.new(route).classify } = Class.new($controller)"
   end
 
   b.report 'generating routes (class endpoints)' do
@@ -46,7 +46,7 @@ Benchmark.bm(50) do |b|
   ##
   # Lazy
   #
-  router = Lotus::Router.new
+  router = Hanami::Router.new
   app    = Rack::MockRequest.new(router)
 
   b.report 'generating routes (lazy endpoints)' do
@@ -56,7 +56,7 @@ Benchmark.bm(50) do |b|
   end
 
   $lazy.each do |route|
-    eval "#{ Lotus::Utils::String.new(route).classify } = Class.new($controller)"
+    eval "#{ Hanami::Utils::String.new(route).classify } = Class.new($controller)"
   end
 
   b.report 'recognizing routes (lazy endpoints)' do

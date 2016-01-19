@@ -1,9 +1,9 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   describe 'recognition' do
     before do
-      @router = Lotus::Router.new
+      @router = Hanami::Router.new
       @test   = RecognitionTestCase.new(@router)
     end
 
