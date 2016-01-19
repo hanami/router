@@ -251,6 +251,21 @@ describe Lotus::Routing::RoutesInspector do
           actual.must_include(expectation)
         end
       end
+
+      it 'returns header text only one time' do
+        header = %(Name Method     Path                           Action)
+
+        actual = @router.inspector.to_s.split("\n")
+        actual.reject! { |l| !l.match(header) }
+        actual.count.must_equal 1
+      end
+
+      it 'returns header text on the top' do
+        header = %(Name Method     Path                           Action)
+
+        actual = @router.inspector.to_s.split("\n")
+        actual.first.must_include(header)
+      end
     end
 
     describe 'with header option' do
@@ -261,10 +276,10 @@ describe Lotus::Routing::RoutesInspector do
       end
 
       it 'returns header text' do
-        expectation = %(Name Method     Path                           Action)
+        header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s
-        actual.must_include(expectation)
+        actual.must_include(header)
       end
     end
   end
