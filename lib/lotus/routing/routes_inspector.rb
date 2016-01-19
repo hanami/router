@@ -135,7 +135,25 @@ module Lotus
       #          | GET, HEAD |      | /api/second_mount/comments | Comments::Index |
       def to_s(formatter = FORMATTER, base_path = nil)
         base_path = Utils::PathPrefix.new(base_path)
-        result    = ''
+
+        inspect_routes(formatter, base_path)
+          .insert(0, formatter % INSPECTOR_HEADER_HASH + EMPTY_LINE)
+      end
+
+      # Returns a string representation of routes
+      #
+      # @param formatter [String] the template for the output
+      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      #
+      # @return [String] serialized routes from router
+      #
+      # @since 0.2.0
+      # @api private
+      #
+      # @see Lotus::Routing::RoutesInspector#FORMATTER
+      # @see Lotus::Routing::RoutesInspector#to_s
+      def inspect_routes(formatter, base_path)
+        result = ''
 
         # TODO refactoring: replace conditional with polymorphism
         # We're exposing too much knowledge from Routing::Route:
@@ -146,10 +164,6 @@ module Lotus
           else
             inspect_route(formatter, route, base_path)
           end
-        end
-
-        unless result.include?(INSPECTOR_HEADER_NAME)
-          result.insert(0, formatter % INSPECTOR_HEADER_HASH + EMPTY_LINE)
         end
 
         result
@@ -194,7 +208,7 @@ module Lotus
       # @see Lotus::Routing::RoutesInspector#FORMATTER
       # @see Lotus::Routing::RoutesInspector#to_s
       def inspect_router(formatter, router, route, base_path)
-        router.inspector.to_s(formatter, base_path.join(route.path_for_generation))
+        router.inspector.inspect_routes(formatter, base_path.join(route.path_for_generation))
       end
     end
   end
