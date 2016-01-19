@@ -147,7 +147,7 @@ module Lotus
       #
       # @return [String] serialized routes from router
       #
-      # @since 0.2.0
+      # @since 0.5.1
       # @api private
       #
       # @see Lotus::Routing::RoutesInspector#FORMATTER

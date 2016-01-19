@@ -1,6 +1,9 @@
 # Lotus::Router
 Rack compatible HTTP router for Ruby
 
+## v0.5.1 - 2016-01-19
+- [Anton Davydov] Print stacked lines for routes inspection
+
 ## v0.5.0 - 2016-01-12
 ### Added
 - [Luca Guidi] Added `Lotus::Router#recognize` as a testing facility. Example `router.recognize('/') # => associated route`
