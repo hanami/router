@@ -1,23 +1,27 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v0.6.0 - 2016-01-22
+### Changed
+- [Luca Guidi] Renamed the project
+
 ## v0.5.1 - 2016-01-19
 - [Anton Davydov] Print stacked lines for routes inspection
 
 ## v0.5.0 - 2016-01-12
 ### Added
-- [Luca Guidi] Added `Hanami::Router#recognize` as a testing facility. Example `router.recognize('/') # => associated route`
-- [Luca Guidi] Added `Hanami::Router.define` in order to wrap routes definitions in `config/routes.rb` when `Hanami::Router` is used outside of Hanami projects
-- [David Strauß] Make `Hanami::Routing::Parsing::JsonParser` compatible with `application/vnd.api+json` MIME Type
-- [Alfonso Uceda Pompa] Improved exception messages for `Hanami::Router#path` and `#url`
+- [Luca Guidi] Added `Lotus::Router#recognize` as a testing facility. Example `router.recognize('/') # => associated route`
+- [Luca Guidi] Added `Lotus::Router.define` in order to wrap routes definitions in `config/routes.rb` when `Lotus::Router` is used outside of Lotus projects
+- [David Strauß] Make `Lotus::Routing::Parsing::JsonParser` compatible with `application/vnd.api+json` MIME Type
+- [Alfonso Uceda Pompa] Improved exception messages for `Lotus::Router#path` and `#url`
 
 ### Fixed
-- [Alfonso Uceda Pompa] Ensure `Hanami::Router#path` and `#url` to generate correct URL for mounted applications
+- [Alfonso Uceda Pompa] Ensure `Lotus::Router#path` and `#url` to generate correct URL for mounted applications
 - [Vladislav Zarakovsky] Ensure Force SSL mode to respect Rack SPEC
 
 ### Changed
-- [Alfonso Uceda Pompa] A failure for body parsers raises a `Hanami::Routing::Parsing::BodyParsingError` exception
-- [Karim Tarek] Introduced `Hanami::Router::Error` and let all the framework exceptions to inherit from it.
+- [Alfonso Uceda Pompa] A failure for body parsers raises a `Lotus::Routing::Parsing::BodyParsingError` exception
+- [Karim Tarek] Introduced `Lotus::Router::Error` and let all the framework exceptions to inherit from it.
 
 ## v0.4.3 - 2015-09-30
 ### Added
@@ -30,7 +34,7 @@ Rack compatible HTTP router for Ruby
 
 ## v0.4.1 - 2015-06-23
 ### Added
-- [Alfonso Uceda Pompa] Force SSL (eg `Hanami::Router.new(force_ssl: true`).
+- [Alfonso Uceda Pompa] Force SSL (eg `Lotus::Router.new(force_ssl: true`).
 - [Alfonso Uceda Pompa] Allow router to accept a `:prefix` option, in order to generate prefixed routes.
 
 ## v0.4.0 - 2015-05-15
@@ -44,7 +48,7 @@ Rack compatible HTTP router for Ruby
 
 ## v0.2.1 - 2015-01-30
 ### Added
-- [Alfonso Uceda Pompa] Hanami::Action compat: invoke `.call` if defined, otherwise fall back to `#call`.
+- [Alfonso Uceda Pompa] Lotus::Action compat: invoke `.call` if defined, otherwise fall back to `#call`.
 
 ## v0.2.0 - 2014-12-23
 ### Added
@@ -60,31 +64,31 @@ Rack compatible HTTP router for Ruby
 - [Luca Guidi] Fix RESTful resource(s) to respect :only/:except options
 
 ### Changed
-- [Luca Guidi] Aligned naming conventions with Hanami::Controller: no more BooksController::Index. Use Books::Index instead.
+- [Luca Guidi] Aligned naming conventions with Lotus::Controller: no more BooksController::Index. Use Books::Index instead.
 - [Luca Guidi] Removed `:prefix` option for routes. Use `#namespace` blocks instead.
 - [Janko Marohnić] Make 301 the default redirect status
 
 ## v0.1.1 - 2014-06-23
 ### Added
-- [Luca Guidi] Introduced Hanami::Router#mount
-- [Luca Guidi] Let specify a pattern for Hanami::Routing::EndpointResolver
-- [Luca Guidi] Make Hanami::Routing::Endpoint::EndpointNotFound to inherit from StandardError, instead of Exception. This make it compatible with Rack::ShowExceptions.
+- [Luca Guidi] Introduced Lotus::Router#mount
+- [Luca Guidi] Let specify a pattern for Lotus::Routing::EndpointResolver
+- [Luca Guidi] Make Lotus::Routing::Endpoint::EndpointNotFound to inherit from StandardError, instead of Exception. This make it compatible with Rack::ShowExceptions.
 
 ## v0.1.0 - 2014-01-23
 ### Added
 - [Luca Guidi] Official support for Ruby 2.1
 - [Luca Guidi] Added support for OPTIONS HTTP verb
-- [Luca Guidi] Added Hanami::Routing::EndpointNotFound when a lazy endpoint can't be found
-- [Luca Guidi] Make action separator customizable via Hanami::Router options.
-- [Luca Guidi] Catch http_router exceptions and re-raise them with names under Hanami::Routing. This helps to have a stable public API.
-- [Luca Guidi] Hanami::Routing::Resource::CollectionAction use configurable controller and action name separator over the hardcoded value
-- [Luca Guidi] Implemented Hanami::Routing::Namespace#resource
-- [Luca Guidi] Hanami::Routing::EndpointResolver now accepts options to inject namespace and suffix
+- [Luca Guidi] Added Lotus::Routing::EndpointNotFound when a lazy endpoint can't be found
+- [Luca Guidi] Make action separator customizable via Lotus::Router options.
+- [Luca Guidi] Catch http_router exceptions and re-raise them with names under Lotus::Routing. This helps to have a stable public API.
+- [Luca Guidi] Lotus::Routing::Resource::CollectionAction use configurable controller and action name separator over the hardcoded value
+- [Luca Guidi] Implemented Lotus::Routing::Namespace#resource
+- [Luca Guidi] Lotus::Routing::EndpointResolver now accepts options to inject namespace and suffix
 - [Luca Guidi] Allow resolver and route class to be injected via options
 - [Luca Guidi] Return 404 for not found and 405 for unacceptable HTTP method
 - [Luca Guidi] Allow non-finished Rack responses to be used
 - [Luca Guidi] Implemented lazy loading for endpoints
-- [Luca Guidi] Implemented Hanami::Router.new to take a block and define routes
+- [Luca Guidi] Implemented Lotus::Router.new to take a block and define routes
 - [Luca Guidi] Add support for resource
 - [Luca Guidi] Support for resource's member and collection
 - [Luca Guidi] Add support for namespaces
