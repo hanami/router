@@ -1,8 +1,8 @@
-require 'lotus/utils/string'
-require 'lotus/utils/path_prefix'
-require 'lotus/routing/resource'
+require 'hanami/utils/string'
+require 'hanami/utils/path_prefix'
+require 'hanami/routing/resource'
 
-module Lotus
+module Hanami
   module Routing
     class Resources < Resource
       # Action for RESTful resources
@@ -11,7 +11,7 @@ module Lotus
       #
       # @api private
       #
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Action < Resource::Action
         # Ruby namespace where lookup for default subclasses.
         #
@@ -38,7 +38,7 @@ module Lotus
         # @api private
         # @since 0.4.0
         def as
-          Lotus::Utils::String.new(super).pluralize
+          Hanami::Utils::String.new(super).pluralize
         end
       end
 
@@ -47,10 +47,10 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class CollectionAction < Resource::CollectionAction
         def as(action_name)
-          Lotus::Utils::String.new(super(action_name)).pluralize
+          Hanami::Utils::String.new(super(action_name)).pluralize
         end
       end
 
@@ -59,7 +59,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class MemberAction < Resource::MemberAction
         private
         def path(action_name)
@@ -82,7 +82,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Index < Action
         include PluralizedAction
         self.verb = :get
@@ -92,7 +92,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class New < Resource::New
       end
 
@@ -100,7 +100,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Create < Resource::Create
         include PluralizedAction
       end
@@ -109,7 +109,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Show < Resource::Show
         include DefaultMemberAction
       end
@@ -118,7 +118,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Edit < Resource::Edit
         include DefaultMemberAction
 
@@ -132,7 +132,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Update < Resource::Update
         include DefaultMemberAction
       end
@@ -141,7 +141,7 @@ module Lotus
       #
       # @api private
       # @since 0.1.0
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resources
       class Destroy < Resource::Destroy
         include DefaultMemberAction
       end

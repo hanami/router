@@ -1,6 +1,6 @@
 require 'json'
 
-module Lotus
+module Hanami
   module Routing
     module Parsing
       class JsonParser < Parser
@@ -14,7 +14,7 @@ module Lotus
         #
         # @return [Hash] the parsed json
         #
-        # @raise [Lotus::Routing::Parsing::BodyParsingError] when the body can't be parsed.
+        # @raise [Hanami::Routing::Parsing::BodyParsingError] when the body can't be parsed.
         #
         # @since 0.2.0
         def parse(body)

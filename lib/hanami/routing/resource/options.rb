@@ -1,4 +1,4 @@
-module Lotus
+module Hanami
   module Routing
     class Resource
       # Options for RESTFul resource(s)
@@ -6,16 +6,16 @@ module Lotus
       # @api private
       # @since 0.1.0
       #
-      # @see Lotus::Router#resource
-      # @see Lotus::Router#resources
+      # @see Hanami::Router#resource
+      # @see Hanami::Router#resources
       class Options
         # @api private
         # @since 0.1.0
         attr_reader :actions
 
         # Initialize the options for:
-        #   * Lotus::Router#resource
-        #   * Lotus::Router#resources
+        #   * Hanami::Router#resource
+        #   * Hanami::Router#resources
         #
         # @param actions [Array<Symbol>] the name of the actions
         # @param options [Hash]
@@ -26,13 +26,13 @@ module Lotus
         # @api private
         # @since 0.1.0
         #
-        # @see Lotus::Routing::Resource
-        # @see Lotus::Routing::Resources
+        # @see Hanami::Routing::Resource
+        # @see Hanami::Routing::Resources
         #
         # @example
-        #   require 'lotus/router'
+        #   require 'hanami/router'
         #
-        #   Lotus::Router.new do
+        #   Hanami::Router.new do
         #     resources 'articles', only:   [:index]
         #     resource  'profile',  except: [:new, :create, :destroy]
         #   end

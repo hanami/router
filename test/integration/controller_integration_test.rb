@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe 'Lotus::Controller integration' do
+describe 'Hanami::Controller integration' do
   before do
-    @routes = Lotus::Router.new do
+    @routes = Hanami::Router.new do
       get '/payments', to: CreditCards::Index
       get '/ccs',      to: 'credit_cards#index'
       resources :credit_cards, only: [:index]

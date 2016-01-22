@@ -6,7 +6,7 @@ describe 'Body parsing' do
       [200, {}, [env['router.params'].inspect]]
     }
 
-    @routes = Lotus::Router.new(parsers: [:json, XmlParser.new]) {
+    @routes = Hanami::Router.new(parsers: [:json, XmlParser.new]) {
       patch '/books/:id',   to: endpoint
       patch '/authors/:id', to: endpoint
     }

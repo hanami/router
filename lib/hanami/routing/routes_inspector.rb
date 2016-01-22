@@ -1,6 +1,6 @@
-require 'lotus/utils/path_prefix'
+require 'hanami/utils/path_prefix'
 
-module Lotus
+module Hanami
   module Routing
     # Routes inspector
     #
@@ -43,7 +43,7 @@ module Lotus
 
       # Instantiate a new inspector
       #
-      # @return [Lotus::Routing::RoutesInspector] the new instance
+      # @return [Hanami::Routing::RoutesInspector] the new instance
       #
       # @since 0.2.0
       # @api private
@@ -60,12 +60,12 @@ module Lotus
       #
       # @since 0.2.0
       #
-      # @see Lotus::Routing::RoutesInspector::FORMATTER
+      # @see Hanami::Routing::RoutesInspector::FORMATTER
       #
       # @example Default formatter
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new do
+      #   router = Hanami::Router.new do
       #     get    '/',       to: 'home#index'
       #     get    '/login',  to: 'sessions#new',     as: :login
       #     post   '/login',  to: 'sessions#create'
@@ -81,9 +81,9 @@ module Lotus
       #          logout GET, HEAD  /logout                  Sessions::Destroy
       #
       # @example Custom formatter
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new do
+      #   router = Hanami::Router.new do
       #     get    '/',       to: 'home#index'
       #     get    '/login',  to: 'sessions#new',     as: :login
       #     post   '/login',  to: 'sessions#create'
@@ -101,24 +101,24 @@ module Lotus
       #          | GET, HEAD | logout | /logout | Sessions::Destroy |
       #
       # @example Nested routes
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   class AdminLotusApp
+      #   class AdminHanamiApp
       #     def call(env)
       #     end
       #     def routes
-      #       Lotus::Router.new {
+      #       Hanami::Router.new {
       #         get '/home', to: 'home#index'
       #       }
       #     end
       #   end
       #
-      #   router = Lotus::Router.new {
+      #   router = Hanami::Router.new {
       #     get '/fakeroute', to: 'fake#index'
-      #     mount AdminLotusApp, at: '/admin'
-      #     mount Lotus::Router.new {
+      #     mount AdminHanamiApp, at: '/admin'
+      #     mount Hanami::Router.new {
       #       get '/posts', to: 'posts#index'
-      #       mount Lotus::Router.new {
+      #       mount Hanami::Router.new {
       #         get '/comments', to: 'comments#index'
       #       }, at: '/second_mount'
       #     }, at: '/api'
@@ -143,15 +143,15 @@ module Lotus
       # Returns a string representation of routes
       #
       # @param formatter [String] the template for the output
-      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      # @param base_path [Hanami::Utils::PathPrefix] the base path
       #
       # @return [String] serialized routes from router
       #
       # @since 0.5.1
       # @api private
       #
-      # @see Lotus::Routing::RoutesInspector#FORMATTER
-      # @see Lotus::Routing::RoutesInspector#to_s
+      # @see Hanami::Routing::RoutesInspector#FORMATTER
+      # @see Hanami::Routing::RoutesInspector#to_s
       def inspect_routes(formatter, base_path)
         result = ''
 
@@ -174,16 +174,16 @@ module Lotus
       # Returns a string representation of the given route
       #
       # @param formatter [String] the template for the output
-      # @param route [Lotus::Routing::Route] a route
-      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      # @param route [Hanami::Routing::Route] a route
+      # @param base_path [Hanami::Utils::PathPrefix] the base path
       #
       # @return [String] serialized route
       #
       # @since 0.2.0
       # @api private
       #
-      # @see Lotus::Routing::RoutesInspector#FORMATTER
-      # @see Lotus::Routing::RoutesInspector#to_s
+      # @see Hanami::Routing::RoutesInspector#FORMATTER
+      # @see Hanami::Routing::RoutesInspector#to_s
       def inspect_route(formatter, route, base_path)
         formatter % Hash[
           name:     route.name,
@@ -196,17 +196,17 @@ module Lotus
       # Returns a string representation of the given router
       #
       # @param formatter [String] the template for the output
-      # @param router [Lotus::Router] a router
-      # @param route [Lotus::Routing::Route] a route
-      # @param base_path [Lotus::Utils::PathPrefix] the base path
+      # @param router [Hanami::Router] a router
+      # @param route [Hanami::Routing::Route] a route
+      # @param base_path [Hanami::Utils::PathPrefix] the base path
       #
       # @return [String] serialized routes from router
       #
       # @since 0.2.0
       # @api private
       #
-      # @see Lotus::Routing::RoutesInspector#FORMATTER
-      # @see Lotus::Routing::RoutesInspector#to_s
+      # @see Hanami::Routing::RoutesInspector#FORMATTER
+      # @see Hanami::Routing::RoutesInspector#to_s
       def inspect_router(formatter, router, route, base_path)
         router.inspector.inspect_routes(formatter, base_path.join(route.path_for_generation))
       end

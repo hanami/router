@@ -1,6 +1,6 @@
 $:.unshift 'lib'
 require 'benchmark'
-require 'lotus/router'
+require 'hanami/router'
 
 # head -$((${RANDOM} % `wc -l < /usr/share/dict/words` + 1)) /usr/share/dict/words | tail -1
 
@@ -46,11 +46,11 @@ $named_routes = $named_routes.map do |r|
 end
 
 $resource.each do |w|
-  eval "#{ Lotus::Utils::String.new(w).classify }Controller = Class.new($resource_controller)"
+  eval "#{ Hanami::Utils::String.new(w).classify }Controller = Class.new($resource_controller)"
 end
 
 $resources.each do |w|
-  eval "#{ Lotus::Utils::String.new(w).classify }Controller = Class.new($resources_controller)"
+  eval "#{ Hanami::Utils::String.new(w).classify }Controller = Class.new($resources_controller)"
 end
 
 GC.start

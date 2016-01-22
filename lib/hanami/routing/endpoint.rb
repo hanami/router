@@ -1,14 +1,14 @@
 require 'delegate'
-require 'lotus/routing/error'
-require 'lotus/utils/class'
+require 'hanami/routing/error'
+require 'hanami/utils/class'
 
-module Lotus
+module Hanami
   module Routing
     # Endpoint not found
     # This is raised when the router fails to load an endpoint at the runtime.
     #
     # @since 0.1.0
-    class EndpointNotFound < Lotus::Routing::Error
+    class EndpointNotFound < Hanami::Routing::Error
     end
 
     # Routing endpoint
@@ -24,10 +24,10 @@ module Lotus
     # @api private
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
-    #     get '/proc',     to: ->(env) { [200, {}, ['This will use Lotus::Routing::Endpoint']] }
+    #   Hanami::Router.new do
+    #     get '/proc',     to: ->(env) { [200, {}, ['This will use Hanami::Routing::Endpoint']] }
     #     get '/rack-app', to: RackApp.new
     #   end
     class Endpoint < SimpleDelegator
@@ -54,8 +54,8 @@ module Lotus
     # The router will use this class for:
     #
     #   * Classes
-    #   * Lotus::Action endpoints referenced as a class
-    #   * Lotus::Action endpoints referenced a string
+    #   * Hanami::Action endpoints referenced as a class
+    #   * Hanami::Action endpoints referenced a string
     #   * RESTful resource(s)
     #
     # @since 0.1.0
@@ -63,12 +63,12 @@ module Lotus
     # @api private
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     get '/class',               to: RackMiddleware
-    #     get '/lotus-action-class',  to: Dashboard::Index
-    #     get '/lotus-action-string', to: 'dashboard#index'
+    #     get '/hanami-action-class',  to: Dashboard::Index
+    #     get '/hanami-action-string', to: 'dashboard#index'
     #
     #     resource  'identity'
     #     resources 'articles'
@@ -100,7 +100,7 @@ module Lotus
     #
     # @api private
     #
-    # @see Lotus::Routing::ClassEndpoint
+    # @see Hanami::Routing::ClassEndpoint
     class LazyEndpoint < Endpoint
       # Initialize the lazy endpoint
       #

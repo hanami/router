@@ -28,10 +28,10 @@ module Prefix
   end
 end
 
-describe Lotus::Router do
+describe Hanami::Router do
   describe 'with prefix option' do
     before do
-      @router = Lotus::Router.new(scheme: 'https', host: 'lotus.test', port: 443, prefix: '/admin', namespace: Prefix::Controllers) do
+      @router = Hanami::Router.new(scheme: 'https', host: 'hanami.test', port: 443, prefix: '/admin', namespace: Prefix::Controllers) do
         get     '/home', to: 'home#index', as: :get_home
         post    '/home', to: 'home#index', as: :post_home
         put     '/home', to: 'home#index', as: :put_home
@@ -84,25 +84,25 @@ describe Lotus::Router do
     end
 
     it 'generates absolute URLs with prefix' do
-      @router.url(:get_home).must_equal     'https://lotus.test/admin/home'
-      @router.url(:post_home).must_equal    'https://lotus.test/admin/home'
-      @router.url(:put_home).must_equal     'https://lotus.test/admin/home'
-      @router.url(:patch_home).must_equal   'https://lotus.test/admin/home'
-      @router.url(:delete_home).must_equal  'https://lotus.test/admin/home'
-      @router.url(:trace_home).must_equal   'https://lotus.test/admin/home'
-      @router.url(:options_home).must_equal 'https://lotus.test/admin/home'
+      @router.url(:get_home).must_equal     'https://hanami.test/admin/home'
+      @router.url(:post_home).must_equal    'https://hanami.test/admin/home'
+      @router.url(:put_home).must_equal     'https://hanami.test/admin/home'
+      @router.url(:patch_home).must_equal   'https://hanami.test/admin/home'
+      @router.url(:delete_home).must_equal  'https://hanami.test/admin/home'
+      @router.url(:trace_home).must_equal   'https://hanami.test/admin/home'
+      @router.url(:options_home).must_equal 'https://hanami.test/admin/home'
 
-      @router.url(:users).must_equal            'https://lotus.test/admin/users'
-      @router.url(:new_user).must_equal         'https://lotus.test/admin/users/new'
-      @router.url(:users).must_equal            'https://lotus.test/admin/users'
-      @router.url(:user, id: 1).must_equal      'https://lotus.test/admin/users/1'
-      @router.url(:edit_user, id: 1).must_equal 'https://lotus.test/admin/users/1/edit'
+      @router.url(:users).must_equal            'https://hanami.test/admin/users'
+      @router.url(:new_user).must_equal         'https://hanami.test/admin/users/new'
+      @router.url(:users).must_equal            'https://hanami.test/admin/users'
+      @router.url(:user, id: 1).must_equal      'https://hanami.test/admin/users/1'
+      @router.url(:edit_user, id: 1).must_equal 'https://hanami.test/admin/users/1/edit'
 
-      @router.url(:new_asteroid).must_equal  'https://lotus.test/admin/asteroid/new'
-      @router.url(:asteroid).must_equal      'https://lotus.test/admin/asteroid'
-      @router.url(:edit_asteroid).must_equal 'https://lotus.test/admin/asteroid/edit'
+      @router.url(:new_asteroid).must_equal  'https://hanami.test/admin/asteroid/new'
+      @router.url(:asteroid).must_equal      'https://hanami.test/admin/asteroid'
+      @router.url(:edit_asteroid).must_equal 'https://hanami.test/admin/asteroid/edit'
 
-      @router.url(:dashboard_home).must_equal 'https://lotus.test/admin/dashboard/home'
+      @router.url(:dashboard_home).must_equal 'https://hanami.test/admin/dashboard/home'
     end
 
     %w(GET POST PUT PATCH DELETE TRACE OPTIONS).each do |verb|
@@ -132,7 +132,7 @@ describe Lotus::Router do
     end
 
     it 'redirect works with prefix' do
-      router = Lotus::Router.new(prefix: '/admin') do
+      router = Hanami::Router.new(prefix: '/admin') do
         redirect '/redirect', to: '/redirect_destination'
         get '/redirect_destination', to: ->(env) { [200, {}, ['Redirect destination!']] }
       end

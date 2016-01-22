@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new { get '/', to: ->(env) {} }
+    @router = Hanami::Router.new { get '/', to: ->(env) {} }
     @app    = Rack::MockRequest.new(@router)
   end
 

@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new do
+    @router = Hanami::Router.new do
       mount Api::App,                      at: '/api'
       mount Api::App.new,                  at: '/api2'
       mount Backend::App,                  at: '/backend'

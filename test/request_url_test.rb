@@ -5,8 +5,8 @@ describe 'SCRIPT_NAME' do
   include Rack::Test::Methods
 
   before do
-    @container = Lotus::Router.new do
-      mount Lotus::Router.new(prefix: '/admin') {
+    @container = Hanami::Router.new do
+      mount Hanami::Router.new(prefix: '/admin') {
         get '/foo', to: ->(env) { [200, {}, [::Rack::Request.new(env).url]] }
       }, at: '/admin'
     end

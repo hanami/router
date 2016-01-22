@@ -5,7 +5,7 @@ Benchmark.bm(50) do |b|
   ##
   # Callable
   #
-  router = Lotus::Router.new
+  router = Hanami::Router.new
   app    = Rack::MockRequest.new(router)
 
   b.report 'generating from callable endpoints' do

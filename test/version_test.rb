@@ -1,7 +1,7 @@
 require 'test_helper'
 
-describe Lotus::Router::VERSION do
+describe Hanami::Router::VERSION do
   it 'exposes version' do
-    Lotus::Router::VERSION.must_equal '0.5.1'
+    Hanami::Router::VERSION.must_equal '0.6.0'
   end
 end

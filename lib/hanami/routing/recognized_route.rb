@@ -1,12 +1,12 @@
-require 'lotus/utils/string'
+require 'hanami/utils/string'
 
-module Lotus
+module Hanami
   module Routing
     # Represents a result of router path recognition.
     #
     # @since 0.5.0
     #
-    # @see Lotus::Router#recognize
+    # @see Hanami::Router#recognize
     class RecognizedRoute
       # @since 0.5.0
       # @api private
@@ -32,9 +32,9 @@ module Lotus
       #
       # @param response [HttpRouter::Response] raw response of recognition
       # @param env [Hash] Rack env
-      # @param router [Lotus::Routing::HttpRouter] low level router
+      # @param router [Hanami::Routing::HttpRouter] low level router
       #
-      # @return [Lotus::Routing::RecognizedRoute]
+      # @return [Hanami::Routing::RecognizedRoute]
       #
       # @since 0.5.0
       # @api private
@@ -56,18 +56,18 @@ module Lotus
       #
       # @return [Array] serialized Rack response
       #
-      # @raise [Lotus::Router::NotRoutableEndpointError] if not routable
+      # @raise [Hanami::Router::NotRoutableEndpointError] if not routable
       #
       # @since 0.5.0
       # @api public
       #
-      # @see Lotus::Routing::RecognizedRoute#routable?
-      # @see Lotus::Router::NotRoutableEndpointError
+      # @see Hanami::Routing::RecognizedRoute#routable?
+      # @see Hanami::Router::NotRoutableEndpointError
       def call(env)
         if routable?
           @endpoint.call(env)
         else
-          raise Lotus::Router::NotRoutableEndpointError.new(@env)
+          raise Hanami::Router::NotRoutableEndpointError.new(@env)
         end
       end
 
@@ -88,12 +88,12 @@ module Lotus
       # @since 0.5.0
       # @api public
       #
-      # @see Lotus::Router#recognize
+      # @see Hanami::Router#recognize
       #
       # @example
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new do
+      #   router = Hanami::Router.new do
       #     get '/books/:id', to: 'books#show'
       #   end
       #
@@ -102,7 +102,7 @@ module Lotus
         namespace = NAMESPACE % @namespace
 
         if destination.match(namespace)
-          Lotus::Utils::String.new(
+          Hanami::Utils::String.new(
             destination.sub(namespace, NAMESPACE_REPLACEMENT)
           ).underscore.rsub(ACTION_PATH_SEPARATOR, @action_separator)
         else
@@ -117,12 +117,12 @@ module Lotus
       # @since 0.5.0
       # @api public
       #
-      # @see Lotus::Router#recognize
+      # @see Hanami::Router#recognize
       #
       # @example
-      #   require 'lotus/router'
+      #   require 'hanami/router'
       #
-      #   router = Lotus::Router.new do
+      #   router = Hanami::Router.new do
       #     get '/', to: 'home#index'
       #   end
       #
@@ -137,7 +137,7 @@ module Lotus
       # @since 0.5.0
       # @api private
       #
-      # @see Lotus::Routing::Endpoint
+      # @see Hanami::Routing::Endpoint
       def destination
         @destination ||= begin
           case k = @endpoint.__getobj__

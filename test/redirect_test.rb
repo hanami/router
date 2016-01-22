@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new
+    @router = Hanami::Router.new
   end
 
   describe '#redirect' do

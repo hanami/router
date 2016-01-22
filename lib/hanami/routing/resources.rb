@@ -1,16 +1,16 @@
-require 'lotus/routing/resource'
-require 'lotus/routing/resources/action'
+require 'hanami/routing/resource'
+require 'hanami/routing/resources/action'
 
-module Lotus
+module Hanami
   module Routing
     # Set of RESTful resources routes
-    # Implementation of Lotus::Router#resources
+    # Implementation of Hanami::Router#resources
     #
     # @since 0.1.0
     #
     # @api private
     #
-    # @see Lotus::Router#resources
+    # @see Hanami::Router#resources
     class Resources < Resource
       # Set of default routes
       #
@@ -41,7 +41,7 @@ module Lotus
       # @api private
       # @since 0.4.0
       def wildcard_param(route_param = nil)
-        "/:#{ Lotus::Utils::String.new(route_param).singularize }_id/"
+        "/:#{ Hanami::Utils::String.new(route_param).singularize }_id/"
       end
     end
   end

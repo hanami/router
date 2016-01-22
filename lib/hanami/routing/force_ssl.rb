@@ -1,6 +1,6 @@
 require 'rack/request'
 
-module Lotus
+module Hanami
   module Routing
     # Force ssl
     #
@@ -106,7 +106,7 @@ module Lotus
       #
       # @return [Array]
       #
-      # @see Lotus::Routing::HttpRouter#call
+      # @see Hanami::Routing::HttpRouter#call
       #
       # @since 0.4.1
       # @api private

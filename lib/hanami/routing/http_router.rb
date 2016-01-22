@@ -1,31 +1,31 @@
 require 'http_router'
-require 'lotus/utils/io'
-require 'lotus/routing/endpoint_resolver'
-require 'lotus/routing/route'
-require 'lotus/routing/parsers'
-require 'lotus/routing/force_ssl'
-require 'lotus/routing/error'
-require 'lotus/utils/path_prefix'
+require 'hanami/utils/io'
+require 'hanami/routing/endpoint_resolver'
+require 'hanami/routing/route'
+require 'hanami/routing/parsers'
+require 'hanami/routing/force_ssl'
+require 'hanami/routing/error'
+require 'hanami/utils/path_prefix'
 
-Lotus::Utils::IO.silence_warnings do
+Hanami::Utils::IO.silence_warnings do
   HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
 end
 
-module Lotus
+module Hanami
   module Routing
     # Invalid route
     # This is raised when the router fails to recognize a route, because of the
     # given arguments.
     #
     # @since 0.1.0
-    class InvalidRouteException < Lotus::Routing::Error
+    class InvalidRouteException < Hanami::Routing::Error
     end
 
     # HTTP router
     #
     # This implementation is based on ::HttpRouter (http_router gem).
     #
-    # Lotus::Router wraps an instance of this class, in order to protect its
+    # Hanami::Router wraps an instance of this class, in order to protect its
     # public API from any future change of ::HttpRouter.
     #
     # @since 0.1.0
@@ -43,7 +43,7 @@ module Lotus
 
       # Initialize the router.
       #
-      # @see Lotus::Router#initialize
+      # @see Hanami::Router#initialize
       #
       # @since 0.1.0
       # @api private
@@ -58,12 +58,12 @@ module Lotus
         @resolver         = options[:resolver] || Routing::EndpointResolver.new(options)
         @parsers          = Routing::Parsers.new(options[:parsers])
         @prefix           = Utils::PathPrefix.new(options[:prefix] || '')
-        @force_ssl        = Lotus::Routing::ForceSsl.new(!!options[:force_ssl], host: @default_host, port: @default_port)
+        @force_ssl        = Hanami::Routing::ForceSsl.new(!!options[:force_ssl], host: @default_host, port: @default_port)
       end
 
       # Separator between controller and action name.
       #
-      # @see Lotus::Routing::EndpointResolver::ACTION_SEPARATOR
+      # @see Hanami::Routing::EndpointResolver::ACTION_SEPARATOR
       #
       # @since 0.1.0
       # @api private
@@ -73,7 +73,7 @@ module Lotus
 
       # Finds a path from the given options.
       #
-      # @see Lotus::Routing::EndpointResolver#find
+      # @see Hanami::Routing::EndpointResolver#find
       #
       # @since 0.1.0
       # @api private
@@ -83,7 +83,7 @@ module Lotus
 
       # Generate a relative URL for a specified named route.
       #
-      # @see Lotus::Router#path
+      # @see Hanami::Router#path
       #
       # @since 0.1.0
       # @api private
@@ -95,7 +95,7 @@ module Lotus
 
       # Generate an absolute URL for a specified named route.
       #
-      # @see Lotus::Router#path
+      # @see Hanami::Router#path
       #
       # @since 0.1.0
       # @api private
@@ -107,7 +107,7 @@ module Lotus
 
       # Support for OPTIONS HTTP verb
       #
-      # @see Lotus::Router#options
+      # @see Hanami::Router#options
       #
       # @since 0.1.0
       # @api private
@@ -117,7 +117,7 @@ module Lotus
 
       # Allow to mount a Rack app
       #
-      # @see Lotus::Router#mount
+      # @see Hanami::Router#mount
       #
       # @since 0.1.1
       # @api private

@@ -1,9 +1,9 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   describe 'generation' do
     before do
-      @router = Lotus::Router.new
+      @router = Hanami::Router.new
       @test   = GenerationTestCase.new(@router)
     end
 

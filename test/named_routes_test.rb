@@ -1,10 +1,10 @@
 require 'test_helper'
 
-describe Lotus::Router do
+describe Hanami::Router do
   before do
-    @router = Lotus::Router.new(scheme: 'https', host: 'test.com', port: 443)
+    @router = Hanami::Router.new(scheme: 'https', host: 'test.com', port: 443)
 
-    @router.get('/lotus',                  to: endpoint, as: :fixed)
+    @router.get('/hanami',                  to: endpoint, as: :fixed)
     @router.get('/flowers/:id',            to: endpoint, as: :variables)
     @router.get('/books/:id',   id: /\d+/, to: endpoint, as: :constraints)
     @router.get('/articles(.:format)',     to: endpoint, as: :optional)
@@ -19,17 +19,17 @@ describe Lotus::Router do
 
   describe '#path' do
     it 'recognizes fixed string' do
-      @router.path(:fixed).must_equal '/lotus'
+      @router.path(:fixed).must_equal '/hanami'
     end
 
     it 'recognizes string with variables' do
-      @router.path(:variables, id: 'lotus').must_equal '/flowers/lotus'
+      @router.path(:variables, id: 'hanami').must_equal '/flowers/hanami'
     end
 
     it "raises error when variables aren't satisfied" do
       exception = -> {
         @router.path(:variables)
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'No route (path) could be generated for :variables - please check given arguments'
     end
@@ -41,7 +41,7 @@ describe Lotus::Router do
     it "raises error when constraints aren't satisfied" do
       exception = -> {
         @router.path(:constraints, id: 'x')
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'No route (path) could be generated for :constraints - please check given arguments'
     end
@@ -58,13 +58,13 @@ describe Lotus::Router do
     end
 
     it 'escapes additional params in query string' do
-      @router.path(:fixed, return_to: '/dashboard').must_equal '/lotus?return_to=%2Fdashboard'
+      @router.path(:fixed, return_to: '/dashboard').must_equal '/hanami?return_to=%2Fdashboard'
     end
 
     it 'raises error when insufficient params are passed' do
       exception = -> {
         @router.path(nil)
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'No route (path) could be generated for nil - please check given arguments'
     end
@@ -72,7 +72,7 @@ describe Lotus::Router do
     it 'raises error when too many params are passed' do
       exception = -> {
         @router.path(:fixed, 'x')
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'HttpRouter::TooManyParametersException - please check given arguments'
     end
@@ -80,17 +80,17 @@ describe Lotus::Router do
 
   describe '#url' do
     it 'recognizes fixed string' do
-      @router.url(:fixed).must_equal 'https://test.com/lotus'
+      @router.url(:fixed).must_equal 'https://test.com/hanami'
     end
 
     it 'recognizes string with variables' do
-      @router.url(:variables, id: 'lotus').must_equal 'https://test.com/flowers/lotus'
+      @router.url(:variables, id: 'hanami').must_equal 'https://test.com/flowers/hanami'
     end
 
     it "raises error when variables aren't satisfied" do
       exception = -> {
         @router.url(:variables)
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'No route (url) could be generated for :variables - please check given arguments'
     end
@@ -102,7 +102,7 @@ describe Lotus::Router do
     it "raises error when constraints aren't satisfied" do
       exception = -> {
         @router.url(:constraints, id: 'x')
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'No route (url) could be generated for :constraints - please check given arguments'
     end
@@ -119,13 +119,13 @@ describe Lotus::Router do
     end
 
     it 'escapes additional params in query string' do
-      @router.url(:fixed, return_to: '/dashboard').must_equal 'https://test.com/lotus?return_to=%2Fdashboard'
+      @router.url(:fixed, return_to: '/dashboard').must_equal 'https://test.com/hanami?return_to=%2Fdashboard'
     end
 
     it 'raises error when insufficient params are passed' do
       exception = -> {
         @router.url(nil)
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'No route (url) could be generated for nil - please check given arguments'
     end
@@ -133,7 +133,7 @@ describe Lotus::Router do
     it 'raises error when too many params are passed' do
       exception = -> {
         @router.url(:fixed, 'x')
-      }.must_raise(Lotus::Routing::InvalidRouteException)
+      }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'HttpRouter::TooManyParametersException - please check given arguments'
     end

@@ -1,20 +1,20 @@
 require 'rack/request'
-require 'lotus/routing/http_router'
-require 'lotus/routing/namespace'
-require 'lotus/routing/resource'
-require 'lotus/routing/resources'
-require 'lotus/routing/error'
+require 'hanami/routing/http_router'
+require 'hanami/routing/namespace'
+require 'hanami/routing/resource'
+require 'hanami/routing/resources'
+require 'hanami/routing/error'
 
-module Lotus
+module Hanami
   # Rack compatible, lightweight and fast HTTP Router.
   #
   # @since 0.1.0
   #
   # @example It offers an intuitive DSL, that supports most of the HTTP verbs:
-  #   require 'lotus/router'
+  #   require 'hanami/router'
   #
-  #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
-  #   router = Lotus::Router.new do
+  #   endpoint = ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  #   router = Hanami::Router.new do
   #     get     '/', to: endpoint # => get and head requests
   #     post    '/', to: endpoint
   #     put     '/', to: endpoint
@@ -27,47 +27,47 @@ module Lotus
   #
   #
   # @example Specify an endpoint with `:to` (Rack compatible object)
-  #   require 'lotus/router'
+  #   require 'hanami/router'
   #
-  #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
-  #   router = Lotus::Router.new do
+  #   endpoint = ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  #   router = Hanami::Router.new do
   #     get '/', to: endpoint
   #   end
   #
-  #   # :to is mandatory for the default resolver (`Lotus::Routing::EndpointResolver.new`),
-  #   # This behavior can be changed by passing a custom resolver to `Lotus::Router#initialize`
+  #   # :to is mandatory for the default resolver (`Hanami::Routing::EndpointResolver.new`),
+  #   # This behavior can be changed by passing a custom resolver to `Hanami::Router#initialize`
   #
   #
   #
   # @example Specify an endpoint with `:to` (controller and action string)
-  #   require 'lotus/router'
+  #   require 'hanami/router'
   #
-  #   router = Lotus::Router.new do
+  #   router = Hanami::Router.new do
   #     get '/', to: 'articles#show' # => Articles::Show
   #   end
   #
-  #   # This is a builtin feature for a Lotus::Controller convention.
+  #   # This is a builtin feature for a Hanami::Controller convention.
   #
   #
   #
   # @example Specify a named route with `:as`
-  #   require 'lotus/router'
+  #   require 'hanami/router'
   #
-  #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
-  #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org') do
+  #   endpoint = ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  #   router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org') do
   #     get '/', to: endpoint, as: :root
   #   end
   #
   #   router.path(:root) # => '/'
-  #   router.url(:root)  # => 'https://lotusrb.org/'
+  #   router.url(:root)  # => 'https://hanamirb.org/'
   #
-  #   # This isn't mandatory for the default route class (`Lotus::Routing::Route`),
-  #   # This behavior can be changed by passing a custom route to `Lotus::Router#initialize`
+  #   # This isn't mandatory for the default route class (`Hanami::Routing::Route`),
+  #   # This behavior can be changed by passing a custom route to `Hanami::Router#initialize`
   #
   # @example Mount an application
-  #   require 'lotus/router'
+  #   require 'hanami/router'
   #
-  #   router = Lotus::Router.new do
+  #   router = Hanami::Router.new do
   #     mount Api::App, at: '/api'
   #   end
   #
@@ -78,11 +78,11 @@ module Lotus
     #
     # @since 0.5.0
     #
-    # @see Lotus::Router#recognize
-    # @see Lotus::Routing::RecognizedRoute
-    # @see Lotus::Routing::RecognizedRoute#call
-    # @see Lotus::Routing::RecognizedRoute#routable?
-    class NotRoutableEndpointError < Lotus::Routing::Error
+    # @see Hanami::Router#recognize
+    # @see Hanami::Routing::RecognizedRoute
+    # @see Hanami::Routing::RecognizedRoute#call
+    # @see Hanami::Routing::RecognizedRoute#routable?
+    class NotRoutableEndpointError < Hanami::Routing::Error
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
       PATH_INFO      = 'PATH_INFO'.freeze
 
@@ -93,7 +93,7 @@ module Lotus
 
     # Returns the given block as it is.
     #
-    # When Lotus::Router is used as a standalone gem and the routes are defined
+    # When Hanami::Router is used as a standalone gem and the routes are defined
     # into a configuration file, some systems could raise an exception.
     #
     # Imagine the following file into a Ruby on Rails application:
@@ -103,10 +103,10 @@ module Lotus
     # Because Ruby on Rails in production mode use to eager load code and the
     # routes file uses top level method calls, it crashes the application.
     #
-    # If we wrap these routes with <tt>Lotus::Router.define</tt>, the block
+    # If we wrap these routes with <tt>Hanami::Router.define</tt>, the block
     # doesn't get yielded but just returned to the caller as it is.
     #
-    # Usually the receiver of this block is <tt>Lotus::Router#initialize</tt>,
+    # Usually the receiver of this block is <tt>Hanami::Router#initialize</tt>,
     # which finally evaluates the block.
     #
     # @param blk [Proc] a set of route definitions
@@ -117,7 +117,7 @@ module Lotus
     #
     # @example
     #   # apps/web/config/routes.rb
-    #   Lotus::Router.define do
+    #   Hanami::Router.define do
     #     get '/', to: 'home#index'
     #   end
     def self.define(&blk)
@@ -132,9 +132,9 @@ module Lotus
     # @option options [String] :host The URL host (defaults to `"localhost"`)
     # @option options [String] :port The URL port (defaults to `"80"`)
     # @option options [Object, #resolve, #find, #action_separator] :resolver
-    #   the route resolver (defaults to `Lotus::Routing::EndpointResolver.new`)
+    #   the route resolver (defaults to `Hanami::Routing::EndpointResolver.new`)
     # @option options [Object, #generate] :route the route class
-    #   (defaults to `Lotus::Routing::Route`)
+    #   (defaults to `Hanami::Routing::Route`)
     # @option options [String] :action_separator the separator between controller
     #   and action name (eg. 'dashboard#show', where '#' is the :action_separator)
     # @option options [Array<Symbol,String,Object #mime_types, parse>] :parsers
@@ -142,33 +142,33 @@ module Lotus
     #
     # @param blk [Proc] the optional block to define the routes
     #
-    # @return [Lotus::Router] self
+    # @return [Hanami::Router] self
     #
     # @since 0.1.0
     #
     # @example Basic example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   endpoint = ->(env) { [200, {}, ['Welcome to Lotus::Router!']] }
+    #   endpoint = ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.get '/', to: endpoint
     #
     #   # or
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/', to: endpoint
     #   end
     #
     # @example Body parsers
     #   require 'json'
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
     #   # It parses JSON body and makes the attributes available to the params
     #
     #   endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
     #
-    #   router = Lotus::Router.new(parsers: [:json]) do
+    #   router = Hanami::Router.new(parsers: [:json]) do
     #     patch '/books/:id', to: endpoint
     #   end
     #
@@ -185,7 +185,7 @@ module Lotus
     #   [200, {}, ["{:published=>\"true\",:id=>\"1\"}"]]
     #
     # @example Custom body parser
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
     #   class XmlParser
     #     def mime_types
@@ -202,7 +202,7 @@ module Lotus
     #
     #   endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
     #
-    #   router = Lotus::Router.new(parsers: [XmlParser.new]) do
+    #   router = Hanami::Router.new(parsers: [XmlParser.new]) do
     #     patch '/authors/:id', to: endpoint
     #   end
     #
@@ -224,8 +224,8 @@ module Lotus
 
     # Returns self
     #
-    # This is a duck-typing trick for compatibility with `Lotus::Application`.
-    # It's used by `Lotus::Routing::RoutesInspector` to inspect both apps and
+    # This is a duck-typing trick for compatibility with `Hanami::Application`.
+    # It's used by `Hanami::Routing::RoutesInspector` to inspect both apps and
     # routers.
     #
     # @return [self]
@@ -240,12 +240,12 @@ module Lotus
     #
     # @param blk [Proc] the block to define the routes
     #
-    # @return [Lotus::Routing::Route]
+    # @return [Hanami::Routing::Route]
     #
     # @since 0.2.0
     #
-    # @example In Lotus framework
-    #   class Application < Lotus::Application
+    # @example In Hanami framework
+    #   class Application < Hanami::Application
     #     configure do
     #       routes 'config/routes'
     #     end
@@ -269,10 +269,10 @@ module Lotus
     #
     # @example
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.defined? # => false
     #
-    #   router = Lotus::Router.new { get '/', to: ->(env) { } }
+    #   router = Hanami::Router.new { get '/', to: ->(env) { } }
     #   router.defined? # => true
     def defined?
       @router.routes.any?
@@ -287,21 +287,21 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
     # @since 0.1.0
     #
     # @example Fixed matching string
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
-    #   router.get '/lotus', to: ->(env) { [200, {}, ['Hello from Lotus!']] }
+    #   router = Hanami::Router.new
+    #   router.get '/hanami', to: ->(env) { [200, {}, ['Hello from Hanami!']] }
     #
     # @example String matching with variables
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.get '/flowers/:id',
     #     to: ->(env) {
     #       [
@@ -312,17 +312,17 @@ module Lotus
     #     }
     #
     # @example Variables Constraints
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.get '/flowers/:id',
     #     id: /\d+/,
     #     to: ->(env) { [200, {}, [":id must be a number!"]] }
     #
     # @example String matching with globbling
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.get '/*',
     #     to: ->(env) {
     #       [
@@ -333,31 +333,31 @@ module Lotus
     #     }
     #
     # @example String matching with optional tokens
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
-    #   router.get '/lotus(.:format)',
+    #   router = Hanami::Router.new
+    #   router.get '/hanami(.:format)',
     #     to: ->(env) {
     #       [200, {}, ["You've requested #{ env['router.params'][:format] }!"]]
     #     }
     #
     # @example Named routes
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
-    #   router.get '/lotus',
-    #     to: ->(env) { [200, {}, ['Hello from Lotus!']] },
-    #     as: :lotus
+    #   router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org')
+    #   router.get '/hanami',
+    #     to: ->(env) { [200, {}, ['Hello from Hanami!']] },
+    #     as: :hanami
     #
-    #   router.path(:lotus) # => "/lotus"
-    #   router.url(:lotus)  # => "https://lotusrb.org/lotus"
+    #   router.path(:hanami) # => "/hanami"
+    #   router.url(:hanami)  # => "https://hanamirb.org/hanami"
     #
     # @example Duck typed endpoints (Rack compatible objects)
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #
-    #   router.get '/lotus',      to: ->(env) { [200, {}, ['Hello from Lotus!']] }
+    #   router.get '/hanami',      to: ->(env) { [200, {}, ['Hello from Hanami!']] }
     #   router.get '/middleware', to: Middleware
     #   router.get '/rack-app',   to: RackApp.new
     #   router.get '/method',     to: ActionControllerSubclass.action(:new)
@@ -365,7 +365,7 @@ module Lotus
     #   # Everything that responds to #call is invoked as it is
     #
     # @example Duck typed endpoints (strings)
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
     #   class RackApp
     #     def call(env)
@@ -373,11 +373,11 @@ module Lotus
     #     end
     #   end
     #
-    #   router = Lotus::Router.new
-    #   router.get '/lotus', to: 'rack_app' # it will map to RackApp.new
+    #   router = Hanami::Router.new
+    #   router.get '/hanami', to: 'rack_app' # it will map to RackApp.new
     #
     # @example Duck typed endpoints (string: controller + action)
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
     #   module Flowers
     #     class Index
@@ -387,11 +387,11 @@ module Lotus
     #     end
     #   end
     #
-    #    router = Lotus::Router.new
+    #    router = Hanami::Router.new
     #    router.get '/flowers', to: 'flowers#index'
     #
     #    # It will map to Flowers::Index.new, which is the
-    #    # Lotus::Controller convention.
+    #    # Hanami::Controller convention.
     def get(path, options = {}, &blk)
       @router.get(path, options, &blk)
     end
@@ -405,10 +405,10 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @see Lotus::Router#get
+    # @see Hanami::Router#get
     #
     # @since 0.1.0
     def post(path, options = {}, &blk)
@@ -424,10 +424,10 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @see Lotus::Router#get
+    # @see Hanami::Router#get
     #
     # @since 0.1.0
     def put(path, options = {}, &blk)
@@ -443,10 +443,10 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @see Lotus::Router#get
+    # @see Hanami::Router#get
     #
     # @since 0.1.0
     def patch(path, options = {}, &blk)
@@ -462,10 +462,10 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @see Lotus::Router#get
+    # @see Hanami::Router#get
     #
     # @since 0.1.0
     def delete(path, options = {}, &blk)
@@ -481,10 +481,10 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @see Lotus::Router#get
+    # @see Hanami::Router#get
     #
     # @since 0.1.0
     def trace(path, options = {}, &blk)
@@ -500,10 +500,10 @@ module Lotus
     #
     # @param blk [Proc] the anonymous proc to be used as endpoint for the route
     #
-    # @return [Lotus::Routing::Route] this may vary according to the :route
+    # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @see Lotus::Router#get
+    # @see Hanami::Router#get
     #
     # @since 0.1.0
     def options(path, options = {}, &blk)
@@ -516,25 +516,25 @@ module Lotus
     # @param options [Hash] the options to customize the redirect behavior
     # @option options [Fixnum] the HTTP status to return (defaults to `301`)
     #
-    # @return [Lotus::Routing::Route] the generated route.
+    # @return [Hanami::Routing::Route] the generated route.
     #   This may vary according to the `:route` option passed to the initializer
     #
     # @since 0.1.0
     #
-    # @see Lotus::Router
+    # @see Hanami::Router
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     redirect '/legacy',  to: '/new_endpoint'
     #     redirect '/legacy2', to: '/new_endpoint2', code: 302
     #   end
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
     def redirect(path, options = {}, &endpoint)
       get(path).redirect @router.find(options), options[:code] || 301
@@ -549,25 +549,25 @@ module Lotus
     #   be mounted
     # @param blk [Proc] the block that defines the resources
     #
-    # @return [Lotus::Routing::Namespace] the generated namespace.
+    # @return [Hanami::Routing::Namespace] the generated namespace.
     #
     # @since 0.1.0
     #
-    # @see Lotus::Router
+    # @see Hanami::Router
     #
     # @example Basic example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     namespace 'trees' do
     #       get '/sequoia', to: endpoint # => '/trees/sequoia'
     #     end
     #   end
     #
     # @example Nested namespaces
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     namespace 'animals' do
     #       namespace 'mammals' do
     #         get '/cats', to: endpoint # => '/animals/mammals/cats'
@@ -576,9 +576,9 @@ module Lotus
     #   end
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new
+    #   router = Hanami::Router.new
     #   router.namespace 'trees' do
     #     get '/sequoia', to: endpoint # => '/trees/sequoia'
     #   end
@@ -587,7 +587,7 @@ module Lotus
     end
 
     # Defines a set of named routes for a single RESTful resource.
-    # It has a built-in integration for Lotus::Controller.
+    # It has a built-in integration for Hanami::Controller.
     #
     # @param name [String] the name of the resource
     # @param options [Hash] a set of options to customize the routes
@@ -597,18 +597,18 @@ module Lotus
     #   generated
     # @param blk [Proc] a block of code to generate additional routes
     #
-    # @return [Lotus::Routing::Resource]
+    # @return [Hanami::Routing::Resource]
     #
     # @since 0.1.0
     #
-    # @see Lotus::Routing::Resource
-    # @see Lotus::Routing::Resource::Action
-    # @see Lotus::Routing::Resource::Options
+    # @see Hanami::Routing::Resource
+    # @see Hanami::Routing::Resource::Action
+    # @see Hanami::Routing::Resource::Options
     #
     # @example Default usage
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resource 'identity'
     #   end
     #
@@ -628,9 +628,9 @@ module Lotus
     #
     #
     # @example Limit the generated routes with :only
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resource 'identity', only: [:show, :new, :create]
     #   end
     #
@@ -647,9 +647,9 @@ module Lotus
     #
     #
     # @example Limit the generated routes with :except
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resource 'identity', except: [:edit, :update, :destroy]
     #   end
     #
@@ -666,9 +666,9 @@ module Lotus
     #
     #
     # @example Additional single routes
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resource 'identity', only: [] do
     #       member do
     #         patch 'activate'
@@ -687,9 +687,9 @@ module Lotus
     #
     #
     # @example Additional collection routes
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resource 'identity', only: [] do
     #       collection do
     #         get 'keys'
@@ -709,7 +709,7 @@ module Lotus
     end
 
     # Defines a set of named routes for a plural RESTful resource.
-    # It has a built-in integration for Lotus::Controller.
+    # It has a built-in integration for Hanami::Controller.
     #
     # @param name [String] the name of the resource
     # @param options [Hash] a set of options to customize the routes
@@ -719,18 +719,18 @@ module Lotus
     #   generated
     # @param blk [Proc] a block of code to generate additional routes
     #
-    # @return [Lotus::Routing::Resources]
+    # @return [Hanami::Routing::Resources]
     #
     # @since 0.1.0
     #
-    # @see Lotus::Routing::Resources
-    # @see Lotus::Routing::Resources::Action
-    # @see Lotus::Routing::Resource::Options
+    # @see Hanami::Routing::Resources
+    # @see Hanami::Routing::Resources::Action
+    # @see Hanami::Routing::Resource::Options
     #
     # @example Default usage
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resources 'articles'
     #   end
     #
@@ -751,9 +751,9 @@ module Lotus
     #
     #
     # @example Limit the generated routes with :only
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resources 'articles', only: [:index]
     #   end
     #
@@ -768,9 +768,9 @@ module Lotus
     #
     #
     # @example Limit the generated routes with :except
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resources 'articles', except: [:edit, :update]
     #   end
     #
@@ -789,9 +789,9 @@ module Lotus
     #
     #
     # @example Additional single routes
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resources 'articles', only: [] do
     #       member do
     #         patch 'publish'
@@ -810,9 +810,9 @@ module Lotus
     #
     #
     # @example Additional collection routes
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     resources 'articles', only: [] do
     #       collection do
     #         get 'search'
@@ -847,9 +847,9 @@ module Lotus
     # @since 0.1.1
     #
     # @example Basic usage
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     mount Api::App.new, at: '/api'
     #   end
     #
@@ -861,9 +861,9 @@ module Lotus
     #   # GET  /api/unknown  # => 404
     #
     # @example Difference between #get and #mount
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     get '/rack1',      to: RackOne.new
     #     mount RackTwo.new, at: '/rack2'
     #   end
@@ -879,7 +879,7 @@ module Lotus
     #   # POST /rack2        # => 200 (RackTwo.new)
     #
     # @example Types of mountable applications
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
     #   class RackOne
     #     def self.call(env)
@@ -903,7 +903,7 @@ module Lotus
     #     end
     #   end
     #
-    #   Lotus::Router.new do
+    #   Hanami::Router.new do
     #     mount RackOne,                             at: '/rack1'
     #     mount RackTwo,                             at: '/rack2'
     #     mount RackThree.new,                       at: '/rack3'
@@ -915,7 +915,7 @@ module Lotus
     #   # 2. RackTwo is initialized, because it respond to #call
     #   # 3. RackThree is used as it is (object), because it respond to #call
     #   # 4. That Proc is used as it is, because it respond to #call
-    #   # 5. That string is resolved as Dashboard::Index (Lotus::Controller)
+    #   # 5. That string is resolved as Dashboard::Index (Hanami::Controller)
     def mount(app, options)
       @router.mount(app, options)
     end
@@ -941,17 +941,17 @@ module Lotus
     # @param options [Hash] a set of options for Rack env or route params
     # @param params [Hash] a set of params
     #
-    # @return [Lotus::Routing::RecognizedRoute] the recognized route
+    # @return [Hanami::Routing::RecognizedRoute] the recognized route
     #
     # @since 0.5.0
     #
-    # @see Lotus::Router#env_for
-    # @see Lotus::Routing::RecognizedRoute
+    # @see Hanami::Router#env_for
+    # @see Hanami::Routing::RecognizedRoute
     #
     # @example Successful Path Recognition
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -961,9 +961,9 @@ module Lotus
     #   route.params    # => {:id=>"23"}
     #
     # @example Successful Rack Env Recognition
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -973,9 +973,9 @@ module Lotus
     #   route.params    # => {:id=>"23"}
     #
     # @example Successful Named Route Recognition
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -985,9 +985,9 @@ module Lotus
     #   route.params    # => {:id=>"23"}
     #
     # @example Failing Recognition For Unknown Path
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -996,9 +996,9 @@ module Lotus
     #   route.routable? # => false
     #
     # @example Failing Recognition For Path With Wrong HTTP Verb
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -1007,9 +1007,9 @@ module Lotus
     #   route.routable? # => false
     #
     # @example Failing Recognition For Rack Env With Wrong HTTP Verb
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -1018,9 +1018,9 @@ module Lotus
     #   route.routable? # => false
     #
     # @example Failing Recognition Named Route With Wrong Params
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -1029,9 +1029,9 @@ module Lotus
     #   route.routable? # => false
     #
     # @example Failing Recognition Named Route With Wrong HTTP Verb
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get '/books/:id', to: 'books#show', as: :book
     #   end
     #
@@ -1040,7 +1040,7 @@ module Lotus
     #   route.routable? # => false
     #   route.params    # => {:id=>"1"}
     def recognize(env, options = {}, params = nil)
-      require 'lotus/routing/recognized_route'
+      require 'hanami/routing/recognized_route'
 
       env          = env_for(env, options, params)
       responses, _ = *@router.recognize(env)
@@ -1058,15 +1058,15 @@ module Lotus
     #
     # @return [String]
     #
-    # @raise [Lotus::Routing::InvalidRouteException] when the router fails to
+    # @raise [Hanami::Routing::InvalidRouteException] when the router fails to
     #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
+    #   router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org')
     #   router.get '/login', to: 'sessions#new',    as: :login
     #   router.get '/:name', to: 'frameworks#show', as: :framework
     #
@@ -1085,21 +1085,21 @@ module Lotus
     #
     # @return [String]
     #
-    # @raise [Lotus::Routing::InvalidRouteException] when the router fails to
+    # @raise [Hanami::Routing::InvalidRouteException] when the router fails to
     #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new(scheme: 'https', host: 'lotusrb.org')
+    #   router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org')
     #   router.get '/login', to: 'sessions#new', as: :login
     #   router.get '/:name', to: 'frameworks#show', as: :framework
     #
-    #   router.url(:login)                          # => "https://lotusrb.org/login"
-    #   router.url(:login, return_to: '/dashboard') # => "https://lotusrb.org/login?return_to=%2Fdashboard"
-    #   router.url(:framework, name: 'router')      # => "https://lotusrb.org/router"
+    #   router.url(:login)                          # => "https://hanamirb.org/login"
+    #   router.url(:login, return_to: '/dashboard') # => "https://hanamirb.org/login?return_to=%2Fdashboard"
+    #   router.url(:framework, name: 'router')      # => "https://hanamirb.org/router"
     def url(route, *args)
       @router.url(route, *args)
     end
@@ -1108,12 +1108,12 @@ module Lotus
     #
     # @since 0.2.0
     #
-    # @see Lotus::Routing::RoutesInspector
+    # @see Hanami::Routing::RoutesInspector
     #
     # @example
-    #   require 'lotus/router'
+    #   require 'hanami/router'
     #
-    #   router = Lotus::Router.new do
+    #   router = Hanami::Router.new do
     #     get    '/',       to: 'home#index'
     #     get    '/login',  to: 'sessions#new',     as: :login
     #     post   '/login',  to: 'sessions#create'
@@ -1126,7 +1126,7 @@ module Lotus
     #                 POST       /login                   Sessions::Create
     #          logout GET, HEAD  /logout                  Sessions::Destroy
     def inspector
-      require 'lotus/routing/routes_inspector'
+      require 'hanami/routing/routes_inspector'
       Routing::RoutesInspector.new(@router.routes)
     end
 
@@ -1143,7 +1143,7 @@ module Lotus
     # @since 0.5.0
     # @api private
     #
-    # @see Lotus::Router#recognize
+    # @see Hanami::Router#recognize
     # @see http://www.rubydoc.info/github/rack/rack/Rack%2FMockRequest.env_for
     def env_for(env, options = {}, params = nil)
       env = case env
@@ -1153,7 +1153,7 @@ module Lotus
         begin
           url = path(env, params || options)
           return env_for(url, options)
-        rescue Lotus::Routing::InvalidRouteException
+        rescue Hanami::Routing::InvalidRouteException
           {}
         end
       else
