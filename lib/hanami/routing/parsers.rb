@@ -8,6 +8,7 @@ module Hanami
 
       RACK_INPUT    = 'rack.input'.freeze
       ROUTER_PARAMS = 'router.params'.freeze
+      FALLBACK_KEY  = '_'.freeze
 
       def initialize(parsers)
         @parsers = prepare(parsers)
@@ -44,15 +45,26 @@ module Hanami
           return env if body.empty?
 
           env[RACK_INPUT].rewind    # somebody might try to read this stream
-          env[ROUTER_PARAMS] ||= {} # prepare params
 
+          env[ROUTER_PARAMS] ||= {} # prepare params
           env[ROUTER_PARAMS].merge!(
-            @parsers[
-              media_type(env)
-            ].parse(body)
+            _parse(env, body)
           )
 
           env
+        end
+      end
+
+      def _parse(env, body)
+        result = @parsers[
+          media_type(env)
+        ].parse(body)
+
+        case result
+        when Hash
+          result
+        else
+          {FALLBACK_KEY => result}
         end
       end
 
