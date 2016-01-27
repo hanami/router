@@ -49,10 +49,19 @@ describe Hanami::Routing::Parsers do
           result['router.params'].must_equal({"attribute" => "ok"})
         end
 
+        describe "with non hash body" do
+          let(:body) { %(["foo"]) }
+
+          it "parses params from body" do
+            result = @parsers.call(env)
+            result['router.params'].must_equal({"_" => ["foo"]})
+          end
+        end
+
         describe 'with malformed json' do
-          let(:body) {  %({"hanami":"ok" "attribute":"ok"}) }
+          let(:body) { %({"hanami":"ok" "attribute":"ok"}) }
           it 'raises an exception' do
-            -> { result = @parsers.call(env) }.must_raise(Hanami::Routing::Parsing::BodyParsingError)
+            -> { @parsers.call(env) }.must_raise(Hanami::Routing::Parsing::BodyParsingError)
           end
         end
       end
@@ -69,7 +78,7 @@ describe Hanami::Routing::Parsers do
         describe 'with malformed json' do
           let(:body) {  %({"hanami":"ok" "attribute":"ok"}) }
           it 'raises an exception' do
-            -> { result = @parsers.call(env) }.must_raise(Hanami::Routing::Parsing::BodyParsingError)
+            -> { @parsers.call(env) }.must_raise(Hanami::Routing::Parsing::BodyParsingError)
           end
         end
       end
