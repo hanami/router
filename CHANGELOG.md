@@ -1,6 +1,10 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v0.6.1 - 2016-01-27
+### Fixed
+- [Luca Guidi] Fix body parsers for non Hash requests
+
 ## v0.6.0 - 2016-01-22
 ### Changed
 - [Luca Guidi] Renamed the project
