@@ -31,7 +31,7 @@ module Hanami
     # @since 0.1.0
     # @api private
     class HttpRouter < ::HttpRouter
-      # Script name - rack enviroment variable
+      # Script name - rack environment variable
       #
       # @since 0.5.0
       # @api private
@@ -161,7 +161,7 @@ module Hanami
       # @since 0.5.0
       def rewrite_path_info(env, request)
         super
-        env[SCRIPT_NAME] = @prefix + env[SCRIPT_NAME]
+        env[SCRIPT_NAME] = @prefix.join(env[SCRIPT_NAME])
       end
 
       private

@@ -1,6 +1,10 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v0.6.2 - 2016-02-05
+### Fixed
+- [Anton Davydov] Fix double leading slash for Capybara's `current_path`
+
 ## v0.6.1 - 2016-01-27
 ### Fixed
 - [Luca Guidi] Fix body parsers for non Hash requests
