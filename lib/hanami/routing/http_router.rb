@@ -164,6 +164,18 @@ module Hanami
         env[SCRIPT_NAME] = @prefix.join(env[SCRIPT_NAME])
       end
 
+      # @api private
+      def rewrite_partial_path_info(env, request)
+        path_info_before = request.rack_request.path_info.dup
+        if request.path.empty?
+          env['PATH_INFO'] = "/"
+          env['SCRIPT_NAME'] += path_info_before
+        else
+          env['PATH_INFO'] = "/#{URI.encode(request.path.join('/'))}"
+          env['SCRIPT_NAME'] += path_info_before[0, path_info_before.size - env['PATH_INFO'].size]
+        end
+      end
+
       private
 
       def _rescue_url_recognition
