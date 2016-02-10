@@ -170,7 +170,7 @@ module Hanami
           env[SCRIPT_NAME] += path_info_before
         else
           env[PATH_INFO] = "/#{URI.encode(request.path.join('/'))}"
-          env[SCRIPT_NAME] += path_info_before[0, path_info_before.size - env[PATH_INFO].size]
+          env[SCRIPT_NAME] += path_info_before[0, path_info_before.bytesize - env[PATH_INFO].bytesize]
         end
       end
 
