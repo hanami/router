@@ -37,6 +37,11 @@ module Hanami
       # @api private
       SCRIPT_NAME = 'SCRIPT_NAME'.freeze
 
+      # Path info - rack environment variable
+      #
+      # @api private
+      PATH_INFO = 'PATH_INFO'.freeze
+
       # @since 0.5.0
       # @api private
       attr_reader :namespace
@@ -158,10 +163,15 @@ module Hanami
       end
 
       # @api private
-      # @since 0.5.0
-      def rewrite_path_info(env, request)
-        super
-        env[SCRIPT_NAME] = @prefix.join(env[SCRIPT_NAME])
+      def rewrite_partial_path_info(env, request)
+        path_info_before = request.rack_request.path_info.dup
+        if request.path.empty?
+          env[PATH_INFO] = "/"
+          env[SCRIPT_NAME] += path_info_before
+        else
+          env[PATH_INFO] = "/#{URI.encode(request.path.join('/'))}"
+          env[SCRIPT_NAME] += path_info_before[0, path_info_before.bytesize - env[PATH_INFO].bytesize]
+        end
       end
 
       private
