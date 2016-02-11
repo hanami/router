@@ -39,8 +39,21 @@ module Hanami
 
       # Path info - rack environment variable
       #
+      # @since x.x.x
       # @api private
       PATH_INFO = 'PATH_INFO'.freeze
+
+      # Default PATH_INFO for Rack requests
+      #
+      # @since x.x.x
+      # @api private
+      DEFAULT_PATH_INFO = '/'.freeze
+
+      # URL separator
+      #
+      # @since x.x.x
+      # @api private
+      URL_SEPARATOR = '/'.freeze
 
       # @since 0.5.0
       # @api private
@@ -164,12 +177,12 @@ module Hanami
 
       # @api private
       def rewrite_partial_path_info(env, request)
-        path_info_before = request.rack_request.path_info.dup
         if request.path.empty?
-          env[PATH_INFO] = "/"
-          env[SCRIPT_NAME] += path_info_before
+          env[SCRIPT_NAME] += env[PATH_INFO]
+          env[PATH_INFO]    = DEFAULT_PATH_INFO
         else
-          env[PATH_INFO] = "/#{URI.encode(request.path.join('/'))}"
+          path_info_before  = env[PATH_INFO].dup
+          env[PATH_INFO]    = "/#{URI.encode(request.path.join(URL_SEPARATOR))}"
           env[SCRIPT_NAME] += path_info_before[0, path_info_before.bytesize - env[PATH_INFO].bytesize]
         end
       end
