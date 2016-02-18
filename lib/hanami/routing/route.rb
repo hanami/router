@@ -50,7 +50,8 @@ module Hanami
       # @since 0.2.0
       # @api private
       def nested_router
-        dest.routes if dest.respond_to?(:routes)
+        dest.routes if dest.respond_to?(:routes) &&
+          dest.routes.is_a?(Hanami::Router)
       end
 
       private

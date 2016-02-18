@@ -224,10 +224,18 @@ describe Hanami::Routing::RoutesInspector do
           mount inner_router, at: '/second_mount'
         }
 
+        nested_non_hanami_router = Object.new
+        def nested_non_hanami_router.call(env)
+        end
+        def nested_non_hanami_router.routes
+          return {}
+        end
+
         @router = Hanami::Router.new do
           get '/fakeroute', to: 'fake#index'
           mount AdminHanamiApp,  at: '/admin'
           mount nested_router,  at: '/api'
+          mount nested_non_hanami_router, at: '/foo'
           mount RackMiddleware, at: '/class'
           mount RackMiddlewareInstanceMethod,     at: '/instance_from_class'
           mount RackMiddlewareInstanceMethod.new, at: '/instance'
@@ -243,7 +251,8 @@ describe Hanami::Routing::RoutesInspector do
           %(| GET, HEAD |  | /api/second_mount/comments | Comments::Index |),
           %(|  |  | /class | RackMiddleware |),
           %(|  |  | /instance_from_class | #<RackMiddlewareInstanceMethod> |),
-          %(|  |  | /instance | #<RackMiddlewareInstanceMethod> |)
+          %(|  |  | /instance | #<RackMiddlewareInstanceMethod> |),
+          %(|  |  | /foo | #<Object> |)
         ]
 
         actual = @router.inspector.to_s(formatter)
