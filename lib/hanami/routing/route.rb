@@ -45,13 +45,12 @@ module Hanami
       end
 
       # Introspect the given route to understand if there is a wrapped
-      # Hanami::Router
+      # router that has an inspector
       #
       # @since 0.2.0
       # @api private
       def nested_router
-        dest.routes if dest.respond_to?(:routes) &&
-          dest.routes.is_a?(Hanami::Router)
+        dest.routes if dest.respond_to?(:routes) && dest.routes.respond_to?(:inspector)
       end
 
       private
