@@ -41,7 +41,10 @@ describe 'SCRIPT_NAME' do
 
     response.status.must_equal 200
     request.env['SCRIPT_NAME'].must_equal script_name
+    request.env['SCRIPT_NAME'].must_be_kind_of(String)
+
     request.env['PATH_INFO'].must_equal ''
+    request.env['PATH_INFO'].must_be_kind_of(String)
     response.body.must_equal "http://example.org#{ script_name }"
   end
 end
