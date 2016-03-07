@@ -8,6 +8,7 @@ describe Hanami::Router do
 
       endpoint = ->(env) { [200, {}, ['']] }
       @router = Hanami::Router.new do
+        root                to: endpoint
         get '/route',       to: endpoint
         get '/named_route', to: endpoint, as: :named_route
         resource  'avatar'
@@ -42,7 +43,7 @@ describe Hanami::Router do
 
     it 'sets options' do
       router = Hanami::Router.new(scheme: 'https') do
-        get '/', to: ->(env) { }, as: :root
+        root to: ->(env) { }
       end
 
       router.url(:root).must_match('https')
@@ -50,7 +51,7 @@ describe Hanami::Router do
 
     it 'sets custom separator' do
       router = Hanami::Router.new(action_separator: '^')
-      route  = router.get('/', to: 'test^show', as: :root)
+      route  = router.root(to: 'test^show')
 
       route.dest.must_equal(Test::Show)
     end
@@ -61,6 +62,10 @@ describe Hanami::Router do
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
       router.must_be :defined?
+    end
+
+    it 'recognizes root' do
+      @app.get('/', lint: true).status.must_equal 200
     end
 
     it 'recognizes path' do
