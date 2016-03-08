@@ -91,6 +91,14 @@ module Hanami
       end
     end
 
+    # Defines root path
+    #
+    # @since x.x.x
+    # @api private
+    #
+    # @see Hanami::Router#root
+    ROOT_PATH = '/'.freeze
+
     # Returns the given block as it is.
     #
     # When Hanami::Router is used as a standalone gem and the routes are defined
@@ -501,25 +509,24 @@ module Hanami
     # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @since 0.6.2
+    # @since x.x.x
     #
     # @example Fixed matching string
     #   require 'hanami/router'
     #
     #   router = Hanami::Router.new
-    #   router.root , to: ->(env) { [200, {}, ['Hello from Hanami!']] }
+    #   router.root to: ->(env) { [200, {}, ['Hello from Hanami!']] }
     #
     # @example Included names as `root` (for path and url helpers)
     #   require 'hanami/router'
     #
     #   router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org')
-    #   router.root, to: ->(env) { [200, {}, ['Hello from Hanami!']] }
+    #   router.root to: ->(env) { [200, {}, ['Hello from Hanami!']] }
     #
     #   router.path(:root) # => "/"
     #   router.url(:root)  # => "https://hanamirb.org/"
     def root(options = {}, &blk)
-      options.merge!({ as: :root})
-      @router.get('/', options, &blk)
+      @router.get(ROOT_PATH, options.merge(as: :root), &blk)
     end
 
     # Defines a route that accepts a OPTIONS request for the given path.

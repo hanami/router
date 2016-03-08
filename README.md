@@ -68,7 +68,8 @@ For the standalone usage, it supports neat features:
 
 ```ruby
 Hanami::Router.new do
-  get '/', to: ->(env) { [200, {}, ['Hi!']] }
+  root                to: ->(env) { [200, {}, ['Hello']] }
+  get '/lambda',      to: ->(env) { [200, {}, ['World']] }
   get '/dashboard',   to: Dashboard::Index
   get '/rack-app',    to: RackApp.new
   get '/flowers',     to: 'flowers#index'
@@ -163,6 +164,15 @@ router.put    '/hanami', to: endpoint
 router.patch  '/hanami', to: endpoint
 router.delete '/hanami', to: endpoint
 router.trace  '/hanami', to: endpoint
+```
+
+
+
+### Root:
+
+```ruby
+router = Hanami::Router.new
+router.root to: ->(env) { [200, {}, ['Hello from Hanami!']] }
 ```
 
 
