@@ -10,6 +10,7 @@ describe Hanami::Routing::RoutesInspector do
     describe 'named routes with procs' do
       before do
         @router = Hanami::Router.new do
+          root           to: ->(env) { }
           get '/login',  to: ->(env) { },       as: :login
           get '/logout', to: Proc.new {|env| }, as: :logout
         end
@@ -17,8 +18,9 @@ describe Hanami::Routing::RoutesInspector do
 
       it 'inspects routes' do
         expectations = [
-          %( login GET, HEAD  /login                         #<Proc@#{ @path }:13 (lambda)>),
-          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:14>)
+          %(  root GET, HEAD  /                              #<Proc@#{ @path }:13 (lambda)>),
+          %( login GET, HEAD  /login                         #<Proc@#{ @path }:14 (lambda)>),
+          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:15>)
         ]
 
         actual = @router.inspector.to_s
@@ -193,7 +195,7 @@ describe Hanami::Routing::RoutesInspector do
       it 'inspects routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [
-          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:189 (lambda)> |)
+          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:191 (lambda)> |)
         ]
 
         actual = @router.inspector.to_s(formatter)

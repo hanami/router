@@ -89,7 +89,36 @@ describe Hanami::Router do
           @app.request(verb.upcase, '/hanami/flower', lint: true).status.must_equal 404
         end
       end
+    end
 
-    end # main each
+  end # main each
+
+  describe 'root' do
+    describe 'path recognition' do
+      it 'recognize fixed string' do
+        response = [200, {}, ['Fixed!']]
+        @router.root(to: ->(env) { response })
+
+        response.must_be_same_as @app.request('GET', '/', lint: true)
+      end
+
+      it 'accepts a block' do
+        response = [200, {}, ['Block!']]
+        @router.root {|e| response }
+
+        response.must_be_same_as @app.request('GET', '/', lint: true)
+      end
+    end
+
+    describe 'named route for root' do
+      it 'recognizes by the given symbol' do
+        response = [200, {}, ['Named route!']]
+
+        @router.root(to: ->(env) { response })
+
+        @router.path(:root).must_equal '/'
+        @router.url(:root).must_equal  'http://localhost/'
+      end
+    end
   end
 end
