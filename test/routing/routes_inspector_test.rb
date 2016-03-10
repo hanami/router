@@ -10,6 +10,7 @@ describe Hanami::Routing::RoutesInspector do
     describe 'named routes with procs' do
       before do
         @router = Hanami::Router.new do
+          root           to: ->(env) { }
           get '/login',  to: ->(env) { },       as: :login
           get '/logout', to: Proc.new {|env| }, as: :logout
         end
@@ -17,8 +18,9 @@ describe Hanami::Routing::RoutesInspector do
 
       it 'inspects routes' do
         expectations = [
-          %( login GET, HEAD  /login                         #<Proc@#{ @path }:13 (lambda)>),
-          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:14>)
+          %(  root GET, HEAD  /                              #<Proc@#{ @path }:13 (lambda)>),
+          %( login GET, HEAD  /login                         #<Proc@#{ @path }:14 (lambda)>),
+          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:15>)
         ]
 
         actual = @router.inspector.to_s
@@ -193,7 +195,7 @@ describe Hanami::Routing::RoutesInspector do
       it 'inspects routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [
-          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:189 (lambda)> |)
+          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:191 (lambda)> |)
         ]
 
         actual = @router.inspector.to_s(formatter)
@@ -224,10 +226,18 @@ describe Hanami::Routing::RoutesInspector do
           mount inner_router, at: '/second_mount'
         }
 
+        nested_non_hanami_router = Object.new
+        def nested_non_hanami_router.call(env)
+        end
+        def nested_non_hanami_router.routes
+          return {}
+        end
+
         @router = Hanami::Router.new do
           get '/fakeroute', to: 'fake#index'
           mount AdminHanamiApp,  at: '/admin'
           mount nested_router,  at: '/api'
+          mount nested_non_hanami_router, at: '/foo'
           mount RackMiddleware, at: '/class'
           mount RackMiddlewareInstanceMethod,     at: '/instance_from_class'
           mount RackMiddlewareInstanceMethod.new, at: '/instance'
@@ -243,7 +253,8 @@ describe Hanami::Routing::RoutesInspector do
           %(| GET, HEAD |  | /api/second_mount/comments | Comments::Index |),
           %(|  |  | /class | RackMiddleware |),
           %(|  |  | /instance_from_class | #<RackMiddlewareInstanceMethod> |),
-          %(|  |  | /instance | #<RackMiddlewareInstanceMethod> |)
+          %(|  |  | /instance | #<RackMiddlewareInstanceMethod> |),
+          %(|  |  | /foo | #<Object> |)
         ]
 
         actual = @router.inspector.to_s(formatter)
