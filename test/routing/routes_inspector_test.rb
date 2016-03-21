@@ -244,6 +244,10 @@ describe Hanami::Routing::RoutesInspector do
         end
       end
 
+      after do
+        Object.__send__(:remove_const, :AdminHanamiApp)
+      end
+
       it 'inspect routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [

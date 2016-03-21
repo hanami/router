@@ -16,6 +16,13 @@ module Hanami
     #   router = Hanami::Router.new
     #   router.get('/', to: endpoint) # => #<Hanami::Routing::Route:0x007f83083ba028 ...>
     class Route < HttpRouter::Route
+      # @since x.x.x
+      # @api private
+      def initialize(*)
+        super
+        @name = nil
+      end
+
       # Asks the given resolver to return an endpoint that will be associated
       #   with the other options.
       #

@@ -39,7 +39,8 @@ module Hanami
       # @since 0.5.0
       # @api private
       def initialize(response, env, router)
-        @env = env
+        @env      = env
+        @endpoint = nil
 
         unless response.nil?
           @endpoint = response.route.dest
@@ -129,7 +130,7 @@ module Hanami
       #   puts router.recognize('/').routable?    # => true
       #   puts router.recognize('/foo').routable? # => false
       def routable?
-        !!@endpoint
+        !@endpoint.nil?
       end
 
       private
