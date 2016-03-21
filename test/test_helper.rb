@@ -1,19 +1,9 @@
 require 'rubygems'
 require 'bundler/setup'
 
-if ENV['COVERAGE'] == 'true'
-  require 'simplecov'
+if ENV['COVERALL']
   require 'coveralls'
-
-  SimpleCov.formatters = [
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
-
-  SimpleCov.start do
-    command_name 'test'
-    add_filter   'test'
-  end
+  Coveralls.wear!
 end
 
 require 'minitest/autorun'
