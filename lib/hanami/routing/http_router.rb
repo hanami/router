@@ -66,6 +66,7 @@ module Hanami
       # @since 0.1.0
       # @api private
       def initialize(options = {}, &blk)
+        @compiled         = false
         super(options, &nil)
 
         @namespace        = options[:namespace] if options[:namespace]
