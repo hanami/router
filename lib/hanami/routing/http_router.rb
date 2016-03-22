@@ -1,3 +1,4 @@
+require 'uri'
 require 'http_router'
 require 'hanami/utils/io'
 require 'hanami/routing/endpoint_resolver'
@@ -67,6 +68,7 @@ module Hanami
       # @api private
       def initialize(options = {}, &blk)
         @compiled         = false
+        @uri_parser       = URI::Parser.new
         super(options, &nil)
 
         @namespace        = options[:namespace] if options[:namespace]
@@ -183,7 +185,7 @@ module Hanami
           env[PATH_INFO]    = DEFAULT_PATH_INFO
         else
           path_info_before  = env[PATH_INFO].dup
-          env[PATH_INFO]    = "/#{URI.encode(request.path.join(URL_SEPARATOR))}"
+          env[PATH_INFO]    = "/#{@uri_parser.escape(request.path.join(URL_SEPARATOR))}"
           env[SCRIPT_NAME] += path_info_before[0, path_info_before.bytesize - env[PATH_INFO].bytesize]
         end
       end
