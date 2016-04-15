@@ -23,7 +23,7 @@ describe 'Router wrapper as container' do
     @app = Rack::MockRequest.new(@router_container)
     response = @app.get('https://www.hanami.test/front/home', lint: true)
     response.body.must_equal 'front'
-    response = @app.get('/front/home', lint: true)
+    response = @app.get('https://hanami.test/front/home', lint: true)
     response.body.must_equal 'back'
   end
 end
