@@ -1,0 +1,111 @@
+#!/usr/bin/env ruby -W0
+require 'benchmark/ips'
+require 'json'
+require 'oj'
+
+json = <<-JSON
+[
+    {
+        "fname": "Keana",
+        "lname": "Holmes",
+        "tel": "(788)347-3637",
+        "address": "3652 Non Ct",
+        "city": "Peoria",
+        "state": "RI",
+        "zip": 36792
+    },
+    {
+        "fname": "Marisa",
+        "lname": "Aunkst",
+        "tel": "(466)390-7138",
+        "address": "7090 Pulvinar Ave",
+        "city": "Lockport",
+        "state": "TN",
+        "zip": 28402
+    },
+    {
+        "fname": "Xiumei",
+        "lname": "Hopson",
+        "tel": "(994)033-1079",
+        "address": "4503 Molestie Ln",
+        "city": "Circleville",
+        "state": "NC",
+        "zip": 53478
+    },
+    {
+        "fname": "Stephen",
+        "lname": "Lallemont",
+        "tel": "(873)060-4304",
+        "address": "7368 Rutrum St",
+        "city": "Stoneham",
+        "state": "MD",
+        "zip": 23739
+    },
+    {
+        "fname": "Jayne",
+        "lname": "Cobb",
+        "tel": "(631)913-5543",
+        "address": "8838 Sollicitudin Ln",
+        "city": "Lake Elsinore",
+        "state": "ME",
+        "zip": 89290
+    },
+    {
+        "fname": "Muhammad",
+        "lname": "Lindsey",
+        "tel": "(170)835-9370",
+        "address": "4887 Quis Ln",
+        "city": "Centreville",
+        "state": "UT",
+        "zip": 33751
+    },
+    {
+        "fname": "Zhanna",
+        "lname": "Greaves",
+        "tel": "(131)679-6008",
+        "address": "8555 Sollicitudin St",
+        "city": "Danbury",
+        "state": "AZ",
+        "zip": 85215
+    },
+    {
+        "fname": "Mark",
+        "lname": "Mcinerney",
+        "tel": "(242)373-2101",
+        "address": "5247 Vitae Dr",
+        "city": "Tonasket",
+        "state": "MO",
+        "zip": 95105
+    },
+    {
+        "fname": "Marlon",
+        "lname": "Silverstein",
+        "tel": "(172)106-1751",
+        "address": "2236 Et Dr",
+        "city": "Alton",
+        "state": "MD",
+        "zip": 56187
+    },
+    {
+        "fname": "Inho",
+        "lname": "Nitzky",
+        "tel": "(896)658-0070",
+        "address": "9367 Porttitor Ct",
+        "city": "Inez",
+        "state": "VT",
+        "zip": 23160
+    }
+]
+JSON
+
+Benchmark.ips do |bm|
+  bm.report 'json' do
+    JSON.parse json
+  end
+
+  bm.report 'oj' do
+    Oj.load json
+  end
+
+  bm.compare!
+end
