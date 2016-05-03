@@ -1,4 +1,14 @@
-require 'json'
+begin
+  require 'multi_json'
+rescue LoadError
+  require 'json'
+  require 'hanami/utils/io'
+
+  Hanami::Utils::IO.silence_warnings do
+    MultiJson             = JSON
+    MultiJson::ParseError = JSON::ParserError
+  end
+end
 
 module Hanami
   module Routing
@@ -18,8 +28,8 @@ module Hanami
         #
         # @since 0.2.0
         def parse(body)
-          JSON.parse(body)
-        rescue JSON::ParserError => e
+          MultiJson.load(body)
+        rescue MultiJson::ParseError => e
           raise BodyParsingError.new(e.message)
         end
       end

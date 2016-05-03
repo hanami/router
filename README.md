@@ -618,6 +618,10 @@ If the json can't be parsed an exception is raised:
 Hanami::Routing::Parsing::BodyParsingError
 ```
 
+##### `multi_json`
+
+If you want to use a different JSON backend, include `multi_json` in your `Gemfile`.
+
 #### Custom Parsers
 
 ```ruby
