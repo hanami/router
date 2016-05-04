@@ -2,18 +2,17 @@ begin
   require 'multi_json'
 rescue LoadError
   require 'json'
-  require 'hanami/utils/io'
-
-  Hanami::Utils::IO.silence_warnings do
-    MultiJson             = JSON
-    MultiJson::ParseError = JSON::ParserError
-  end
 end
 
 module Hanami
   module Routing
     module Parsing
       class JsonParser < Parser
+        unless defined?(MultiJson)
+          MultiJson             = JSON
+          MultiJson::ParseError = JSON::ParserError
+        end
+
         def mime_types
           ['application/json', 'application/vnd.api+json']
         end
