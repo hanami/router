@@ -52,7 +52,7 @@ module Hanami
       #   will be ignored.
       #   See the examples below.
       #
-      # @option options [String] :action_separator the sepatator between controller and
+      # @option options [String] :action_separator the separator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
       #
       # @return [Hanami::Routing::EndpointResolver] self
