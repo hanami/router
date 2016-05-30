@@ -1,18 +1,9 @@
-begin
-  require 'multi_json'
-rescue LoadError
-  require 'json'
-end
+require 'hanami/utils/json'
 
 module Hanami
   module Routing
     module Parsing
       class JsonParser < Parser
-        unless defined?(MultiJson)
-          MultiJson             = JSON
-          MultiJson::ParseError = JSON::ParserError
-        end
-
         def mime_types
           ['application/json', 'application/vnd.api+json']
         end
@@ -27,8 +18,8 @@ module Hanami
         #
         # @since 0.2.0
         def parse(body)
-          MultiJson.load(body)
-        rescue MultiJson::ParseError => e
+          Hanami::Utils::Json.load(body)
+        rescue Hanami::Utils::Json::ParserError => e
           raise BodyParsingError.new(e.message)
         end
       end
