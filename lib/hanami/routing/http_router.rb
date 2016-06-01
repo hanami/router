@@ -143,7 +143,7 @@ module Hanami
       # @since 0.1.1
       # @api private
       def mount(app, options)
-        add("#{ options.fetch(:at) }*").to(
+        add("#{ options.fetch(:at) }*", host: options[:host]).to(
           @resolver.resolve(to: app)
         )
       end

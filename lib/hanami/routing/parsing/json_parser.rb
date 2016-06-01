@@ -1,4 +1,4 @@
-require 'json'
+require 'hanami/utils/json'
 
 module Hanami
   module Routing
@@ -18,8 +18,8 @@ module Hanami
         #
         # @since 0.2.0
         def parse(body)
-          JSON.parse(body)
-        rescue JSON::ParserError => e
+          Hanami::Utils::Json.load(body)
+        rescue Hanami::Utils::Json::ParserError => e
           raise BodyParsingError.new(e.message)
         end
       end

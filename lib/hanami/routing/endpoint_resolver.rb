@@ -14,6 +14,10 @@ module Hanami
       # @api private
       NAMING_PATTERN = '%{controller}::%{action}'.freeze
 
+      # @since x.x.x
+      # @api private
+      DEFAULT_RESPONSE = [404, {'X-Cascade' => 'pass'}, 'Not Found'].freeze
+
       # Default separator for controller and action.
       # A different separator can be passed to #initialize with the `:separator` option.
       #
@@ -48,7 +52,7 @@ module Hanami
       #   will be ignored.
       #   See the examples below.
       #
-      # @option options [String] :action_separator the sepatator between controller and
+      # @option options [String] :action_separator the separator between controller and
       #   action name. (defaults to `ACTION_SEPARATOR`)
       #
       # @return [Hanami::Routing::EndpointResolver] self
@@ -178,7 +182,7 @@ module Hanami
       protected
       def default
         @endpoint_class.new(
-          ->(env) { [404, {'X-Cascade' => 'pass'}, 'Not Found'] }
+          ->(env) { DEFAULT_RESPONSE }
         )
       end
 
