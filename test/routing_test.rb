@@ -108,6 +108,13 @@ describe Hanami::Router do
 
         response.must_be_same_as @app.request('GET', '/', lint: true)
       end
+
+      it 'handles not found on GET when only POST root is defined' do
+        @router.post("/", to: ->(_env) { [201, {}, [""]] })
+
+        status, _, _ = @app.request('GET', '/bogus', lint: true)
+        status.must_equal(404)
+      end
     end
 
     describe 'named route for root' do
