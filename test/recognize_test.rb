@@ -269,4 +269,21 @@ describe Hanami::Router do
       end
     end
   end
+
+  describe '#recognize without routes' do
+    before do
+      @router = Hanami::Router.new do
+      end
+    end
+
+    describe 'without routes' do
+      it 'should not fail' do
+        route = @router.recognize('/books/1')
+
+        assert_equal '', route.action, 'Expected action to be empty String'
+        assert_equal false, route.routable?, 'Expected route to be not routable'
+        assert_nil route.params, 'Expected params to be Nil'
+      end
+    end
+  end
 end

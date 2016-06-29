@@ -140,6 +140,7 @@ module Hanami
       #
       # @see Hanami::Routing::Endpoint
       def destination
+        return '' unless @endpoint
         @destination ||= begin
           case k = @endpoint.__getobj__
           when Class
