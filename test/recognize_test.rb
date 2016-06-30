@@ -270,7 +270,7 @@ describe Hanami::Router do
     end
   end
 
-  describe '#recognize without routes' do
+  describe '#recognize' do
     before do
       @router = Hanami::Router.new do
       end

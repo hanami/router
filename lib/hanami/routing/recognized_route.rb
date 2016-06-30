@@ -140,7 +140,6 @@ module Hanami
       #
       # @see Hanami::Routing::Endpoint
       def destination
-        return '' unless @endpoint
         @destination ||= begin
           case k = @endpoint.__getobj__
           when Class
@@ -148,6 +147,8 @@ module Hanami
           else
             k.class
           end.name
+        rescue NoMethodError
+          return ''
         end
       end
     end
