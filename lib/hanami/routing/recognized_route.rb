@@ -147,6 +147,8 @@ module Hanami
           else
             k.class
           end.name
+        rescue NoMethodError
+          return ''
         end
       end
     end
