@@ -2,8 +2,19 @@
 Rack compatible HTTP router for Ruby
 
 ## v0.7.0 - (unreleased)
+### Added
+- [Sean Collins] Introduced `Hanami::Router#root`. Example: `root to: 'home#index'`, equivalent to `get '/', to: 'home#index', as: :root`.
+- [Nicola Racco] Allow to mount Rack applications at a specific host. Example: `mount Blog, host: 'blog'`, which will be hit for `GET http://blog.example.com`
+- [Luca Guidi] Support `multi_json` gem as backend for JSON body parser. If `multi_json` is present in the gem bundle, it will be used, otherwise it will fallback to Ruby's `JSON`.
+- [Luca Guidi] Introduced `Hanami::Routing::RecognizedRoute#path` in order to allow a better introspection
+
+### Fixed
+- [Andrew De Ponte] Make routes inspection to work when non-Hanami apps are mounted
+- [Andrew De Ponte] Ensure to set the right `SCRIPT_NAME` in Rack env for mounted Hanami apps
+- [Luca Guidi] Fix `NoMethodError` when `Hanami::Router#recognize` is invoked with a Rack env or a route name or a path that can't be recognized
+
 ### Changed
-– [Luca Guidi] Drop support for Ruby 2.0 and 2.1
+– [Luca Guidi] Drop support for Ruby 2.0 and 2.1. Official support for JRuby 9.0.5.0+
 
 ## v0.6.2 - 2016-02-05
 ### Fixed
