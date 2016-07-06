@@ -12,6 +12,10 @@ module Hanami
       # @api private
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
 
+      # @since x.x.x
+      # @api private
+      PATH_INFO      = 'PATH_INFO'.freeze
+
       # @since 0.5.0
       # @api private
       NAMESPACE             = '%s::'.freeze
@@ -41,6 +45,7 @@ module Hanami
       def initialize(response, env, router)
         @env      = env
         @endpoint = nil
+        @params   = {}
 
         unless response.nil?
           @endpoint = response.route.dest
@@ -82,6 +87,16 @@ module Hanami
         @env[REQUEST_METHOD]
       end
 
+      # Relative URL (path)
+      #
+      # @return [String]
+      #
+      # @since x.x.x
+      # @api public
+      def path
+        @env[PATH_INFO]
+      end
+
       # Action name
       #
       # @return [String]
@@ -100,6 +115,7 @@ module Hanami
       #
       #   puts router.recognize('/books/23').action # => "books#show"
       def action
+        return unless routable?
         namespace = NAMESPACE % @namespace
 
         if destination.match(namespace)
@@ -143,10 +159,12 @@ module Hanami
         @destination ||= begin
           case k = @endpoint.__getobj__
           when Class
-            k
+            k.name
+          when Proc
+            @endpoint.inspect
           else
-            k.class
-          end.name
+            k.class.name
+          end
         end
       end
     end
