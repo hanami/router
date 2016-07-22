@@ -93,7 +93,7 @@ module Hanami
 
     # Defines root path
     #
-    # @since x.x.x
+    # @since 0.7.0
     # @api private
     #
     # @see Hanami::Router#root
@@ -509,7 +509,7 @@ module Hanami
     # @return [Hanami::Routing::Route] this may vary according to the :route
     #   option passed to the constructor
     #
-    # @since x.x.x
+    # @since 0.7.0
     #
     # @example Fixed matching string
     #   require 'hanami/router'

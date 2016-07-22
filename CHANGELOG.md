@@ -1,7 +1,7 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
-## v0.7.0 - (unreleased)
+## v0.7.0 - 2016-07-22
 ### Added
 - [Sean Collins] Introduced `Hanami::Router#root`. Example: `root to: 'home#index'`, equivalent to `get '/', to: 'home#index', as: :root`.
 - [Nicola Racco] Allow to mount Rack applications at a specific host. Example: `mount Blog, host: 'blog'`, which will be hit for `GET http://blog.example.com`

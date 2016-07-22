@@ -14,7 +14,7 @@ module Hanami
       # @api private
       NAMING_PATTERN = '%{controller}::%{action}'.freeze
 
-      # @since x.x.x
+      # @since 0.7.0
       # @api private
       DEFAULT_RESPONSE = [404, {'X-Cascade' => 'pass'}, 'Not Found'].freeze
 
