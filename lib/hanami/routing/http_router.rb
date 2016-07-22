@@ -40,19 +40,19 @@ module Hanami
 
       # Path info - rack environment variable
       #
-      # @since x.x.x
+      # @since 0.7.0
       # @api private
       PATH_INFO = 'PATH_INFO'.freeze
 
       # Default PATH_INFO for Rack requests
       #
-      # @since x.x.x
+      # @since 0.7.0
       # @api private
       DEFAULT_PATH_INFO = '/'.freeze
 
       # URL separator
       #
-      # @since x.x.x
+      # @since 0.7.0
       # @api private
       URL_SEPARATOR = '/'.freeze
 

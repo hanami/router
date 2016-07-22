@@ -16,7 +16,7 @@ module Hanami
     #   router = Hanami::Router.new
     #   router.get('/', to: endpoint) # => #<Hanami::Routing::Route:0x007f83083ba028 ...>
     class Route < HttpRouter::Route
-      # @since x.x.x
+      # @since 0.7.0
       # @api private
       def initialize(*)
         super

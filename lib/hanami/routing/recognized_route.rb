@@ -12,7 +12,7 @@ module Hanami
       # @api private
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
 
-      # @since x.x.x
+      # @since 0.7.0
       # @api private
       PATH_INFO      = 'PATH_INFO'.freeze
 
@@ -91,7 +91,7 @@ module Hanami
       #
       # @return [String]
       #
-      # @since x.x.x
+      # @since 0.7.0
       # @api public
       def path
         @env[PATH_INFO]
