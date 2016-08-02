@@ -8,6 +8,7 @@ module Hanami
 
       RACK_INPUT    = 'rack.input'.freeze
       ROUTER_PARAMS = 'router.params'.freeze
+      ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
       FALLBACK_KEY  = '_'.freeze
 
       def initialize(parsers)
@@ -47,9 +48,9 @@ module Hanami
           env[RACK_INPUT].rewind    # somebody might try to read this stream
 
           env[ROUTER_PARAMS] ||= {} # prepare params
-          env[ROUTER_PARAMS].merge!(
-            _parse(env, body)
-          )
+          parsed_body = _parse(env, body)
+          env[ROUTER_PARSED_BODY] = parsed_body
+          env[ROUTER_PARAMS].merge!(parsed_body)
 
           env
         end
