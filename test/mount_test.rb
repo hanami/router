@@ -13,7 +13,7 @@ describe Hanami::Router do
     @app = Rack::MockRequest.new(@router)
   end
 
-  [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options' ].each do |verb|
+  [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options', 'link', 'unklink' ].each do |verb|
     it "accepts #{ verb } for a class endpoint" do
       @app.request(verb.upcase, '/backend', lint: true).body.must_equal 'home'
     end

@@ -1,16 +1,11 @@
 require 'uri'
 require 'http_router'
-require 'hanami/utils/io'
 require 'hanami/routing/endpoint_resolver'
 require 'hanami/routing/route'
 require 'hanami/routing/parsers'
 require 'hanami/routing/force_ssl'
 require 'hanami/routing/error'
 require 'hanami/utils/path_prefix'
-
-Hanami::Utils::IO.silence_warnings do
-  HttpRouter::Route::VALID_HTTP_VERBS = %w{GET POST PUT PATCH DELETE HEAD OPTIONS TRACE}
-end
 
 module Hanami
   module Routing

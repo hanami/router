@@ -59,6 +59,14 @@ describe Hanami::Router do
       @app.request('TRACE', '/trees/cypress', lint: true).body.must_equal 'Trees (TRACE)!'
     end
 
+    it 'recognizes options path' do
+      @router.namespace 'trees' do
+        options '/oak', to: ->(env) { [200, {}, ['Trees (OPTIONS)!']] }
+      end
+
+      @app.request('OPTIONS', '/trees/oak', lint: true).body.must_equal 'Trees (OPTIONS)!'
+    end
+
     describe 'nested' do
       it 'defines HTTP methods correctly' do
         @router.namespace 'animals' do

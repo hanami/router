@@ -499,6 +499,44 @@ module Hanami
       @router.trace(path, options, &blk)
     end
 
+    # Defines a route that accepts a LINK request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Hanami::Routing::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Hanami::Router#get
+    #
+    # @since x.x.x
+    def link(path, options = {}, &blk)
+      @router.link(path, options, &blk)
+    end
+
+    # Defines a route that accepts an UNLINK request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Hanami::Routing::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Hanami::Router#get
+    #
+    # @since x.x.x
+    def unlink(path, options = {}, &blk)
+      @router.unlink(path, options, &blk)
+    end
+
     # Defines a root route (a GET route for '/')
     #
     # @param options [Hash] the options to customize the route
