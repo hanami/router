@@ -185,6 +185,25 @@ describe Hanami::Routing::RoutesInspector do
       end
     end
 
+    describe 'prefix' do
+      before do
+        @router = Hanami::Router.new(prefix: '/admin') do
+          get '/books', to: 'books#index', as: :books
+        end
+      end
+
+      it 'inspects routes' do
+        expectations = [
+          %(               books GET, HEAD  /admin/books                   Books::Index)
+        ]
+
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
+    end
+
     describe 'with custom formatter' do
       before do
         @router = Hanami::Router.new do
@@ -195,7 +214,7 @@ describe Hanami::Routing::RoutesInspector do
       it 'inspects routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [
-          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:191 (lambda)> |)
+          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:210 (lambda)> |)
         ]
 
         actual = @router.inspector.to_s(formatter)

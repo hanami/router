@@ -47,8 +47,9 @@ module Hanami
       #
       # @since 0.2.0
       # @api private
-      def initialize(routes)
+      def initialize(routes, prefix)
         @routes = routes
+        @prefix = prefix
       end
 
       # Return a formatted string that describes all the routes
@@ -133,7 +134,7 @@ module Hanami
       #          | GET, HEAD |      | /admin/home                | Home::Index     |
       #          | GET, HEAD |      | /api/posts                 | Posts::Index    |
       #          | GET, HEAD |      | /api/second_mount/comments | Comments::Index |
-      def to_s(formatter = FORMATTER, base_path = nil)
+      def to_s(formatter = FORMATTER, base_path = prefix)
         base_path = Utils::PathPrefix.new(base_path)
 
         inspect_routes(formatter, base_path)
@@ -170,6 +171,10 @@ module Hanami
       end
 
       private
+
+      # @since x.x.x
+      # @api private
+      attr_reader :prefix
 
       # Returns a string representation of the given route
       #
