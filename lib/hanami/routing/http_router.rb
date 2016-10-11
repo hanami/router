@@ -55,6 +55,10 @@ module Hanami
       # @api private
       attr_reader :namespace
 
+      # @since x.x.x
+      # @api private
+      attr_reader :prefix
+
       # Initialize the router.
       #
       # @see Hanami::Router#initialize

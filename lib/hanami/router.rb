@@ -1203,7 +1203,7 @@ module Hanami
     #          logout GET, HEAD  /logout                  Sessions::Destroy
     def inspector
       require 'hanami/routing/routes_inspector'
-      Routing::RoutesInspector.new(@router.routes)
+      Routing::RoutesInspector.new(@router.routes, @router.prefix)
     end
 
     protected
