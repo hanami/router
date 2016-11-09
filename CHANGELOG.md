@@ -1,6 +1,17 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v0.8.0 - (unreleased)
+### Added
+- [Kyle Chong] Referenced params from body parses in Rack env via `router.parsed_body`
+
+### Fixed
+- [Luca Guidi] Ensure params from routes take precedence over params from body parsing
+- [Luca Guidi] Ensure inspector to respect path prefix of mouted apps
+
+### Changed
+- [Luca Guidi] Official support for Ruby: MRI 2.3+ and JRuby 9.1.5.0+
+
 ## v0.7.0 - 2016-07-22
 ### Added
 - [Sean Collins] Introduced `Hanami::Router#root`. Example: `root to: 'home#index'`, equivalent to `get '/', to: 'home#index', as: :root`.
