@@ -55,7 +55,7 @@ module Hanami
       # @api private
       attr_reader :namespace
 
-      # @since x.x.x
+      # @since 0.8.0
       # @api private
       attr_reader :prefix
 

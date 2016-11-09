@@ -513,7 +513,7 @@ module Hanami
     #
     # @see Hanami::Router#get
     #
-    # @since x.x.x
+    # @since 0.8.0
     def link(path, options = {}, &blk)
       @router.link(path, options, &blk)
     end
@@ -532,7 +532,7 @@ module Hanami
     #
     # @see Hanami::Router#get
     #
-    # @since x.x.x
+    # @since 0.8.0
     def unlink(path, options = {}, &blk)
       @router.unlink(path, options, &blk)
     end
