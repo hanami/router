@@ -19,7 +19,16 @@ describe 'Body parsing' do
     response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
     response.status.must_equal 200
-    response.body.must_equal %({"published"=>"true", :id=>"23"})
+    response.body.must_equal %({:published=>"true", :id=>"23"})
+  end
+
+  # See https://github.com/hanami/router/issues/124
+  it 'does not overrides URI params' do
+    body     = StringIO.new( %({"id":"1"}).encode(Encoding::ASCII_8BIT) )
+    response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
+
+    response.status.must_equal 200
+    response.body.must_equal %({:id=>"23"})
   end
 
   it 'is successful (JSON as array)' do
@@ -36,7 +45,7 @@ describe 'Body parsing' do
       response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
       response.status.must_equal 200
-      response.body.must_equal %({"published"=>"true", :id=>"23"})
+      response.body.must_equal %({:published=>"true", :id=>"23"})
     end
   end
 
@@ -45,7 +54,7 @@ describe 'Body parsing' do
     response = @app.patch('/authors/23', 'CONTENT_TYPE' => 'application/xml', 'rack.input' => body, lint: true)
 
     response.status.must_equal 200
-    response.body.must_equal %({"name"=>"LG", :id=>"23"})
+    response.body.must_equal %({:name=>"LG", :id=>"23"})
   end
 
   it 'is successful (XML aliased mime)' do
@@ -53,6 +62,6 @@ describe 'Body parsing' do
     response = @app.patch('/authors/15', 'CONTENT_TYPE' => 'text/xml', 'rack.input' => body, lint: true)
 
     response.status.must_equal 200
-    response.body.must_equal %({"name"=>"MGF", :id=>"15"})
+    response.body.must_equal %({:name=>"MGF", :id=>"15"})
   end
 end

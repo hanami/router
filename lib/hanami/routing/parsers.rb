@@ -1,4 +1,5 @@
 require 'hanami/routing/parsing/parser'
+require 'hanami/utils/hash'
 
 module Hanami
   module Routing
@@ -50,7 +51,7 @@ module Hanami
           env[ROUTER_PARAMS] ||= {} # prepare params
           parsed_body = _parse(env, body)
           env[ROUTER_PARSED_BODY] = parsed_body
-          env[ROUTER_PARAMS].merge!(parsed_body)
+          env[ROUTER_PARAMS]      = parsed_body.merge(env[ROUTER_PARAMS])
 
           env
         end
@@ -63,7 +64,7 @@ module Hanami
 
         case result
         when Hash
-          result
+          Utils::Hash.new(result).symbolize!.to_h
         else
           {FALLBACK_KEY => result}
         end
