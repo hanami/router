@@ -60,6 +60,11 @@ describe Hanami::Routing::EndpointResolver do
       options = { to: 'test2#show' }
       @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::Test2::Show!'
     end
+
+    it 'recognizes :to when it is dasherized' do
+      options = { to: 'test-endpoint' }
+      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::TestEndpoint!'
+    end
   end
 
   describe 'endpoint' do

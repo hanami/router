@@ -198,7 +198,7 @@ module Hanami
       end
 
       def classify(string)
-        Utils::String.new(string).classify
+        Utils::String.new(string).underscore.classify
       end
 
       private
