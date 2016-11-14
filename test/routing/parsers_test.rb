@@ -51,7 +51,7 @@ describe Hanami::Routing::Parsers do
 
         it "stores parsed body" do
           result = @parsers.call(env)
-          result['router.parsed_body'].must_equal({attribute: "ok"})
+          result['router.parsed_body'].must_equal({'attribute' => "ok"})
         end
 
         describe "with non hash body" do
@@ -64,7 +64,7 @@ describe Hanami::Routing::Parsers do
 
           it "stores parsed body" do
             result = @parsers.call(env)
-            result['router.parsed_body'].must_equal({"_" => ["foo"]})
+            result['router.parsed_body'].must_equal(["foo"])
           end
         end
 
@@ -87,7 +87,7 @@ describe Hanami::Routing::Parsers do
 
         it "stores parsed body" do
           result = @parsers.call(env)
-          result['router.parsed_body'].must_equal({attribute: "ok"})
+          result['router.parsed_body'].must_equal({'attribute' => "ok"})
         end
 
         describe 'with malformed json' do

@@ -6,7 +6,7 @@ Rack compatible HTTP router for Ruby
 - [Kyle Chong] Referenced params from body parses in Rack env via `router.parsed_body`
 
 ### Fixed
-- [Luca Guidi] Ensure params from routes take precedence over params from body parsing
+- [Luca Guidi & Lucas Hosseini] Ensure params from routes take precedence over params from body parsing
 - [Luca Guidi] Ensure inspector to respect path prefix of mouted apps
 
 ### Changed
