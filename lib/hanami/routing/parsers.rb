@@ -49,10 +49,8 @@ module Hanami
           env[RACK_INPUT].rewind    # somebody might try to read this stream
 
           env[ROUTER_PARAMS] ||= {} # prepare params
-          parsed_body = _parse(env, body)
-          env[ROUTER_PARSED_BODY] = parsed_body
-          symbolized_body = _symbolize(parsed_body)
-          env[ROUTER_PARAMS] = symbolized_body.merge(env[ROUTER_PARAMS])
+          env[ROUTER_PARSED_BODY] = _parse(env, body)
+          env[ROUTER_PARAMS]      = _symbolize(env[ROUTER_PARSED_BODY]).merge(env[ROUTER_PARAMS])
 
           env
         end
