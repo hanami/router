@@ -51,23 +51,25 @@ module Hanami
           env[ROUTER_PARAMS] ||= {} # prepare params
           parsed_body = _parse(env, body)
           env[ROUTER_PARSED_BODY] = parsed_body
-          env[ROUTER_PARAMS]      = parsed_body.merge(env[ROUTER_PARAMS])
+          symbolized_body = _symbolize(parsed_body)
+          env[ROUTER_PARAMS] = symbolized_body.merge(env[ROUTER_PARAMS])
 
           env
         end
       end
 
+      def _symbolize(body)
+        if body.is_a?(Hash)
+          Utils::Hash.new(body).deep_dup.symbolize!.to_h
+        else
+          { FALLBACK_KEY => body }
+        end
+      end
+
       def _parse(env, body)
-        result = @parsers[
+        @parsers[
           media_type(env)
         ].parse(body)
-
-        case result
-        when Hash
-          Utils::Hash.new(result).symbolize!.to_h
-        else
-          {FALLBACK_KEY => result}
-        end
       end
 
       def media_type(env)
