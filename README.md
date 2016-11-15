@@ -22,7 +22,7 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://h
 
 ## Rubies
 
-__Hanami::Router__ supports Ruby (MRI) 2.2+, JRuby 9k+
+__Hanami::Router__ supports Ruby (MRI) 2.3+, JRuby 9.1.5.0+
 
 
 ## Installation

@@ -1,7 +1,7 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
-## v0.8.0 - (unreleased)
+## v0.8.0 - 2016-11-15
 ### Added
 - [Kyle Chong] Referenced params from body parses in Rack env via `router.parsed_body`
 
