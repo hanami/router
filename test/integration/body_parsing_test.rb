@@ -39,6 +39,15 @@ describe 'Body parsing' do
     response.body.must_equal %({"_"=>["alpha", "beta"], :id=>"23"})
   end
 
+  # See https://github.com/hanami/utils/issues/169
+  it 'does not eval untrusted input' do
+    body     = StringIO.new( %({"json_class": "Foo"}).encode(Encoding::ASCII_8BIT) )
+    response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
+
+    response.status.must_equal 200
+    response.body.must_equal %({:json_class=>"Foo", :id=>"23"})
+  end
+
   it 'is idempotent' do
     2.times do
       body     = StringIO.new( %({"published":"true"}).encode(Encoding::ASCII_8BIT) )

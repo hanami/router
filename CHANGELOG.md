@@ -1,6 +1,10 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v0.8.1 - 2016-11-18
+### Fixed
+- [Luca Guidi] Ensure JSON body parser to not eval untrusted input
+
 ## v0.8.0 - 2016-11-15
 ### Added
 - [Kyle Chong] Referenced params from body parses in Rack env via `router.parsed_body`
