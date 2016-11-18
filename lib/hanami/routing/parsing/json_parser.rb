@@ -18,7 +18,7 @@ module Hanami
         #
         # @since 0.2.0
         def parse(body)
-          Hanami::Utils::Json.load(body)
+          Hanami::Utils::Json.parse(body)
         rescue Hanami::Utils::Json::ParserError => e
           raise BodyParsingError.new(e.message)
         end
