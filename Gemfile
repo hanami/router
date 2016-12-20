@@ -6,5 +6,5 @@ if !ENV['TRAVIS']
   gem 'yard',   require: false
 end
 
-gem 'hanami-utils', '~> 0.9', require: false, github: 'hanami/utils', branch: '0.9.x'
-gem 'coveralls',              require: false
+gem 'hanami-utils', '~> 1.0.0.beta1', require: false, github: 'hanami/utils', branch: '1.0.x'
+gem 'coveralls', require: false
