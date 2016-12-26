@@ -258,7 +258,8 @@ module Hanami
         # @api private
         # @since 0.4.0
         def _singularized_as
-          resource_name.split(NESTED_ROUTES_SEPARATOR).map do |name|
+          name = @options[:as] ? @options[:as].to_s : resource_name
+          name.split(NESTED_ROUTES_SEPARATOR).map do |name|
             Hanami::Utils::String.new(name).singularize
           end
         end
