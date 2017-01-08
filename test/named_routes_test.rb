@@ -9,6 +9,8 @@ describe Hanami::Router do
     @router.get('/books/:id',   id: /\d+/, to: endpoint, as: :constraints)
     @router.get('/articles(.:format)',     to: endpoint, as: :optional)
     @router.get('/files/*',                to: endpoint, as: :glob)
+    @router.resources(:leaves,                           as: :resources)
+    @router.resource(:stem,                              as: :singular_resource)
   end
 
   after do
@@ -75,6 +77,38 @@ describe Hanami::Router do
       }.must_raise(Hanami::Routing::InvalidRouteException)
 
       exception.message.must_equal 'HttpRouter::TooManyParametersException - please check given arguments'
+    end
+
+    describe 'plural resource routes' do
+      it 'recognizes index' do
+        @router.url(:resources).must_equal 'https://test.com/leaves'
+      end
+
+      it 'recognizes new' do
+        @router.url(:new_resource).must_equal 'https://test.com/leaves/new'
+      end
+
+      it 'recognizes edit' do
+        @router.url(:edit_resource, id: 1).must_equal 'https://test.com/leaves/1/edit'
+      end
+
+      it 'recognizes show' do
+        @router.url(:resource, id: 1).must_equal 'https://test.com/leaves/1'
+      end
+    end
+
+    describe 'singular resource routes' do
+      it 'recognizes new' do
+        @router.url(:new_singular_resource).must_equal 'https://test.com/stem/new'
+      end
+
+      it 'recognizes edit' do
+        @router.url(:edit_singular_resource).must_equal 'https://test.com/stem/edit'
+      end
+
+      it 'recognizes show' do
+        @router.url(:singular_resource).must_equal 'https://test.com/stem'
+      end
     end
   end
 
