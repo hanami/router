@@ -209,12 +209,13 @@ describe Hanami::Routing::RoutesInspector do
         @router = Hanami::Router.new do
           get '/login', to: ->(env) { }, as: :login
         end
+        @proc_def_line = __LINE__ - 2
       end
 
       it 'inspects routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [
-          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:210 (lambda)> |)
+          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:#{ @proc_def_line } (lambda)> |)
         ]
 
         actual = @router.inspector.to_s(formatter)
