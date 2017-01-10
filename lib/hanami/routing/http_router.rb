@@ -6,6 +6,7 @@ require 'hanami/routing/parsers'
 require 'hanami/routing/force_ssl'
 require 'hanami/routing/error'
 require 'hanami/utils/path_prefix'
+require 'hanami/routing/http_router_monkey_patch'
 
 module Hanami
   module Routing
