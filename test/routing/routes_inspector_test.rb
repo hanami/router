@@ -160,6 +160,30 @@ describe Hanami::Routing::RoutesInspector do
       end
     end
 
+    describe 'named resource' do
+      before do
+        @router = Hanami::Router.new do
+          resource 'identity', as: 'user'
+        end
+      end
+
+      it 'inspects routes' do
+        expectations = [
+          %( new_user GET, HEAD  /identity/new                  Identity::New),
+          %(     user POST       /identity                      Identity::Create),
+          %(     user GET, HEAD  /identity                      Identity::Show),
+          %(edit_user GET, HEAD  /identity/edit                 Identity::Edit),
+          %(     user PATCH      /identity                      Identity::Update),
+          %(     user DELETE     /identity                      Identity::Destroy)
+        ]
+
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
+    end
+
     describe 'resources' do
       before do
         @router = Hanami::Router.new do
@@ -176,6 +200,31 @@ describe Hanami::Routing::RoutesInspector do
           %(edit_book GET, HEAD  /books/:id/edit                Books::Edit),
           %(     book PATCH      /books/:id                     Books::Update),
           %(     book DELETE     /books/:id                     Books::Destroy)
+        ]
+
+        actual = @router.inspector.to_s
+        expectations.each do |expectation|
+          actual.must_include(expectation)
+        end
+      end
+    end
+
+    describe 'named resources' do
+      before do
+        @router = Hanami::Router.new do
+          resources 'books', as: 'items'
+        end
+      end
+
+      it 'inspects routes' do
+        expectations = [
+         %(     items GET, HEAD  /books                         Books::Index),
+          %( new_item GET, HEAD  /books/new                     Books::New),
+         %(     items POST       /books                         Books::Create),
+          %(     item GET, HEAD  /books/:id                     Books::Show),
+          %(edit_item GET, HEAD  /books/:id/edit                Books::Edit),
+          %(     item PATCH      /books/:id                     Books::Update),
+          %(     item DELETE     /books/:id                     Books::Destroy)
         ]
 
         actual = @router.inspector.to_s
@@ -209,12 +258,13 @@ describe Hanami::Routing::RoutesInspector do
         @router = Hanami::Router.new do
           get '/login', to: ->(env) { }, as: :login
         end
+        @proc_def_line = __LINE__ - 2
       end
 
       it 'inspects routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [
-          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:210 (lambda)> |)
+          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:#{ @proc_def_line } (lambda)> |)
         ]
 
         actual = @router.inspector.to_s(formatter)

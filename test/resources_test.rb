@@ -174,5 +174,38 @@ describe Hanami::Router do
         @app.request('GET', '/keyboards/8/screenshot', lint: true).body.must_equal 'Keys::Screenshot 8'
       end
     end
+
+    describe ':as option' do
+      before do
+        @router.resources 'keyboards', as: 'pianos' do
+          collection do
+            get 'search'
+          end
+
+          member do
+            get 'screenshot'
+          end
+        end
+      end
+
+      it 'recognizes the new name' do
+        @router.path(:pianos).must_equal '/keyboards'
+        @router.path(:piano, id: 3).must_equal '/keyboards/3'
+        @router.path(:new_piano).must_equal '/keyboards/new'
+        @router.path(:edit_piano, id: 5).must_equal '/keyboards/5/edit'
+        @router.path(:search_pianos).must_equal '/keyboards/search'
+        @router.path(:screenshot_piano, id: 8).must_equal '/keyboards/8/screenshot'
+      end
+
+      it 'does not recognize the resource name' do
+        e = Hanami::Routing::InvalidRouteException
+        -> { @router.path(:keyboards) }.must_raise e
+        -> { @router.path(:keyboard, id: 3) }.must_raise e
+        -> { @router.path(:new_keyboard) }.must_raise e
+        -> { @router.path(:edit_keyboard, id: 5) }.must_raise e
+        -> { @router.path(:search_keyboards) }.must_raise e
+        -> { @router.path(:screenshot_keyboard, id: 8) }.must_raise e
+      end
+    end
   end
 end
