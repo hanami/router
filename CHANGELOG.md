@@ -1,8 +1,7 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
-## v1.0.0.beta1 (unreleased)
-
+## v1.0.0.beta1 - 2017-02-14
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.4
 - [Jakub Pavlík] Added `:as` option for RESTful resources (eg. `resources :psi, controller: 'dogs', as: 'dogs'`)
