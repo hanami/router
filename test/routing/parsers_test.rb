@@ -77,17 +77,17 @@ describe Hanami::Routing::Parsers do
       end
 
       describe 'and a JSON API request' do
-        let(:body)         { %({"attribute":"ok"}) }
+        let(:body)         { %({"data": {"attribute":"ok"}}) }
         let(:content_type) { 'application/vnd.api+json' }
 
         it "parses params from body" do
           result = @parsers.call(env)
-          result['router.params'].must_equal({attribute: "ok"})
+          result['router.params'].must_equal({data: {attribute: "ok"}})
         end
 
         it "stores parsed body" do
           result = @parsers.call(env)
-          result['router.parsed_body'].must_equal({'attribute' => "ok"})
+          result['router.parsed_body'].must_equal({'data' => {'attribute' => "ok"}})
         end
 
         describe 'with malformed json' do
