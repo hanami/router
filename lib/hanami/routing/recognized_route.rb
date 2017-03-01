@@ -146,7 +146,7 @@ module Hanami
       #   puts router.recognize('/').routable?    # => true
       #   puts router.recognize('/foo').routable? # => false
       def routable?
-        !@endpoint.nil?
+        @endpoint&.routable?
       end
 
       private
