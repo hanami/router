@@ -10,6 +10,7 @@ describe Hanami::Router do
         get '/rack_app',      to: RackMiddlewareInstanceMethod,       as: :rack_app
         get '/proc',          to: ->(_env) { [200, {}, ['OK']] },     as: :proc
         get '/resources/:id', to: ->(_env) { [200, {}, ['PARAMS']] }, as: :params
+        get '/missing',       to: "missing#index",                    as: :missing
       end
     end
 
@@ -111,6 +112,17 @@ describe Hanami::Router do
         route.params.must_equal({})
       end
 
+      it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
+        env   = Rack::MockRequest.env_for('/missing', method: :get)
+        route = @router.recognize(env)
+
+        assert !route.routable?, 'Expected route to NOT be routable'
+        route.action.must_be_nil
+        route.verb.must_equal   'GET'
+        route.path.must_equal   '/missing'
+        route.params.must_equal({})
+      end
+
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(env)
@@ -208,6 +220,16 @@ describe Hanami::Router do
         route.action.must_be_nil
         route.verb.must_equal    'POST'
         route.path.must_equal    '/'
+        route.params.must_equal({})
+      end
+
+      it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
+        route = @router.recognize('/missing')
+
+        assert !route.routable?, 'Expected route to NOT be routable'
+        route.action.must_be_nil
+        route.verb.must_equal   'GET'
+        route.path.must_equal   '/missing'
         route.params.must_equal({})
       end
 
@@ -331,6 +353,16 @@ describe Hanami::Router do
         route.action.must_be_nil
         route.verb.must_equal    'POST'
         route.path.must_equal    '/'
+        route.params.must_equal({})
+      end
+
+      it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
+        route = @router.recognize(:missing)
+
+        assert !route.routable?, 'Expected route to NOT be routable'
+        route.action.must_be_nil
+        route.verb.must_equal   'GET'
+        route.path.must_equal   '/missing'
         route.params.must_equal({})
       end
 

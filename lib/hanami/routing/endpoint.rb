@@ -45,6 +45,13 @@ module Hanami
           "#<#{ __getobj__.class }>"
         end
       end
+
+      # @since 1.0.0.beta2
+      # @api private
+      def routable?
+        !__getobj__.nil?
+      rescue ArgumentError
+      end
     end
 
     # Routing endpoint

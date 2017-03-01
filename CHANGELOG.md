@@ -1,6 +1,11 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v1.0.0.beta2 - 2017-03-02
+### Fixed
+- [Valentyn Ostakh] Deep symbolize params from parsed body
+- [Luca Guidi] `Hanami::Router#recognize` must return a non-routeable object when the endpoint cannot be resolved
+
 ## v1.0.0.beta1 - 2017-02-14
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.4
