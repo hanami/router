@@ -192,6 +192,7 @@ module Hanami
 
       private
 
+      # @api private
       def _rescue_url_recognition
         yield
       rescue ::HttpRouter::InvalidRouteException,
@@ -199,10 +200,12 @@ module Hanami
         raise Routing::InvalidRouteException.new("#{ e.message } - please check given arguments")
       end
 
+      # @api private
       def add_with_request_method(path, method, opts = {}, &app)
         super.generate(@resolver, opts, &app)
       end
 
+      # @api private
       def _custom_path(uri_string)
         uri = URI.parse(uri_string)
         uri.path = @prefix.join(uri.path)

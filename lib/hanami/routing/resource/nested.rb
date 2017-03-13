@@ -28,6 +28,8 @@ module Hanami
 
         private
 
+        # @api private
+        # @since 0.4.0
         def _calculate(param_wildcard, resource = nil)
           return if resource.nil?
           @path << resource.wildcard_param(param_wildcard.pop)

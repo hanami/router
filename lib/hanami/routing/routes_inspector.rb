@@ -60,6 +60,7 @@ module Hanami
       # @return [String] routes pretty print
       #
       # @since 0.2.0
+      # @api private
       #
       # @see Hanami::Routing::RoutesInspector::FORMATTER
       #

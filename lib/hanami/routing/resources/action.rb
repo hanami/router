@@ -62,6 +62,8 @@ module Hanami
       # @see Hanami::Router#resources
       class MemberAction < Resource::MemberAction
         private
+        # @since 0.1.0
+        # @api private
         def path(action_name)
           rest_path.join(Action.identifier, action_name)
         end
@@ -73,6 +75,8 @@ module Hanami
       # @since 0.1.0
       module DefaultMemberAction
         private
+        # @since 0.1.0
+        # @api private
         def path
           rest_path.join(Action.identifier)
         end
@@ -123,6 +127,8 @@ module Hanami
         include DefaultMemberAction
 
         private
+        # @since 0.1.0
+        # @api private
         def path
           super.join(action_name)
         end

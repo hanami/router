@@ -7,6 +7,7 @@ module Hanami
     # @api private
     #
     # @since 0.1.0
+    # @api private
     #
     # @see http://rdoc.info/gems/http_router/HttpRouter/Route
     #
@@ -61,6 +62,7 @@ module Hanami
       end
 
       private
+      # @api private
       def to=(dest = nil, &blk)
         self.to dest, &blk
       end

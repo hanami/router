@@ -58,6 +58,7 @@ module Hanami
       # @return [Hanami::Routing::EndpointResolver] self
       #
       # @since 0.1.0
+      # @api private
       #
       # @example Specify custom endpoint class
       #   require 'hanami/router'
@@ -117,6 +118,7 @@ module Hanami
       #   passed to #initialize
       #
       # @since 0.1.0
+      # @api private
       #
       # @see #initialize
       # @see #find
@@ -173,6 +175,7 @@ module Hanami
       # @option options [String] :namespace an optional namespace
       #
       # @since 0.1.0
+      # @api private
       #
       # @return [Object]
       def find(options)
@@ -180,12 +183,14 @@ module Hanami
       end
 
       protected
+      # @api private
       def default
         @endpoint_class.new(
           ->(env) { DEFAULT_RESPONSE }
         )
       end
 
+      # @api private
       def constantize(string)
         klass = Utils::Class.load!(string, @namespace)
         if klass.respond_to?(:call)
@@ -197,11 +202,13 @@ module Hanami
         LazyEndpoint.new(string, @namespace)
       end
 
+      # @api private
       def classify(string)
         Utils::String.new(string).underscore.classify
       end
 
       private
+      # @api private
       def resolve_callable(callable)
         if callable.respond_to?(:call)
           @endpoint_class.new(callable)
@@ -210,6 +217,7 @@ module Hanami
         end
       end
 
+      # @api private
       def resolve_matchable(matchable)
         if matchable.respond_to?(:match)
           constantize(
@@ -218,6 +226,7 @@ module Hanami
         end
       end
 
+      # @api private
       def resolve_action(string)
         if string.match(action_separator)
           controller, action = string.split(action_separator).map {|token| classify(token) }

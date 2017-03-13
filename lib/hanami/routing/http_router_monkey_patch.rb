@@ -3,8 +3,11 @@
 # This monkey patches http_router to make it Rack 2.0 compatible.
 # Details see: https://github.com/hanami/router/issues/136
 #
+# @api private
 class HttpRouter
+  # @api private
   class Node
+    # @api private
     class Path < Node
       def to_code
         path_ivar = inject_root_ivar(self)
