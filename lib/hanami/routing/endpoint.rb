@@ -32,6 +32,7 @@ module Hanami
     #   end
     class Endpoint < SimpleDelegator
       # @since 0.2.0
+      # @api private
       def inspect
         case __getobj__
         when Proc
@@ -84,6 +85,7 @@ module Hanami
       # Rack interface
       #
       # @since 0.1.0
+      # @api private
       def call(env)
         __getobj__.new.call(env)
       end
@@ -112,6 +114,7 @@ module Hanami
       # Initialize the lazy endpoint
       #
       # @since 0.1.0
+      # @api private
       def initialize(name, namespace)
         @name, @namespace = name, namespace
       end
@@ -121,11 +124,13 @@ module Hanami
       # @raise [EndpointNotFound] when the endpoint can't be found.
       #
       # @since 0.1.0
+      # @api private
       def call(env)
         obj.call(env)
       end
 
       # @since 0.2.0
+      # @api private
       def inspect
         # TODO review this implementation once the namespace feature will be
         # cleaned up.

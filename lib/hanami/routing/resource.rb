@@ -96,6 +96,7 @@ module Hanami
         klass.new(@router, [@name, name].join(NESTED_ROUTES_SEPARATOR), options, self, &blk)
       end
 
+      # @api private
       def generate(&blk)
         instance_eval(&blk) if block_given?
 
@@ -104,10 +105,12 @@ module Hanami
         end
       end
 
+      # @api private
       def member(&blk)
         self.class.member.new(@router, @options, self, &blk)
       end
 
+      # @api private
       def collection(&blk)
         self.class.collection.new(@router, @options, self, &blk)
       end

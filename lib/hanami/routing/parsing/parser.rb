@@ -14,6 +14,8 @@ module Hanami
 
       # @since 0.2.0
       class UnknownParserError < Hanami::Routing::Error
+        # @since 0.2.0
+        # @api private
         def initialize(parser)
           super("Unknown Parser: `#{ parser }'")
         end
@@ -22,6 +24,7 @@ module Hanami
       # @since 0.2.0
       class Parser
         # @since 0.2.0
+        # @api private
         def self.for(parser)
           case parser
           when String, Symbol

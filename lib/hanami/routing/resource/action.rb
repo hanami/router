@@ -280,11 +280,15 @@ module Hanami
       # @since 0.1.0
       # @see Hanami::Router#resource
       class CollectionAction < Action
+        # @since 0.1.0
+        # @api private
         def generate(&blk)
           instance_eval(&blk) if block_given?
         end
 
         protected
+        # @since 0.1.0
+        # @api private
         def method_missing(m, *args)
           verb        = m
           action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
@@ -294,14 +298,20 @@ module Hanami
         end
 
         private
+        # @since 0.1.0
+        # @api private
         def path(action_name)
           rest_path.join(action_name)
         end
 
+        # @since 0.1.0
+        # @api private
         def endpoint(action_name)
           [ controller_name, action_name ].join separator
         end
 
+        # @since 0.1.0
+        # @api private
         def as(action_name)
           [ action_name, super() ].join(self.class.named_route_separator).to_sym
         end
@@ -322,10 +332,14 @@ module Hanami
       # @since 0.1.0
       module DefaultMemberAction
         private
+        # @since 0.1.0
+        # @api private
         def path
           rest_path.join(action_name)
         end
 
+        # @since 0.1.0
+        # @api private
         def as
           [ action_name, super ].join(self.class.named_route_separator).to_sym
         end

@@ -5,6 +5,9 @@ require 'hanami/routing/resource'
 require 'hanami/routing/resources'
 require 'hanami/routing/error'
 
+# Hanami
+#
+# @since 0.1.0
 module Hanami
   # Rack compatible, lightweight and fast HTTP Router.
   #
@@ -83,9 +86,15 @@ module Hanami
     # @see Hanami::Routing::RecognizedRoute#call
     # @see Hanami::Routing::RecognizedRoute#routable?
     class NotRoutableEndpointError < Hanami::Routing::Error
+      # @since 0.5.0
+      # @api private
       REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+
+      # @since 0.5.0
+      # @api private
       PATH_INFO      = 'PATH_INFO'.freeze
 
+      # @since 0.5.0
       def initialize(env)
         super %(Cannot find routable endpoint for #{ env[REQUEST_METHOD] } "#{ env[PATH_INFO] }")
       end

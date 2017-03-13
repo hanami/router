@@ -3,25 +3,47 @@ require 'hanami/utils/hash'
 
 module Hanami
   module Routing
+    # @since 0.2.0
+    # @api private
     class Parsers
+      # @since 0.2.0
+      # @api private
       CONTENT_TYPE       = 'CONTENT_TYPE'.freeze
+
+      # @since 0.2.0
+      # @api private
       MEDIA_TYPE_MATCHER = /\s*[;,]\s*/.freeze
 
+      # @since 0.2.0
+      # @api private
       RACK_INPUT    = 'rack.input'.freeze
+
+      # @since 0.2.0
+      # @api private
       ROUTER_PARAMS = 'router.params'.freeze
+
+      # @api private
       ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
+
+      # @api private
       FALLBACK_KEY  = '_'.freeze
 
+      # @since 0.2.0
+      # @api private
       def initialize(parsers)
         @parsers = prepare(parsers)
         _redefine_call
       end
 
+      # @since 0.2.0
+      # @api private
       def call(env)
         env
       end
 
       private
+      # @since 0.2.0
+      # @api private
       def prepare(args)
         result  = Hash.new
         args    = Array(args)
@@ -39,6 +61,8 @@ module Hanami
         result
       end
 
+      # @since 0.2.0
+      # @api private
       def _redefine_call
         return if @parsers.empty?
 
@@ -56,6 +80,7 @@ module Hanami
         end
       end
 
+      # @api private
       def _symbolize(body)
         if body.is_a?(Hash)
           Utils::Hash.new(body).deep_dup.deep_symbolize!.to_h
@@ -64,18 +89,21 @@ module Hanami
         end
       end
 
+      # @api private
       def _parse(env, body)
         @parsers[
           media_type(env)
         ].parse(body)
       end
 
+      # @api private
       def media_type(env)
         if ct = content_type(env)
           ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
         end
       end
 
+      # @api private
       def content_type(env)
         content_type = env[CONTENT_TYPE]
         content_type.nil? || content_type.empty? ? nil : content_type

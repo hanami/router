@@ -3,7 +3,11 @@ require 'hanami/utils/json'
 module Hanami
   module Routing
     module Parsing
+      # @since 0.2.0
+      # @api private
       class JsonParser < Parser
+        # @since 0.2.0
+        # @api private
         def mime_types
           ['application/json', 'application/vnd.api+json']
         end
@@ -17,6 +21,7 @@ module Hanami
         # @raise [Hanami::Routing::Parsing::BodyParsingError] when the body can't be parsed.
         #
         # @since 0.2.0
+        # @api private
         def parse(body)
           Hanami::Utils::Json.parse(body)
         rescue Hanami::Utils::Json::ParserError => e
