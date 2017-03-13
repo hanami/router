@@ -1,6 +1,8 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v1.0.0.beta3 (unreleased)
+
 ## v1.0.0.beta2 - 2017-03-02
 ### Fixed
 - [Valentyn Ostakh] Deep symbolize params from parsed body
