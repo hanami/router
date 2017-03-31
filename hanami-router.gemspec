@@ -6,8 +6,8 @@ require 'hanami/router/version'
 Gem::Specification.new do |spec|
   spec.name          = 'hanami-router'
   spec.version       = Hanami::Router::VERSION
-  spec.authors       = ['Luca Guidi', 'Trung Lê', 'Alfonso Uceda']
-  spec.email         = ['me@lucaguidi.com', 'trung.le@ruby-journal.com', 'uceda73@gmail.com']
+  spec.authors       = ['Luca Guidi']
+  spec.email         = ['me@lucaguidi.com']
   spec.description   = %q{Rack compatible HTTP router for Ruby}
   spec.summary       = %q{Rack compatible HTTP router for Ruby and Hanami}
   spec.homepage      = 'http://hanamirb.org'
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rack',         '~> 2.0'
   spec.add_dependency 'http_router',  '0.11.2'
-  spec.add_dependency 'hanami-utils', '~> 1.0.0.beta1'
+  spec.add_dependency 'hanami-utils', '~> 1.0.0.rc1'
 
   spec.add_development_dependency 'bundler',   '~> 1.5'
   spec.add_development_dependency 'minitest',  '~> 5'
