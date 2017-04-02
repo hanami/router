@@ -1,7 +1,8 @@
 language: ruby
 sudo: false
 cache: bundler
-script: 'bundle exec rake test:coverage --trace'
+# script: 'bundle exec rake test:coverage --trace'
+script: 'bundle exec rake spec:coverage --trace'
 rvm:
   - 2.3.3
   - 2.4.0
