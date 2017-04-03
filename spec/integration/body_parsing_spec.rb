@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe 'Body parsing' do
+RSpec.describe 'Body parsing' do
   before do
     endpoint = ->(env) {
       [200, {}, [env['router.params'].inspect]]
@@ -18,8 +16,8 @@ describe 'Body parsing' do
     body     = StringIO.new( %({"published":"true"}).encode(Encoding::ASCII_8BIT) )
     response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
-    response.status.must_equal 200
-    response.body.must_equal %({:published=>"true", :id=>"23"})
+    expect(response.status).to eq(200)
+    expect(response.body).to eq(%({:published=>"true", :id=>"23"}))
   end
 
   # See https://github.com/hanami/router/issues/124
@@ -27,16 +25,16 @@ describe 'Body parsing' do
     body     = StringIO.new( %({"id":"1"}).encode(Encoding::ASCII_8BIT) )
     response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
-    response.status.must_equal 200
-    response.body.must_equal %({:id=>"23"})
+    expect(response.status).to eq(200)
+    expect(response.body).to eq(%({:id=>"23"}))
   end
 
   it 'is successful (JSON as array)' do
     body     = StringIO.new( %(["alpha", "beta"]).encode(Encoding::ASCII_8BIT) )
     response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
-    response.status.must_equal 200
-    response.body.must_equal %({"_"=>["alpha", "beta"], :id=>"23"})
+    expect(response.status).to eq(200)
+    expect(response.body).to eq(%({"_"=>["alpha", "beta"], :id=>"23"}))
   end
 
   # See https://github.com/hanami/utils/issues/169
@@ -44,8 +42,8 @@ describe 'Body parsing' do
     body     = StringIO.new( %({"json_class": "Foo"}).encode(Encoding::ASCII_8BIT) )
     response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
-    response.status.must_equal 200
-    response.body.must_equal %({:json_class=>"Foo", :id=>"23"})
+    expect(response.status).to eq(200)
+    expect(response.body).to eq(%({:json_class=>"Foo", :id=>"23"}))
   end
 
   it 'is idempotent' do
@@ -53,8 +51,8 @@ describe 'Body parsing' do
       body     = StringIO.new( %({"published":"true"}).encode(Encoding::ASCII_8BIT) )
       response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
-      response.status.must_equal 200
-      response.body.must_equal %({:published=>"true", :id=>"23"})
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(%({:published=>"true", :id=>"23"}))
     end
   end
 
@@ -62,15 +60,15 @@ describe 'Body parsing' do
     body     = StringIO.new( %(<name>LG</name>).encode(Encoding::ASCII_8BIT) )
     response = @app.patch('/authors/23', 'CONTENT_TYPE' => 'application/xml', 'rack.input' => body, lint: true)
 
-    response.status.must_equal 200
-    response.body.must_equal %({:name=>"LG", :id=>"23"})
+    expect(response.status).to eq(200)
+    expect(response.body).to eq(%({:name=>"LG", :id=>"23"}))
   end
 
   it 'is successful (XML aliased mime)' do
     body     = StringIO.new( %(<name>MGF</name>).encode(Encoding::ASCII_8BIT) )
     response = @app.patch('/authors/15', 'CONTENT_TYPE' => 'text/xml', 'rack.input' => body, lint: true)
 
-    response.status.must_equal 200
-    response.body.must_equal %({:name=>"MGF", :id=>"15"})
+    expect(response.status).to eq(200)
+    expect(response.body).to eq(%({:name=>"MGF", :id=>"15"}))
   end
 end

@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe 'Hanami::Controller integration' do
+RSpec.describe 'Hanami::Controller integration' do
   before do
     @routes = Hanami::Router.new do
       get '/payments', to: CreditCards::Index
@@ -13,16 +11,16 @@ describe 'Hanami::Controller integration' do
 
   it 'recognizes single endpoint (as class)' do
     response = @app.get('/payments', lint: true)
-    response.body.must_equal 'Hello from CreditCards::Index'
+    expect(response.body).to eq('Hello from CreditCards::Index')
   end
 
   it 'recognizes single endpoint (with naming convention)' do
     response = @app.get('/ccs', lint: true)
-    response.body.must_equal 'Hello from CreditCards::Index'
+     expect(response.body).to eq('Hello from CreditCards::Index')
   end
 
   it 'recognizes RESTful endpoint' do
     response = @app.get('/credit_cards', lint: true)
-    response.body.must_equal 'Hello from CreditCards::Index'
+     expect(response.body).to eq('Hello from CreditCards::Index')
   end
 end

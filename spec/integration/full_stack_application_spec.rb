@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe 'Hanami integration' do
+RSpec.describe 'Hanami integration' do
   before do
     @router_container = Hanami::Router.new(scheme: 'https', host: 'hanami.test', port: 443) do
       mount Dashboard::Index, at: '/dashboard'
@@ -17,11 +15,11 @@ describe 'Hanami integration' do
 
   it 'recognizes single endpoint' do
     response = @app.get('/dashboard', lint: true)
-    response.body.must_equal 'Hello from Travels::Controllers::Journeys::Index'
+    expect(response.body).to eq('Hello from Travels::Controllers::Journeys::Index')
   end
 
   it 'recognizes RESTful endpoint' do
     response = @app.get('/journeys', lint: true)
-    response.body.must_equal 'Hello from Travels::Controllers::Journeys::Index'
+    expect(response.body).to eq('Hello from Travels::Controllers::Journeys::Index')
   end
 end

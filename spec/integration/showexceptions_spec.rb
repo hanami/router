@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Router do
+RSpec.describe Hanami::Router do
   describe 'usage with Rack::ShowExceptions' do
     before do
       router  = Hanami::Router.new { get '/', to: 'missing#index' }
@@ -14,16 +12,16 @@ describe Hanami::Router do
     it 'shows textual exception stack trace by default' do
       response = @app.get('/', lint: true)
 
-      response.status.must_equal 500
-      response.body.must_match 'Hanami::Routing::EndpointNotFound'
+      expect(response.status).to eq(500)
+      expect(response.body).to match('Hanami::Routing::EndpointNotFound')
     end
 
     it 'shows exceptions page (when requesting HTML)' do
       response = @app.get('/', 'HTTP_ACCEPT' => 'text/html', lint: true)
 
-      response.status.must_equal 500
-      response.body.must_match '<body>'
-      response.body.must_match 'Hanami::Routing::EndpointNotFound'
+      expect(response.status).to eq(500)
+      expect(response.body).to match('<body>')
+      expect(response.body).to match('Hanami::Routing::EndpointNotFound')
     end
   end
 end
