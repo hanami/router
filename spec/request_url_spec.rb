@@ -1,7 +1,7 @@
-require 'test_helper'
+
 require 'rack/test'
 
-describe 'SCRIPT_NAME' do
+RSpec.describe 'SCRIPT_NAME' do
   include Rack::Test::Methods
 
   before do
@@ -27,24 +27,24 @@ describe 'SCRIPT_NAME' do
 
   it 'generates proper path' do
     router = @container.instance_variable_get(:@some_test_router)
-    router.path(:foo).must_equal '/admin/foo'
+    expect(router.path(:foo)).to eq('/admin/foo')
   end
 
   it 'generates proper url' do
     router = @container.instance_variable_get(:@some_test_router)
-    router.url(:foo).must_equal 'http://localhost/admin/foo'
+    expect(router.url(:foo)).to eq('http://localhost/admin/foo')
   end
 
   it 'is successfuly parsing a JSON body' do
     script_name = '/admin/foo'
     get script_name
 
-    response.status.must_equal 200
-    request.env['SCRIPT_NAME'].must_equal script_name
-    request.env['SCRIPT_NAME'].must_be_kind_of(String)
+    expect(response.status).to eq(200)
+    expect(request.env['SCRIPT_NAME']).to eq(script_name
+    expect(request.env['SCRIPT_NAME']).to be_kind_of(String)
 
-    request.env['PATH_INFO'].must_equal ''
-    request.env['PATH_INFO'].must_be_kind_of(String)
-    response.body.must_equal "http://example.org#{ script_name }"
+    expect(request.env['PATH_INFO']).to eq('')
+    expect(request.env['PATH_INFO']).to be_kind_of(String)
+    expect(response.body).to eq("http://example.org#{ script_name }")
   end
 end

@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Router do
+RSpec.describe Hanami::Router do
   before do
     @router = Hanami::Router.new
     @app    = Rack::MockRequest.new(@router)
@@ -56,8 +54,8 @@ describe Hanami::Router do
 
           @router.send(verb, '/named_route', to: ->(env) { response }, as: :"#{ verb }_named_route")
 
-          @router.path(:"#{ verb }_named_route").must_equal '/named_route'
-          @router.url(:"#{ verb }_named_route").must_equal  'http://localhost/named_route'
+          expect(@router.path(:"#{ verb }_named_route")).to eq( '/named_route')
+          expect(@router.url(:"#{ verb }_named_route")).to eq(  'http://localhost/named_route')
         end
 
         it 'compiles variables' do
@@ -65,8 +63,8 @@ describe Hanami::Router do
 
           @router.send(verb, '/named_:var', to: ->(env) { response }, as: :"#{ verb }_named_route_var")
 
-          @router.path(:"#{ verb }_named_route_var", var: 'route').must_equal '/named_route'
-          @router.url(:"#{ verb }_named_route_var", var: 'route').must_equal  'http://localhost/named_route'
+          expect(@router.path(:"#{ verb }_named_route_var", var: 'route')).to eq( '/named_route')
+          expect(@router.url(:"#{ verb }_named_route_var", var: 'route')).to eq(  'http://localhost/named_route')
         end
 
         it 'allows custom url parts' do
@@ -75,7 +73,7 @@ describe Hanami::Router do
           router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org', port: 443)
           router.send(verb, '/custom_named_route', to: ->(env) { response }, as: :"#{ verb }_custom_named_route")
 
-          router.url(:"#{ verb }_custom_named_route").must_equal 'https://hanamirb.org/custom_named_route'
+          expect(router.url(:"#{ verb }_custom_named_route")).to eq( 'https://hanamirb.org/custom_named_route')
         end
       end
 
@@ -86,7 +84,7 @@ describe Hanami::Router do
           @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
           response.must_be_same_as @app.request(verb.upcase, '/hanami/23', lint: true)
 
-          @app.request(verb.upcase, '/hanami/flower', lint: true).status.must_equal 404
+          expect(@app.request(verb.upcase, '/hanami/flower', lint: true).status).to eq( 404)
         end
       end
     end
@@ -116,8 +114,8 @@ describe Hanami::Router do
 
         @router.root(to: ->(env) { response })
 
-        @router.path(:root).must_equal '/'
-        @router.url(:root).must_equal  'http://localhost/'
+        expect(@router.path(:root)).to eq( '/')
+        expect(@router.url(:root)).to eq(  'http://localhost/')
       end
     end
   end

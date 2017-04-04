@@ -21,13 +21,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['OK']
+        expect(body).to eq( ['OK'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_match 'test/recognize_test.rb:11 (lambda)'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/proc'
-        route.params.must_equal({})
+        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/proc')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes procs with params' do
@@ -35,10 +35,10 @@ describe Hanami::Router do
         route = @router.recognize(env)
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_match 'test/recognize_test.rb:12 (lambda)'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/resources/1'
-        route.params.must_equal(id: '1')
+        expect(route.action.to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/resources/1')
+        expect(route.params).to eq(id: '1'))
       end
 
       it 'recognizes action with naming convention (home#index)' do
@@ -47,13 +47,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['Hello from Web::Controllers::Home::Index']
+        expect(body).to eq( ['Hello from Web::Controllers::Home::Index'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'home#index'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'home#index')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from class' do
@@ -62,13 +62,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['Hello from Web::Controllers::Dashboard::Index']
+        expect(body).to eq( ['Hello from Web::Controllers::Dashboard::Index'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'dashboard#index'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/dashboard'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'dashboard#index')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/dashboard')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from rack middleware class' do
@@ -77,13 +77,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['RackMiddleware']
+        expect(body).to eq( ['RackMiddleware'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'RackMiddleware'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/rack_class'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'RackMiddleware')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/rack_class')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from rack middleware' do
@@ -92,13 +92,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['RackMiddlewareInstanceMethod']
+        expect(body).to eq( ['RackMiddlewareInstanceMethod'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'RackMiddlewareInstanceMethod'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/rack_app'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/rack_app')
+        expect(route.params).to eq({}))
       end
 
       it 'returns not routeable result when cannot recognize' do
@@ -107,9 +107,9 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal   'POST'
-        route.path.must_equal   '/'
-        route.params.must_equal({})
+        expect(route.verb).to eq(   'POST')
+        expect(route.path).to eq(   '/')
+        expect(route.params).to eq({}))
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
@@ -118,9 +118,9 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/missing'
-        route.params.must_equal({})
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/missing')
+        expect(route.params).to eq({})
       end
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
@@ -128,7 +128,7 @@ describe Hanami::Router do
         route = @router.recognize(env)
 
         exception = -> { route.call(env) }.must_raise Hanami::Router::NotRoutableEndpointError
-        exception.message.must_equal 'Cannot find routable endpoint for POST "/"'
+        expect(exception.message).to eq( 'Cannot find routable endpoint for POST "/"')
       end
     end
 
@@ -138,23 +138,23 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['OK']
+        expect(body).to eq( ['OK'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_match 'test/recognize_test.rb:11 (lambda)'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/proc'
-        route.params.must_equal({})
+        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/proc')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes procs with params' do
         route = @router.recognize('/resources/1')
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_match 'test/recognize_test.rb:12 (lambda)'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/resources/1'
-        route.params.must_equal(id: '1')
+        expect(route.action.to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/resources/1')
+        expect(route.params).to eq(id: '1'))
       end
 
       it 'recognizes action with naming convention (home#index)' do
@@ -162,13 +162,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['Hello from Web::Controllers::Home::Index']
+        expect(body).to eq( ['Hello from Web::Controllers::Home::Index'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'home#index'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'home#index')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from class' do
@@ -176,13 +176,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['Hello from Web::Controllers::Dashboard::Index']
+        expect(body).to eq( ['Hello from Web::Controllers::Dashboard::Index'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'dashboard#index'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/dashboard'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'dashboard#index')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/dashboard')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from rack middleware class' do
@@ -190,13 +190,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['RackMiddleware']
+        expect(body).to eq( ['RackMiddleware'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'RackMiddleware'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/rack_class'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'RackMiddleware')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/rack_class')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from rack middleware' do
@@ -204,13 +204,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['RackMiddlewareInstanceMethod']
+        expect(body).to eq( ['RackMiddlewareInstanceMethod'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'RackMiddlewareInstanceMethod'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/rack_app'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/rack_app')
+        expect(route.params).to eq({}))
       end
 
       it 'returns not routeable result when cannot recognize' do
@@ -218,9 +218,9 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal    'POST'
-        route.path.must_equal    '/'
-        route.params.must_equal({})
+        expect(route.verb).to eq(    'POST')
+        expect(route.path).to eq(    '/')
+        expect(route.params).to eq({}))
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
@@ -228,9 +228,9 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/missing'
-        route.params.must_equal({})
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/missing')
+        expect(route.params).to eq({}))
       end
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
@@ -238,7 +238,7 @@ describe Hanami::Router do
         route = @router.recognize('/', method: :post)
 
         exception = -> { route.call(env) }.must_raise Hanami::Router::NotRoutableEndpointError
-        exception.message.must_equal 'Cannot find routable endpoint for POST "/"'
+        expect(exception.message).to eq( 'Cannot find routable endpoint for POST "/"')
       end
 
       it 'raises error if #call is invoked for unknown path' do
@@ -246,12 +246,12 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal    'GET'
-        route.path.must_equal    '/unknown'
-        route.params.must_equal({})
+        expect(route.verb).to eq(    'GET')
+        expect(route.path).to eq(    '/unknown')
+        expect(route.params).to eq({}))
 
         exception = -> { route.call({}) }.must_raise Hanami::Router::NotRoutableEndpointError
-        exception.message.must_equal 'Cannot find routable endpoint for GET "/unknown"'
+        expect(exception.message).to eq( 'Cannot find routable endpoint for GET "/unknown"')
       end
     end
 
@@ -261,23 +261,23 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['OK']
+        expect(body).to eq( ['OK'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_match 'test/recognize_test.rb:11 (lambda)'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/proc'
-        route.params.must_equal({})
+        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/proc')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes procs with params' do
         route = @router.recognize(:params, id: 1)
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_match 'test/recognize_test.rb:12 (lambda)'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/resources/1'
-        route.params.must_equal(id: '1')
+        expect(route.action.to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/resources/1')
+        expect(route.params).to eq(id: '1'))
       end
 
       it 'recognizes action with naming convention (home#index)' do
@@ -285,13 +285,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['Hello from Web::Controllers::Home::Index']
+        expect(body).to eq( ['Hello from Web::Controllers::Home::Index'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'home#index'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'home#index')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from class' do
@@ -299,13 +299,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['Hello from Web::Controllers::Dashboard::Index']
+        expect(body).to eq( ['Hello from Web::Controllers::Dashboard::Index'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'dashboard#index'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/dashboard'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'dashboard#index')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/dashboard')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from rack middleware class' do
@@ -313,13 +313,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['RackMiddleware']
+        expect(body).to eq( ['RackMiddleware'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'RackMiddleware'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/rack_class'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'RackMiddleware')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/rack_class')
+        expect(route.params).to eq({}))
       end
 
       it 'recognizes action from rack middleware' do
@@ -327,13 +327,13 @@ describe Hanami::Router do
 
         _, _, body = *route.call({})
 
-        body.must_equal ['RackMiddlewareInstanceMethod']
+        expect(body).to eq( ['RackMiddlewareInstanceMethod'])
 
         assert route.routable?, 'Expected route to be routable'
-        route.action.must_equal 'RackMiddlewareInstanceMethod'
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/rack_app'
-        route.params.must_equal({})
+        expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/rack_app')
+        expect(route.params).to eq({}))
       end
 
       it 'returns not routeable result when cannot find named route' do
@@ -343,7 +343,7 @@ describe Hanami::Router do
         route.action.must_be_nil
         route.verb.must_be_nil
         route.path.must_be_nil
-        route.params.must_equal({})
+        expect(route.params).to eq({}))
       end
 
       it 'returns not routeable result when cannot recognize' do
@@ -351,9 +351,9 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal    'POST'
-        route.path.must_equal    '/'
-        route.params.must_equal({})
+        expect(route.verb).to eq(    'POST')
+        expect(route.path).to eq(    '/')
+        expect(route.params).to eq({}))
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
@@ -361,9 +361,9 @@ describe Hanami::Router do
 
         assert !route.routable?, 'Expected route to NOT be routable'
         route.action.must_be_nil
-        route.verb.must_equal   'GET'
-        route.path.must_equal   '/missing'
-        route.params.must_equal({})
+        expect(route.verb).to eq(   'GET')
+        expect(route.path).to eq(   '/missing')
+        expect(route.params).to eq({}))
       end
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
@@ -371,7 +371,7 @@ describe Hanami::Router do
         route = @router.recognize(:home, { method: :post }, {})
 
         exception = -> { route.call(env) }.must_raise Hanami::Router::NotRoutableEndpointError
-        exception.message.must_equal 'Cannot find routable endpoint for POST "/"'
+        expect(exception.message).to eq( 'Cannot find routable endpoint for POST "/"')
       end
     end
   end

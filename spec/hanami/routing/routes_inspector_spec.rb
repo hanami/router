@@ -1,7 +1,6 @@
-require 'test_helper'
 require 'hanami/routing/routes_inspector'
 
-describe Hanami::Routing::RoutesInspector do
+RSpec.describe Hanami::Routing::RoutesInspector do
   describe '#to_s' do
     before do
       @path = ::File.expand_path(__FILE__)
@@ -25,7 +24,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -44,7 +43,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -72,7 +71,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -91,7 +90,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -110,7 +109,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -131,7 +130,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -155,7 +154,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -179,7 +178,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -204,7 +203,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -229,7 +228,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -248,7 +247,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -269,7 +268,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s(formatter)
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
     end
@@ -332,7 +331,7 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s(formatter)
         expectations.each do |expectation|
-          actual.must_include(expectation)
+          expect(actual).to include(expectation)
         end
       end
 
@@ -341,14 +340,14 @@ describe Hanami::Routing::RoutesInspector do
 
         actual = @router.inspector.to_s.split("\n")
         actual.reject! { |l| !l.match(header) }
-        actual.count.must_equal 1
+        expect(actual.count).to eq(1)
       end
 
       it 'returns header text on the top' do
         header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s.split("\n")
-        actual.first.must_include(header)
+        expect(actual.first).to include(header)
       end
     end
 
@@ -363,7 +362,7 @@ describe Hanami::Routing::RoutesInspector do
         header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s
-        actual.must_include(header)
+        expect(actual).to include(header)
       end
     end
   end

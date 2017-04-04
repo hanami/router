@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Router do
+RSpec.describe Hanami::Router do
   # Bug https://github.com/hanami/router/issues/73
   it 'respects the Rack spec' do
     router = Hanami::Router.new(force_ssl: true)
@@ -18,9 +16,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
-      status.must_equal 301
-      headers['Location'].must_equal 'https://localhost:443/http_destination'
-      body.body.must_equal ''
+      expect(status).to eq(301)
+      expect(headers['Location']).to eq('https://localhost:443/http_destination')
+      expect(body.body).to eq('')
     end
 
     it "force_ssl to true and scheme is https, return 200, verb: #{verb}" do
@@ -30,9 +28,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, 'https://hanami.test/http_destination', lint: true)
 
-      status.must_equal 200
-      headers['Location'].must_be_nil
-      body.body.must_equal 'http destination!'
+      expect(status).to eq(200)
+      expect(headers['Location']).to be_nil
+      expect(body.body).to eq('http destination!')
     end
   end
 
@@ -44,9 +42,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
-      status.must_equal 307
-      headers['Location'].must_equal 'https://localhost:443/http_destination'
-      body.body.must_equal ''
+      expect(status).to eq(307)
+      expect(headers['Location']).to eq('https://localhost:443/http_destination')
+      expect(body.body).to eq('')
     end
 
     it "force_ssl to true and added query string, verb: #{verb}" do
@@ -57,9 +55,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
 
-      status.must_equal 307
-      headers['Location'].must_equal 'https://localhost:443/http_destination?foo=bar'
-      body.body.must_equal ''
+      expect(status).to eq(307)
+      expect(headers['Location']).to eq('https://localhost:443/http_destination?foo=bar')
+      expect(body.body).to eq('')
     end
 
     it "force_ssl to true and added port, verb: #{verb}" do
@@ -70,9 +68,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
 
-      status.must_equal 307
-      headers['Location'].must_equal 'https://localhost:4000/http_destination?foo=bar'
-      body.body.must_equal ''
+      expect(status).to eq(307)
+      expect(headers['Location']).to eq('https://localhost:4000/http_destination?foo=bar')
+      expect(body.body).to eq('')
     end
 
     it "force_ssl to true, added host and port, verb: #{verb}" do
@@ -83,9 +81,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
 
-      status.must_equal 307
-      headers['Location'].must_equal 'https://hanamirb.org:4000/http_destination?foo=bar'
-      body.body.must_equal ''
+      expect(status).to eq(307)
+      expect(headers['Location']).to eq('https://hanamirb.org:4000/http_destination?foo=bar')
+      expect(body.body).to eq('')
     end
 
     it "force_ssl to false and scheme is http, return 200 and doesn't return new location, verb: #{verb}" do
@@ -96,9 +94,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
-      status.must_equal 200
-      headers['Location'].must_be_nil
-      body.body.must_equal 'http destination!'
+      expect(status).to eq(200)
+      expect(headers['Location']).to be_nil
+      expect(body.body).to eq('http destination!')
     end
 
     it "force_ssl to false and scheme is https, return 200 and doesn't return new location, verb: #{verb}" do
@@ -109,9 +107,9 @@ describe Hanami::Router do
 
       status, headers, body = app.public_send(verb, '/http_destination', lint: true)
 
-      status.must_equal 200
-      headers['Location'].must_be_nil
-      body.body.must_equal 'http destination!'
+      expect(status).to eq(200)
+      expect(headers['Location']).to be_nil
+      expect(body.body).to eq('http destination!')
     end
   end
 end

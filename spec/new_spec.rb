@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Router do
+RSpec.describe Hanami::Router do
   describe '.new' do
     before do
       class MockRoute
@@ -23,7 +21,7 @@ describe Hanami::Router do
 
     it 'returns instance of Hanami::Router with empty block' do
       router = Hanami::Router.new { }
-      router.must_be_instance_of Hanami::Router
+      expect(router).to be_instance_of(Hanami::Router)
     end
 
     it 'evaluates routes passed from Hanami::Router.define' do
@@ -33,12 +31,12 @@ describe Hanami::Router do
       app      = Rack::MockRequest.new(router)
       response = app.post('/domains', lint: true)
 
-      response.status.must_equal 201
-      response.body.must_equal   'Domain Created'
+      expect(response.status).to eq(201)
+      expect(response.body).to eq('Domain Created')
     end
 
     it 'returns instance of Hanami::Router' do
-      @router.must_be_instance_of Hanami::Router
+      expect(@router).to be_instance_of(Hanami::Router)
     end
 
     it 'sets options' do
@@ -46,46 +44,46 @@ describe Hanami::Router do
         root to: ->(env) { }
       end
 
-      router.url(:root).must_match('https')
+      expect(router.url(:root).to match('https')
     end
 
     it 'sets custom separator' do
       router = Hanami::Router.new(action_separator: '^')
       route  = router.root(to: 'test^show')
 
-      route.dest.must_equal(Test::Show)
+      expect(route.dest).to eq(Test::Show)
     end
 
     it 'checks if there are defined routes' do
       router = Hanami::Router.new
-      router.wont_be :defined?
+      expect(router)not_to be(:defined)
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
-      router.must_be :defined?
+      expect(router).to be(:defined)
     end
 
     it 'recognizes root' do
-      @app.get('/', lint: true).status.must_equal 200
+      expect(@app.get('/', lint: true).status).to eq(200)
     end
 
     it 'recognizes path' do
-      @app.get('/route', lint: true).status.must_equal 200
+      expect(@app.get('/route', lint: true).status).to eq(200)
     end
 
     it 'recognizes named path' do
-      @app.get('/named_route', lint: true).status.must_equal 200
+      expect(@app.get('/named_route', lint: true).status).to eq(200)
     end
 
     it 'recognizes resource' do
-      @app.get('/avatar', lint: true).status.must_equal 200
+      expect(@app.get('/avatar', lint: true).status).to eq(200)
     end
 
     it 'recognizes resources' do
-      @app.get('/avatar', lint: true).status.must_equal 200
+      expect(@app.get('/avatar', lint: true).status).to eq(200)
     end
 
     it 'recognizes namespaced path' do
-      @app.get('/admin/dashboard', lint: true).status.must_equal 200
+      expect(@app.get('/admin/dashboard', lint: true).status).to eq(200)
     end
   end
 end

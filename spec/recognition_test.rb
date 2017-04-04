@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Router do
+RSpec.describe Hanami::Router do
   describe 'recognition' do
     before do
       @router = Hanami::Router.new

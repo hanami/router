@@ -1,7 +1,6 @@
-require 'test_helper'
 require 'hanami/routing/http_router'
 
-describe Hanami::Routing::HttpRouter do
+RSpec.describe Hanami::Routing::HttpRouter do
   class TestRackRequest
     def path_info
       '/post'
@@ -22,8 +21,8 @@ describe Hanami::Routing::HttpRouter do
       http_route = Hanami::Routing::HttpRouter.new(prefix: '/')
       http_route.rewrite_path_info(env, request)
 
-      env['SCRIPT_NAME'].must_equal '/post'
-      env['SCRIPT_NAME'].must_be_kind_of(String)
+      expect(env['SCRIPT_NAME']).to eq('/post')
+      expect(env['SCRIPT_NAME']).to be_a_kind_of(String)
     end
   end
 
@@ -37,42 +36,42 @@ describe Hanami::Routing::HttpRouter do
     describe 'when from partial match' do
       it 'sets PATH_INFO correctly' do
         @router.call(Rack::MockRequest.env_for("/sidekiq/queues"))
-        @request_env['PATH_INFO'].must_equal '/queues'
-        @request_env['PATH_INFO'].must_be_kind_of(String)
+        expect(@request_env['PATH_INFO']).to eq('/queues')
+        expect(@request_env['PATH_INFO']).to be_a_kind_of(String)
       end
 
       it 'sets SCRIPT_NAME correctly' do
         @router.call(Rack::MockRequest.env_for("/sidekiq/queues"))
-        @request_env['SCRIPT_NAME'].must_equal '/sidekiq'
-        @request_env['SCRIPT_NAME'].must_be_kind_of(String)
+        expect(@request_env['SCRIPT_NAME']).to eq('/sidekiq')
+        expect(@request_env['SCRIPT_NAME']).to be_a_kind_of(String)
       end
     end
 
     describe 'when from partial match of single' do
       it 'sets PATH_INFO correctly' do
         @router.call(Rack::MockRequest.env_for("/sidekiq"))
-        @request_env['PATH_INFO'].must_equal '/'
-        @request_env['PATH_INFO'].must_be_kind_of(String)
+        expect(@request_env['PATH_INFO']).to eq('/')
+        expect(@request_env['PATH_INFO']).to be_a_kind_of(String)
       end
 
       it 'sets SCRIPT_NAME correctly' do
         @router.call(Rack::MockRequest.env_for("/sidekiq"))
-        @request_env['SCRIPT_NAME'].must_equal '/sidekiq'
-        @request_env['SCRIPT_NAME'].must_be_kind_of(String)
+        expect(@request_env['SCRIPT_NAME']).to eq('/sidekiq')
+        expect(@request_env['SCRIPT_NAME']).to be_a_kind_of(String)
       end
     end
 
     describe 'when from encoded path' do
       it 'sets PATH_INFO correctly' do
         @router.call(Rack::MockRequest.env_for("/sidekiq/queues/some%20path"))
-        @request_env['PATH_INFO'].must_equal '/queues/some%20path'
-        @request_env['PATH_INFO'].must_be_kind_of(String)
+        expect(@request_env['PATH_INFO']).to eq('/queues/some%20path')
+        expect(@request_env['PATH_INFO']).to be_a_kind_of(String)
       end
 
       it 'sets SCRIPT_NAME correctly' do
         @router.call(Rack::MockRequest.env_for("/sidekiq/queues/some%20path"))
-        @request_env['SCRIPT_NAME'].must_equal '/sidekiq'
-        @request_env['SCRIPT_NAME'].must_be_kind_of(String)
+        expect(@request_env['SCRIPT_NAME']).to eq('/sidekiq')
+        expect(@request_env['SCRIPT_NAME']).to be_a_kind_of(String)
       end
     end
   end

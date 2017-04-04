@@ -9,12 +9,12 @@ RSpec.describe Hanami::Routing::EndpointResolver do
 
     options = { to: endpoint }
 
-    @resolver.resolve(options).must_equal(endpoint)
+    expect(@resolver.resolve(options)).to eq(endpoint)
   end
 
   it 'recognizes :to when it is a string that references a class that can be retrieved now' do
     options = { to: 'test_endpoint' }
-    @resolver.resolve(options).call({}).must_equal 'Hi from TestEndpoint!'
+    expect(@resolver.resolve(options).call({})).to eq( 'Hi from TestEndpoint!')
   end
 
   describe 'when :to references a missing class' do
@@ -23,25 +23,25 @@ RSpec.describe Hanami::Routing::EndpointResolver do
       endpoint = @resolver.resolve(options)
       LazyController = Class.new(Object) { define_method(:call) {|env| env } }
 
-      endpoint.call({}).must_equal({})
+      expect(endpoint.call({})).to eq({})
     end
 
     it 'if the class is not available when invoking call, it raises error' do
       options  = { to: 'missing_endpoint' }
       endpoint = @resolver.resolve(options)
 
-      -> { endpoint.call({}) }.must_raise Hanami::Routing::EndpointNotFound
+      expect({ endpoint.call({}) }).to raise_error(Hanami::Routing::EndpointNotFound)
     end
   end
 
   it 'recognizes :to when it is a string with separator' do
     options = { to: 'test#show' }
-    @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
+    expect(@resolver.resolve(options).call({})).to eq( 'Hi from Test::Show!')
   end
 
   it 'returns the default endpoint when cannot match anything' do
     options = { to: 23 }
-    @resolver.resolve(options).call({}).first.must_equal 404
+    expect(@resolver.resolve(options).call({}).first).to eq( 404)
   end
 
   describe 'namespace' do
@@ -51,17 +51,17 @@ RSpec.describe Hanami::Routing::EndpointResolver do
 
     it 'recognizes :to when it is a string and an explicit namespace' do
       options = { to: 'test_endpoint' }
-      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::TestEndpoint!'
+      expect(@resolver.resolve(options).call({})).to eq( 'Hi from TestApp::TestEndpoint!')
     end
 
     it 'recognizes :to when it is a string with separator and it has an explicit namespace' do
       options = { to: 'test2#show' }
-      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::Test2::Show!'
+      expect(@resolver.resolve(options).call({})).to eq( 'Hi from TestApp::Test2::Show!')
     end
 
     it 'recognizes :to when it is dasherized' do
       options = { to: 'test-endpoint' }
-      @resolver.resolve(options).call({}).must_equal 'Hi from TestApp::TestEndpoint!'
+      expect(@resolver.resolve(options).call({})).to eq( 'Hi from TestApp::TestEndpoint!')
     end
   end
 
@@ -72,12 +72,12 @@ RSpec.describe Hanami::Routing::EndpointResolver do
 
     it 'if :to is an action without middleware' do
       options = { to: 'dashboard#index' }
-      @resolver.resolve(options).class.must_equal Hanami::Routing::ClassEndpoint
+      expect(@resolver.resolve(options).class).to eq( Hanami::Routing::ClassEndpoint)
     end
 
     it 'if :to is an action with middleware' do
       options = { to: 'home#index' }
-      @resolver.resolve(options).class.must_equal Hanami::Routing::Endpoint
+      expect(@resolver.resolve(options).class).to eq( Hanami::Routing::Endpoint)
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
     end
 
     it 'responds to :routes' do
-      @resolver.resolve(to: NestedRoutesApp).respond_to?(:routes).must_equal true
+      expect(@resolver.resolve(to: NestedRoutesApp).respond_to?(:routes)).to eq( true)
     end
 
     after do
@@ -120,7 +120,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
     end
 
     it 'returns specified endpoint instance' do
-      @resolver.resolve({}).class.must_equal(CustomEndpoint)
+      expect(@resolver.resolve({}).class).to eq(CustomEndpoint)
     end
   end
 
@@ -133,7 +133,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
 
     it 'matches controller and action with a custom separator' do
       options = { to: "test#{ action_separator }show" }
-      @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
+      expect(@resolver.resolve(options).call({})).to eq( 'Hi from Test::Show!')
     end
   end
 
@@ -146,7 +146,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
 
     it 'matches controller and action with a custom separator' do
       options = { to: 'test#show' }
-      @resolver.resolve(options).call({}).must_equal 'Hi from Test::Show!'
+      expect(@resolver.resolve(options).call({})).to eq( 'Hi from Test::Show!')
     end
   end
 
@@ -159,7 +159,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
 
     it 'matches controller and action with a custom pattern' do
       options = { to: 'test#show' }
-      @resolver.resolve(options).call({}).must_equal 'Hi from Controllers::Test::Show!'
+      expect(@resolver.resolve(options).call({})).to eq( 'Hi from Controllers::Test::Show!')
     end
   end
 end
