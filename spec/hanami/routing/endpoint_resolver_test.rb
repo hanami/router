@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Routing::EndpointResolver do
+RSpec.describe Hanami::Routing::EndpointResolver do
   before do
     @resolver = Hanami::Routing::EndpointResolver.new
   end
