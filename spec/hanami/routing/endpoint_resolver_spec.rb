@@ -30,7 +30,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
       options  = { to: 'missing_endpoint' }
       endpoint = @resolver.resolve(options)
 
-      expect({ endpoint.call({}) }).to raise_error(Hanami::Routing::EndpointNotFound)
+      expect({ endpoint.call({})).to raise_error(Hanami::Routing::EndpointNotFound)
     end
   end
 
