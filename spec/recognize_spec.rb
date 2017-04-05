@@ -22,7 +22,7 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
         expect(route.params).to eq({}))
