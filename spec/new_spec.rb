@@ -56,7 +56,7 @@ RSpec.describe Hanami::Router do
 
     it 'checks if there are defined routes' do
       router = Hanami::Router.new
-      expect(router)not_to be(:defined)
+      expect(router).not_to be(:defined)
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
       expect(router).to be(:defined)
