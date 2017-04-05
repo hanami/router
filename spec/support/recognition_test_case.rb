@@ -1,3 +1,5 @@
+require 'rspec'
+
 class RecognitionTestCase
   HEADER_ENV     = '_env'.freeze
   ROUTER_PARAMS  = 'router.params'.freeze

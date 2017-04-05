@@ -1,3 +1,5 @@
+require 'rspec'
+
 class GenerationTestCase
   def initialize(router)
     @router = router
