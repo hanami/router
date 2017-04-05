@@ -27,9 +27,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      exception = expect {
-        @router.path(:variables)
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.path(:variables)}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('No route (path) could be generated for :variables - please check given arguments')
     end
@@ -39,9 +37,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when constraints aren't satisfied" do
-      exception = expect {
-        @router.path(:constraints, id: 'x')
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.path(:constraints, id: 'x')}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('No route (path) could be generated for :constraints - please check given arguments')
     end
@@ -62,17 +58,13 @@ RSpec.describe Hanami::Router do
     end
 
     it 'raises error when insufficient params are passed' do
-      exception = expect {
-        @router.path(nil)
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.path(nil)}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('No route (path) could be generated for nil - please check given arguments')
     end
 
     it 'raises error when too many params are passed' do
-      exception = expect {
-        @router.path(:fixed, 'x')
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.path(:fixed, 'x')}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       exception.message.to eq('HttpRouter::TooManyParametersException - please check given arguments')
     end
@@ -120,9 +112,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      exception =  {
-        @router.url(:variables)
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.url(:variables)}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('No route (url) could be generated for :variables - please check given arguments')
     end
@@ -132,9 +122,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when constraints aren't satisfied" do
-      exception = expect {
-        @router.url(:constraints, id: 'x')
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.url(:constraints, id: 'x')}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('No route (url) could be generated for :constraints - please check given arguments')
     end
@@ -155,17 +143,13 @@ RSpec.describe Hanami::Router do
     end
 
     it 'raises error when insufficient params are passed' do
-      exception = expect {
-        @router.url(nil)
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.url(nil)}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('No route (url) could be generated for nil - please check given arguments')
     end
 
     it 'raises error when too many params are passed' do
-      exception = expect {
-        @router.url(:fixed, 'x')
-      }.to raise_error(Hanami::Routing::InvalidRouteException)
+      exception = expect {@router.url(:fixed, 'x')}.to raise_error(Hanami::Routing::InvalidRouteException)
 
       expect(exception.message).to eq('HttpRouter::TooManyParametersException - please check given arguments')
     end
