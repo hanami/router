@@ -21,7 +21,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['OK'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
@@ -32,7 +32,7 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/resources/1', method: :get)
         route = @router.recognize(env)
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
@@ -47,7 +47,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['Hello from Web::Controllers::Home::Index'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'home#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/')
@@ -62,7 +62,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['Hello from Web::Controllers::Dashboard::Index'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'dashboard#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/dashboard')
@@ -77,7 +77,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['RackMiddleware'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'RackMiddleware')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_class')
@@ -92,7 +92,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['RackMiddlewareInstanceMethod'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true  #Expected route to be routable
         expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_app')
@@ -103,7 +103,7 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(env)
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'POST')
         expect(route.path).to eq(   '/')
@@ -114,7 +114,7 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/missing', method: :get)
         route = @router.recognize(env)
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/missing')
@@ -137,7 +137,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['OK'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
@@ -147,7 +147,7 @@ RSpec.describe Hanami::Router do
       it 'recognizes procs with params' do
         route = @router.recognize('/resources/1')
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
@@ -161,7 +161,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['Hello from Web::Controllers::Home::Index'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'home#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/')
@@ -175,7 +175,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['Hello from Web::Controllers::Dashboard::Index'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'dashboard#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/dashboard')
@@ -189,7 +189,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['RackMiddleware'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'RackMiddleware')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_class')
@@ -203,7 +203,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['RackMiddlewareInstanceMethod'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_app')
@@ -213,7 +213,7 @@ RSpec.describe Hanami::Router do
       it 'returns not routeable result when cannot recognize' do
         route = @router.recognize('/', method: :post)
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'POST')
         expect(route.path).to eq(    '/')
@@ -223,7 +223,7 @@ RSpec.describe Hanami::Router do
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         route = @router.recognize('/missing')
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/missing')
@@ -240,7 +240,7 @@ RSpec.describe Hanami::Router do
       it 'raises error if #call is invoked for unknown path' do
         route = @router.recognize('/unknown')
 
-        #expect(route).not_to be_routable 'Expected route to NOT be routable'
+        #expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.routable?).to be false
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'GET')
@@ -260,7 +260,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['OK'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
@@ -270,7 +270,7 @@ RSpec.describe Hanami::Router do
       it 'recognizes procs with params' do
         route = @router.recognize(:params, id: 1)
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
@@ -284,7 +284,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['Hello from Web::Controllers::Home::Index'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'home#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/')
@@ -298,7 +298,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['Hello from Web::Controllers::Dashboard::Index'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'dashboard#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/dashboard')
@@ -312,7 +312,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['RackMiddleware'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'RackMiddleware')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_class')
@@ -326,7 +326,7 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq( ['RackMiddlewareInstanceMethod'])
 
-        expect(route.routable?).to be true 'Expected route to be routable'
+        expect(route.routable?).to be true #Expected route to be routable
         expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_app')
@@ -336,7 +336,7 @@ RSpec.describe Hanami::Router do
       it 'returns not routeable result when cannot find named route' do
         route = @router.recognize(:unknown)
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to be_nil
         expect(route.path).to be_nil
@@ -346,7 +346,7 @@ RSpec.describe Hanami::Router do
       it 'returns not routeable result when cannot recognize' do
         route = @router.recognize(:home, { method: :post }, {})
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'POST')
         expect(route.path).to eq(    '/')
@@ -356,7 +356,7 @@ RSpec.describe Hanami::Router do
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         route = @router.recognize(:missing)
 
-        expect(route).not_to be_routable 'Expected route to NOT be routable'
+        expect(route).not_to be_routable #Expected route to NOT be routable
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/missing')
