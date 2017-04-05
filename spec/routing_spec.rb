@@ -16,35 +16,35 @@ RSpec.describe Hanami::Router do
           response = [200, {}, ['Fixed!']]
           @router.send(verb, '/hanami', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/hanami', lint: true)
+          expect(response).to eq(@app.request(verb.upcase, '/hanami', lint: true))
         end
 
         it 'recognize moving parts string' do
           response = [200, {}, ['Moving!']]
           @router.send(verb, '/hanami/:id', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/hanami/23', lint: true)
+          expect(response).to eq(@app.request(verb.upcase, '/hanami/23', lint: true))
         end
 
         it 'recognize globbing string' do
           response = [200, {}, ['Globbing!']]
           @router.send(verb, '/hanami/*', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/hanami/all', lint: true)
+          expect(response).to eq(@app.request(verb.upcase, '/hanami/all', lint: true))
         end
 
         it 'recognize format string' do
           response = [200, {}, ['Format!']]
           @router.send(verb, '/hanami/:id(.:format)', to: ->(env) { response })
 
-          response.must_be_same_as @app.request(verb.upcase, '/hanami/all.json', lint: true)
+          expect(response).to eq(@app.request(verb.upcase, '/hanami/all.json', lint: true))
         end
 
         it 'accepts a block' do
           response = [200, {}, ['Block!']]
           @router.send(verb, '/block') {|e| response }
 
-          response.must_be_same_as @app.request(verb.upcase, '/block', lint: true)
+          expect(response).to eq(@app.request(verb.upcase, '/block', lint: true))
         end
       end
 
@@ -82,7 +82,7 @@ RSpec.describe Hanami::Router do
           response = [200, {}, ['Moving with constraints!']]
 
           @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
-          response.must_be_same_as @app.request(verb.upcase, '/hanami/23', lint: true)
+          expect(response).to eq(@app.request(verb.upcase, '/hanami/23', lint: true))
 
           expect(@app.request(verb.upcase, '/hanami/flower', lint: true).status).to eq( 404)
         end
@@ -97,14 +97,14 @@ RSpec.describe Hanami::Router do
         response = [200, {}, ['Fixed!']]
         @router.root(to: ->(env) { response })
 
-        response.must_be_same_as @app.request('GET', '/', lint: true)
+        expect(response).to eq(@app.request('GET', '/', lint: true))
       end
 
       it 'accepts a block' do
         response = [200, {}, ['Block!']]
         @router.root {|e| response }
 
-        response.must_be_same_as @app.request('GET', '/', lint: true)
+        expect(response).to eq(@app.request('GET', '/', lint: true))
       end
     end
 

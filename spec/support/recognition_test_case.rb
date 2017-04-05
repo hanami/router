@@ -20,10 +20,10 @@ class RecognitionTestCase
 
       case status
       when 200
-        headers[HEADER_ENV][ROUTER_PARAMS].must_equal params || {}
-        body.must_equal                               Array(name.to_s)
+        expect(headers[HEADER_ENV][ROUTER_PARAMS]).to eq(params || {})
+        expect(body).to eq(                          Array(name.to_s))
       when 404
-        name.must_be_nil
+        expect(name).to be_nil
       end
     end
   end
