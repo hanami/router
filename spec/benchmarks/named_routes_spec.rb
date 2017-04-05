@@ -147,7 +147,7 @@ RSpec.describe Hanami::Router do
     end
 
     it 'recognizes glob string' do
-      expect(@router.url(:glob).to eq('https://test.com/files/')
+      expect(@router.url(:glob)).to eq('https://test.com/files/')
     end
 
     it 'escapes additional params in query string' do
