@@ -22,10 +22,10 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes procs with params' do
@@ -33,10 +33,10 @@ RSpec.describe Hanami::Router do
         route = @router.recognize(env)
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
-        expect(route.params).to eq(id: '1'))
+        expect(route.params).to eq(id: '1')
       end
 
       it 'recognizes action with naming convention (home#index)' do
@@ -51,7 +51,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'home#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from class' do
@@ -66,7 +66,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'dashboard#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/dashboard')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from rack middleware class' do
@@ -81,7 +81,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'RackMiddleware')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_class')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from rack middleware' do
@@ -96,7 +96,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_app')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'returns not routeable result when cannot recognize' do
@@ -107,7 +107,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'POST')
         expect(route.path).to eq(   '/')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
@@ -139,17 +139,17 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes procs with params' do
         route = @router.recognize('/resources/1')
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
         expect(route.params).to eq(id: '1'))
@@ -166,7 +166,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'home#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from class' do
@@ -180,7 +180,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'dashboard#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/dashboard')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from rack middleware class' do
@@ -194,7 +194,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'RackMiddleware')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_class')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from rack middleware' do
@@ -208,7 +208,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_app')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'returns not routeable result when cannot recognize' do
@@ -218,7 +218,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'POST')
         expect(route.path).to eq(    '/')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
@@ -228,7 +228,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/missing')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
@@ -246,7 +246,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'GET')
         expect(route.path).to eq(    '/unknown')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
 
         exception = expect { route.call({}) }.to raise_error(Hanami::Router::NotRoutableEndpointError)
         expect(exception.message).to eq( 'Cannot find routable endpoint for GET "/unknown"')
@@ -262,17 +262,17 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes procs with params' do
         route = @router.recognize(:params, id: 1)
 
         expect(route).to be_routable 'Expected route to be routable'
-        expect(route.action.to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
         expect(route.params).to eq(id: '1'))
@@ -289,7 +289,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'home#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from class' do
@@ -303,7 +303,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'dashboard#index')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/dashboard')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from rack middleware class' do
@@ -317,7 +317,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'RackMiddleware')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_class')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'recognizes action from rack middleware' do
@@ -331,7 +331,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq( 'RackMiddlewareInstanceMethod')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/rack_app')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'returns not routeable result when cannot find named route' do
@@ -341,7 +341,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to be_nil
         expect(route.path).to be_nil
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'returns not routeable result when cannot recognize' do
@@ -351,7 +351,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'POST')
         expect(route.path).to eq(    '/')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
@@ -361,7 +361,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to be_nil
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/missing')
-        expect(route.params).to eq({}))
+        expect(route.params).to eq({})
       end
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
