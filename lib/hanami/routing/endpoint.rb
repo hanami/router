@@ -47,7 +47,7 @@ module Hanami
         end
       end
 
-      # @since 1.0.0.beta2
+      # @since 1.0.0
       # @api private
       def routable?
         !__getobj__.nil?
