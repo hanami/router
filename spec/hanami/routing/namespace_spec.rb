@@ -73,7 +73,7 @@ RSpec.describe Hanami::Router do
           end
         end
 
-        expect(@app.request('GET', '/animals/mammals/cats', lint: true).body).to eq(Meow!')
+        expect(@app.request('GET', '/animals/mammals/cats', lint: true).body).to eq('Meow!')
       end
 
       it 'defines #resource correctly' do
@@ -95,7 +95,7 @@ RSpec.describe Hanami::Router do
         end
 
         expect(@app.request('GET', '/vegetals/pretty/flowers', lint: true).body).to eq('Flowers::Index')
-        expect(@router.path(:vegetals_pretty_flowers)).to eq('/vegetals/pretty/flowers")
+        expect(@router.path(:vegetals_pretty_flowers)).to eq('/vegetals/pretty/flowers')
       end
 
       it 'defines #redirect correctly' do
