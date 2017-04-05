@@ -62,9 +62,8 @@ RSpec.describe Hanami::Router do
         expect(@app.request('GET',    '/profile', lint: true).status).to eq(    405)
         expect(@app.request('DELETE', '/profile', lint: true).status).to eq(    405)
 
-        exception = expect { @router.path(:new_profile) }.to raise_error( Hanami::Routing::InvalidRouteException)
-        expect(exception.message).to eq('No route (path) could be generated for :new_profile - please check given arguments')
-      end
+        expect { @router.path(:new_profile) }.to raise_error(InvalidRouteException, 'No route (path) could be generated for :new_profile - please check given arguments')
+       end
     end
 
     describe ':except option' do
@@ -86,8 +85,8 @@ RSpec.describe Hanami::Router do
         expect(@app.request('GET',    '/profile', lint: true).status).to eq(    405)
         expect(@app.request('DELETE', '/profile', lint: true).status).to eq(    405)
 
-        exception = expect { @router.path(:new_profile) }.to raise_error( Hanami::Routing::InvalidRouteException)
-        expect(exception.message).to eq('No route (path) could be generated for :new_profile - please check given arguments')
+        expect { @router.path(:new_profile) }.to raise_error(InvalidRouteException, 'No route (path) could be generated for :new_profile - please check given arguments')
+        
       end
     end
 

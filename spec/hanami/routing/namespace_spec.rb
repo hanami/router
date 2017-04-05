@@ -119,7 +119,7 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes get path' do
         expect(@app.request('GET', '/users/dashboard', lint: true).headers['Location']).to eq('/users/home')
-        expect(@app.request('GET', '/users/dashboard', lint: true).status).to eq(01)
+        expect(@app.request('GET', '/users/dashboard', lint: true).status).to eq(301)
       end
     end
 
@@ -181,7 +181,7 @@ RSpec.describe Hanami::Router do
         end
 
         it 'does not recognize other paths' do
-          expect(@app.request('GET',    '/electronics/keyboards/new', lint: true).status).to eq(04)
+          expect(@app.request('GET',    '/electronics/keyboards/new', lint: true).status).to eq(404)
           expect(@app.request('POST',   '/electronics/keyboards', lint: true).status).to eq(    405)
           expect(@app.request('GET',    '/electronics/keyboards/23', lint: true).status).to eq( 404)
           expect(@app.request('PATCH',  '/electronics/keyboards/23', lint: true).status).to eq( 405)
@@ -211,7 +211,7 @@ RSpec.describe Hanami::Router do
         end
 
         it 'does not recognize other paths' do
-          expect(@app.request('GET',    '/electronics/keyboards/new', lint: true).status).to eq(04)
+          expect(@app.request('GET',    '/electronics/keyboards/new', lint: true).status).to eq(404)
           expect(@app.request('PATCH',  '/electronics/keyboards/23', lint: true).status).to eq( 405)
           expect(@app.request('DELETE', '/electronics/keyboards/23', lint: true).status).to eq( 405)
 
@@ -339,7 +339,7 @@ RSpec.describe Hanami::Router do
 
         it 'does not recognize other paths' do
           expect(@app.request('GET',    '/settings/profile', lint: true).status).to eq(    405)
-          expect(@app.request('GET',    '/settings/profile/new', lint: true).status).to eq(05)
+          expect(@app.request('GET',    '/settings/profile/new', lint: true).status).to eq(405)
           expect(@app.request('POST',   '/settings/profile', lint: true).status).to eq(    405)
           expect(@app.request('DELETE', '/settings/profile', lint: true).status).to eq(    405)
 
@@ -370,7 +370,7 @@ RSpec.describe Hanami::Router do
         end
 
         it 'does not recognize other paths' do
-          expect(@app.request('GET', '/settings/profile/edit', lint: true).status).to eq(04)
+          expect(@app.request('GET', '/settings/profile/edit', lint: true).status).to eq(404)
 
           exception = expect { @router.path(:edit_settings_profile) }.to raise_error(Hanami::Routing::InvalidRouteException)
           expect(exception.message).to eq('No route (path) could be generated for :edit_settings_profile - please check given arguments')

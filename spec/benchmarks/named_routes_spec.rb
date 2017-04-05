@@ -27,7 +27,7 @@ RSpec.describe Hanami::Router do
     end
     
     it "raises error when variables aren't satisfied" do
-      expect {@router.path(:variables)}.to raise_error(InvalidRouteException,'No route (path) could be generated for :variables - please check given arguments')
+      expect {@router.path(:variables)}.to raise_error(Hanami::Routing::InvalidRouteException,'No route (path) could be generated for :variables - please check given arguments')
     end
 
     it 'recognizes string with variables and constraints' do
@@ -35,7 +35,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when constraints aren't satisfied" do
-      expect {@router.path(:constraints, id: 'x')}.to raise_error(InvalidRouteException, 'No route (path) could be generated for :constraints - please check given arguments' )
+      expect {@router.path(:constraints, id: 'x')}.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :constraints - please check given arguments' )
     end
 
     it 'recognizes optional variables' do
@@ -54,11 +54,11 @@ RSpec.describe Hanami::Router do
     end
 
     it 'raises error when insufficient params are passed' do
-      expect {@router.path(nil)}.to raise_error(InvalidRouteException, 'No route (path) could be generated for nil - please check given arguments')
+      expect {@router.path(nil)}.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for nil - please check given arguments')
     end
 
     it 'raises error when too many params are passed' do
-      expect {@router.path(:fixed, 'x')}.to raise_error(InvalidRouteException, 'HttpRouter::TooManyParametersException - please check given arguments' )
+      expect {@router.path(:fixed, 'x')}.to raise_error(Hanami::Routing::InvalidRouteException, 'HttpRouter::TooManyParametersException - please check given arguments' )
     end
 
     describe 'plural resource routes' do
@@ -104,7 +104,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      expect {@router.url(:variables)}.to raise_error(InvalidRouteException, 'No route (url) could be generated for :variables - please check given arguments')
+      expect {@router.url(:variables)}.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (url) could be generated for :variables - please check given arguments')
     end
 
     it 'recognizes string with variables and constraints' do
@@ -112,7 +112,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when constraints aren't satisfied" do
-      expect {@router.url(:constraints, id: 'x')}.to raise_error(InvalidRouteException, 'No route (url) could be generated for :constraints - please check given arguments' )
+      expect {@router.url(:constraints, id: 'x')}.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (url) could be generated for :constraints - please check given arguments' )
     end
 
     it 'recognizes optional variables' do
@@ -131,11 +131,11 @@ RSpec.describe Hanami::Router do
     end
 
     it 'raises error when insufficient params are passed' do
-      expect {@router.url(nil)}.to raise_error(InvalidRouteException, 'No route (url) could be generated for nil - please check given arguments')
+      expect {@router.url(nil)}.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (url) could be generated for nil - please check given arguments')
     end
 
     it 'raises error when too many params are passed' do
-      expect {@router.url(:fixed, 'x')}.to raise_error(InvalidRouteException, 'HttpRouter::TooManyParametersException - please check given arguments')
+      expect {@router.url(:fixed, 'x')}.to raise_error(Hanami::Routing::InvalidRouteException, 'HttpRouter::TooManyParametersException - please check given arguments')
     end
   end
 end
