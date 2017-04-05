@@ -44,7 +44,7 @@ RSpec.describe Hanami::Router do
         root to: ->(env) { }
       end
 
-      expect(router.url(:root).to match('https')
+      expect(router.url(:root)).to match('https')
     end
 
     it 'sets custom separator' do
@@ -56,7 +56,7 @@ RSpec.describe Hanami::Router do
 
     it 'checks if there are defined routes' do
       router = Hanami::Router.new
-      expect(router)not_to be(:defined)
+      expect(router).not_to be(:defined)
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
       expect(router).to be(:defined)

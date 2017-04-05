@@ -40,7 +40,7 @@ RSpec.describe 'SCRIPT_NAME' do
     get script_name
 
     expect(response.status).to eq(200)
-    expect(request.env['SCRIPT_NAME']).to eq(script_name
+    expect(request.env['SCRIPT_NAME']).to eq(script_name)
     expect(request.env['SCRIPT_NAME']).to be_kind_of(String)
 
     expect(request.env['PATH_INFO']).to eq('')
