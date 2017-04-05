@@ -1,4 +1,4 @@
-Rspec.describe Hanami::Routing::Resource::Options do
+RSpec.describe Hanami::Routing::Resource::Options do
   before do
     @actions = [:index, :new, :create, :show, :edit, :update, :destroy]
   end
