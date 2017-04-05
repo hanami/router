@@ -84,7 +84,7 @@ RSpec.describe Hanami::Router do
         end
 
         expect(@app.request('GET', '/users/management/avatar', lint: true).body).to eq('Avatar::Show')
-        expect(@router.path(:users_management_avatar)).to eq('/users/management/avatar")
+        expect(@router.path(:users_management_avatar)).to eq('/users/management/avatar')
       end
 
       it 'defines #resources correctly' do
