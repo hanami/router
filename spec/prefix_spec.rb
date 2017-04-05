@@ -26,7 +26,7 @@ module Prefix
   end
 end
 
-describe Hanami::Router do
+RSpec.describe Hanami::Router do
   describe 'with prefix option' do
     before do
       @router = Hanami::Router.new(scheme: 'https', host: 'hanami.test', port: 443, prefix: '/admin', namespace: Prefix::Controllers) do
