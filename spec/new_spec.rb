@@ -44,7 +44,7 @@ RSpec.describe Hanami::Router do
         root to: ->(env) { }
       end
 
-      expect(router.url(:root).to match('https')
+      expect(router.url(:root)).to match('https')
     end
 
     it 'sets custom separator' do
