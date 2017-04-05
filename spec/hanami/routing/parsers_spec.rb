@@ -6,7 +6,7 @@ RSpec.describe Hanami::Routing::Parsers do
       begin
         Hanami::Routing::Parsers.new(:a_parser)
       rescue Hanami::Routing::Parsing::UnknownParserError => e
-        expect(e.message).to eq() "Unknown Parser: `a_parser'")
+        expect(e.message).to eq( "Unknown Parser: `a_parser'")
       end
     end
   end
