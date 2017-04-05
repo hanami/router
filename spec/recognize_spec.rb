@@ -152,7 +152,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
-        expect(route.params).to eq(id: '1'))
+        expect(route.params).to eq(id: '1')
       end
 
       it 'recognizes action with naming convention (home#index)' do
@@ -275,7 +275,7 @@ RSpec.describe Hanami::Router do
         expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
-        expect(route.params).to eq(id: '1'))
+        expect(route.params).to eq(id: '1')
       end
 
       it 'recognizes action with naming convention (home#index)' do
