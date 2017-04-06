@@ -59,7 +59,7 @@ RSpec.describe Hanami::Router do
       expect(defined? router).to be false
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
-      expect(defined? router).to be_truthy
+      expect(defined? router).to be false
     end
 
     it 'recognizes root' do
