@@ -1,5 +1,3 @@
-require 'rspec'
-
 class RecognitionTestCase
   HEADER_ENV     = '_env'.freeze
   ROUTER_PARAMS  = 'router.params'.freeze
@@ -22,10 +20,10 @@ class RecognitionTestCase
 
       case status
       when 200
-        expect(headers[HEADER_ENV][ROUTER_PARAMS]).to eq(params || {})
-        expect(body).to eq(                          Array(name.to_s))
+        headers[HEADER_ENV][ROUTER_PARAMS].must_equal params || {}
+        body.must_equal                               Array(name.to_s)
       when 404
-        expect(name).to be_nil
+        name.must_be_nil
       end
     end
   end
