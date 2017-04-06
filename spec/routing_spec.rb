@@ -95,7 +95,7 @@ RSpec.describe Hanami::Router do
   describe 'root' do
     describe 'path recognition' do
       it 'recognize fixed string' do
-        response = [@status=200, @body=['Fixed!']]
+        response = [200, {}, ['Fixed!']]
         @router.root(to: ->(env) { response })
 
         expect(@app.request('GET', '/', lint: true)).to be(response)
