@@ -22,7 +22,7 @@ RSpec.describe Hanami::Router do
         end
 
         it 'recognize moving parts string' do
-          response = [@status=200, @body='Moving!']
+          response = [@status=200, @body=['Moving!']]
           @router.send(verb, '/hanami/:id', to: ->(env) { response })
 
           expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to include(response)
@@ -96,7 +96,7 @@ RSpec.describe Hanami::Router do
   describe 'root' do
     describe 'path recognition' do
       it 'recognize fixed string' do
-        response = [@status=200, @body='Fixed!']
+        response = [@status=200, @body=['Fixed!']]
         @router.root(to: ->(env) { response })
 
         expect(@app.request('GET', '/', lint: true)).to include(response)

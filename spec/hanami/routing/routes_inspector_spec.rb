@@ -17,9 +17,9 @@ RSpec.describe Hanami::Routing::RoutesInspector do
 
       it 'inspects routes' do
         expectations = [
-          %(  root GET, HEAD  /                              #<Proc@#{ @path }:13 (lambda)>),
-          %( login GET, HEAD  /login                         #<Proc@#{ @path }:14 (lambda)>),
-          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:15>)
+          %(  root GET, HEAD  /                              #<Proc@#{ @path }:12 (lambda)>),
+          %( login GET, HEAD  /login                         #<Proc@#{ @path }:13 (lambda)>),
+          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:14>)
         ]
 
         actual = @router.inspector.to_s
