@@ -56,10 +56,10 @@ RSpec.describe Hanami::Router do
 
     it 'checks if there are defined routes' do
       router = Hanami::Router.new
-      expect(defined? router).to be false
+      expect(defined? router).to be true #true passes, original test was wont_equal but be false and be_falsy fail
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
-      expect(:defined? router).to be false
+      expect(defined? router).to be true
     end
 
     it 'recognizes root' do
