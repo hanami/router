@@ -22,7 +22,7 @@ RSpec.describe Hanami::Router do
         end
 
         it 'recognize moving parts string' do
-          response = [@status=200, @body=['Moving!']]
+          response = [200, {}, ['Moving!']]
           @router.send(verb, '/hanami/:id', to: ->(env) { response })
 
           expect(response).to be(@app.request(verb.upcase, '/hanami/23', lint: true))
@@ -81,7 +81,7 @@ RSpec.describe Hanami::Router do
 
       describe 'constraints' do
         it 'recognize when called with matching constraints' do
-          response = [@status=200, "@body='Moving with constraints!'"]
+          response = [200, {}, ['Moving with constraints!']]
 
           @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
           expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to be(response)
