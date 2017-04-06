@@ -1,5 +1,3 @@
-require 'rspec'
-
 class GenerationTestCase
   def initialize(router)
     @router = router
@@ -13,7 +11,7 @@ class GenerationTestCase
   private
   def _run!(type, tests)
     _for_each_test(type, tests) do |actual, expected|
-      expect(actual).to eq(expected)
+      actual.must_equal expected
     end
   end
 
