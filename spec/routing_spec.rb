@@ -25,14 +25,14 @@ RSpec.describe Hanami::Router do
           response = [200, {}, ['Moving!']]
           @router.send(verb, '/hanami/:id', to: ->(env) { response })
 
-          expect(response).to be(@app.request(verb.upcase, '/hanami/23', lint: true))
+          expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to be(response)
         end
 
         it 'recognize globbing string' do
           response = [200, {}, ['Globbing!']]
           @router.send(verb, '/hanami/*', to: ->(env) { response })
 
-          expect(response).to be(@app.request(verb.upcase, '/hanami/all', lint: true))
+          expect(@app.request(verb.upcase, '/hanami/all', lint: true)).to be(response)
         end
 
         it 'recognize format string' do
