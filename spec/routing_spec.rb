@@ -16,7 +16,7 @@ RSpec.describe Hanami::Router do
           response = [200, {}, ['Fixed!']]
           @router.send(verb, '/hanami', to: ->(env) { response })
 
-          expect(@app.request(verb.upcase, '/hanami', lint: true).to include(response)
+          expect(@app.request(verb.upcase, '/hanami', lint: true)).to include(response)
         end
 
         it 'recognize moving parts string' do
