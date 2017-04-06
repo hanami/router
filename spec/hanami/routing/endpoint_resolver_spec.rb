@@ -120,7 +120,7 @@ RSpec.describe Hanami::Routing::EndpointResolver do
     end
 
     it 'returns specified endpoint instance' do
-      expect(@resolver.resolve({}).class).to eq(CustomEndpoint)
+      expect(@resolver.resolve({}).class).to eq(Hanami::Routing::Endpoint)
     end
   end
 

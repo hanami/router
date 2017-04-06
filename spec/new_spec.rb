@@ -42,7 +42,7 @@ RSpec.describe Hanami::Router do
     it 'sets options' do
       router = Hanami::Router.new(scheme: 'https') do
         root to: ->(env) { }
-      end
+      end 
 
       expect(router.url(:root)).to match('https')
     end
@@ -56,10 +56,10 @@ RSpec.describe Hanami::Router do
 
     it 'checks if there are defined routes' do
       router = Hanami::Router.new
-      expect(router).not_to be(:defined)
+      expect(router).not_to be(:defined?)
 
       router = Hanami::Router.new { get '/', to: ->(env) { } }
-      expect(router).to be(:defined)
+      expect(router).to be(:defined?)
     end
 
     it 'recognizes root' do

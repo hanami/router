@@ -187,8 +187,7 @@ RSpec.describe Hanami::Router do
           expect(@app.request('PATCH',  '/electronics/keyboards/23', lint: true).status).to eq( 405)
           expect(@app.request('DELETE', '/electronics/keyboards/23', lint: true).status).to eq( 405)
 
-          exception = expect { @router.path(:new_electronics_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException)
-          expect(exception.message).to eq('No route (path) could be generated for :new_electronics_keyboards - please check given arguments')
+          expect { @router.path(:new_electronics_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments')
         end
       end
 
@@ -215,8 +214,7 @@ RSpec.describe Hanami::Router do
           expect(@app.request('PATCH',  '/electronics/keyboards/23', lint: true).status).to eq( 405)
           expect(@app.request('DELETE', '/electronics/keyboards/23', lint: true).status).to eq( 405)
 
-          exception = expect { @router.path(:new_electronics_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException)
-          expect(exception.message).to eq('No route (path) could be generated for :new_electronics_keyboards - please check given arguments')
+          expect { @router.path(:new_electronics_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_electronics_keyboards - please check given arguments')
         end
       end
 
@@ -343,8 +341,7 @@ RSpec.describe Hanami::Router do
           expect(@app.request('POST',   '/settings/profile', lint: true).status).to eq(    405)
           expect(@app.request('DELETE', '/settings/profile', lint: true).status).to eq(    405)
 
-          exception = expect { @router.path(:new_settings_profile) }.to raise_error(Hanami::Routing::InvalidRouteException)
-          expect(exception.message).to eq('No route (path) could be generated for :new_settings_profile - please check given arguments')
+          expect { @router.path(:new_settings_profile) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_settings_profile - please check given arguments')
         end
       end
 
@@ -372,8 +369,7 @@ RSpec.describe Hanami::Router do
         it 'does not recognize other paths' do
           expect(@app.request('GET', '/settings/profile/edit', lint: true).status).to eq(404)
 
-          exception = expect { @router.path(:edit_settings_profile) }.to raise_error(Hanami::Routing::InvalidRouteException)
-          expect(exception.message).to eq('No route (path) could be generated for :edit_settings_profile - please check given arguments')
+          expect { @router.path(:edit_settings_profile) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :edit_settings_profile - please check given arguments')
         end
       end
     end

@@ -22,7 +22,7 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_spec.rb:9 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
         expect(route.params).to eq({})
@@ -33,7 +33,7 @@ RSpec.describe Hanami::Router do
         route = @router.recognize(env)
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.action).to match( 'test/recognize_spec.rb:10 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
         expect(route.params).to eq(id: '1')
@@ -125,7 +125,7 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(env)
 
-        expect { route.call(env) }.to raise_error(NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
+        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
       end
     end
 
@@ -138,7 +138,7 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_spec.rb:9 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
         expect(route.params).to eq({})
@@ -148,7 +148,7 @@ RSpec.describe Hanami::Router do
         route = @router.recognize('/resources/1')
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.action).to match( 'test/recognize_spec.rb:10 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
         expect(route.params).to eq(id: '1')
@@ -234,20 +234,20 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize('/', method: :post)
 
-        expect { route.call(env) }.to raise_error(NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
+        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
       end
 
       it 'raises error if #call is invoked for unknown path' do
         route = @router.recognize('/unknown')
 
         #expect(route).not_to be_routable #Expected route to NOT be routable
-        expect(route.routable?).to be false
+        expect(route.routable?).to be_falsy
         expect(route.action).to be_nil
         expect(route.verb).to eq(    'GET')
         expect(route.path).to eq(    '/unknown')
         expect(route.params).to eq({})
 
-        expect { route.call({}) }.to raise_error(NotRoutableEndpointError, 'Cannot find routable endpoint for GET "/unknown"')
+        expect { route.call({}) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for GET "/unknown"')
         
       end
     end
@@ -261,7 +261,7 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'test/recognize_test.rb:11 (lambda)')
+        expect(route.action).to match( 'test/recognize_spec.rb:9 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
         expect(route.params).to eq({})
@@ -271,7 +271,7 @@ RSpec.describe Hanami::Router do
         route = @router.recognize(:params, id: 1)
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'test/recognize_test.rb:12 (lambda)')
+        expect(route.action).to match( 'test/recognize_spec.rb:10 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
         expect(route.params).to eq(id: '1')
@@ -367,7 +367,7 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(:home, { method: :post }, {})
 
-        expect { route.call(env) }.to raise_error(NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"' )
+        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"' )
         
       end
     end

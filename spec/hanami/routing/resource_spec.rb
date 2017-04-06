@@ -62,7 +62,7 @@ RSpec.describe Hanami::Router do
         expect(@app.request('GET',    '/profile', lint: true).status).to eq(    405)
         expect(@app.request('DELETE', '/profile', lint: true).status).to eq(    405)
 
-        expect { @router.path(:new_profile) }.to raise_error(InvalidRouteException, 'No route (path) could be generated for :new_profile - please check given arguments')
+        expect { @router.path(:new_profile) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_profile - please check given arguments')
        end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe Hanami::Router do
         expect(@app.request('GET',    '/profile', lint: true).status).to eq(    405)
         expect(@app.request('DELETE', '/profile', lint: true).status).to eq(    405)
 
-        expect { @router.path(:new_profile) }.to raise_error(InvalidRouteException, 'No route (path) could be generated for :new_profile - please check given arguments')
+        expect { @router.path(:new_profile) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_profile - please check given arguments')
         
       end
     end
@@ -165,7 +165,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'does not recognize the resource name' do
-        e = Hanami::Routing::InvalidRouteException
+        e = Hanami::Routing::Hanami::Routing::InvalidRouteException
         expect { @router.path(:keyboard) }.to raise_error( e)
         expect { @router.path(:new_keyboard) }.to raise_error( e)
         expect { @router.path(:edit_keyboard) }.to raise_error( e)

@@ -68,8 +68,7 @@ RSpec.describe Hanami::Router do
         expect(@app.request('PATCH',  '/keyboards/23', lint: true).status).to eq( 405)
         expect(@app.request('DELETE', '/keyboards/23', lint: true).status).to eq( 405)
 
-        exception = expect { @router.path(:new_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException)
-        expect(exception.message).to eq('No route (path) could be generated for :new_keyboards - please check given arguments')
+        expect { @router.path(:new_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_keyboards - please check given arguments')
       end
     end
 
@@ -94,8 +93,7 @@ RSpec.describe Hanami::Router do
         expect(@app.request('PATCH',  '/keyboards/23', lint: true).status).to eq( 405)
         expect(@app.request('DELETE', '/keyboards/23', lint: true).status).to eq( 405)
 
-        exception = expect { @router.path(:new_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException)
-        expect(exception.message).to eq('No route (path) could be generated for :new_keyboards - please check given arguments')
+        expect { @router.path(:new_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_keyboards - please check given arguments')
       end
     end
 
