@@ -1,4 +1,5 @@
 class GenerationTestCase
+  include ::RSpec::Matchers
   def initialize(router)
     @router = router
   end
@@ -11,7 +12,7 @@ class GenerationTestCase
   private
   def _run!(type, tests)
     _for_each_test(type, tests) do |actual, expected|
-      actual.must_equal expected
+      expect(actual).to eq(expected)
     end
   end
 

@@ -1,4 +1,5 @@
 class RecognitionTestCase
+  include ::RSpec::Matchers
   HEADER_ENV     = '_env'.freeze
   ROUTER_PARAMS  = 'router.params'.freeze
   REQUEST_METHOD = 'REQUEST_METHOD'.freeze
@@ -21,9 +22,9 @@ class RecognitionTestCase
       case status
       when 200
         headers[HEADER_ENV][ROUTER_PARAMS].must_equal params || {}
-        body.must_equal                               Array(name.to_s)
+        expect(body).to eq(                              Array(name.to_s))
       when 404
-        name.must_be_nil
+        expect(name).to be_nil
       end
     end
   end
