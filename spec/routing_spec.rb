@@ -22,10 +22,10 @@ RSpec.describe Hanami::Router do
         end
 
         it 'recognize moving parts string' do
-          response = [200, {}, ['Moving!']]
+          response = [@status=200, @body='Moving!']
           @router.send(verb, '/hanami/:id', to: ->(env) { response })
 
-          expect(response).to eql(@app.request(verb.upcase, '/hanami/23', lint: true))
+          expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to include(response)
         end
 
         it 'recognize globbing string' do
@@ -81,7 +81,7 @@ RSpec.describe Hanami::Router do
 
       describe 'constraints' do
         it 'recognize when called with matching constraints' do
-          response = ['@status=200', "@body='Moving with constraints!'"]
+          response = [@status=200, "@body='Moving with constraints!'"]
 
           @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
           expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to include(response)
@@ -96,10 +96,10 @@ RSpec.describe Hanami::Router do
   describe 'root' do
     describe 'path recognition' do
       it 'recognize fixed string' do
-        response = [200, {}, ['Fixed!']]
+        response = [@status=200, @body='Fixed!']
         @router.root(to: ->(env) { response })
 
-        expect(response).to eql(@app.request('GET', '/', lint: true))
+        expect(@app.request('GET', '/', lint: true)).to include(response)
       end
 
       it 'accepts a block' do
