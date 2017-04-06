@@ -18,7 +18,7 @@ RSpec.describe Hanami::Router do
           areq = @app.request(verb.upcase, '/hanami', lint: true)
 
           expect(areq.status).to eq(200)
-          expect(areq.body).to eq(['Fixed!'])
+          expect(areq.body).to eq('Fixed!')
         end
 
         it 'recognize moving parts string' do
@@ -81,10 +81,10 @@ RSpec.describe Hanami::Router do
 
       describe 'constraints' do
         it 'recognize when called with matching constraints' do
-          response = [200, {}, ['Moving with constraints!']]
+          response = ['@status=200', "@body='Moving with constraints!'"]
 
           @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
-          expect(response).to eql(@app.request(verb.upcase, '/hanami/23', lint: true))
+          expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to include(response)
 
           expect(@app.request(verb.upcase, '/hanami/flower', lint: true).status).to eq( 404)
         end
