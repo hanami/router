@@ -13,7 +13,7 @@ RSpec.describe Hanami::Router do
     describe "##{ verb }" do
       describe 'path recognition' do
         it 'recognize fixed string' do
-          response = [300, {}, ['Fixed!']]
+          response = [200, {}, ['Fixed!']]
           @router.send(verb, '/hanami', to: ->(env) { response })
           
           expect(@app.request(verb.upcase, '/hanami', lint: true)).to be(response)
