@@ -15,10 +15,9 @@ RSpec.describe Hanami::Router do
         it 'recognize fixed string' do
           response = [200, {}, ['Fixed!']]
           @router.send(verb, '/hanami', to: ->(env) { response })
-          areq = @app.request(verb.upcase, '/hanami', lint: true)
+          
+          expect(@app.request(verb.upcase, '/hanami', lint: true)) to be(response)
 
-          expect(areq.status).to eq(200)
-          expect(areq.body).to eq('Fixed!')
         end
 
         it 'recognize moving parts string' do
@@ -39,14 +38,14 @@ RSpec.describe Hanami::Router do
           response = [200, {}, ['Format!']]
           @router.send(verb, '/hanami/:id(.:format)', to: ->(env) { response })
 
-          expect(response).to be(@app.request(verb.upcase, '/hanami/all.json', lint: true))
+          expect(@app.request(verb.upcase, '/hanami/all.json', lint: true)).to be(response)
         end
 
         it 'accepts a block' do
           response = [200, {}, ['Block!']]
           @router.send(verb, '/block') {|e| response }
 
-          expect(response).to be(@app.request(verb.upcase, '/block', lint: true))
+          expect(@app.request(verb.upcase, '/block', lint: true)).to be(response)
         end
       end
 
@@ -82,8 +81,8 @@ RSpec.describe Hanami::Router do
       describe 'constraints' do
         it 'recognize when called with matching constraints' do
           response = [200, {}, ['Moving with constraints!']]
-
           @router.send(verb, '/hanami/:id', to: ->(env) { response }, id: /\d+/)
+          
           expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to be(response)
 
           expect(@app.request(verb.upcase, '/hanami/flower', lint: true).status).to eq( 404)
@@ -99,14 +98,14 @@ RSpec.describe Hanami::Router do
         response = [@status=200, @body=['Fixed!']]
         @router.root(to: ->(env) { response })
 
-        expect(response).to be(@app.request('GET', '/', lint: true))
+        expect(@app.request('GET', '/', lint: true)).to be(response)
       end
 
       it 'accepts a block' do
         response = [200, {}, ['Block!']]
         @router.root {|e| response }
 
-        expect(response).to be(@app.request('GET', '/', lint: true))
+        expect(@app.request('GET', '/', lint: true)).to be(response)
       end
     end
 
