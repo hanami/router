@@ -1,3 +1,5 @@
+require 'test_helper'
+
 RSpec.describe Hanami::Router do
   describe 'recognition' do
     before do

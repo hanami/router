@@ -165,7 +165,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'does not recognize the resource name' do
-        e = Hanami::Routing::Hanami::Routing::InvalidRouteException
+        e = Hanami::Routing::InvalidRouteException
         expect { @router.path(:keyboard) }.to raise_error( e)
         expect { @router.path(:new_keyboard) }.to raise_error( e)
         expect { @router.path(:edit_keyboard) }.to raise_error( e)

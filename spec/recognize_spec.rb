@@ -138,7 +138,7 @@ RSpec.describe Hanami::Router do
         expect(body).to eq( ['OK'])
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'spec/recognize_spec.rb:9 (lambda)')
+        expect(route.action).to include( 'spec/recognize_spec.rb:9 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/proc')
         expect(route.params).to eq({})
@@ -148,7 +148,7 @@ RSpec.describe Hanami::Router do
         route = @router.recognize('/resources/1')
 
         expect(route.routable?).to be true #Expected route to be routable
-        expect(route.action).to match( 'spec/recognize_spec.rb:10 (lambda)')
+        expect(route.action).to include( 'spec/recognize_spec.rb:10 (lambda)')
         expect(route.verb).to eq(   'GET')
         expect(route.path).to eq(   '/resources/1')
         expect(route.params).to eq(id: '1')
