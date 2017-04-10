@@ -4,7 +4,7 @@ RSpec.describe Hanami::Router do
       class MockRoute
       end
 
-      endpoint = ->(env) { [200, {}, ['']] }
+      endpoint = ->(_env) { [200, {}, ['']] }
       @router = Hanami::Router.new do
         root                to: endpoint
         get '/route',       to: endpoint
@@ -20,12 +20,12 @@ RSpec.describe Hanami::Router do
     end
 
     it 'returns instance of Hanami::Router with empty block' do
-      router = Hanami::Router.new { }
+      router = Hanami::Router.new {}
       expect(router).to be_instance_of(Hanami::Router)
     end
 
     it 'evaluates routes passed from Hanami::Router.define' do
-      routes = Hanami::Router.define { post '/domains', to: ->(env) {[201, {}, ['Domain Created']]} }
+      routes = Hanami::Router.define { post '/domains', to: ->(_env) { [201, {}, ['Domain Created']] } }
       router = Hanami::Router.new(&routes)
 
       app      = Rack::MockRequest.new(router)
@@ -41,8 +41,8 @@ RSpec.describe Hanami::Router do
 
     it 'sets options' do
       router = Hanami::Router.new(scheme: 'https') do
-        root to: ->(env) { }
-      end 
+        root to: ->(env) {}
+      end
 
       expect(router.url(:root)).to match('https')
     end
@@ -58,7 +58,7 @@ RSpec.describe Hanami::Router do
       router = Hanami::Router.new
       expect(router.defined?).to be false
 
-      router = Hanami::Router.new { get '/', to: ->(env) { } }
+      router = Hanami::Router.new { get '/', to: ->(env) {} }
       expect(router.defined?).to be true
     end
 

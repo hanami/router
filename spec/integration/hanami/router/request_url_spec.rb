@@ -6,9 +6,9 @@ RSpec.describe 'SCRIPT_NAME' do
 
   before do
     @container = Hanami::Router.new do
-      @some_test_router = Hanami::Router.new(prefix: '/admin') {
+      @some_test_router = Hanami::Router.new(prefix: '/admin') do
         get '/foo', to: ->(env) { [200, {}, [::Rack::Request.new(env).url]] }, as: :foo
-      }
+      end
       mount @some_test_router, at: '/admin'
     end
   end
@@ -45,6 +45,6 @@ RSpec.describe 'SCRIPT_NAME' do
 
     expect(request.env['PATH_INFO']).to eq('')
     expect(request.env['PATH_INFO']).to be_kind_of(String)
-    expect(response.body).to eq("http://example.org#{ script_name }")
+    expect(response.body).to eq("http://example.org#{script_name}")
   end
 end

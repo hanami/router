@@ -1,6 +1,6 @@
 RSpec.describe 'Pass on response' do
   before do
-    @routes = Hanami::Router.new { get '/', to: ->(env) { Rack::Response.new } }
+    @routes = Hanami::Router.new { get '/', to: ->(_env) { Rack::Response.new } }
     @app    = Rack::MockRequest.new(@routes)
   end
 

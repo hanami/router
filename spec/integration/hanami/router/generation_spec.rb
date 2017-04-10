@@ -12,9 +12,9 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test', {var: 'test'}],
-          [:a, '/test', {var: 'test'}]
-        ])
+                     [:a, '/test', { var: 'test' }],
+                     [:a, '/test', { var: 'test' }]
+                   ])
       end
     end
 
@@ -25,9 +25,9 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/%C3%A4', {var: 'ä'}],
-          [:a, '/%C3%A4', ['ä']],
-        ])
+                     [:a, '/%C3%A4', { var: 'ä' }],
+                     [:a, '/%C3%A4', ['ä']]
+                   ])
       end
     end
 
@@ -38,9 +38,9 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/one/two', {var: 'one', baz: 'two'}],
-          [:a, '/one/two', ['one', 'two']]
-        ])
+                     [:a, '/one/two', { var: 'one', baz: 'two' }],
+                     [:a, '/one/two', %w[one two]]
+                   ])
       end
     end
 
@@ -55,12 +55,12 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/'],
-          [:b, '/test'],
-          [:c, '/test/time'],
-          [:d, '/one/more/what'],
-          [:e, '/test.html']
-        ])
+                     [:a, '/'],
+                     [:b, '/test'],
+                     [:c, '/test/time'],
+                     [:d, '/one/more/what'],
+                     [:e, '/test.html']
+                   ])
       end
     end
 
@@ -71,8 +71,8 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/var?foo%5B%5D=baz&foo%5B%5D=bar', {foo: ['baz', 'bar']}]
-        ])
+                     [:a, '/var?foo%5B%5D=baz&foo%5B%5D=bar', { foo: %w[baz bar] }]
+                   ])
       end
     end
 
@@ -83,8 +83,8 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/var?foo%5Baz%5D=baz', {foo: {az: 'baz'}}]
-        ])
+                     [:a, '/var?foo%5Baz%5D=baz', { foo: { az: 'baz' } }]
+                   ])
       end
     end
 
@@ -95,8 +95,8 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/var?foo%5Baz%5D%5B%5D=baz', {foo: {az: ['baz']}}]
-        ])
+                     [:a, '/var?foo%5Baz%5D%5B%5D=baz', { foo: { az: ['baz'] } }]
+                   ])
       end
     end
 
@@ -107,9 +107,9 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test?query=string', {var: 'test', query: 'string'}],
-          [:a, '/test?query=string', ['test', {query: 'string'}]]
-        ])
+                     [:a, '/test?query=string', { var: 'test', query: 'string' }],
+                     [:a, '/test?query=string', ['test', { query: 'string' }]]
+                   ])
       end
     end
 
@@ -120,9 +120,9 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test.html', {format: 'html'}],
-          [:a, '/test.html', ['html']]
-        ])
+                     [:a, '/test.html', { format: 'html' }],
+                     [:a, '/test.html', ['html']]
+                   ])
       end
     end
 
@@ -133,10 +133,10 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test.html', {format: 'html'}],
-          [:a, '/test.html', ['html']],
-          [:a, '/test']
-        ])
+                     [:a, '/test.html', { format: 'html' }],
+                     [:a, '/test.html', ['html']],
+                     [:a, '/test']
+                   ])
       end
     end
 
@@ -147,11 +147,11 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test.html', {var: 'test', format: 'html'}],
-          [:a, '/test.html', ['test', 'html']],
-          # [:a, '/test.html', ['test', {format: 'html'}]],
-          # [:a, '/test.html', {format: 'html'}]
-        ])
+                     [:a, '/test.html', { var: 'test', format: 'html' }],
+                     [:a, '/test.html', %w[test html]],
+                     # [:a, '/test.html', ['test', {format: 'html'}]],
+                     # [:a, '/test.html', {format: 'html'}]
+                   ])
       end
     end
 
@@ -162,14 +162,14 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test.html', {var: 'test', format: 'html'}],
-          [:a, '/test.html', ['test', 'html']],
-          # [:a, '/test.html', ['test', {format: 'html'}]],
-          [:a, '/test', ['test']],
-          [:a, '/test', {var: 'test'}],
-          # [:a, nil, {format: 'html'}],
-          # [:a, nil]
-        ])
+                     [:a, '/test.html', { var: 'test', format: 'html' }],
+                     [:a, '/test.html', %w[test html]],
+                     # [:a, '/test.html', ['test', {format: 'html'}]],
+                     [:a, '/test', ['test']],
+                     [:a, '/test', { var: 'test' }],
+                     # [:a, nil, {format: 'html'}],
+                     # [:a, nil]
+                   ])
       end
     end
 
@@ -180,12 +180,12 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/foo/bar', {var1: 'foo', var2: 'bar'}],
-          # [:a, nil, ['foo', {var1: 'bar'}]],
-          [:a, '/foo', {var1: 'foo'}],
-          [:a, '/foo', ['foo']],
-          [:a, '/foo', ['foo', nil]],
-        ])
+                     [:a, '/foo/bar', { var1: 'foo', var2: 'bar' }],
+                     # [:a, nil, ['foo', {var1: 'bar'}]],
+                     [:a, '/foo', { var1: 'foo' }],
+                     [:a, '/foo', ['foo']],
+                     [:a, '/foo', ['foo', nil]]
+                   ])
       end
     end
 
@@ -196,10 +196,10 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/test/test2.html', {var1: 'test', var2: 'test2', format: 'html'}],
-          # [:a, '/test/test2.html', ['test', 'test2', 'html']],
-          [:a, '/test', ['test']],
-        ])
+                     [:a, '/test/test2.html', { var1: 'test', var2: 'test2', format: 'html' }],
+                     # [:a, '/test/test2.html', ['test', 'test2', 'html']],
+                     [:a, '/test', ['test']]
+                   ])
       end
     end
 
@@ -210,13 +210,13 @@ RSpec.describe Hanami::Router do
 
       it 'generates relative and absolute URLs' do
         @test.run!([
-          [:a, '/var/fooz/baz', {var1: 'var', var2: 'fooz', var3: 'baz'}],
-          [:a, '/var/fooz', {var1: 'var', var2: 'fooz'}],
-          [:a, '/var', {var1: 'var'}],
-          # [:a, '/var/fooz/baz', ['var', 'fooz', 'baz']],
-          [:a, '/var/fooz', ['var', 'fooz']],
-          [:a, '/var', ['var']],
-        ])
+                     [:a, '/var/fooz/baz', { var1: 'var', var2: 'fooz', var3: 'baz' }],
+                     [:a, '/var/fooz', { var1: 'var', var2: 'fooz' }],
+                     [:a, '/var', { var1: 'var' }],
+                     # [:a, '/var/fooz/baz', ['var', 'fooz', 'baz']],
+                     [:a, '/var/fooz', %w[var fooz]],
+                     [:a, '/var', ['var']]
+                   ])
       end
     end
   end

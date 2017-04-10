@@ -16,11 +16,11 @@ RSpec.describe 'Hanami::Controller integration' do
 
   it 'recognizes single endpoint (with naming convention)' do
     response = @app.get('/ccs', lint: true)
-     expect(response.body).to eq('Hello from CreditCards::Index')
+    expect(response.body).to eq('Hello from CreditCards::Index')
   end
 
   it 'recognizes RESTful endpoint' do
     response = @app.get('/credit_cards', lint: true)
-     expect(response.body).to eq('Hello from CreditCards::Index')
+    expect(response.body).to eq('Hello from CreditCards::Index')
   end
 end

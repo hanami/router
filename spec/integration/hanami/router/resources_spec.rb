@@ -14,59 +14,59 @@ RSpec.describe Hanami::Router do
     end
 
     it 'recognizes get index' do
-      expect(@router.path(:flowers)).to eq(                          '/flowers')
+      expect(@router.path(:flowers)).to eq('/flowers')
       expect(@app.request('GET', '/flowers', lint: true).body).to eq('Flowers::Index')
     end
 
     it 'recognizes get new' do
-      expect(@router.path(:new_flower)).to eq(                           '/flowers/new')
+      expect(@router.path(:new_flower)).to eq('/flowers/new')
       expect(@app.request('GET', '/flowers/new', lint: true).body).to eq('Flowers::New')
     end
 
     it 'recognizes post create' do
-      expect(@router.path(:flowers)).to eq(                           '/flowers')
+      expect(@router.path(:flowers)).to eq('/flowers')
       expect(@app.request('POST', '/flowers', lint: true).body).to eq('Flowers::Create')
     end
 
     it 'recognizes get show' do
-      expect(@router.path(:flower, id: 23)).to eq(                      '/flowers/23')
+      expect(@router.path(:flower, id: 23)).to eq('/flowers/23')
       expect(@app.request('GET', '/flowers/23', lint: true).body).to eq('Flowers::Show 23')
     end
 
     it 'recognizes get edit' do
-      expect(@router.path(:edit_flower, id: 23)).to eq(                      '/flowers/23/edit')
+      expect(@router.path(:edit_flower, id: 23)).to eq('/flowers/23/edit')
       expect(@app.request('GET', '/flowers/23/edit', lint: true).body).to eq('Flowers::Edit 23')
     end
 
     it 'recognizes patch update' do
-      expect(@router.path(:flower, id: 23)).to eq(                        '/flowers/23')
+      expect(@router.path(:flower, id: 23)).to eq('/flowers/23')
       expect(@app.request('PATCH', '/flowers/23', lint: true).body).to eq('Flowers::Update 23')
     end
 
     it 'recognizes delete destroy' do
-      expect(@router.path(:flower, id: 23)).to eq(                         '/flowers/23')
+      expect(@router.path(:flower, id: 23)).to eq('/flowers/23')
       expect(@app.request('DELETE', '/flowers/23', lint: true).body).to eq('Flowers::Destroy 23')
     end
 
     describe ':only option' do
       before do
-        @router.resources 'keyboards', only: [:index, :edit]
+        @router.resources 'keyboards', only: %i[index edit]
       end
 
       it 'recognizes only specified paths' do
-        expect(@router.path(:keyboards)).to eq(                          '/keyboards')
+        expect(@router.path(:keyboards)).to eq('/keyboards')
         expect(@app.request('GET', '/keyboards', lint: true).body).to eq('Keyboards::Index')
 
-        expect(@router.path(:edit_keyboard, id: 23)).to eq(                      '/keyboards/23/edit')
+        expect(@router.path(:edit_keyboard, id: 23)).to eq('/keyboards/23/edit')
         expect(@app.request('GET', '/keyboards/23/edit', lint: true).body).to eq('Keyboards::Edit 23')
       end
 
       it 'does not recognize other paths' do
         expect(@app.request('GET',    '/keyboards/new', lint: true).status).to eq(404)
-        expect(@app.request('POST',   '/keyboards', lint: true).status).to eq(    405)
-        expect(@app.request('GET',    '/keyboards/23', lint: true).status).to eq( 404)
-        expect(@app.request('PATCH',  '/keyboards/23', lint: true).status).to eq( 405)
-        expect(@app.request('DELETE', '/keyboards/23', lint: true).status).to eq( 405)
+        expect(@app.request('POST',   '/keyboards', lint: true).status).to eq(405)
+        expect(@app.request('GET',    '/keyboards/23', lint: true).status).to eq(404)
+        expect(@app.request('PATCH',  '/keyboards/23', lint: true).status).to eq(405)
+        expect(@app.request('DELETE', '/keyboards/23', lint: true).status).to eq(405)
 
         expect { @router.path(:new_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_keyboards - please check given arguments')
       end
@@ -74,24 +74,24 @@ RSpec.describe Hanami::Router do
 
     describe ':except option' do
       before do
-        @router.resources 'keyboards', except: [:new, :show, :update, :destroy]
+        @router.resources 'keyboards', except: %i[new show update destroy]
       end
 
       it 'recognizes only the non-rejected paths' do
-        expect(@router.path(:keyboards)).to eq(                          '/keyboards')
+        expect(@router.path(:keyboards)).to eq('/keyboards')
         expect(@app.request('GET', '/keyboards', lint: true).body).to eq('Keyboards::Index')
 
-        expect(@router.path(:edit_keyboard, id: 23)).to eq(                      '/keyboards/23/edit')
+        expect(@router.path(:edit_keyboard, id: 23)).to eq('/keyboards/23/edit')
         expect(@app.request('GET', '/keyboards/23/edit', lint: true).body).to eq('Keyboards::Edit 23')
 
-        expect(@router.path(:keyboards)).to eq(                           '/keyboards')
+        expect(@router.path(:keyboards)).to eq('/keyboards')
         expect(@app.request('POST', '/keyboards', lint: true).body).to eq('Keyboards::Create')
       end
 
       it 'does not recognize other paths' do
         expect(@app.request('GET',    '/keyboards/new', lint: true).status).to eq(404)
-        expect(@app.request('PATCH',  '/keyboards/23', lint: true).status).to eq( 405)
-        expect(@app.request('DELETE', '/keyboards/23', lint: true).status).to eq( 405)
+        expect(@app.request('PATCH',  '/keyboards/23', lint: true).status).to eq(405)
+        expect(@app.request('DELETE', '/keyboards/23', lint: true).status).to eq(405)
 
         expect { @router.path(:new_keyboards) }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :new_keyboards - please check given arguments')
       end
@@ -108,12 +108,12 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes the path' do
-        expect(@router.path(:screenshot_keyboard, id: 23)).to eq(                      '/keyboards/23/screenshot')
+        expect(@router.path(:screenshot_keyboard, id: 23)).to eq('/keyboards/23/screenshot')
         expect(@app.request('GET', '/keyboards/23/screenshot', lint: true).body).to eq('Keyboards::Screenshot 23')
       end
 
       it 'recognizes the path with a leading slash' do
-        expect(@router.path(:print_keyboard, id: 23)).to eq(                      '/keyboards/23/print')
+        expect(@router.path(:print_keyboard, id: 23)).to eq('/keyboards/23/print')
         expect(@app.request('GET', '/keyboards/23/print', lint: true).body).to eq('Keyboards::Print 23')
       end
     end
@@ -129,12 +129,12 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes the path' do
-        expect(@router.path(:search_keyboards)).to eq(                          '/keyboards/search')
+        expect(@router.path(:search_keyboards)).to eq('/keyboards/search')
         expect(@app.request('GET', '/keyboards/search', lint: true).body).to eq('Keyboards::Search')
       end
 
       it 'recognizes the path with a leading slash' do
-        expect(@router.path(:characters_keyboards)).to eq(                          '/keyboards/characters')
+        expect(@router.path(:characters_keyboards)).to eq('/keyboards/characters')
         expect(@app.request('GET', '/keyboards/characters', lint: true).body).to eq('Keyboards::Characters')
       end
     end

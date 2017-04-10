@@ -6,7 +6,7 @@ RSpec.describe Hanami::Routing::Parsers do
       begin
         Hanami::Routing::Parsers.new(:a_parser)
       rescue Hanami::Routing::Parsing::UnknownParserError => e
-        expect(e.message).to eq( "Unknown Parser: `a_parser'")
+        expect(e.message).to eq("Unknown Parser: `a_parser'")
       end
     end
   end
@@ -16,7 +16,7 @@ RSpec.describe Hanami::Routing::Parsers do
       @parsers = Hanami::Routing::Parsers.new(parsers)
     end
 
-    let(:env)  { Rack::MockRequest.env_for('/', method: 'POST', 'CONTENT_TYPE' => content_type, input: body) }
+    let(:env) { Rack::MockRequest.env_for('/', method: 'POST', 'CONTENT_TYPE' => content_type, input: body) }
     let(:body)         { '' }
     let(:content_type) { '' }
 
@@ -24,7 +24,7 @@ RSpec.describe Hanami::Routing::Parsers do
       let(:parsers) { nil }
 
       it "returns the env as it is" do
-        expect(@parsers.call(env)).to eq((env))
+        expect(@parsers.call(env)).to eq(env)
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Hanami::Routing::Parsers do
       let(:parsers) { [] }
 
       it "returns the env as it is" do
-        expect(@parsers.call(env)).to eq((env))
+        expect(@parsers.call(env)).to eq(env)
       end
     end
 
@@ -45,12 +45,12 @@ RSpec.describe Hanami::Routing::Parsers do
 
         it "parses params from body" do
           result = @parsers.call(env)
-          expect(result['router.params']).to eq(({attribute: "ok"}))
+          expect(result['router.params']).to eq(attribute: "ok")
         end
 
         it "stores parsed body" do
           result = @parsers.call(env)
-          expect(result['router.parsed_body']).to eq(({'attribute' => "ok"}))
+          expect(result['router.parsed_body']).to eq('attribute' => "ok")
         end
 
         describe "with non hash body" do
@@ -58,12 +58,12 @@ RSpec.describe Hanami::Routing::Parsers do
 
           it "parses params from body" do
             result = @parsers.call(env)
-            expect(result['router.params']).to eq(({"_" => ["foo"]}))
+            expect(result['router.params']).to eq("_" => ["foo"])
           end
 
           it "stores parsed body" do
             result = @parsers.call(env)
-            expect(result['router.parsed_body']).to eq((["foo"]))
+            expect(result['router.parsed_body']).to eq(["foo"])
           end
         end
 
@@ -81,12 +81,12 @@ RSpec.describe Hanami::Routing::Parsers do
 
         it "parses params from body" do
           result = @parsers.call(env)
-          expect(result['router.params']).to eq(({data: {attribute: "ok"}}))
+          expect(result['router.params']).to eq(data: { attribute: "ok" })
         end
 
         it "stores parsed body" do
           result = @parsers.call(env)
-          expect(result['router.parsed_body']).to eq(({'data' => {'attribute' => "ok"}}))
+          expect(result['router.parsed_body']).to eq('data' => { 'attribute' => "ok" })
         end
 
         describe 'with malformed json' do
@@ -102,7 +102,7 @@ RSpec.describe Hanami::Routing::Parsers do
         let(:content_type) { 'application/xml' }
 
         it "returns the env as it is" do
-          expect(@parsers.call(env)).to eq((env))
+          expect(@parsers.call(env)).to eq(env)
         end
       end
     end

@@ -1,4 +1,4 @@
-RSpec.describe 'Nested resources' do
+RSpec.describe 'Inspector nested resources' do
   before do
     @router = Hanami::Router.new(namespace: Nested::Controllers) do
       resources :users do
@@ -15,9 +15,9 @@ RSpec.describe 'Nested resources' do
       end
 
       resources 'products' do
-        resources 'variants', only: [:index, :show]
+        resources 'variants', only: %i[index show]
       end
-      resources :admins, only: [:index, :show], controller: :agents do
+      resources :admins, only: %i[index show], controller: :agents do
         resources :comments, only: [:index], controller: :topics
       end
 
@@ -159,44 +159,44 @@ RSpec.describe 'Nested resources' do
     describe 'users -> posts' do
       it 'should match body' do
         response = @app.get('/users/1/posts', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::Users::Posts::Index')
+        expect(response.body).to eq('Hello from Nested::Controllers::Users::Posts::Index')
       end
     end
 
     describe 'users -> avatar' do
       it 'should match body' do
         response = @app.get('/users/1/avatar', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::Users::Avatar::Show')
+        expect(response.body).to eq('Hello from Nested::Controllers::Users::Avatar::Show')
       end
     end
 
     describe 'users -> posts -> comments' do
       it 'should match body' do
         response = @app.get('/users/1/posts/1/comments', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::Users::Posts::Comments::Index')
+        expect(response.body).to eq('Hello from Nested::Controllers::Users::Posts::Comments::Index')
       end
     end
 
     describe 'user -> comments' do
       it 'should match body' do
         response = @app.get('/user/comments', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::User::Comments::Index')
+        expect(response.body).to eq('Hello from Nested::Controllers::User::Comments::Index')
       end
     end
 
     describe 'user -> api_key' do
       it 'should match body' do
         response = @app.get('/user/api_key', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::User::ApiKey::Show')
+        expect(response.body).to eq('Hello from Nested::Controllers::User::ApiKey::Show')
       end
     end
 
     describe 'products -> variants' do
       it 'should match body' do
         response = @app.get('/products/1/variants', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::Products::Variants::Index')
+        expect(response.body).to eq('Hello from Nested::Controllers::Products::Variants::Index')
         response = @app.get('/products/1/variants/1', lint: true)
-        expect(response.body).to eq( 'Hello from Nested::Controllers::Products::Variants::Show')
+        expect(response.body).to eq('Hello from Nested::Controllers::Products::Variants::Show')
       end
     end
   end
@@ -214,12 +214,12 @@ RSpec.describe 'Nested resources' do
 
     it 'should products -> variants only create index and show' do
       expect(@inspector).to match('product_variants GET, HEAD  /products/:product_id/variants Nested::Controllers::Products::Variants::Index')
-      expect(@inspector).not_to match( 'new_product_variant GET, HEAD  /products/:products_id/variants/new Nested::Controllers::Products::Variants::New')
-      expect(@inspector).not_to match( 'product_variants POST       /products/:products_id/variants Nested::Controllers::Products::Variants::Create')
+      expect(@inspector).not_to match('new_product_variant GET, HEAD  /products/:products_id/variants/new Nested::Controllers::Products::Variants::New')
+      expect(@inspector).not_to match('product_variants POST       /products/:products_id/variants Nested::Controllers::Products::Variants::Create')
       expect(@inspector).to match('product_variant GET, HEAD  /products/:product_id/variants/:id Nested::Controllers::Products::Variants::Show')
-      expect(@inspector).not_to match( 'edit_product_variant GET, HEAD  /products/:products_id/variants/:id/edit Nested::Controllers::Products::Variants::Edit')
-      expect(@inspector).not_to match( 'product_variant PATCH      /products/:products_id/variants/:id Nested::Controllers::Products::Variants::Update')
-      expect(@inspector).not_to match( 'product_variant DELETE     /products/:products_id/variants/:id Nested::Controllers::Products::Variants::Destroy')
+      expect(@inspector).not_to match('edit_product_variant GET, HEAD  /products/:products_id/variants/:id/edit Nested::Controllers::Products::Variants::Edit')
+      expect(@inspector).not_to match('product_variant PATCH      /products/:products_id/variants/:id Nested::Controllers::Products::Variants::Update')
+      expect(@inspector).not_to match('product_variant DELETE     /products/:products_id/variants/:id Nested::Controllers::Products::Variants::Destroy')
     end
   end
 

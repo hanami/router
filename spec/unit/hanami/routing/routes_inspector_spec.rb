@@ -9,17 +9,17 @@ RSpec.describe Hanami::Routing::RoutesInspector do
     describe 'named routes with procs' do
       before do
         @router = Hanami::Router.new do
-          root           to: ->(env) { }
-          get '/login',  to: ->(env) { },       as: :login
-          get '/logout', to: Proc.new {|env| }, as: :logout
+          root           to: ->(env) {}
+          get '/login',  to: ->(env) {}, as: :login
+          get '/logout', to: proc { |env| }, as: :logout
         end
       end
 
       it 'inspects routes' do
         expectations = [
-          %(  root GET, HEAD  /                              #<Proc@#{ @path }:12 (lambda)>),
-          %( login GET, HEAD  /login                         #<Proc@#{ @path }:13 (lambda)>),
-          %(logout GET, HEAD  /logout                        #<Proc@#{ @path }:14>)
+          %(  root GET, HEAD  /                              #<Proc@#{@path}:12 (lambda)>),
+          %( login GET, HEAD  /login                         #<Proc@#{@path}:13 (lambda)>),
+          %(logout GET, HEAD  /logout                        #<Proc@#{@path}:14>)
         ]
 
         actual = @router.inspector.to_s
@@ -192,9 +192,9 @@ RSpec.describe Hanami::Routing::RoutesInspector do
 
       it 'inspects routes' do
         expectations = [
-         %(     books GET, HEAD  /books                         Books::Index),
+          %(     books GET, HEAD  /books                         Books::Index),
           %( new_book GET, HEAD  /books/new                     Books::New),
-         %(     books POST       /books                         Books::Create),
+          %(     books POST       /books                         Books::Create),
           %(     book GET, HEAD  /books/:id                     Books::Show),
           %(edit_book GET, HEAD  /books/:id/edit                Books::Edit),
           %(     book PATCH      /books/:id                     Books::Update),
@@ -217,9 +217,9 @@ RSpec.describe Hanami::Routing::RoutesInspector do
 
       it 'inspects routes' do
         expectations = [
-         %(     items GET, HEAD  /books                         Books::Index),
+          %(     items GET, HEAD  /books                         Books::Index),
           %( new_item GET, HEAD  /books/new                     Books::New),
-         %(     items POST       /books                         Books::Create),
+          %(     items POST       /books                         Books::Create),
           %(     item GET, HEAD  /books/:id                     Books::Show),
           %(edit_item GET, HEAD  /books/:id/edit                Books::Edit),
           %(     item PATCH      /books/:id                     Books::Update),
@@ -255,7 +255,7 @@ RSpec.describe Hanami::Routing::RoutesInspector do
     describe 'with custom formatter' do
       before do
         @router = Hanami::Router.new do
-          get '/login', to: ->(env) { }, as: :login
+          get '/login', to: ->(env) {}, as: :login
         end
         @proc_def_line = __LINE__ - 2
       end
@@ -263,7 +263,7 @@ RSpec.describe Hanami::Routing::RoutesInspector do
       it 'inspects routes' do
         formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
         expectations  = [
-          %(| GET, HEAD | login | /login | #<Proc@#{ @path }:#{ @proc_def_line } (lambda)> |)
+          %(| GET, HEAD | login | /login | #<Proc@#{@path}:#{@proc_def_line} (lambda)> |)
         ]
 
         actual = @router.inspector.to_s(formatter)
@@ -286,25 +286,26 @@ RSpec.describe Hanami::Routing::RoutesInspector do
           end
         end
 
-        inner_router = Hanami::Router.new {
+        inner_router = Hanami::Router.new do
           get '/comments', to: 'comments#index'
-        }
-        nested_router = Hanami::Router.new {
+        end
+        nested_router = Hanami::Router.new do
           get '/posts', to: 'posts#index'
           mount inner_router, at: '/second_mount'
-        }
+        end
 
         nested_non_hanami_router = Object.new
-        def nested_non_hanami_router.call(env)
+        def nested_non_hanami_router.call(_env)
         end
+
         def nested_non_hanami_router.routes
-          return {}
+          {}
         end
 
         @router = Hanami::Router.new do
           get '/fakeroute', to: 'fake#index'
-          mount AdminHanamiApp,  at: '/admin'
-          mount nested_router,  at: '/api'
+          mount AdminHanamiApp, at: '/admin'
+          mount nested_router, at: '/api'
           mount nested_non_hanami_router, at: '/foo'
           mount RackMiddleware, at: '/class'
           mount RackMiddlewareInstanceMethod,     at: '/instance_from_class'
@@ -339,7 +340,7 @@ RSpec.describe Hanami::Routing::RoutesInspector do
         header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s.split("\n")
-        actual.reject! { |l| !l.match(header) }
+        actual.select! { |l| l.match(header) }
         expect(actual.count).to eq(1)
       end
 
