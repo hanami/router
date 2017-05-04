@@ -629,12 +629,12 @@ require 'hanami/router'
 
 # See Hanami::Routing::Parsing::Parser
 class XmlParser
-  def mime_types
+  def self.mime_types
     ['application/xml', 'text/xml']
   end
 
   # Parse body and return a Hash
-  def parse(body)
+  def self.parse(body)
     # parse xml
   rescue SomeXmlParsingError => e
     raise Hanami::Routing::Parsing::BodyParsingError.new(e)
