@@ -99,7 +99,7 @@ RSpec.describe Hanami::Router do
         @router.get '/føø', as: :fixed, to: endpoint('fixed')
       end
 
-      it 'recognizes route(s)' do
+      xit 'recognizes route(s)' do
         @test.run!([
                      [:fixed, '/f%C3%B8%C3%B8']
                    ])
@@ -151,7 +151,7 @@ RSpec.describe Hanami::Router do
         @router.get ':var', as: :variable, to: endpoint('variable')
       end
 
-      it 'recognizes variable(s)' do
+      xit 'recognizes variable(s)' do
         @test.run!([
                      [:variable, '/%E6%AE%BA%E3%81%99', { var: '殺す' }]
                    ])
