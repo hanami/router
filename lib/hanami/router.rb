@@ -239,20 +239,28 @@ module Hanami
     #   # It returns
     #
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
-    def initialize(options = {}, &blk)
-      @routes    = []
-      @named     = {}
-      @namespace = options.fetch(:namespace, nil)
-      @base      = Uri.build(options)
-      @prefix    = Utils::PathPrefix.new(options.fetch(:prefix, ""))
-      @parsers   = Routing::Parsers.new(options[:parsers])
-      @force_ssl = Hanami::Routing::ForceSsl.new(options.fetch(:force_ssl, false), host: options.fetch(:host, "localhost"), port: options.fetch(:port, 443))
-      @not_found = options.fetch(:not_found, NOT_FOUND)
-      @not_allowed = options.fetch(:not_allowed, NOT_ALLOWED)
+    #
+    # rubocop:disable Metrics/ParameterLists
+    # rubocop:disable Metrics/MethodLength
+    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, parsers: [], force_ssl: false, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+      @routes      = []
+      @named       = {}
+      @namespace   = namespace
+      @base        = Uri.build(scheme: scheme, host: host, port: port)
+      @prefix      = Utils::PathPrefix.new(prefix)
+      @parsers     = Routing::Parsers.new(parsers)
+      @force_ssl   = Hanami::Routing::ForceSsl.new(force_ssl, host: host, port: port)
+      @not_found   = not_found
+      @not_allowed = not_allowed
       instance_eval(&blk) unless blk.nil?
       freeze
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/ParameterLists
 
+    # Freeze the router
+    #
+    # @since x.x.x
     def freeze
       @routes.freeze
       super
@@ -404,8 +412,8 @@ module Hanami
     #
     #    # It will map to Flowers::Index.new, which is the
     #    # Hanami::Controller convention.
-    def get(path, options = {}, &blk)
-      add_route(GET, path, options, &blk)
+    def get(path, to: nil, as: nil, **constraints, &blk)
+      add_route(GET, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts a POST request for the given path.
@@ -423,8 +431,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def post(path, options = {}, &blk)
-      add_route(POST, path, options, &blk)
+    def post(path, to: nil, as: nil, **constraints, &blk)
+      add_route(POST, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts a PUT request for the given path.
@@ -442,8 +450,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def put(path, options = {}, &blk)
-      add_route(PUT, path, options, &blk)
+    def put(path, to: nil, as: nil, **constraints, &blk)
+      add_route(PUT, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts a PATCH request for the given path.
@@ -461,8 +469,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def patch(path, options = {}, &blk)
-      add_route(PATCH, path, options, &blk)
+    def patch(path, to: nil, as: nil, **constraints, &blk)
+      add_route(PATCH, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts a DELETE request for the given path.
@@ -480,8 +488,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def delete(path, options = {}, &blk)
-      add_route(DELETE, path, options, &blk)
+    def delete(path, to: nil, as: nil, **constraints, &blk)
+      add_route(DELETE, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts a TRACE request for the given path.
@@ -499,8 +507,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def trace(path, options = {}, &blk)
-      add_route(TRACE, path, options, &blk)
+    def trace(path, to: nil, as: nil, **constraints, &blk)
+      add_route(TRACE, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts a LINK request for the given path.
@@ -518,8 +526,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.8.0
-    def link(path, options = {}, &blk)
-      add_route(LINK, path, options, &blk)
+    def link(path, to: nil, as: nil, **constraints, &blk)
+      add_route(LINK, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts an UNLINK request for the given path.
@@ -537,8 +545,27 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.8.0
-    def unlink(path, options = {}, &blk)
-      add_route(UNLINK, path, options, &blk)
+    def unlink(path, to: nil, as: nil, **constraints, &blk)
+      add_route(UNLINK, path, to, as, constraints, &blk)
+    end
+
+    # Defines a route that accepts a OPTIONS request for the given path.
+    #
+    # @param path [String] the relative URL to be matched
+    #
+    # @param options [Hash] the options to customize the route
+    # @option options [String,Proc,Class,Object#call] :to the endpoint
+    #
+    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
+    #
+    # @return [Hanami::Routing::Route] this may vary according to the :route
+    #   option passed to the constructor
+    #
+    # @see Hanami::Router#get
+    #
+    # @since 0.1.0
+    def options(path, to: nil, as: nil, **constraints, &blk)
+      add_route(OPTIONS, path, to, as, constraints, &blk)
     end
 
     # Defines a root route (a GET route for '/')
@@ -567,27 +594,8 @@ module Hanami
     #
     #   router.path(:root) # => "/"
     #   router.url(:root)  # => "https://hanamirb.org/"
-    def root(options = {}, &blk)
-      add_route(GET, ROOT_PATH, options.merge(as: :root), &blk)
-    end
-
-    # Defines a route that accepts a OPTIONS request for the given path.
-    #
-    # @param path [String] the relative URL to be matched
-    #
-    # @param options [Hash] the options to customize the route
-    # @option options [String,Proc,Class,Object#call] :to the endpoint
-    #
-    # @param blk [Proc] the anonymous proc to be used as endpoint for the route
-    #
-    # @return [Hanami::Routing::Route] this may vary according to the :route
-    #   option passed to the constructor
-    #
-    # @see Hanami::Router#get
-    #
-    # @since 0.1.0
-    def options(path, options = {}, &blk)
-      add_route(OPTIONS, path, options, &blk)
+    def root(to: nil, &blk)
+      add_route(GET, ROOT_PATH, to, :root, &blk)
     end
 
     # Defines an HTTP redirect
@@ -616,11 +624,9 @@ module Hanami
     #
     #   router = Hanami::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
-    def redirect(path, options = {})
-      opts      = options.dup
-      opts[:to] = Redirect.new(@prefix.join(opts[:to]).to_s, opts[:code] || 301)
-
-      add_route(GET, path, opts)
+    def redirect(path, to:, code: 301)
+      to = Redirect.new(@prefix.join(to).to_s, code)
+      add_route(GET, path, to)
     end
 
     # Defines a Ruby block: all the routes defined within it will be namespaced
@@ -1384,27 +1390,21 @@ module Hanami
       DEFAULT_SCHEME = HTTP
 
       def self.build(options)
-        # FIXME: avoid dup and default value for host, with kwargs in Router#initialize
-        opts = options.dup
-        opts[:host] ||= "localhost"
-
-        case opts.fetch(:scheme, DEFAULT_SCHEME)
+        case options.fetch(:scheme, DEFAULT_SCHEME)
         when HTTP
           URI::HTTP
         when HTTPS
           URI::HTTPS
-        end.build(opts).to_s
+        end.build(options).to_s
       end
     end
 
-    def add_route(verb, path, options, &blk)
-      opts = options.dup
-      to = opts.delete(:to) || blk
-      as = opts.delete(:as) || nil
+    def add_route(verb, path, to, as = nil, constraints = {}, &blk)
+      to ||= blk
 
       path     = path.to_s
       endpoint = Endpoint.find(to, @namespace)
-      route    = Route.new(verb, @prefix.join(path).to_s, endpoint, opts)
+      route    = Route.new(verb, @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)
       @named[as] = route unless as.nil?
