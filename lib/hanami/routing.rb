@@ -36,6 +36,7 @@ module Hanami
 
     require "hanami/routing/uri"
     require "hanami/routing/endpoint"
+    require "hanami/routing/redirect"
     require "hanami/routing/namespace"
     require "hanami/routing/resource"
     require "hanami/routing/resources"

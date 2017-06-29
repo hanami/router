@@ -618,7 +618,7 @@ module Hanami
     #   router = Hanami::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
     def redirect(path, to:, code: 301)
-      to = Redirect.new(@prefix.join(to).to_s, code)
+      to = Routing::Redirect.new(@prefix.join(to).to_s, code)
       add_route(GET, path, to)
     end
 
@@ -1336,19 +1336,6 @@ module Hanami
         env[PATH_INFO]   = "/" if env[PATH_INFO] == ""
 
         @endpoint.call(env)
-      end
-    end
-
-    class Redirect
-      LOCATION = "Location".freeze
-
-      def initialize(path, code)
-        @path = path
-        @code = code
-      end
-
-      def call(_)
-        [@code, { LOCATION => @path }, []]
       end
     end
 
