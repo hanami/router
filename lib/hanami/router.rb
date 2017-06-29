@@ -1,14 +1,7 @@
 require 'rack/request'
 require 'mustermann/rails'
+require 'hanami/routing'
 require 'hanami/utils/hash'
-require 'hanami/routing/endpoint'
-require 'hanami/routing/namespace'
-require 'hanami/routing/resource'
-require 'hanami/routing/resources'
-require 'hanami/routing/error'
-require 'hanami/routing/force_ssl'
-require 'hanami/routing/parsers'
-require 'hanami/routing/recognized_route'
 
 # Hanami
 #
@@ -794,7 +787,7 @@ module Hanami
     #   # | GET  | /identity/keys | Identity::Keys |      | :keys_identity |
     #   # +------+----------------+----------------+------+----------------+
     def resource(name, options = {}, &blk)
-      Routing::Resource.new(self, name, options.merge(separator: ACTION_SEPARATOR), &blk)
+      Routing::Resource.new(self, name, options.merge(separator: Routing::Endpoint::ACTION_SEPARATOR), &blk)
     end
 
     # Defines a set of named routes for a plural RESTful resource.
@@ -917,7 +910,7 @@ module Hanami
     #   # | GET  | /articles/search | Articles::Search |      | :search_articles |
     #   # +------+------------------+------------------+------+------------------+
     def resources(name, options = {}, &blk)
-      Routing::Resources.new(self, name, options.merge(separator: ACTION_SEPARATOR), &blk)
+      Routing::Resources.new(self, name, options.merge(separator: Routing::Endpoint::ACTION_SEPARATOR), &blk)
     end
 
     # Mount a Rack application at the specified path.
@@ -1006,7 +999,7 @@ module Hanami
     #   # 4. That Proc is used as it is, because it respond to #call
     #   # 5. That string is resolved as Dashboard::Index (Hanami::Controller)
     def mount(app, at:, host: nil)
-      app = App.new(@prefix.join(at).to_s, Endpoint.find(app, @namespace), host: host)
+      app = App.new(@prefix.join(at).to_s, Routing::Endpoint.find(app, @namespace), host: host)
       @routes.push(app)
     end
 
@@ -1271,8 +1264,6 @@ module Hanami
 
     PARAMS = 'router.params'.freeze
 
-    ACTION_SEPARATOR = '#'.freeze
-
     GET     = "GET".freeze
     POST    = "POST".freeze
     PUT     = "PUT".freeze
@@ -1361,29 +1352,6 @@ module Hanami
       end
     end
 
-    module Endpoint
-      def self.find(name, namespace)
-        namespace ||= Object
-
-        case name
-        when String
-          find_string(name, namespace)
-        when Class
-          name.respond_to?(:call) ? name : name.new
-        else
-          name
-        end
-      end
-
-      def self.find_string(name, namespace)
-        n     = Utils::String.new(name.sub("#", "/")).classify.to_s
-        klass = Utils::Class.load!(n, namespace)
-        klass.new
-      rescue NameError
-        Hanami::Routing::LazyEndpoint.new(n, namespace)
-      end
-    end
-
     module Uri
       HTTP  = "http".freeze
       HTTPS = "https".freeze
@@ -1403,7 +1371,7 @@ module Hanami
       to ||= blk
 
       path     = path.to_s
-      endpoint = Endpoint.find(to, @namespace)
+      endpoint = Routing::Endpoint.find(to, @namespace)
       route    = Route.new(verb, @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)

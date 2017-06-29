@@ -1,6 +1,5 @@
 require 'hanami/utils/class'
 require 'hanami/utils/string'
-require 'hanami/routing/error'
 
 module Hanami
   module Routing
