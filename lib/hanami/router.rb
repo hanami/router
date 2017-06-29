@@ -239,7 +239,7 @@ module Hanami
       @routes      = []
       @named       = {}
       @namespace   = namespace
-      @base        = Uri.build(scheme: scheme, host: host, port: port)
+      @base        = Routing::Uri.build(scheme: scheme, host: host, port: port)
       @prefix      = Utils::PathPrefix.new(prefix)
       @parsers     = Routing::Parsers.new(parsers)
       @force_ssl   = Hanami::Routing::ForceSsl.new(force_ssl, host: host, port: port)
@@ -1349,21 +1349,6 @@ module Hanami
 
       def call(_)
         [@code, { LOCATION => @path }, []]
-      end
-    end
-
-    module Uri
-      HTTP  = "http".freeze
-      HTTPS = "https".freeze
-      DEFAULT_SCHEME = HTTP
-
-      def self.build(options)
-        case options.fetch(:scheme, DEFAULT_SCHEME)
-        when HTTP
-          URI::HTTP
-        when HTTPS
-          URI::HTTPS
-        end.build(options).to_s
       end
     end
 
