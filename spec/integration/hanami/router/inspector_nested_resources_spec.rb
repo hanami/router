@@ -1,4 +1,4 @@
-RSpec.describe 'Inspector nested resources' do
+RSpec.xdescribe 'Inspector nested resources' do
   before do
     @router = Hanami::Router.new(namespace: Nested::Controllers) do
       resources :users do

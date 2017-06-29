@@ -38,7 +38,7 @@ module Hanami
         # @api private
         # @since 0.4.0
         def as
-          Hanami::Utils::String.new(super).pluralize
+          Hanami::Utils::String.new(super).pluralize.to_sym
         end
       end
 
@@ -50,7 +50,7 @@ module Hanami
       # @see Hanami::Router#resources
       class CollectionAction < Resource::CollectionAction
         def as(action_name)
-          Hanami::Utils::String.new(super(action_name)).pluralize
+          Hanami::Utils::String.new(super(action_name)).pluralize.to_sym
         end
       end
 

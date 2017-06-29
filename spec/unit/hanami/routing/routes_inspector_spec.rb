@@ -1,6 +1,6 @@
 require 'hanami/routing/routes_inspector'
 
-RSpec.describe Hanami::Routing::RoutesInspector do
+RSpec.xdescribe Hanami::Routing::RoutesInspector do
   describe '#to_s' do
     before do
       @path = ::File.expand_path(__FILE__)

@@ -1,9 +1,14 @@
 require 'rack/request'
-require 'hanami/routing/http_router'
+require 'mustermann/rails'
+require 'hanami/utils/hash'
+require 'hanami/routing/endpoint'
 require 'hanami/routing/namespace'
 require 'hanami/routing/resource'
 require 'hanami/routing/resources'
 require 'hanami/routing/error'
+require 'hanami/routing/force_ssl'
+require 'hanami/routing/parsers'
+require 'hanami/routing/recognized_route'
 
 # Hanami
 #
@@ -235,8 +240,22 @@ module Hanami
     #
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     def initialize(options = {}, &blk)
-      @router = Routing::HttpRouter.new(options)
-      define(&blk)
+      @routes    = []
+      @named     = {}
+      @namespace = options.fetch(:namespace, nil)
+      @base      = Uri.build(options)
+      @prefix    = Utils::PathPrefix.new(options.fetch(:prefix, ""))
+      @parsers   = Routing::Parsers.new(options[:parsers])
+      @force_ssl = Hanami::Routing::ForceSsl.new(options.fetch(:force_ssl, false), host: options.fetch(:host, "localhost"), port: options.fetch(:port, 443))
+      @not_found = options.fetch(:not_found, NOT_FOUND)
+      @not_allowed = options.fetch(:not_allowed, NOT_ALLOWED)
+      instance_eval(&blk) unless blk.nil?
+      freeze
+    end
+
+    def freeze
+      @routes.freeze
+      super
     end
 
     # Returns self
@@ -251,30 +270,6 @@ module Hanami
     # @api private
     def routes
       self
-    end
-
-    # To support defining routes in the `define` wrapper.
-    #
-    # @param blk [Proc] the block to define the routes
-    #
-    # @return [Hanami::Routing::Route]
-    #
-    # @since 0.2.0
-    #
-    # @example In Hanami framework
-    #   class Application < Hanami::Application
-    #     configure do
-    #       routes 'config/routes'
-    #     end
-    #   end
-    #
-    #   # In `config/routes`
-    #
-    #   define do
-    #     get # ...
-    #   end
-    def define(&blk)
-      instance_eval(&blk) if block_given?
     end
 
     # Check if there are defined routes
@@ -292,7 +287,7 @@ module Hanami
     #   router = Hanami::Router.new { get '/', to: ->(env) { } }
     #   router.defined? # => true
     def defined?
-      @router.routes.any?
+      @routes.any?
     end
 
     # Defines a route that accepts a GET request for the given path.
@@ -410,7 +405,7 @@ module Hanami
     #    # It will map to Flowers::Index.new, which is the
     #    # Hanami::Controller convention.
     def get(path, options = {}, &blk)
-      @router.get(path, options, &blk)
+      add_route(GET, path, options, &blk)
     end
 
     # Defines a route that accepts a POST request for the given path.
@@ -429,7 +424,7 @@ module Hanami
     #
     # @since 0.1.0
     def post(path, options = {}, &blk)
-      @router.post(path, options, &blk)
+      add_route(POST, path, options, &blk)
     end
 
     # Defines a route that accepts a PUT request for the given path.
@@ -448,7 +443,7 @@ module Hanami
     #
     # @since 0.1.0
     def put(path, options = {}, &blk)
-      @router.put(path, options, &blk)
+      add_route(PUT, path, options, &blk)
     end
 
     # Defines a route that accepts a PATCH request for the given path.
@@ -467,7 +462,7 @@ module Hanami
     #
     # @since 0.1.0
     def patch(path, options = {}, &blk)
-      @router.patch(path, options, &blk)
+      add_route(PATCH, path, options, &blk)
     end
 
     # Defines a route that accepts a DELETE request for the given path.
@@ -486,7 +481,7 @@ module Hanami
     #
     # @since 0.1.0
     def delete(path, options = {}, &blk)
-      @router.delete(path, options, &blk)
+      add_route(DELETE, path, options, &blk)
     end
 
     # Defines a route that accepts a TRACE request for the given path.
@@ -505,7 +500,7 @@ module Hanami
     #
     # @since 0.1.0
     def trace(path, options = {}, &blk)
-      @router.trace(path, options, &blk)
+      add_route(TRACE, path, options, &blk)
     end
 
     # Defines a route that accepts a LINK request for the given path.
@@ -524,7 +519,7 @@ module Hanami
     #
     # @since 0.8.0
     def link(path, options = {}, &blk)
-      @router.link(path, options, &blk)
+      add_route(LINK, path, options, &blk)
     end
 
     # Defines a route that accepts an UNLINK request for the given path.
@@ -543,7 +538,7 @@ module Hanami
     #
     # @since 0.8.0
     def unlink(path, options = {}, &blk)
-      @router.unlink(path, options, &blk)
+      add_route(UNLINK, path, options, &blk)
     end
 
     # Defines a root route (a GET route for '/')
@@ -573,7 +568,7 @@ module Hanami
     #   router.path(:root) # => "/"
     #   router.url(:root)  # => "https://hanamirb.org/"
     def root(options = {}, &blk)
-      @router.get(ROOT_PATH, options.merge(as: :root), &blk)
+      add_route(GET, ROOT_PATH, options.merge(as: :root), &blk)
     end
 
     # Defines a route that accepts a OPTIONS request for the given path.
@@ -592,7 +587,7 @@ module Hanami
     #
     # @since 0.1.0
     def options(path, options = {}, &blk)
-      @router.options(path, options, &blk)
+      add_route(OPTIONS, path, options, &blk)
     end
 
     # Defines an HTTP redirect
@@ -621,8 +616,11 @@ module Hanami
     #
     #   router = Hanami::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
-    def redirect(path, options = {}, &endpoint)
-      get(path).redirect @router.find(options), options[:code] || 301
+    def redirect(path, options = {})
+      opts      = options.dup
+      opts[:to] = Redirect.new(@prefix.join(opts[:to]).to_s, opts[:code] || 301)
+
+      add_route(GET, path, opts)
     end
 
     # Defines a Ruby block: all the routes defined within it will be namespaced
@@ -790,7 +788,7 @@ module Hanami
     #   # | GET  | /identity/keys | Identity::Keys |      | :keys_identity |
     #   # +------+----------------+----------------+------+----------------+
     def resource(name, options = {}, &blk)
-      Routing::Resource.new(self, name, options.merge(separator: @router.action_separator), &blk)
+      Routing::Resource.new(self, name, options.merge(separator: ACTION_SEPARATOR), &blk)
     end
 
     # Defines a set of named routes for a plural RESTful resource.
@@ -913,7 +911,7 @@ module Hanami
     #   # | GET  | /articles/search | Articles::Search |      | :search_articles |
     #   # +------+------------------+------------------+------+------------------+
     def resources(name, options = {}, &blk)
-      Routing::Resources.new(self, name, options.merge(separator: @router.action_separator), &blk)
+      Routing::Resources.new(self, name, options.merge(separator: ACTION_SEPARATOR), &blk)
     end
 
     # Mount a Rack application at the specified path.
@@ -1001,8 +999,9 @@ module Hanami
     #   # 3. RackThree is used as it is (object), because it respond to #call
     #   # 4. That Proc is used as it is, because it respond to #call
     #   # 5. That string is resolved as Dashboard::Index (Hanami::Controller)
-    def mount(app, options)
-      @router.mount(app, options)
+    def mount(app, at:, host: nil)
+      app = App.new(@prefix.join(at).to_s, Endpoint.find(app, @namespace), host: host)
+      @routes.push(app)
     end
 
     # Resolve the given Rack env to a registered endpoint and invoke it.
@@ -1013,7 +1012,19 @@ module Hanami
     #
     # @since 0.1.0
     def call(env)
-      @router.call(env)
+      if response = @force_ssl.call(env)
+        response
+      else
+        (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
+      end
+    end
+
+    def fallback(env)
+      if @routes.find { |r| r.match_path?(env) }
+        @not_allowed
+      else
+        @not_found
+      end
     end
 
     # Recognize the given env, path, or name and return a route for testing
@@ -1125,14 +1136,11 @@ module Hanami
     #   route.routable? # => false
     #   route.params    # => {:id=>"1"}
     def recognize(env, options = {}, params = nil)
-      require 'hanami/routing/recognized_route'
+      env   = env_for(env, options, params)
+      # FIXME: this finder is shared with #call and should be extracted
+      route = @routes.find { |r| r.match?(env) }
 
-      env          = env_for(env, options, params)
-      responses, _ = *@router.recognize(env)
-
-      Routing::RecognizedRoute.new(
-        responses.nil? ? responses : responses.first,
-        env, @router)
+      Routing::RecognizedRoute.new(route, env, @namespace)
     end
 
     # Generate an relative URL for a specified named route.
@@ -1158,8 +1166,10 @@ module Hanami
     #   router.path(:login)                          # => "/login"
     #   router.path(:login, return_to: '/dashboard') # => "/login?return_to=%2Fdashboard"
     #   router.path(:framework, name: 'router')      # => "/router"
-    def path(route, *args)
-      @router.path(route, *args)
+    def path(route, args = {})
+      @named.fetch(route).path(args)
+    rescue KeyError
+      raise Hanami::Routing::InvalidRouteException.new("No route could be generated for #{route.inspect} - please check given arguments")
     end
 
     # Generate a URL for a specified named route.
@@ -1185,8 +1195,8 @@ module Hanami
     #   router.url(:login)                          # => "https://hanamirb.org/login"
     #   router.url(:login, return_to: '/dashboard') # => "https://hanamirb.org/login?return_to=%2Fdashboard"
     #   router.url(:framework, name: 'router')      # => "https://hanamirb.org/router"
-    def url(route, *args)
-      @router.url(route, *args)
+    def url(route, args = {})
+      @base + path(route, args)
     end
 
     # Returns an routes inspector
@@ -1212,7 +1222,7 @@ module Hanami
     #          logout GET, HEAD  /logout                  Sessions::Destroy
     def inspector
       require 'hanami/routing/routes_inspector'
-      Routing::RoutesInspector.new(@router.routes, @router.prefix)
+      Routing::RoutesInspector.new(@routes, @prefix)
     end
 
     protected
@@ -1244,6 +1254,160 @@ module Hanami
       else
         env
       end
+    end
+
+    private
+
+    PATH_INFO      = 'PATH_INFO'.freeze
+    SCRIPT_NAME    = 'SCRIPT_NAME'.freeze
+    SERVER_NAME    = 'SERVER_NAME'.freeze
+    REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+
+    PARAMS = 'router.params'.freeze
+
+    ACTION_SEPARATOR = '#'.freeze
+
+    GET     = "GET".freeze
+    POST    = "POST".freeze
+    PUT     = "PUT".freeze
+    PATCH   = "PATCH".freeze
+    DELETE  = "DELETE".freeze
+    TRACE   = "TRACE".freeze
+    OPTIONS = "OPTIONS".freeze
+    LINK    = "LINK".freeze
+    UNLINK  = "UNLINK".freeze
+
+    NOT_FOUND   = ->(_) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
+    NOT_ALLOWED = ->(_) { [405, { "Content-Length" => "18" }, ["Method Not Allowed"]] }.freeze
+    ROOT = "/".freeze
+
+    class Route
+      def initialize(verb, path, endpoint, constraints)
+        @verb     = verb
+        @path     = Mustermann.new(path, type: :rails, version: "5.0", capture: constraints)
+        @endpoint = endpoint
+      end
+
+      def call(env)
+        env[PARAMS] ||= {}
+        env[PARAMS].merge!(Utils::Hash.deep_symbolize(@path.params(env[PATH_INFO])))
+        @endpoint.call(env)
+      end
+
+      def path(args)
+        @path.expand(:append, args)
+      rescue Mustermann::ExpandError => e
+        raise Hanami::Routing::InvalidRouteException.new(e.message)
+      end
+
+      def match?(env)
+        @path =~ env[PATH_INFO] &&
+          @verb == env[REQUEST_METHOD]
+      end
+
+      def match_path?(env)
+        @path =~ env[PATH_INFO]
+      end
+    end
+
+    class App
+      def initialize(path, endpoint, host: nil)
+        @path     = Mustermann.new(path, type: :rails, version: "5.0")
+        @prefix   = path.to_s
+        @endpoint = endpoint
+        @host     = host
+        freeze
+      end
+
+      def match?(env)
+        match_path?(env)
+      end
+
+      def match_path?(env)
+        result   = env[PATH_INFO].start_with?(@prefix)
+        result &&= @host == env[SERVER_NAME] unless @host.nil?
+
+        result
+      end
+
+      def call(env)
+        env[PARAMS] ||= {}
+        env[PARAMS].merge!(Utils::Hash.deep_symbolize(@path.params(env[PATH_INFO]) || {}))
+
+        env[SCRIPT_NAME] = @prefix
+        env[PATH_INFO]   = env[PATH_INFO].sub(@prefix, "")
+        env[PATH_INFO]   = "/" if env[PATH_INFO] == ""
+
+        @endpoint.call(env)
+      end
+    end
+
+    class Redirect
+      LOCATION = "Location".freeze
+
+      def initialize(path, code)
+        @path = path
+        @code = code
+      end
+
+      def call(_)
+        [@code, { LOCATION => @path }, []]
+      end
+    end
+
+    module Endpoint
+      def self.find(name, namespace)
+        namespace ||= Object
+
+        case name
+        when String
+          find_string(name, namespace)
+        when Class
+          name.respond_to?(:call) ? name : name.new
+        else
+          name
+        end
+      end
+
+      def self.find_string(name, namespace)
+        n     = Utils::String.new(name.sub("#", "/")).classify.to_s
+        klass = Utils::Class.load!(n, namespace)
+        klass.new
+      rescue NameError
+        Hanami::Routing::LazyEndpoint.new(n, namespace)
+      end
+    end
+
+    module Uri
+      HTTP  = "http".freeze
+      HTTPS = "https".freeze
+      DEFAULT_SCHEME = HTTP
+
+      def self.build(options)
+        # FIXME: avoid dup and default value for host, with kwargs in Router#initialize
+        opts = options.dup
+        opts[:host] ||= "localhost"
+
+        case opts.fetch(:scheme, DEFAULT_SCHEME)
+        when HTTP
+          URI::HTTP
+        when HTTPS
+          URI::HTTPS
+        end.build(opts).to_s
+      end
+    end
+
+    def add_route(verb, path, options, &blk)
+      opts = options.dup
+      to = opts.delete(:to) || blk
+      as = opts.delete(:as) || nil
+
+      path     = path.to_s
+      endpoint = Endpoint.find(to, @namespace)
+      route    = Route.new(verb, @prefix.join(path).to_s, endpoint, opts)
+
+      @routes.push(route)
+      @named[as] = route unless as.nil?
     end
   end
 end

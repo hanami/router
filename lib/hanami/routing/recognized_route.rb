@@ -28,6 +28,8 @@ module Hanami
       # @api private
       ACTION_PATH_SEPARATOR = '/'.freeze
 
+      ACTION_SEPARATOR = "#".freeze
+
       # @since 0.5.0
       # @api public
       attr_reader :params
@@ -42,18 +44,18 @@ module Hanami
       #
       # @since 0.5.0
       # @api private
-      def initialize(response, env, router)
-        @env      = env
-        @endpoint = nil
-        @params   = {}
+      def initialize(route, env, namespace)
+        @env       = env
+        @endpoint  = nil
+        @params    = {}
+        @namespace = namespace
 
-        unless response.nil?
-          @endpoint = response.route.dest
-          @params   = response.params
-        end
+        return if route.nil?
+        @endpoint = route.instance_variable_get(:@endpoint)
 
-        @namespace        = router.namespace
-        @action_separator = router.action_separator
+        return unless routable?
+        route.call(@env)
+        @params = @env['router.params']
       end
 
       # Rack protocol compatibility
@@ -121,7 +123,7 @@ module Hanami
         if destination.match(namespace)
           Hanami::Utils::String.new(
             destination.sub(namespace, NAMESPACE_REPLACEMENT)
-          ).underscore.rsub(ACTION_PATH_SEPARATOR, @action_separator)
+          ).underscore.rsub(ACTION_PATH_SEPARATOR, ACTION_SEPARATOR).to_s
         else
           destination
         end
@@ -146,7 +148,8 @@ module Hanami
       #   puts router.recognize('/').routable?    # => true
       #   puts router.recognize('/foo').routable? # => false
       def routable?
-        @endpoint&.routable?
+        return false if @endpoint.nil?
+        @endpoint.respond_to?(:routable?) ? @endpoint.routable? : true
       end
 
       private
@@ -157,13 +160,13 @@ module Hanami
       # @see Hanami::Routing::Endpoint
       def destination
         @destination ||= begin
-          case k = @endpoint.__getobj__
-          when Class
-            k.name
+          case @endpoint
           when Proc
             @endpoint.inspect
+          when Class
+            @endpoint.name
           else
-            k.class.name
+            @endpoint.class.name
           end
         end
       end

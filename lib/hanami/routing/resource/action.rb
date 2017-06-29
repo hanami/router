@@ -205,7 +205,7 @@ module Hanami
         # @api private
         # @since 0.1.0
         def action_name
-          Utils::String.new(self.class.name).demodulize.downcase
+          Utils::String.new(self.class.name).demodulize.downcase.to_s
         end
 
         # A string that represents the endpoint to be loaded.
@@ -260,7 +260,7 @@ module Hanami
         def _singularized_as
           name = @options[:as] ? @options[:as].to_s : resource_name
           name.split(NESTED_ROUTES_SEPARATOR).map do |name|
-            Hanami::Utils::String.new(name).singularize
+            Hanami::Utils::String.new(name).singularize.to_s
           end
         end
 
