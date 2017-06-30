@@ -1,10 +1,6 @@
-require 'http_router/route'
-
 module Hanami
   module Routing
     # Entry of the routing system
-    #
-    # @api private
     #
     # @since 0.1.0
     # @api private
@@ -16,7 +12,7 @@ module Hanami
     #
     #   router = Hanami::Router.new
     #   router.get('/', to: endpoint) # => #<Hanami::Routing::Route:0x007f83083ba028 ...>
-    class Route < HttpRouter::Route
+    class Route
       # @since 0.7.0
       # @api private
       def initialize(*)
