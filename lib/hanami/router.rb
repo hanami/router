@@ -1,5 +1,4 @@
 require 'rack/request'
-require 'mustermann/rails'
 require 'hanami/routing'
 require 'hanami/utils/hash'
 
@@ -1278,35 +1277,6 @@ module Hanami
     NOT_ALLOWED = ->(_) { [405, { "Content-Length" => "18" }, ["Method Not Allowed"]] }.freeze
     ROOT = "/".freeze
 
-    class Route
-      def initialize(verb, path, endpoint, constraints)
-        @verb     = verb
-        @path     = Mustermann.new(path, type: :rails, version: "5.0", capture: constraints)
-        @endpoint = endpoint
-      end
-
-      def call(env)
-        env[PARAMS] ||= {}
-        env[PARAMS].merge!(Utils::Hash.deep_symbolize(@path.params(env[PATH_INFO])))
-        @endpoint.call(env)
-      end
-
-      def path(args)
-        @path.expand(:append, args)
-      rescue Mustermann::ExpandError => e
-        raise Hanami::Routing::InvalidRouteException.new(e.message)
-      end
-
-      def match?(env)
-        @path =~ env[PATH_INFO] &&
-          @verb == env[REQUEST_METHOD]
-      end
-
-      def match_path?(env)
-        @path =~ env[PATH_INFO]
-      end
-    end
-
     class App
       def initialize(path, endpoint, host: nil)
         @path     = Mustermann.new(path, type: :rails, version: "5.0")
@@ -1344,7 +1314,7 @@ module Hanami
 
       path     = path.to_s
       endpoint = Routing::Endpoint.find(to, @namespace)
-      route    = Route.new(verb, @prefix.join(path).to_s, endpoint, constraints)
+      route    = Routing::Route.new(verb, @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)
       @named[as] = route unless as.nil?

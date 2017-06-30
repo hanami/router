@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "uri"
+require "rack/utils"
+require "mustermann/rails"
 
 # Hanami
 #
@@ -10,6 +12,12 @@ module Hanami
   #
   # @since 0.1.0
   module Routing
+    PATH_INFO      = "PATH_INFO".freeze
+    QUERY_STRING   = "QUERY_STRING".freeze
+    REQUEST_METHOD = "REQUEST_METHOD".freeze
+
+    PARAMS = "router.params".freeze
+
     # @since 0.5.0
     class Error < ::StandardError
     end
@@ -71,6 +79,53 @@ module Hanami
 
       def call(_)
         [@status, { LOCATION => @path }, []]
+      end
+    end
+
+    # Route
+    #
+    # @since 0.1.0
+    # @api private
+    class Route
+      # @since 0.7.0
+      # @api private
+      def initialize(verb, path, endpoint, constraints)
+        @verb     = verb
+        @path     = Mustermann.new(path, type: :rails, version: "5.0", capture: constraints)
+        @endpoint = endpoint
+        freeze
+      end
+
+      # @since 0.1.0
+      # @api private
+      def call(env)
+        env[PARAMS] ||= {}
+        env[PARAMS].merge!(Rack::Utils.parse_nested_query(env[QUERY_STRING]))
+        env[PARAMS].merge!(@path.params(env[PATH_INFO]))
+        env[PARAMS] = Utils::Hash.deep_symbolize(env[PARAMS])
+
+        @endpoint.call(env)
+      end
+
+      # @since 0.1.0
+      # @api private
+      def path(args)
+        @path.expand(:append, args)
+      rescue Mustermann::ExpandError => e
+        raise Hanami::Routing::InvalidRouteException.new(e.message)
+      end
+
+      # @since x.x.x
+      # @api private
+      def match?(env)
+        match_path?(env) &&
+          @verb == env[REQUEST_METHOD]
+      end
+
+      # @since x.x.x
+      # @api private
+      def match_path?(env)
+        @path =~ env[PATH_INFO]
       end
     end
 
