@@ -115,7 +115,7 @@ module Hanami
       #
       #   puts router.recognize('/books/23').action # => "books#show"
       def action
-        return unless routable?
+        return if !routable? || redirect?
         namespace = NAMESPACE % @namespace
 
         if destination.match(namespace)
@@ -147,6 +147,12 @@ module Hanami
       #   puts router.recognize('/foo').routable? # => false
       def routable?
         @endpoint&.routable?
+      end
+
+      # @since x.x.x
+      # @api private
+      def redirect?
+        @endpoint&.redirect?
       end
 
       private
