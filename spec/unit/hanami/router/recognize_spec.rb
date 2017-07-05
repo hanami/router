@@ -9,6 +9,7 @@ RSpec.describe Hanami::Router do
         get '/proc',          to: ->(_env) { [200, {}, ['OK']] },     as: :proc
         get '/resources/:id', to: ->(_env) { [200, {}, ['PARAMS']] }, as: :params
         get '/missing',       to: "missing#index",                    as: :missing
+        redirect '/home',     to: '/'
       end
     end
 
@@ -96,6 +97,22 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq('RackMiddlewareInstanceMethod')
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_app')
+        expect(route.params).to eq({})
+      end
+
+      it 'recognizes action for redirect' do
+        env   = Rack::MockRequest.env_for('/home', method: :get)
+        route = @router.recognize(env)
+
+        _, headers, body = *route.call({})
+
+        expect(body).to be_kind_of(Rack::BodyProxy)
+        expect(headers).to eq("Location" => "/")
+
+        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.action).to be(nil)
+        expect(route.verb).to eq('GET')
+        expect(route.path).to eq('/home')
         expect(route.params).to eq({})
       end
 
@@ -207,6 +224,21 @@ RSpec.describe Hanami::Router do
         expect(route.action).to eq('RackMiddlewareInstanceMethod')
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_app')
+        expect(route.params).to eq({})
+      end
+
+      it 'recognizes redirect' do
+        route = @router.recognize('/home')
+
+        _, headers, body = *route.call({})
+
+        expect(body).to be_kind_of(Rack::BodyProxy)
+        expect(headers).to eq("Location" => "/")
+
+        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.action).to be(nil)
+        expect(route.verb).to eq('GET')
+        expect(route.path).to eq('/home')
         expect(route.params).to eq({})
       end
 
