@@ -146,13 +146,54 @@ module Hanami
       #   puts router.recognize('/').routable?    # => true
       #   puts router.recognize('/foo').routable? # => false
       def routable?
-        @endpoint&.routable?
+        @endpoint&.routable? || false
       end
 
+      # Check if redirect
+      #
+      # @return [TrueClass,FalseClass]
+      #
       # @since x.x.x
-      # @api private
+      # @api public
+      #
+      # @see Hanami::Router#recognize
+      #
+      # @example
+      #   require 'hanami/router'
+      #
+      #   router = Hanami::Router.new do
+      #     get '/', to: 'home#index'
+      #     redirect '/home', to: '/'
+      #   end
+      #
+      #   puts router.recognize('/home').redirect? # => true
+      #   puts router.recognize('/').redirect?     # => false
       def redirect?
-        @endpoint&.redirect?
+        @endpoint&.redirect? || false
+      end
+
+      # Returns the redirect destination path
+      #
+      # @return [String,NilClass] the destination path, if it's a redirect
+      #
+      # @since x.x.x
+      # @api public
+      #
+      # @see Hanami::Router#recognize
+      # @see #redirect?
+      #
+      # @example
+      #   require 'hanami/router'
+      #
+      #   router = Hanami::Router.new do
+      #     get '/', to: 'home#index'
+      #     redirect '/home', to: '/'
+      #   end
+      #
+      #   puts router.recognize('/home').destination_path # => "/"
+      #   puts router.recognize('/').destination_path     # => nil
+      def redirection_path
+        @endpoint&.destination_path
       end
 
       private

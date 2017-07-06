@@ -59,6 +59,11 @@ module Hanami
       def redirect?
         false
       end
+
+      # @since x.x.x
+      # @api private
+      def destination_path
+      end
     end
 
     # Routing endpoint
@@ -169,6 +174,17 @@ module Hanami
     # @since x.x.x
     # @api private
     class RedirectEndpoint < Endpoint
+      # @since x.x.x
+      # @api private
+      attr_reader :destination_path
+
+      # @since x.x.x
+      # @api private
+      def initialize(destination_path, destination)
+        @destination_path = destination_path
+        super(destination)
+      end
+
       # @since x.x.x
       # @api private
       def redirect?
