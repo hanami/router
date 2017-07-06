@@ -13,7 +13,7 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    describe 'from Rack env' do
+    context 'from Rack env' do
       it 'recognizes proc' do
         env   = Rack::MockRequest.env_for('/proc', method: :get)
         route = @router.recognize(env)
@@ -22,8 +22,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['OK'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to include('spec/unit/hanami/router/recognize_spec.rb:9 (lambda)')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/proc')
         expect(route.params).to eq({})
@@ -33,8 +35,10 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/resources/1', method: :get)
         route = @router.recognize(env)
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to include('spec/unit/hanami/router/recognize_spec.rb:10 (lambda)')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/resources/1')
         expect(route.params).to eq(id: '1')
@@ -48,8 +52,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['Hello from Web::Controllers::Home::Index'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('home#index')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/')
         expect(route.params).to eq({})
@@ -63,8 +69,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['Hello from Web::Controllers::Dashboard::Index'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('dashboard#index')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/dashboard')
         expect(route.params).to eq({})
@@ -78,8 +86,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['RackMiddleware'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('RackMiddleware')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_class')
         expect(route.params).to eq({})
@@ -93,8 +103,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['RackMiddlewareInstanceMethod'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('RackMiddlewareInstanceMethod')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_app')
         expect(route.params).to eq({})
@@ -109,8 +121,10 @@ RSpec.describe Hanami::Router do
         expect(body).to be_kind_of(Rack::BodyProxy)
         expect(headers).to eq("Location" => "/")
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(true)
         expect(route.action).to be(nil)
+        expect(route.redirection_path).to eq("/")
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/home')
         expect(route.params).to eq({})
@@ -120,8 +134,10 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/', method: :post)
         route = @router.recognize(env)
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('POST')
         expect(route.path).to eq('/')
         expect(route.params).to eq({})
@@ -131,8 +147,10 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for('/missing', method: :get)
         route = @router.recognize(env)
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/missing')
         expect(route.params).to eq({})
@@ -146,7 +164,7 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    describe 'from path' do
+    context 'from path' do
       it 'recognizes proc' do
         route = @router.recognize('/proc')
 
@@ -154,8 +172,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['OK'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to include('spec/unit/hanami/router/recognize_spec.rb:9 (lambda)')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/proc')
         expect(route.params).to eq({})
@@ -164,8 +184,10 @@ RSpec.describe Hanami::Router do
       it 'recognizes procs with params' do
         route = @router.recognize('/resources/1')
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to include('spec/unit/hanami/router/recognize_spec.rb:10 (lambda)')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/resources/1')
         expect(route.params).to eq(id: '1')
@@ -178,8 +200,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['Hello from Web::Controllers::Home::Index'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('home#index')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/')
         expect(route.params).to eq({})
@@ -192,8 +216,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['Hello from Web::Controllers::Dashboard::Index'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('dashboard#index')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/dashboard')
         expect(route.params).to eq({})
@@ -206,8 +232,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['RackMiddleware'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('RackMiddleware')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_class')
         expect(route.params).to eq({})
@@ -220,8 +248,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['RackMiddlewareInstanceMethod'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('RackMiddlewareInstanceMethod')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_app')
         expect(route.params).to eq({})
@@ -235,8 +265,10 @@ RSpec.describe Hanami::Router do
         expect(body).to be_kind_of(Rack::BodyProxy)
         expect(headers).to eq("Location" => "/")
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(true)
         expect(route.action).to be(nil)
+        expect(route.redirection_path).to eq("/")
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/home')
         expect(route.params).to eq({})
@@ -245,8 +277,10 @@ RSpec.describe Hanami::Router do
       it 'returns not routeable result when cannot recognize' do
         route = @router.recognize('/', method: :post)
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('POST')
         expect(route.path).to eq('/')
         expect(route.params).to eq({})
@@ -255,8 +289,10 @@ RSpec.describe Hanami::Router do
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         route = @router.recognize('/missing')
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/missing')
         expect(route.params).to eq({})
@@ -272,9 +308,10 @@ RSpec.describe Hanami::Router do
       it 'raises error if #call is invoked for unknown path' do
         route = @router.recognize('/unknown')
 
-        # expect(route).not_to be_routable #Expected route to NOT be routable
-        expect(route.routable?).to be_falsy
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/unknown')
         expect(route.params).to eq({})
@@ -283,7 +320,7 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    describe 'from named path' do
+    context 'from named path' do
       it 'recognizes proc' do
         route = @router.recognize(:proc)
 
@@ -291,8 +328,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['OK'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to include('spec/unit/hanami/router/recognize_spec.rb:9 (lambda)')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/proc')
         expect(route.params).to eq({})
@@ -301,8 +340,10 @@ RSpec.describe Hanami::Router do
       it 'recognizes procs with params' do
         route = @router.recognize(:params, id: 1)
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to include('spec/unit/hanami/router/recognize_spec.rb:10 (lambda)')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/resources/1')
         expect(route.params).to eq(id: '1')
@@ -315,8 +356,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['Hello from Web::Controllers::Home::Index'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('home#index')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/')
         expect(route.params).to eq({})
@@ -329,8 +372,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['Hello from Web::Controllers::Dashboard::Index'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('dashboard#index')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/dashboard')
         expect(route.params).to eq({})
@@ -343,8 +388,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['RackMiddleware'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('RackMiddleware')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_class')
         expect(route.params).to eq({})
@@ -357,8 +404,10 @@ RSpec.describe Hanami::Router do
 
         expect(body).to eq(['RackMiddlewareInstanceMethod'])
 
-        expect(route.routable?).to be true # Expected route to be routable
+        expect(route.routable?).to be(true)
+        expect(route.redirect?).to be(false)
         expect(route.action).to eq('RackMiddlewareInstanceMethod')
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/rack_app')
         expect(route.params).to eq({})
@@ -367,18 +416,22 @@ RSpec.describe Hanami::Router do
       it 'returns not routeable result when cannot find named route' do
         route = @router.recognize(:unknown)
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
-        expect(route.verb).to be_nil
-        expect(route.path).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
+        expect(route.verb).to be(nil)
+        expect(route.path).to be(nil)
         expect(route.params).to eq({})
       end
 
       it 'returns not routeable result when cannot recognize' do
         route = @router.recognize(:home, { method: :post }, {})
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('POST')
         expect(route.path).to eq('/')
         expect(route.params).to eq({})
@@ -387,8 +440,10 @@ RSpec.describe Hanami::Router do
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         route = @router.recognize(:missing)
 
-        expect(route).not_to be_routable # Expected route to NOT be routable
-        expect(route.action).to be_nil
+        expect(route.routable?).to be(false)
+        expect(route.redirect?).to be(false)
+        expect(route.action).to be(nil)
+        expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq('GET')
         expect(route.path).to eq('/missing')
         expect(route.params).to eq({})
