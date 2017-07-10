@@ -53,6 +53,17 @@ module Hanami
         !__getobj__.nil?
       rescue ArgumentError
       end
+
+      # @since 1.0.1
+      # @api private
+      def redirect?
+        false
+      end
+
+      # @since 1.0.1
+      # @api private
+      def destination_path
+      end
     end
 
     # Routing endpoint
@@ -157,6 +168,27 @@ module Hanami
         Utils::Class.load!(@name, @namespace)
       rescue NameError => e
         raise EndpointNotFound.new(e.message)
+      end
+    end
+
+    # @since 1.0.1
+    # @api private
+    class RedirectEndpoint < Endpoint
+      # @since 1.0.1
+      # @api private
+      attr_reader :destination_path
+
+      # @since 1.0.1
+      # @api private
+      def initialize(destination_path, destination)
+        @destination_path = destination_path
+        super(destination)
+      end
+
+      # @since 1.0.1
+      # @api private
+      def redirect?
+        true
       end
     end
   end
