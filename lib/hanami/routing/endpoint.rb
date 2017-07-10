@@ -54,13 +54,13 @@ module Hanami
       rescue ArgumentError
       end
 
-      # @since x.x.x
+      # @since 1.0.1
       # @api private
       def redirect?
         false
       end
 
-      # @since x.x.x
+      # @since 1.0.1
       # @api private
       def destination_path
       end
@@ -171,21 +171,21 @@ module Hanami
       end
     end
 
-    # @since x.x.x
+    # @since 1.0.1
     # @api private
     class RedirectEndpoint < Endpoint
-      # @since x.x.x
+      # @since 1.0.1
       # @api private
       attr_reader :destination_path
 
-      # @since x.x.x
+      # @since 1.0.1
       # @api private
       def initialize(destination_path, destination)
         @destination_path = destination_path
         super(destination)
       end
 
-      # @since x.x.x
+      # @since 1.0.1
       # @api private
       def redirect?
         true

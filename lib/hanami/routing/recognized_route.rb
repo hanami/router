@@ -153,7 +153,7 @@ module Hanami
       #
       # @return [TrueClass,FalseClass]
       #
-      # @since x.x.x
+      # @since 1.0.1
       # @api public
       #
       # @see Hanami::Router#recognize
@@ -176,7 +176,7 @@ module Hanami
       #
       # @return [String,NilClass] the destination path, if it's a redirect
       #
-      # @since x.x.x
+      # @since 1.0.1
       # @api public
       #
       # @see Hanami::Router#recognize
