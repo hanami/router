@@ -622,7 +622,10 @@ module Hanami
     #   router = Hanami::Router.new
     #   router.redirect '/legacy',  to: '/new_endpoint'
     def redirect(path, options = {}, &endpoint)
-      get(path).redirect @router.find(options), options[:code] || 301
+      destination_path = @router.find(options)
+      get(path).redirect(destination_path, options[:code] || 301).tap do |route|
+        route.dest = Hanami::Routing::RedirectEndpoint.new(destination_path, route.dest)
+      end
     end
 
     # Defines a Ruby block: all the routes defined within it will be namespaced
