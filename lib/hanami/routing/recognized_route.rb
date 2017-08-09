@@ -119,9 +119,9 @@ module Hanami
         namespace = NAMESPACE % @namespace
 
         if destination.match(namespace)
-          Hanami::Utils::String.new(
-            destination.sub(namespace, NAMESPACE_REPLACEMENT)
-          ).underscore.rsub(ACTION_PATH_SEPARATOR, @action_separator)
+          Hanami::Utils::String.transform(
+            destination.sub(namespace, NAMESPACE_REPLACEMENT),
+            :underscore, [:rsub, ACTION_PATH_SEPARATOR, @action_separator])
         else
           destination
         end

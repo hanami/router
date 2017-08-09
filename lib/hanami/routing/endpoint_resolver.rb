@@ -204,7 +204,7 @@ module Hanami
 
       # @api private
       def classify(string)
-        Utils::String.new(string).underscore.classify
+        Utils::String.transform(string, :underscore, :classify)
       end
 
       private

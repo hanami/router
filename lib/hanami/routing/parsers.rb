@@ -83,7 +83,7 @@ module Hanami
       # @api private
       def _symbolize(body)
         if body.is_a?(Hash)
-          Utils::Hash.new(body).deep_dup.deep_symbolize!.to_h
+          Utils::Hash.deep_symbolize(body)
         else
           { FALLBACK_KEY => body }
         end
