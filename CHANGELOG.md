@@ -1,6 +1,8 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v1.1.0.beta1 (unreleased)
+
 ## v1.0.1 - 2017-07-10
 ### Added
 - [Luca Guidi] Introduce new introspection methods (`#redirect?` and `#redirection_path`) for recognized routes (see `Hanami::Router#recognize`)
