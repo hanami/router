@@ -1,7 +1,7 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
-## v1.1.0.beta1 (unreleased)
+## v1.1.0.beta1 - 2017-08-11
 
 ## v1.0.1 - 2017-07-10
 ### Added
