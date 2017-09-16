@@ -1,0 +1,12 @@
+require 'hanami/router'
+
+app = Hanami::Router.new do
+  get '/user/new', to: ->(env) { [200, {}, ["get /user/new"]] }
+  post '/user', to: ->(env) { [200, {}, ["post /user ]] }
+  get '/user', to: ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  get '/user/edit', to: ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  patch '/user', to: ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  delete '/user', to: ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+end
+
+Rack::Server.start app: app, Port: 2300
