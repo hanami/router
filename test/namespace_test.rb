@@ -417,5 +417,19 @@ describe Hanami::Router do
         @app.request('DELETE', '/settings/avatar', lint: true).body.must_equal 'Avatar::Destroy'
       end
     end
+
+    describe 'mount' do
+      before do
+        @router.namespace 'trees' do
+          mount Backend::App, at: '/backend'
+        end
+      end
+
+      [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options', 'link', 'unklink' ].each do |verb|
+        it "accepts #{ verb } for a namespaced mount" do
+          @app.request(verb.upcase, '/trees/backend', lint: true).body.must_equal 'home'
+        end
+      end
+    end
   end
 end
