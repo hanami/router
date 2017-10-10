@@ -8,4 +8,3 @@ end
 
 gem 'hanami-utils', '~> 1.0', require: false, git: 'https://github.com/hanami/utils.git', branch: '1.0.x'
 gem 'coveralls',              require: false
-gem 'minitest',               require: false
