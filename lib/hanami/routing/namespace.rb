@@ -82,7 +82,7 @@ module Hanami
       end
 
       # @api private
-      # @since x.x.x
+      # @since 1.1.0
       def mount(app, options)
         super(app, options.merge(at: @name.join(options[:at])))
       end
