@@ -1,6 +1,8 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v1.1.0 - 2017-10-25
+
 ## v1.1.0.rc1 - 2017-10-16
 ### Added
 - [Sergey Fedorov] Allow Rack applications to be mounted inside a namespace. (`namespace "api" { mount V1::App, at: "/v1" }`)
