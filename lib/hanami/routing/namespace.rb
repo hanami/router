@@ -81,6 +81,12 @@ module Hanami
         super(@name.join(path), options.merge(to: @name.join(options[:to])), &endpoint)
       end
 
+      # @api private
+      # @since 1.1.0
+      def mount(app, options)
+        super(app, options.merge(at: @name.join(options[:at])))
+      end
+
       # Supports nested namespaces
       # @api private
       # @since 0.1.0
