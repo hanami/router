@@ -419,7 +419,7 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options', 'link', 'unklink' ].each do |verb|
+      [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options', 'link', 'unlink' ].each do |verb|
         it "accepts #{ verb } for a namespaced mount" do
           expect(@app.request(verb.upcase, '/api/backend', lint: true).body).to eq('home')
         end
