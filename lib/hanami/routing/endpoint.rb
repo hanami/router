@@ -67,6 +67,17 @@ module Hanami
         endpoint
       end
 
+      # @since 1.0.1
+      # @api private
+      def redirect?
+        false
+      end
+
+      # @since 1.0.1
+      # @api private
+      def destination_path
+      end
+
       # Find an endpoint from its name
       #
       # @param name [String] the endpoint name
@@ -155,6 +166,7 @@ module Hanami
       def routable?
         !__getobj__.nil?
       rescue ArgumentError
+        false
       end
 
       private

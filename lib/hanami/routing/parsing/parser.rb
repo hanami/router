@@ -49,7 +49,7 @@ module Hanami
         def self.require_parser(parser)
           require "hanami/routing/parsing/#{ parser }_parser"
 
-          parser = Utils::String.new(parser).classify.to_s
+          parser = Utils::String.classify(parser)
           Utils::Class.load!("Hanami::Routing::Parsing::#{ parser }Parser").new
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)

@@ -117,13 +117,13 @@ module Hanami
       #
       #   puts router.recognize('/books/23').action # => "books#show"
       def action
-        return unless routable?
+        return if !routable? || redirect?
         namespace = NAMESPACE % @namespace
 
         if destination.match(namespace)
-          Hanami::Utils::String.new(
-            destination.sub(namespace, NAMESPACE_REPLACEMENT)
-          ).underscore.rsub(ACTION_PATH_SEPARATOR, ACTION_SEPARATOR).to_s
+          Hanami::Utils::String.transform(
+            destination.sub(namespace, NAMESPACE_REPLACEMENT),
+            :underscore, [:rsub, ACTION_PATH_SEPARATOR, ACTION_SEPARATOR])
         else
           destination
         end
@@ -150,6 +150,55 @@ module Hanami
       def routable?
         return false if @endpoint.nil?
         @endpoint.respond_to?(:routable?) ? @endpoint.routable? : true
+      end
+
+      # Check if redirect
+      #
+      # @return [TrueClass,FalseClass]
+      #
+      # @since 1.0.1
+      # @api public
+      #
+      # @see Hanami::Router#recognize
+      #
+      # @example
+      #   require 'hanami/router'
+      #
+      #   router = Hanami::Router.new do
+      #     get '/', to: 'home#index'
+      #     redirect '/home', to: '/'
+      #   end
+      #
+      #   puts router.recognize('/home').redirect? # => true
+      #   puts router.recognize('/').redirect?     # => false
+      def redirect?
+        return false if @endpoint.nil?
+        @endpoint.respond_to?(:redirect?) ? @endpoint.redirect? : false
+      end
+
+      # Returns the redirect destination path
+      #
+      # @return [String,NilClass] the destination path, if it's a redirect
+      #
+      # @since 1.0.1
+      # @api public
+      #
+      # @see Hanami::Router#recognize
+      # @see #redirect?
+      #
+      # @example
+      #   require 'hanami/router'
+      #
+      #   router = Hanami::Router.new do
+      #     get '/', to: 'home#index'
+      #     redirect '/home', to: '/'
+      #   end
+      #
+      #   puts router.recognize('/home').destination_path # => "/"
+      #   puts router.recognize('/').destination_path     # => nil
+      def redirection_path
+        return unless redirect?
+        @endpoint.destination_path if @endpoint.respond_to?(:destination_path)
       end
 
       private

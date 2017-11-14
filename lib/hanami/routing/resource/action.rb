@@ -125,7 +125,7 @@ module Hanami
         # @api private
         # @since 0.1.0
         def self.class_for(action)
-          Utils::Class.load!(Utils::String.new(action).classify, namespace)
+          Utils::Class.load!(Utils::String.classify(action), namespace)
         end
 
         # Accepted HTTP verb
@@ -205,7 +205,7 @@ module Hanami
         # @api private
         # @since 0.1.0
         def action_name
-          Utils::String.new(self.class.name).demodulize.downcase.to_s
+          Utils::String.transform(self.class.name, :demodulize, :downcase)
         end
 
         # A string that represents the endpoint to be loaded.
@@ -259,8 +259,8 @@ module Hanami
         # @since 0.4.0
         def _singularized_as
           name = @options[:as] ? @options[:as].to_s : resource_name
-          name.split(NESTED_ROUTES_SEPARATOR).map do |name|
-            Hanami::Utils::String.new(name).singularize.to_s
+          name.split(NESTED_ROUTES_SEPARATOR).map do |n|
+            Hanami::Utils::String.singularize(n)
           end
         end
 

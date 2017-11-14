@@ -92,8 +92,13 @@ end # Api
 
 module Backend
   class App
+    VERBS = %w[GET POST DELETE PUT PATCH TRACE OPTIONS LINK UNLINK]
     def self.call(env)
-      [200, {}, ['home']]
+      if VERBS.include? env['REQUEST_METHOD']
+        [200, {}, ['home']]
+      else
+        [405, {}, ['Method Not Allowed']]
+      end
     end
   end
 end # Backend

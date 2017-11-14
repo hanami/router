@@ -57,6 +57,9 @@ module Hanami
       # @api private
       STATUS_RANGE = (300..399).freeze
 
+      attr_reader :path
+      alias destination_path path
+
       # Instantiate a new redirect
       #
       # @param path [String] a relative or absolute URI
@@ -79,6 +82,10 @@ module Hanami
 
       def call(_)
         [@status, { LOCATION => @path }, []]
+      end
+
+      def redirect?
+        true
       end
     end
 
