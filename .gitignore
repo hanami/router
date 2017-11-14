@@ -5,6 +5,7 @@
 .devnotes
 .greenbar
 .yardoc
+.rubocop-*
 Gemfile.lock
 InstalledFiles
 _yardoc
