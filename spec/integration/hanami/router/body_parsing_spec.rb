@@ -34,7 +34,7 @@ RSpec.describe 'Body parsing' do
     response = @app.patch('/books/23', 'CONTENT_TYPE' => 'application/json', 'rack.input' => body, lint: true)
 
     expect(response.status).to eq(200)
-    expect(response.body).to eq(%({"_"=>["alpha", "beta"], :id=>"23"}))
+    expect(response.body).to eq(%({:_=>["alpha", "beta"], :id=>"23"}))
   end
 
   # See https://github.com/hanami/utils/issues/169

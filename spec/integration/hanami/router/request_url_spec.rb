@@ -1,7 +1,7 @@
 
 require 'rack/test'
 
-RSpec.describe 'SCRIPT_NAME' do
+RSpec.xdescribe 'SCRIPT_NAME' do
   include Rack::Test::Methods
 
   before do

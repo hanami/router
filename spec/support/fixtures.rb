@@ -1,6 +1,28 @@
 require 'rexml/document'
 require 'hanami/routing/parsing/parser'
 
+class MyMiddleware
+  def call(_)
+  end
+end
+
+module Middleware
+  class Runtime
+    def call(_)
+    end
+  end
+
+  class ClassMiddleware
+    def self.call(_)
+    end
+  end
+
+  class InstanceMiddleware
+    def call(_)
+    end
+  end
+end
+
 module Web
   module Controllers
     module Home

@@ -1,57 +1,70 @@
-require 'delegate'
-require 'hanami/routing/error'
-require 'hanami/utils/class'
+# frozen_string_literal: true
+
+require "delegate"
+require "hanami/utils/class"
+require "hanami/utils/string"
 
 module Hanami
   module Routing
-    # Endpoint not found
-    # This is raised when the router fails to load an endpoint at the runtime.
-    #
-    # @since 0.1.0
-    class EndpointNotFound < Hanami::Routing::Error
-    end
-
-    # Routing endpoint
-    # This is the object that responds to an HTTP request made against a certain
-    # path.
-    #
-    # The router will use this class for:
-    #
-    #   * Procs and any Rack compatible object (respond to #call)
-    #
-    # @since 0.1.0
-    #
-    # @api private
-    #
-    # @example
-    #   require 'hanami/router'
-    #
-    #   Hanami::Router.new do
-    #     get '/proc',     to: ->(env) { [200, {}, ['This will use Hanami::Routing::Endpoint']] }
-    #     get '/rack-app', to: RackApp.new
-    #   end
-    class Endpoint < SimpleDelegator
-      # @since 0.2.0
+    module Endpoint
+      # @since x.x.x
       # @api private
-      def inspect
-        case __getobj__
-        when Proc
-          source, line     = __getobj__.source_location
-          lambda_inspector = " (lambda)"  if  __getobj__.lambda?
+      #
+      # FIXME: Shall this be the default of Utils::Class.load! ?
+      DEFAULT_NAMESPACE = Object
 
-          "#<Proc@#{ ::File.expand_path(source) }:#{ line }#{ lambda_inspector }>"
+      # Controller / action separator for Hanami
+      #
+      # @since x.x.x
+      # @api private
+      #
+      # @example
+      #   require "hanami/router"
+      #
+      #   Hanami::Router.new do
+      #     get "/home", to: "home#index"
+      #   end
+      ACTION_SEPARATOR = "#".freeze
+
+      # Replacement to load an action from the string name.
+      #
+      # Please note that the `"/"` value is required by `Hanami::Utils::String#classify`.
+      #
+      # Given the `"home#index"` string, with the `Web::Controllers` namespace,
+      # it will try to load `Web::Controllers::Home::Index` action.
+      #
+      # @since x.x.x
+      # @api private
+      ACTION_SEPARATOR_REPLACEMENT = "/".freeze
+
+      # Find an endpoint for the given name
+      #
+      # @param name [String,Class,Proc,Object] the endpoint expressed as name
+      #   (`String`), as a Rack class application (`Class`), as a Rack
+      #   compatible proc (`Proc`), or as any other Rack compatible object
+      #   (`Object`)
+      # @param namespace [Module] the Ruby module where to lookup the endpoint
+      #
+      # @raise [Hanami::Routing::NotCallableEndpointError] if the found object
+      #   doesn't implement Rack protocol (`#call`)
+      #
+      # @return [Object, Hanami::Routing::LazyEndpoint] a Rack compatible
+      #   endpoint
+      #
+      # @since x.x.x
+      # @api private
+      def self.find(name, namespace)
+        endpoint = case name
+        when String
+          find_string(name, namespace || DEFAULT_NAMESPACE)
         when Class
-          __getobj__
+          name.respond_to?(:call) ? name : name.new
         else
-          "#<#{ __getobj__.class }>"
+          name
         end
-      end
 
-      # @since 1.0.0
-      # @api private
-      def routable?
-        !__getobj__.nil?
-      rescue ArgumentError
+        raise NotCallableEndpointError.new(endpoint) unless endpoint.respond_to?(:call)
+        endpoint
       end
 
       # @since 1.0.1
@@ -64,42 +77,34 @@ module Hanami
       # @api private
       def destination_path
       end
-    end
 
-    # Routing endpoint
-    # This is the object that responds to an HTTP request made against a certain
-    # path.
-    #
-    # The router will use this class for:
-    #
-    #   * Classes
-    #   * Hanami::Action endpoints referenced as a class
-    #   * Hanami::Action endpoints referenced a string
-    #   * RESTful resource(s)
-    #
-    # @since 0.1.0
-    #
-    # @api private
-    #
-    # @example
-    #   require 'hanami/router'
-    #
-    #   Hanami::Router.new do
-    #     get '/class',               to: RackMiddleware
-    #     get '/hanami-action-class',  to: Dashboard::Index
-    #     get '/hanami-action-string', to: 'dashboard#index'
-    #
-    #     resource  'identity'
-    #     resources 'articles'
-    #   end
-    class ClassEndpoint < Endpoint
-      # Rack interface
+      # Find an endpoint from its name
       #
-      # @since 0.1.0
+      # @param name [String] the endpoint name
+      # @param namespace [Module] the Ruby module where to lookup the endpoint
+      #
+      # @return [Object, Hanami::Routing::LazyEndpoint] a Rack compatible
+      #   endpoint
+      #
+      # @since x.x.x
       # @api private
-      def call(env)
-        __getobj__.new.call(env)
+      #
+      # @example Basic Usage
+      #   Hanami::Routing::Endpoint.find("MyMiddleware")
+      #     # => #<MyMiddleware:0x007ff6df06f468>
+      #
+      # @example Hanami Action
+      #   Hanami::Routing::Endpoint.find("home#index", Web::Controllers)
+      #     # => #<Web::Controllers::Home::Index:0x007ff6df06f468>
+      def self.find_string(name, namespace)
+        n     = Utils::String.new(name.sub(ACTION_SEPARATOR, ACTION_SEPARATOR_REPLACEMENT)).classify.to_s
+        klass = Utils::Class.load!(n, namespace)
+        klass.new
+      rescue NameError
+        Hanami::Routing::LazyEndpoint.new(n, namespace)
       end
+
+      private_class_method :find_string
     end
 
     # Routing endpoint
@@ -121,13 +126,14 @@ module Hanami
     # @api private
     #
     # @see Hanami::Routing::ClassEndpoint
-    class LazyEndpoint < Endpoint
+    class LazyEndpoint < SimpleDelegator
       # Initialize the lazy endpoint
       #
       # @since 0.1.0
       # @api private
       def initialize(name, namespace)
-        @name, @namespace = name, namespace
+        @name      = name
+        @namespace = namespace
       end
 
       # Rack interface
@@ -149,13 +155,22 @@ module Hanami
 
         if result.nil?
           result = @name
-          result = "#{ @namespace }::#{ result }" if @namespace != Object
+          result = "#{@namespace}::#{result}" if @namespace != Object
         end
 
         result
       end
 
+      # @since 1.0.0
+      # @api private
+      def routable?
+        !__getobj__.nil?
+      rescue ArgumentError
+        false
+      end
+
       private
+
       # @since 0.1.0
       # @api private
       def obj
@@ -168,27 +183,6 @@ module Hanami
         Utils::Class.load!(@name, @namespace)
       rescue NameError => e
         raise EndpointNotFound.new(e.message)
-      end
-    end
-
-    # @since 1.0.1
-    # @api private
-    class RedirectEndpoint < Endpoint
-      # @since 1.0.1
-      # @api private
-      attr_reader :destination_path
-
-      # @since 1.0.1
-      # @api private
-      def initialize(destination_path, destination)
-        @destination_path = destination_path
-        super(destination)
-      end
-
-      # @since 1.0.1
-      # @api private
-      def redirect?
-        true
       end
     end
   end

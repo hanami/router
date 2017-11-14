@@ -1,7 +1,7 @@
 RSpec.describe Hanami::Router do
   describe '#recognize' do
-    before do
-      @router = Hanami::Router.new(namespace: Web::Controllers) do
+    let(:router) do
+      Hanami::Router.new(namespace: Web::Controllers) do
         get '/',              to: 'home#index',                       as: :home
         get '/dashboard',     to: Web::Controllers::Dashboard::Index, as: :dashboard
         get '/rack_class',    to: RackMiddleware,                     as: :rack_class
@@ -16,7 +16,7 @@ RSpec.describe Hanami::Router do
     context 'from Rack env' do
       it 'recognizes proc' do
         env   = Rack::MockRequest.env_for('/proc', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         _, _, body = *route.call({})
 
@@ -33,7 +33,7 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes procs with params' do
         env   = Rack::MockRequest.env_for('/resources/1', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
@@ -46,7 +46,7 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes action with naming convention (home#index)' do
         env   = Rack::MockRequest.env_for('/', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         _, _, body = *route.call({})
 
@@ -63,7 +63,7 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes action from class' do
         env   = Rack::MockRequest.env_for('/dashboard', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         _, _, body = *route.call({})
 
@@ -80,7 +80,7 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes action from rack middleware class' do
         env   = Rack::MockRequest.env_for('/rack_class', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         _, _, body = *route.call({})
 
@@ -97,7 +97,7 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes action from rack middleware' do
         env   = Rack::MockRequest.env_for('/rack_app', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         _, _, body = *route.call({})
 
@@ -114,11 +114,11 @@ RSpec.describe Hanami::Router do
 
       it 'recognizes action for redirect' do
         env   = Rack::MockRequest.env_for('/home', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         _, headers, body = *route.call({})
 
-        expect(body).to be_kind_of(Rack::BodyProxy)
+        expect(body).to eq([])
         expect(headers).to eq("Location" => "/")
 
         expect(route.routable?).to be(true)
@@ -132,7 +132,7 @@ RSpec.describe Hanami::Router do
 
       it 'returns not routeable result when cannot recognize' do
         env   = Rack::MockRequest.env_for('/', method: :post)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -145,7 +145,7 @@ RSpec.describe Hanami::Router do
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         env   = Rack::MockRequest.env_for('/missing', method: :get)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -158,7 +158,7 @@ RSpec.describe Hanami::Router do
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
         env   = Rack::MockRequest.env_for('/', method: :post)
-        route = @router.recognize(env)
+        route = router.recognize(env)
 
         expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
       end
@@ -166,7 +166,7 @@ RSpec.describe Hanami::Router do
 
     context 'from path' do
       it 'recognizes proc' do
-        route = @router.recognize('/proc')
+        route = router.recognize('/proc')
 
         _, _, body = *route.call({})
 
@@ -182,7 +182,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes procs with params' do
-        route = @router.recognize('/resources/1')
+        route = router.recognize('/resources/1')
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
@@ -194,7 +194,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action with naming convention (home#index)' do
-        route = @router.recognize('/')
+        route = router.recognize('/')
 
         _, _, body = *route.call({})
 
@@ -210,7 +210,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action from class' do
-        route = @router.recognize('/dashboard')
+        route = router.recognize('/dashboard')
 
         _, _, body = *route.call({})
 
@@ -226,7 +226,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action from rack middleware class' do
-        route = @router.recognize('/rack_class')
+        route = router.recognize('/rack_class')
 
         _, _, body = *route.call({})
 
@@ -242,7 +242,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action from rack middleware' do
-        route = @router.recognize('/rack_app')
+        route = router.recognize('/rack_app')
 
         _, _, body = *route.call({})
 
@@ -258,11 +258,11 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes redirect' do
-        route = @router.recognize('/home')
+        route = router.recognize('/home')
 
         _, headers, body = *route.call({})
 
-        expect(body).to be_kind_of(Rack::BodyProxy)
+        expect(body).to eq([])
         expect(headers).to eq("Location" => "/")
 
         expect(route.routable?).to be(true)
@@ -275,7 +275,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'returns not routeable result when cannot recognize' do
-        route = @router.recognize('/', method: :post)
+        route = router.recognize('/', method: :post)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -287,7 +287,7 @@ RSpec.describe Hanami::Router do
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
-        route = @router.recognize('/missing')
+        route = router.recognize('/missing')
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -300,13 +300,13 @@ RSpec.describe Hanami::Router do
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
         env   = Rack::MockRequest.env_for('/', method: :post)
-        route = @router.recognize('/', method: :post)
+        route = router.recognize('/', method: :post)
 
         expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
       end
 
       it 'raises error if #call is invoked for unknown path' do
-        route = @router.recognize('/unknown')
+        route = router.recognize('/unknown')
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -322,7 +322,7 @@ RSpec.describe Hanami::Router do
 
     context 'from named path' do
       it 'recognizes proc' do
-        route = @router.recognize(:proc)
+        route = router.recognize(:proc)
 
         _, _, body = *route.call({})
 
@@ -338,7 +338,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes procs with params' do
-        route = @router.recognize(:params, id: 1)
+        route = router.recognize(:params, id: 1)
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
@@ -350,7 +350,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action with naming convention (home#index)' do
-        route = @router.recognize(:home)
+        route = router.recognize(:home)
 
         _, _, body = *route.call({})
 
@@ -366,7 +366,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action from class' do
-        route = @router.recognize(:dashboard)
+        route = router.recognize(:dashboard)
 
         _, _, body = *route.call({})
 
@@ -382,7 +382,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action from rack middleware class' do
-        route = @router.recognize(:rack_class)
+        route = router.recognize(:rack_class)
 
         _, _, body = *route.call({})
 
@@ -398,7 +398,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'recognizes action from rack middleware' do
-        route = @router.recognize(:rack_app)
+        route = router.recognize(:rack_app)
 
         _, _, body = *route.call({})
 
@@ -414,7 +414,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'returns not routeable result when cannot find named route' do
-        route = @router.recognize(:unknown)
+        route = router.recognize(:unknown)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -426,7 +426,7 @@ RSpec.describe Hanami::Router do
       end
 
       it 'returns not routeable result when cannot recognize' do
-        route = @router.recognize(:home, { method: :post }, {})
+        route = router.recognize(:home, { method: :post }, {})
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -438,7 +438,7 @@ RSpec.describe Hanami::Router do
       end
 
       it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
-        route = @router.recognize(:missing)
+        route = router.recognize(:missing)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
@@ -451,7 +451,7 @@ RSpec.describe Hanami::Router do
 
       it 'raises error if #call is invoked for not routeable object when cannot recognize' do
         env   = Rack::MockRequest.env_for('/', method: :post)
-        route = @router.recognize(:home, { method: :post }, {})
+        route = router.recognize(:home, { method: :post }, {})
 
         expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
       end
