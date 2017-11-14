@@ -1,6 +1,8 @@
-require 'hanami/utils/string'
-require 'hanami/utils/path_prefix'
-require 'hanami/routing/resource'
+# frozen_string_literal: true
+
+require "hanami/utils/string"
+require "hanami/utils/path_prefix"
+require "hanami/routing/resource"
 
 module Hanami
   module Routing
@@ -24,7 +26,7 @@ module Hanami
         # @since 0.2.0
         # @api private
         class_attribute :identifier
-        self.identifier = ':id'.freeze
+        self.identifier = ":id"
       end
 
       # Pluralize concrete actions
@@ -33,6 +35,7 @@ module Hanami
       # @since 0.4.0
       module PluralizedAction
         private
+
         # The name of the RESTful action.
         #
         # @api private
@@ -62,6 +65,7 @@ module Hanami
       # @see Hanami::Router#resources
       class MemberAction < Resource::MemberAction
         private
+
         # @since 0.1.0
         # @api private
         def path(action_name)
@@ -75,6 +79,7 @@ module Hanami
       # @since 0.1.0
       module DefaultMemberAction
         private
+
         # @since 0.1.0
         # @api private
         def path
@@ -127,6 +132,7 @@ module Hanami
         include DefaultMemberAction
 
         private
+
         # @since 0.1.0
         # @api private
         def path

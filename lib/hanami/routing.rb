@@ -12,11 +12,11 @@ module Hanami
   #
   # @since 0.1.0
   module Routing
-    PATH_INFO      = "PATH_INFO".freeze
-    QUERY_STRING   = "QUERY_STRING".freeze
-    REQUEST_METHOD = "REQUEST_METHOD".freeze
+    PATH_INFO      = "PATH_INFO"
+    QUERY_STRING   = "QUERY_STRING"
+    REQUEST_METHOD = "REQUEST_METHOD"
 
-    PARAMS = "router.params".freeze
+    PARAMS = "router.params"
 
     # @since 0.5.0
     class Error < ::StandardError
@@ -51,7 +51,7 @@ module Hanami
     class Redirect
       # @since x.x.x
       # @api private
-      LOCATION = "Location".freeze
+      LOCATION = "Location"
 
       # @since x.x.x
       # @api private
@@ -141,11 +141,11 @@ module Hanami
     module Uri
       # @since x.x.x
       # @api private
-      HTTP  = "http".freeze
+      HTTP  = "http"
 
       # @since x.x.x
       # @api private
-      HTTPS = "https".freeze
+      HTTPS = "https"
 
       # @since x.x.x
       # @api private

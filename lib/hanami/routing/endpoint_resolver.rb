@@ -1,6 +1,8 @@
-require 'hanami/utils/string'
-require 'hanami/utils/class'
-require 'hanami/routing/endpoint'
+# frozen_string_literal: true
+
+require "hanami/utils/string"
+require "hanami/utils/class"
+require "hanami/routing/endpoint"
 
 module Hanami
   module Routing
@@ -12,11 +14,11 @@ module Hanami
     class EndpointResolver
       # @since 0.2.0
       # @api private
-      NAMING_PATTERN = '%{controller}::%{action}'.freeze
+      NAMING_PATTERN = "%<controller>s::%<action>s"
 
       # @since 0.7.0
       # @api private
-      DEFAULT_RESPONSE = [404, {'X-Cascade' => 'pass'}, 'Not Found'].freeze
+      DEFAULT_RESPONSE = [404, { "X-Cascade" => "pass" }, "Not Found"].freeze
 
       # Default separator for controller and action.
       # A different separator can be passed to #initialize with the `:separator` option.
@@ -32,7 +34,7 @@ module Hanami
       #   router = Hanami::Router.new do
       #     get '/', to: 'articles#show'
       #   end
-      ACTION_SEPARATOR = '#'.freeze
+      ACTION_SEPARATOR = "#"
 
       attr_reader :action_separator
 
@@ -183,10 +185,11 @@ module Hanami
       end
 
       protected
+
       # @api private
       def default
         @endpoint_class.new(
-          ->(env) { DEFAULT_RESPONSE }
+          ->(_env) { DEFAULT_RESPONSE }
         )
       end
 
@@ -208,6 +211,7 @@ module Hanami
       end
 
       private
+
       # @api private
       def resolve_callable(callable)
         if callable.respond_to?(:call)
@@ -219,19 +223,19 @@ module Hanami
 
       # @api private
       def resolve_matchable(matchable)
-        if matchable.respond_to?(:match)
-          constantize(
-            resolve_action(matchable) || classify(matchable)
-          )
-        end
+        return unless matchable.respond_to?(:match)
+
+        constantize(
+          resolve_action(matchable) || classify(matchable)
+        )
       end
 
       # @api private
       def resolve_action(string)
-        if string.match(action_separator)
-          controller, action = string.split(action_separator).map {|token| classify(token) }
-          @pattern % {controller: controller, action: action}
-        end
+        return unless string =~ action_separator
+
+        controller, action = string.split(action_separator).map { |token| classify(token) }
+        format(@pattern, controller: controller, action: action)
       end
     end
   end

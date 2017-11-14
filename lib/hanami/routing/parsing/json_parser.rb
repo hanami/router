@@ -1,4 +1,6 @@
-require 'hanami/utils/json'
+# frozen_string_literal: true
+
+require "hanami/utils/json"
 
 module Hanami
   module Routing
@@ -9,7 +11,7 @@ module Hanami
         # @since 0.2.0
         # @api private
         def mime_types
-          ['application/json', 'application/vnd.api+json']
+          ["application/json", "application/vnd.api+json"]
         end
 
         # Parse a json string

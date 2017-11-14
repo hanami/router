@@ -1,5 +1,7 @@
-require 'delegate'
-require 'hanami/utils/path_prefix'
+# frozen_string_literal: true
+
+require "delegate"
+require "hanami/utils/path_prefix"
 
 module Hanami
   module Routing

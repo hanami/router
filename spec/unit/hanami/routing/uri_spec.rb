@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Routing::Uri do
   describe ".build" do
     context "http" do

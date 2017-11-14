@@ -6,6 +6,10 @@ require "hanami/utils/string"
 
 module Hanami
   module Routing
+    # Routes endpoint
+    #
+    # @since x.x.x
+    # @api private
     module Endpoint
       # @since x.x.x
       # @api private
@@ -24,7 +28,7 @@ module Hanami
       #   Hanami::Router.new do
       #     get "/home", to: "home#index"
       #   end
-      ACTION_SEPARATOR = "#".freeze
+      ACTION_SEPARATOR = "#"
 
       # Replacement to load an action from the string name.
       #
@@ -35,7 +39,7 @@ module Hanami
       #
       # @since x.x.x
       # @api private
-      ACTION_SEPARATOR_REPLACEMENT = "/".freeze
+      ACTION_SEPARATOR_REPLACEMENT = "/"
 
       # Find an endpoint for the given name
       #
@@ -55,13 +59,13 @@ module Hanami
       # @api private
       def self.find(name, namespace)
         endpoint = case name
-        when String
-          find_string(name, namespace || DEFAULT_NAMESPACE)
-        when Class
-          name.respond_to?(:call) ? name : name.new
-        else
-          name
-        end
+                   when String
+                     find_string(name, namespace || DEFAULT_NAMESPACE)
+                   when Class
+                     name.respond_to?(:call) ? name : name.new
+                   else
+                     name
+                   end
 
         raise NotCallableEndpointError.new(endpoint) unless endpoint.respond_to?(:call)
         endpoint
@@ -149,9 +153,13 @@ module Hanami
       # @since 0.2.0
       # @api private
       def inspect
-        # TODO review this implementation once the namespace feature will be
+        # TODO: review this implementation once the namespace feature will be
         # cleaned up.
-        result = klass rescue nil
+        result = begin
+                   klass
+                 rescue # rubocop:disable Lint/RescueWithoutErrorClass
+                   nil
+                 end
 
         if result.nil?
           result = @name

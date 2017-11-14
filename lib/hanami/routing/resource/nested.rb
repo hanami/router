@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hanami
   module Routing
     class Resource
@@ -8,7 +10,7 @@ module Hanami
       class Nested
         # @api private
         # @since 0.4.0
-        SEPARATOR = '/'.freeze
+        SEPARATOR = "/"
 
         # @api private
         # @since 0.4.0

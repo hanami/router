@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Router do
   describe "#initialize" do
     before do

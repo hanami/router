@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable Lint/RescueWithoutErrorClass
 class GenerationTestCase
   include ::RSpec::Matchers
   def initialize(router)
@@ -10,16 +13,21 @@ class GenerationTestCase
   end
 
   private
+
   def _run!(type, tests)
     _for_each_test(type, tests) do |actual, expected|
       expect(actual).to eq(expected)
     end
   end
 
-  def _for_each_test(type, tests)
+  def _for_each_test(type, tests) # rubocop:disable Metrics/MethodLength
     tests.each do |test|
       name, expected, args = *test
-      args = args.dup rescue nil
+      args = begin
+               args.dup
+             rescue
+               nil
+             end
 
       _rescue name, expected, args do
         actual   = _actual(type, name, args)
@@ -31,15 +39,13 @@ class GenerationTestCase
   end
 
   def _rescue(name, expected, args)
-    begin
-      yield
-    rescue Exception => e
-      puts "Failed with #{ name }, #{ expected.inspect }, #{ args.inspect }"
-      raise e
-    end
+    yield
+  rescue => e
+    puts "Failed with #{name}, #{expected.inspect}, #{args.inspect}"
+    raise e
   end
 
-  def _actual(type, name, args)
+  def _actual(type, name, args) # rubocop:disable Metrics/MethodLength
     case args
     when Hash
       @router.send(type, name, args)
@@ -62,6 +68,7 @@ class GenerationTestCase
   end
 
   def _absolute(expected)
-    "http://localhost#{ expected }"
+    "http://localhost#{expected}"
   end
 end
+# rubocop:enable Lint/RescueWithoutErrorClass

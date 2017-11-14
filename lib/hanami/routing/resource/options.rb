@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hanami
   module Routing
     class Resource
@@ -39,7 +41,7 @@ module Hanami
         def initialize(actions, options = {})
           only     = Array(options.delete(:only) || actions)
           except   = Array(options.delete(:except))
-          @actions = ( actions & only ) - except
+          @actions = (actions & only) - except
 
           @options = options
         end

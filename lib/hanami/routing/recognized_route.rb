@@ -1,4 +1,6 @@
-require 'hanami/utils/string'
+# frozen_string_literal: true
+
+require "hanami/utils/string"
 
 module Hanami
   module Routing
@@ -10,25 +12,25 @@ module Hanami
     class RecognizedRoute
       # @since 0.5.0
       # @api private
-      REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+      REQUEST_METHOD = "REQUEST_METHOD"
 
       # @since 0.7.0
       # @api private
-      PATH_INFO      = 'PATH_INFO'.freeze
+      PATH_INFO      = "PATH_INFO"
 
       # @since 0.5.0
       # @api private
-      NAMESPACE             = '%s::'.freeze
+      NAMESPACE             = "%s::"
 
       # @since 0.5.0
       # @api private
-      NAMESPACE_REPLACEMENT = ''.freeze
+      NAMESPACE_REPLACEMENT = ""
 
       # @since 0.5.0
       # @api private
-      ACTION_PATH_SEPARATOR = '/'.freeze
+      ACTION_PATH_SEPARATOR = "/"
 
-      ACTION_SEPARATOR = "#".freeze
+      ACTION_SEPARATOR = "#"
 
       # @since 0.5.0
       # @api public
@@ -55,7 +57,7 @@ module Hanami
 
         return unless routable?
         route.call(@env)
-        @params = @env['router.params']
+        @params = @env["router.params"]
       end
 
       # Rack protocol compatibility
@@ -72,7 +74,7 @@ module Hanami
       # @see Hanami::Routing::RecognizedRoute#routable?
       # @see Hanami::Router::NotRoutableEndpointError
       def call(env)
-        if routable?
+        if routable? # rubocop:disable Style/GuardClause
           @endpoint.call(env)
         else
           raise Hanami::Router::NotRoutableEndpointError.new(@env)
@@ -123,7 +125,8 @@ module Hanami
         if destination.match(namespace)
           Hanami::Utils::String.transform(
             destination.sub(namespace, NAMESPACE_REPLACEMENT),
-            :underscore, [:rsub, ACTION_PATH_SEPARATOR, ACTION_SEPARATOR])
+            :underscore, [:rsub, ACTION_PATH_SEPARATOR, ACTION_SEPARATOR]
+          )
         else
           destination
         end

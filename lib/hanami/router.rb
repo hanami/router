@@ -1,6 +1,8 @@
-require 'rack/request'
-require 'hanami/routing'
-require 'hanami/utils/hash'
+# frozen_string_literal: true
+
+require "rack/request"
+require "hanami/routing"
+require "hanami/utils/hash"
 
 # Hanami
 #
@@ -72,7 +74,7 @@ module Hanami
   #   end
   #
   #   # All the requests starting with "/api" will be forwarded to Api::App
-  class Router
+  class Router # rubocop:disable Metrics/ClassLength
     # This error is raised when <tt>#call</tt> is invoked on a non-routable
     # recognized route.
     #
@@ -85,15 +87,15 @@ module Hanami
     class NotRoutableEndpointError < Hanami::Routing::Error
       # @since 0.5.0
       # @api private
-      REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+      REQUEST_METHOD = "REQUEST_METHOD"
 
       # @since 0.5.0
       # @api private
-      PATH_INFO      = 'PATH_INFO'.freeze
+      PATH_INFO      = "PATH_INFO"
 
       # @since 0.5.0
       def initialize(env)
-        super %(Cannot find routable endpoint for #{ env[REQUEST_METHOD] } "#{ env[PATH_INFO] }")
+        super %(Cannot find routable endpoint for #{env[REQUEST_METHOD]} "#{env[PATH_INFO]}")
       end
     end
 
@@ -103,7 +105,7 @@ module Hanami
     # @api private
     #
     # @see Hanami::Router#root
-    ROOT_PATH = '/'.freeze
+    ROOT_PATH = "/"
 
     # Returns the given block as it is.
     #
@@ -1010,7 +1012,7 @@ module Hanami
     #
     # @since 0.1.0
     def call(env)
-      if response = @force_ssl.call(env)
+      if (response = @force_ssl.call(env))
         response
       else
         (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
@@ -1219,7 +1221,7 @@ module Hanami
     #                 POST       /login                   Sessions::Create
     #          logout GET, HEAD  /logout                  Sessions::Destroy
     def inspector
-      require 'hanami/routing/routes_inspector'
+      require "hanami/routing/routes_inspector"
       Routing::RoutesInspector.new(@routes, @prefix)
     end
 
@@ -1238,8 +1240,8 @@ module Hanami
     #
     # @see Hanami::Router#recognize
     # @see http://www.rubydoc.info/github/rack/rack/Rack%2FMockRequest.env_for
-    def env_for(env, options = {}, params = nil)
-      env = case env
+    def env_for(env, options = {}, params = nil) # rubocop:disable Metrics/MethodLength
+      case env
       when String
         Rack::MockRequest.env_for(env, options)
       when Symbol
@@ -1256,27 +1258,31 @@ module Hanami
 
     private
 
-    PATH_INFO      = 'PATH_INFO'.freeze
-    SCRIPT_NAME    = 'SCRIPT_NAME'.freeze
-    SERVER_NAME    = 'SERVER_NAME'.freeze
-    REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+    PATH_INFO      = "PATH_INFO"
+    SCRIPT_NAME    = "SCRIPT_NAME"
+    SERVER_NAME    = "SERVER_NAME"
+    REQUEST_METHOD = "REQUEST_METHOD"
 
-    PARAMS = 'router.params'.freeze
+    PARAMS = "router.params"
 
-    GET     = "GET".freeze
-    POST    = "POST".freeze
-    PUT     = "PUT".freeze
-    PATCH   = "PATCH".freeze
-    DELETE  = "DELETE".freeze
-    TRACE   = "TRACE".freeze
-    OPTIONS = "OPTIONS".freeze
-    LINK    = "LINK".freeze
-    UNLINK  = "UNLINK".freeze
+    GET     = "GET"
+    POST    = "POST"
+    PUT     = "PUT"
+    PATCH   = "PATCH"
+    DELETE  = "DELETE"
+    TRACE   = "TRACE"
+    OPTIONS = "OPTIONS"
+    LINK    = "LINK"
+    UNLINK  = "UNLINK"
 
     NOT_FOUND   = ->(_) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
     NOT_ALLOWED = ->(_) { [405, { "Content-Length" => "18" }, ["Method Not Allowed"]] }.freeze
-    ROOT = "/".freeze
+    ROOT = "/"
 
+    # Application
+    #
+    # @since x.x.x
+    # @api private
     class App
       def initialize(path, endpoint, host: nil)
         @path     = Mustermann.new(path, type: :rails, version: "5.0")
@@ -1309,7 +1315,7 @@ module Hanami
       end
     end
 
-    def add_route(verb, path, to, as = nil, constraints = {}, &blk)
+    def add_route(verb, path, to, as = nil, constraints = {}, &blk) # rubocop:disable Metrics/ParameterLists
       to ||= blk
 
       path     = path.to_s

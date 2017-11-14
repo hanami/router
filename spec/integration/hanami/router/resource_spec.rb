@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
 

@@ -1,21 +1,23 @@
-require 'hanami/routing/routes_inspector'
+# frozen_string_literal: true
+
+require "hanami/routing/routes_inspector"
 
 RSpec.xdescribe Hanami::Routing::RoutesInspector do
-  describe '#to_s' do
+  describe "#to_s" do
     before do
       @path = ::File.expand_path(__FILE__)
     end
 
-    describe 'named routes with procs' do
+    describe "named routes with procs" do
       before do
         @router = Hanami::Router.new do
           root           to: ->(env) {}
-          get '/login',  to: ->(env) {}, as: :login
-          get '/logout', to: proc { |env| }, as: :logout
+          get "/login",  to: ->(env) {}, as: :login
+          get "/logout", to: proc { |env| }, as: :logout
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(  root GET, HEAD  /                              #<Proc@#{@path}:12 (lambda)>),
           %( login GET, HEAD  /login                         #<Proc@#{@path}:13 (lambda)>),
@@ -29,14 +31,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'controller action syntax' do
+    describe "controller action syntax" do
       before do
         @router = Hanami::Router.new do
-          get '/controller/action', to: 'welcome#index'
+          get "/controller/action", to: "welcome#index"
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(GET, HEAD  /controller/action             Welcome::Index)
         ]
@@ -48,10 +50,10 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'lazy controller and action' do
+    describe "lazy controller and action" do
       before do
         @router = Hanami::Router.new do
-          get '/lazy', to: 'sleepy#index'
+          get "/lazy", to: "sleepy#index"
         end
 
         module Sleepy
@@ -64,7 +66,7 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
         Object.__send__(:remove_const, :Sleepy)
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(GET, HEAD  /lazy                          Sleepy::Index)
         ]
@@ -76,14 +78,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'missing controller and action' do
+    describe "missing controller and action" do
       before do
         @router = Hanami::Router.new do
-          get '/missing', to: 'missing#index'
+          get "/missing", to: "missing#index"
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(GET, HEAD  /missing                       Missing::Index)
         ]
@@ -95,14 +97,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'class' do
+    describe "class" do
       before do
         @router = Hanami::Router.new do
-          get '/class', to: RackMiddleware
+          get "/class", to: RackMiddleware
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(GET, HEAD  /class                         RackMiddleware)
         ]
@@ -114,15 +116,15 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'object' do
+    describe "object" do
       before do
         @router = Hanami::Router.new do
-          get '/class',  to: RackMiddlewareInstanceMethod
-          get '/object', to: RackMiddlewareInstanceMethod.new
+          get "/class",  to: RackMiddlewareInstanceMethod
+          get "/object", to: RackMiddlewareInstanceMethod.new
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(GET, HEAD  /class                         #<RackMiddlewareInstanceMethod>),
           %(GET, HEAD  /object                        #<RackMiddlewareInstanceMethod>)
@@ -135,14 +137,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'resource' do
+    describe "resource" do
       before do
         @router = Hanami::Router.new do
-          resource 'identity'
+          resource "identity"
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %( new_identity GET, HEAD  /identity/new                  Identity::New),
           %(     identity POST       /identity                      Identity::Create),
@@ -159,14 +161,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'named resource' do
+    describe "named resource" do
       before do
         @router = Hanami::Router.new do
-          resource 'identity', as: 'user'
+          resource "identity", as: "user"
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %( new_user GET, HEAD  /identity/new                  Identity::New),
           %(     user POST       /identity                      Identity::Create),
@@ -183,14 +185,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'resources' do
+    describe "resources" do
       before do
         @router = Hanami::Router.new do
-          resources 'books'
+          resources "books"
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(     books GET, HEAD  /books                         Books::Index),
           %( new_book GET, HEAD  /books/new                     Books::New),
@@ -208,14 +210,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'named resources' do
+    describe "named resources" do
       before do
         @router = Hanami::Router.new do
-          resources 'books', as: 'items'
+          resources "books", as: "items"
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(     items GET, HEAD  /books                         Books::Index),
           %( new_item GET, HEAD  /books/new                     Books::New),
@@ -233,14 +235,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'prefix' do
+    describe "prefix" do
       before do
-        @router = Hanami::Router.new(prefix: '/admin') do
-          get '/books', to: 'books#index', as: :books
+        @router = Hanami::Router.new(prefix: "/admin") do
+          get "/books", to: "books#index", as: :books
         end
       end
 
-      it 'inspects routes' do
+      it "inspects routes" do
         expectations = [
           %(               books GET, HEAD  /admin/books                   Books::Index)
         ]
@@ -252,16 +254,16 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'with custom formatter' do
+    describe "with custom formatter" do
       before do
         @router = Hanami::Router.new do
-          get '/login', to: ->(env) {}, as: :login
+          get "/login", to: ->(env) {}, as: :login
         end
         @proc_def_line = __LINE__ - 2
       end
 
-      it 'inspects routes' do
-        formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
+      it "inspects routes" do
+        formatter     = "| %<methods>s | %<name>s | %<path>s | %<endpoint>s |\n"
         expectations  = [
           %(| GET, HEAD | login | /login | #<Proc@#{@path}:#{@proc_def_line} (lambda)> |)
         ]
@@ -273,7 +275,7 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'nested routes' do
+    describe "nested routes" do
       before do
         class AdminHanamiApp
           def call(env)
@@ -281,17 +283,17 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
 
           def routes
             Hanami::Router.new do
-              get '/home', to: 'home#index'
+              get "/home", to: "home#index"
             end
           end
         end
 
         inner_router = Hanami::Router.new do
-          get '/comments', to: 'comments#index'
+          get "/comments", to: "comments#index"
         end
         nested_router = Hanami::Router.new do
-          get '/posts', to: 'posts#index'
-          mount inner_router, at: '/second_mount'
+          get "/posts", to: "posts#index"
+          mount inner_router, at: "/second_mount"
         end
 
         nested_non_hanami_router = Object.new
@@ -303,13 +305,13 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
         end
 
         @router = Hanami::Router.new do
-          get '/fakeroute', to: 'fake#index'
-          mount AdminHanamiApp, at: '/admin'
-          mount nested_router, at: '/api'
-          mount nested_non_hanami_router, at: '/foo'
-          mount RackMiddleware, at: '/class'
-          mount RackMiddlewareInstanceMethod,     at: '/instance_from_class'
-          mount RackMiddlewareInstanceMethod.new, at: '/instance'
+          get "/fakeroute", to: "fake#index"
+          mount AdminHanamiApp, at: "/admin"
+          mount nested_router, at: "/api"
+          mount nested_non_hanami_router, at: "/foo"
+          mount RackMiddleware, at: "/class"
+          mount RackMiddlewareInstanceMethod,     at: "/instance_from_class"
+          mount RackMiddlewareInstanceMethod.new, at: "/instance"
         end
       end
 
@@ -317,8 +319,8 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
         Object.__send__(:remove_const, :AdminHanamiApp)
       end
 
-      it 'inspect routes' do
-        formatter     = "| %{methods} | %{name} | %{path} | %{endpoint} |\n"
+      it "inspect routes" do
+        formatter     = "| %<methods>s | %<name>s | %<path>s | %<endpoint>s |\n"
         expectations  = [
           %(| GET, HEAD |  | /fakeroute | Fake::Index |),
           %(| GET, HEAD |  | /admin/home | Home::Index |),
@@ -336,7 +338,7 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
         end
       end
 
-      it 'returns header text only one time' do
+      it "returns header text only one time" do
         header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s.split("\n")
@@ -344,7 +346,7 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
         expect(actual.count).to eq(1)
       end
 
-      it 'returns header text on the top' do
+      it "returns header text on the top" do
         header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s.split("\n")
@@ -352,14 +354,14 @@ RSpec.xdescribe Hanami::Routing::RoutesInspector do
       end
     end
 
-    describe 'with header option' do
+    describe "with header option" do
       before do
         @router = Hanami::Router.new do
-          get '/controller/action', to: 'welcome#index'
+          get "/controller/action", to: "welcome#index"
         end
       end
 
-      it 'returns header text' do
+      it "returns header text" do
         header = %(Name Method     Path                           Action)
 
         actual = @router.inspector.to_s

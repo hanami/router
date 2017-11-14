@@ -1,4 +1,6 @@
-require 'hanami/utils/path_prefix'
+# frozen_string_literal: true
+
+require "hanami/utils/path_prefix"
 
 module Hanami
   module Routing
@@ -10,36 +12,36 @@ module Hanami
       #
       # @since 0.2.0
       # @api private
-      FORMATTER = "%<name>20s %<methods>-10s %<path>-30s %<endpoint>-30s\n".freeze
+      FORMATTER = "%<name>20s %<methods>-10s %<path>-30s %<endpoint>-30s\n"
 
       # Default HTTP methods separator
       #
       # @since 0.2.0
       # @api private
-      HTTP_METHODS_SEPARATOR = ', '.freeze
+      HTTP_METHODS_SEPARATOR = ", "
 
       # Default inspector header hash values
       #
       # @since 0.5.0
       # @api private
       INSPECTOR_HEADER_HASH =  Hash[
-        name:     'Name',
-        methods:  'Method',
-        path:     'Path',
-        endpoint: 'Action'
+        name:     "Name",
+        methods:  "Method",
+        path:     "Path",
+        endpoint: "Action"
       ].freeze
 
       # Default inspector header name values
       #
       # @since 0.5.0
       # @api private
-      INSPECTOR_HEADER_NAME = 'Name'.freeze
+      INSPECTOR_HEADER_NAME = "Name"
 
       # Empty line string
       #
       # @since 0.5.0
       # @api private
-      EMPTY_LINE = "\n".freeze
+      EMPTY_LINE = "\n"
 
       # Instantiate a new inspector
       #
@@ -155,17 +157,17 @@ module Hanami
       # @see Hanami::Routing::RoutesInspector#FORMATTER
       # @see Hanami::Routing::RoutesInspector#to_s
       def inspect_routes(formatter, base_path)
-        result = ''
+        result = ""
 
-        # TODO refactoring: replace conditional with polymorphism
+        # TODO: refactoring: replace conditional with polymorphism
         # We're exposing too much knowledge from Routing::Route:
         # #path_for_generation and #base_path
         @routes.each do |route|
-          result << if router = route.nested_router
-            inspect_router(formatter, router, route, base_path)
-          else
-            inspect_route(formatter, route, base_path)
-          end
+          result << if (router = route.nested_router)
+                      inspect_router(formatter, router, route, base_path)
+                    else
+                      inspect_route(formatter, route, base_path)
+                    end
         end
 
         result

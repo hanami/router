@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Router do
   describe "#namespace" do
     let(:app) { Rack::MockRequest.new(router) }
@@ -469,18 +471,18 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    describe 'mount' do
+    describe "mount" do
       let(:router) do
         described_class.new do
-          namespace 'api' do
-            mount Backend::App, at: '/backend'
+          namespace "api" do
+            mount Backend::App, at: "/backend"
           end
         end
       end
 
-      [ 'get', 'post', 'delete', 'put', 'patch', 'trace', 'options', 'link', 'unlink' ].each do |verb|
-        it "accepts #{ verb } for a namespaced mount" do
-          expect(app.request(verb.upcase, '/api/backend', lint: true).body).to eq('home')
+      %w[get post delete put patch trace options link unlink].each do |verb|
+        it "accepts #{verb} for a namespaced mount" do
+          expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq("home")
         end
       end
     end

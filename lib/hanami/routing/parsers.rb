@@ -1,5 +1,7 @@
-require 'hanami/routing/parsing/parser'
-require 'hanami/utils/hash'
+# frozen_string_literal: true
+
+require "hanami/routing/parsing/parser"
+require "hanami/utils/hash"
 
 module Hanami
   module Routing
@@ -8,25 +10,25 @@ module Hanami
     class Parsers
       # @since 0.2.0
       # @api private
-      CONTENT_TYPE       = 'CONTENT_TYPE'.freeze
+      CONTENT_TYPE       = "CONTENT_TYPE"
 
       # @since 0.2.0
       # @api private
-      MEDIA_TYPE_MATCHER = /\s*[;,]\s*/.freeze
+      MEDIA_TYPE_MATCHER = /\s*[;,]\s*/
 
       # @since 0.2.0
       # @api private
-      RACK_INPUT    = 'rack.input'.freeze
+      RACK_INPUT    = "rack.input"
 
       # @since 0.2.0
       # @api private
-      ROUTER_PARAMS = 'router.params'.freeze
+      ROUTER_PARAMS = "router.params"
 
       # @api private
-      ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
+      ROUTER_PARSED_BODY = "router.parsed_body"
 
       # @api private
-      FALLBACK_KEY  = '_'.freeze
+      FALLBACK_KEY = "_"
 
       # @since 0.2.0
       # @api private
@@ -42,10 +44,11 @@ module Hanami
       end
 
       private
+
       # @since 0.2.0
       # @api private
-      def prepare(args)
-        result  = Hash.new
+      def prepare(args) # rubocop:disable Metrics/MethodLength
+        result  = {}
         args    = Array(args)
         return result if args.empty?
 
@@ -98,7 +101,7 @@ module Hanami
 
       # @api private
       def media_type(env)
-        if ct = content_type(env)
+        if (ct = content_type(env)) # rubocop:disable Style/GuardClause
           ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
         end
       end

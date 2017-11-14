@@ -1,6 +1,8 @@
-require 'hanami/utils/class_attribute'
-require 'hanami/routing/resource/options'
-require 'hanami/routing/resource/action'
+# frozen_string_literal: true
+
+require "hanami/utils/class_attribute"
+require "hanami/routing/resource/options"
+require "hanami/routing/resource/action"
 
 module Hanami
   module Routing
@@ -17,14 +19,14 @@ module Hanami
 
       # @api private
       # @since 0.4.0
-      NESTED_ROUTES_SEPARATOR = '/'.freeze
+      NESTED_ROUTES_SEPARATOR = "/"
 
       # Set of default routes
       #
       # @api private
       # @since 0.1.0
       class_attribute :actions
-      self.actions = [:new, :create, :show, :edit, :update, :destroy]
+      self.actions = %i[new create show edit update destroy]
 
       # Action class
       #
@@ -83,7 +85,7 @@ module Hanami
       #
       # @api private
       # @since 0.4.0
-      def wildcard_param(route_param = nil)
+      def wildcard_param(_route_param = nil)
         NESTED_ROUTES_SEPARATOR
       end
 

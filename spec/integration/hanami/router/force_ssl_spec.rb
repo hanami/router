@@ -1,127 +1,129 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Router do
   # Bug https://github.com/hanami/router/issues/73
-  it 'respects the Rack spec' do
+  it "respects the Rack spec" do
     router = Hanami::Router.new(force_ssl: true) do
-      get '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+      get "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
     end
 
     app = Rack::MockRequest.new(router)
-    app.get('/http_destination', lint: true)
+    app.get("/http_destination", lint: true)
   end
 
   %w[get].each do |verb|
     it "force_ssl to true and scheme is http, return 307 and new location, verb: #{verb}" do
       router = Hanami::Router.new(force_ssl: true) do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, '/http_destination', lint: true)
+      status, headers, body = app.request(verb.upcase, "/http_destination", lint: true)
 
       expect(status).to eq(301)
-      expect(headers['Location']).to eq('https://localhost:443/http_destination')
-      expect(body.body).to eq('')
+      expect(headers["Location"]).to eq("https://localhost:443/http_destination")
+      expect(body.body).to eq("")
     end
 
     it "force_ssl to true and scheme is https, return 200, verb: #{verb}" do
-      router = Hanami::Router.new(force_ssl: true, scheme: 'https', host: 'hanami.test') do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+      router = Hanami::Router.new(force_ssl: true, scheme: "https", host: "hanami.test") do
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, 'https://hanami.test/http_destination', lint: true)
+      status, headers, body = app.request(verb.upcase, "https://hanami.test/http_destination", lint: true)
 
       expect(status).to eq(200)
-      expect(headers['Location']).to be_nil
-      expect(body.body).to eq('http destination!')
+      expect(headers["Location"]).to be_nil
+      expect(body.body).to eq("http destination!")
     end
   end
 
   %w[post put patch delete options].each do |verb|
     it "force_ssl to true and scheme is http, return 307 and new location, verb: #{verb}" do
       router = Hanami::Router.new(force_ssl: true) do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, '/http_destination', lint: true)
+      status, headers, body = app.request(verb.upcase, "/http_destination", lint: true)
 
       expect(status).to eq(307)
-      expect(headers['Location']).to eq('https://localhost:443/http_destination')
-      expect(body.body).to eq('')
+      expect(headers["Location"]).to eq("https://localhost:443/http_destination")
+      expect(body.body).to eq("")
     end
 
     it "force_ssl to true and added query string, verb: #{verb}" do
       router = Hanami::Router.new(force_ssl: true) do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, '/http_destination?foo=bar', lint: true)
+      status, headers, body = app.request(verb.upcase, "/http_destination?foo=bar", lint: true)
 
       expect(status).to eq(307)
-      expect(headers['Location']).to eq('https://localhost:443/http_destination?foo=bar')
-      expect(body.body).to eq('')
+      expect(headers["Location"]).to eq("https://localhost:443/http_destination?foo=bar")
+      expect(body.body).to eq("")
     end
 
     it "force_ssl to true and added port, verb: #{verb}" do
       router = Hanami::Router.new(force_ssl: true, port: 4000) do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
+      status, headers, body = app.public_send(verb, "/http_destination?foo=bar", lint: true)
 
       expect(status).to eq(307)
-      expect(headers['Location']).to eq('https://localhost:4000/http_destination?foo=bar')
-      expect(body.body).to eq('')
+      expect(headers["Location"]).to eq("https://localhost:4000/http_destination?foo=bar")
+      expect(body.body).to eq("")
     end
 
     it "force_ssl to true, added host and port, verb: #{verb}" do
-      router = Hanami::Router.new(force_ssl: true, host: 'hanamirb.org', port: 4000) do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+      router = Hanami::Router.new(force_ssl: true, host: "hanamirb.org", port: 4000) do
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, '/http_destination?foo=bar', lint: true)
+      status, headers, body = app.request(verb.upcase, "/http_destination?foo=bar", lint: true)
 
       expect(status).to eq(307)
-      expect(headers['Location']).to eq('https://hanamirb.org:4000/http_destination?foo=bar')
-      expect(body.body).to eq('')
+      expect(headers["Location"]).to eq("https://hanamirb.org:4000/http_destination?foo=bar")
+      expect(body.body).to eq("")
     end
 
     it "force_ssl to false and scheme is http, return 200 and doesn't return new location, verb: #{verb}" do
       router = Hanami::Router.new(force_ssl: false) do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, '/http_destination', lint: true)
+      status, headers, body = app.request(verb.upcase, "/http_destination", lint: true)
 
       expect(status).to eq(200)
-      expect(headers['Location']).to be_nil
-      expect(body.body).to eq('http destination!')
+      expect(headers["Location"]).to be_nil
+      expect(body.body).to eq("http destination!")
     end
 
     it "force_ssl to false and scheme is https, return 200 and doesn't return new location, verb: #{verb}" do
-      router = Hanami::Router.new(force_ssl: false, scheme: 'https') do
-        __send__ verb, '/http_destination', to: ->(_) { [200, {}, ['http destination!']] }
+      router = Hanami::Router.new(force_ssl: false, scheme: "https") do
+        __send__ verb, "/http_destination", to: ->(_) { [200, {}, ["http destination!"]] }
       end
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.request(verb.upcase, '/http_destination', lint: true)
+      status, headers, body = app.request(verb.upcase, "/http_destination", lint: true)
 
       expect(status).to eq(200)
-      expect(headers['Location']).to be_nil
-      expect(body.body).to eq('http destination!')
+      expect(headers["Location"]).to be_nil
+      expect(body.body).to eq("http destination!")
     end
   end
 end
