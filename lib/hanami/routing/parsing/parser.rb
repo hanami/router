@@ -1,5 +1,7 @@
-require 'hanami/utils/class'
-require 'hanami/utils/string'
+# frozen_string_literal: true
+
+require "hanami/utils/class"
+require "hanami/utils/string"
 
 module Hanami
   module Routing
@@ -16,7 +18,7 @@ module Hanami
         # @since 0.2.0
         # @api private
         def initialize(parser)
-          super("Unknown Parser: `#{ parser }'")
+          super("Unknown Parser: `#{parser}'")
         end
       end
 
@@ -39,21 +41,22 @@ module Hanami
         end
 
         # @since 0.2.0
-        def parse(body)
-          Hash.new
+        def parse(_body)
+          {}
         end
 
-        private
         # @since 0.2.0
         # @api private
         def self.require_parser(parser)
-          require "hanami/routing/parsing/#{ parser }_parser"
+          require "hanami/routing/parsing/#{parser}_parser"
 
           parser = Utils::String.classify(parser)
-          Utils::Class.load!("Hanami::Routing::Parsing::#{ parser }Parser").new
+          Utils::Class.load!("Hanami::Routing::Parsing::#{parser}Parser").new
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)
         end
+
+        private_class_method :require_parser
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Routing::Redirect do
   describe "#initialize" do
     it "instantiate a frozen object" do

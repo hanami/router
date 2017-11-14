@@ -1,4 +1,6 @@
-require 'rack/request'
+# frozen_string_literal: true
+
+require "rack/request"
 
 module Hanami
   module Routing
@@ -13,21 +15,21 @@ module Hanami
       #
       # @since 0.4.1
       # @api private
-      SSL_SCHEME = 'https'.freeze
+      SSL_SCHEME = "https"
 
       # @since 0.4.1
       # @api private
-      HTTPS = 'HTTPS'.freeze
+      HTTPS = "HTTPS"
 
       # @since 0.4.1
       # @api private
-      ON    = 'on'.freeze
+      ON    = "on"
 
       # Location header
       #
       # @since 0.4.1
       # @api private
-      LOCATION_HEADER = 'Location'.freeze
+      LOCATION_HEADER = "Location"
 
       # Default http port
       #
@@ -55,31 +57,31 @@ module Hanami
 
       # @since 0.4.1
       # @api private
-      HTTP_X_FORWARDED_SSL = 'HTTP_X_FORWARDED_SSL'.freeze
+      HTTP_X_FORWARDED_SSL = "HTTP_X_FORWARDED_SSL"
 
       # @since 0.4.1
       # @api private
-      HTTP_X_FORWARDED_SCHEME = 'HTTP_X_FORWARDED_SCHEME'.freeze
+      HTTP_X_FORWARDED_SCHEME = "HTTP_X_FORWARDED_SCHEME"
 
       # @since 0.4.1
       # @api private
-      HTTP_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO'.freeze
+      HTTP_X_FORWARDED_PROTO = "HTTP_X_FORWARDED_PROTO"
 
       # @since 0.4.1
       # @api private
-      HTTP_X_FORWARDED_PROTO_SEPARATOR = ','.freeze
+      HTTP_X_FORWARDED_PROTO_SEPARATOR = ","
 
       # @since 0.4.1
       # @api private
-      RACK_URL_SCHEME = 'rack.url_scheme'.freeze
+      RACK_URL_SCHEME = "rack.url_scheme"
 
       # @since 0.4.1
       # @api private
-      REQUEST_METHOD = 'REQUEST_METHOD'.freeze
+      REQUEST_METHOD = "REQUEST_METHOD"
 
       # @since 0.4.1
       # @api private
-      IDEMPOTENT_METHODS = ['GET', 'HEAD'].freeze
+      IDEMPOTENT_METHODS = %w[GET HEAD].freeze
 
       EMPTY_BODY = [].freeze
 
@@ -138,7 +140,7 @@ module Hanami
       # @since 0.4.1
       # @api private
       def full_url(env)
-        "#{ SSL_SCHEME }://#{ host }:#{ port }#{ ::Rack::Request.new(env).fullpath }"
+        "#{SSL_SCHEME}://#{host}:#{port}#{::Rack::Request.new(env).fullpath}"
       end
 
       # Return redirect code
@@ -185,7 +187,7 @@ module Hanami
       #
       # @since 0.4.1
       # @api private
-      def scheme(env)
+      def scheme(env) # rubocop:disable Metrics/MethodLength
         if env[HTTPS] == ON
           SSL_SCHEME
         elsif env[HTTP_X_FORWARDED_SSL] == ON

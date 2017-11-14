@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Routing::Route do
   let(:endpoint) { ->(_) {} }
 
@@ -28,7 +30,7 @@ RSpec.describe Hanami::Routing::Route do
 
     it "sets params in Rack env, by interpolating path variables with PATH_INFO" do
       endpoint = lambda do |env|
-        [200, {}, [env['router.params'].inspect]]
+        [200, {}, [env["router.params"].inspect]]
       end
 
       route = described_class.new("GET", "/authors/:author_id/books/:id", endpoint, {})
@@ -41,7 +43,7 @@ RSpec.describe Hanami::Routing::Route do
 
     it "it captures query string into params" do
       endpoint = lambda do |env|
-        [200, {}, [env['router.params'].inspect]]
+        [200, {}, [env["router.params"].inspect]]
       end
 
       route = described_class.new("GET", "/authors", endpoint, {})

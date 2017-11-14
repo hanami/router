@@ -1,5 +1,7 @@
-require 'hanami/routing/resource'
-require 'hanami/routing/resources/action'
+# frozen_string_literal: true
+
+require "hanami/routing/resource"
+require "hanami/routing/resources/action"
 
 module Hanami
   module Routing
@@ -16,7 +18,7 @@ module Hanami
       #
       # @api private
       # @since 0.1.0
-      self.actions = [:index, :new, :create, :show, :edit, :update, :destroy]
+      self.actions = %i[index new create show edit update destroy]
 
       # Action class
       #
@@ -41,7 +43,7 @@ module Hanami
       # @api private
       # @since 0.4.0
       def wildcard_param(route_param = nil)
-        "/:#{ Hanami::Utils::String.singularize(route_param) }_id/"
+        "/:#{Hanami::Utils::String.singularize(route_param)}_id/"
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Routing::Endpoint do
   describe ".find" do
     context "string" do

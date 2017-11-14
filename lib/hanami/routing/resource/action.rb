@@ -1,7 +1,9 @@
-require 'hanami/utils/string'
-require 'hanami/utils/path_prefix'
-require 'hanami/utils/class_attribute'
-require 'hanami/routing/resource/nested'
+# frozen_string_literal: true
+
+require "hanami/utils/string"
+require "hanami/utils/path_prefix"
+require "hanami/utils/class_attribute"
+require "hanami/routing/resource/nested"
 
 module Hanami
   module Routing
@@ -20,7 +22,7 @@ module Hanami
         #
         # @api private
         # @since 0.4.0
-        NESTED_ROUTES_SEPARATOR = '/'.freeze
+        NESTED_ROUTES_SEPARATOR = "/"
 
         # Ruby namespace where lookup for default subclasses.
         #
@@ -41,7 +43,7 @@ module Hanami
         # @api private
         # @since 0.2.0
         class_attribute :named_route_separator
-        self.named_route_separator = '_'.freeze
+        self.named_route_separator = "_"
 
         # Generate an action for the given router
         #
@@ -113,7 +115,6 @@ module Hanami
           @namespace ||= Utils::PathPrefix.new @options[:namespace]
         end
 
-        private
         # Load a subclass, according to the given action name
         #
         # @param action [String] the action name
@@ -127,6 +128,8 @@ module Hanami
         def self.class_for(action)
           Utils::Class.load!(Utils::String.classify(action), namespace)
         end
+
+        private_class_method :class_for
 
         # Accepted HTTP verb
         #
@@ -219,7 +222,7 @@ module Hanami
         # @api private
         # @since 0.1.0
         def endpoint
-          [ controller_name, action_name ].join separator
+          [controller_name, action_name].join separator
         end
 
         # Separator between controller and action name
@@ -287,17 +290,19 @@ module Hanami
         end
 
         protected
+
         # @since 0.1.0
         # @api private
-        def method_missing(m, *args)
+        def method_missing(m, *args) # rubocop:disable Style/MethodMissing
           verb        = m
           action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
 
           @router.__send__ verb, path(action_name),
-            to: endpoint(action_name), as: as(action_name)
+                           to: endpoint(action_name), as: as(action_name)
         end
 
         private
+
         # @since 0.1.0
         # @api private
         def path(action_name)
@@ -307,13 +312,13 @@ module Hanami
         # @since 0.1.0
         # @api private
         def endpoint(action_name)
-          [ controller_name, action_name ].join separator
+          [controller_name, action_name].join separator
         end
 
         # @since 0.1.0
         # @api private
         def as(action_name)
-          [ action_name, super() ].join(self.class.named_route_separator).to_sym
+          [action_name, super()].join(self.class.named_route_separator).to_sym
         end
       end
 
@@ -332,6 +337,7 @@ module Hanami
       # @since 0.1.0
       module DefaultMemberAction
         private
+
         # @since 0.1.0
         # @api private
         def path
@@ -341,7 +347,7 @@ module Hanami
         # @since 0.1.0
         # @api private
         def as
-          [ action_name, super ].join(self.class.named_route_separator).to_sym
+          [action_name, super].join(self.class.named_route_separator).to_sym
         end
       end
 

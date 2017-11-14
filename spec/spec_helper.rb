@@ -1,9 +1,11 @@
-if ENV['COVERALL']
-  require 'coveralls'
+# frozen_string_literal: true
+
+if ENV["COVERALL"]
+  require "coveralls"
   Coveralls.wear!
 end
 
-require 'hanami/utils'
+require "hanami/utils"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -21,7 +23,7 @@ RSpec.configure do |config|
 
   config.warnings = true
 
-  config.default_formatter = 'doc' if config.files_to_run.one?
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   config.profile_examples = 10
 
@@ -29,11 +31,11 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
-require 'support/generation_test_case'
-require 'support/recognition_test_case'
-$:.unshift 'lib'
-require 'hanami-router'
-require 'rack'
+require "support/generation_test_case"
+require "support/recognition_test_case"
+$LOAD_PATH.unshift "lib"
+require "hanami/router"
+require "rack"
 
 Rack::MockResponse.class_eval do
   def equal?(other)
