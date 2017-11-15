@@ -23,7 +23,7 @@ RSpec.xdescribe "Inspector nested resources" do
         resources :comments, only: [:index], controller: :topics
       end
 
-      namespace "api" do
+      prefix "api" do
         resources "users", only: [:index] do
           resources "comments", only: [:index]
         end
@@ -45,7 +45,7 @@ RSpec.xdescribe "Inspector nested resources" do
         end
       end
 
-      namespace :center do
+      prefix :center do
         resources :tickets, only: [:show], controller: :receipts do
           resources :customers
         end
@@ -246,14 +246,14 @@ RSpec.xdescribe "Inspector nested resources" do
     end
   end
 
-  describe "with namespace" do
+  describe "with prefix" do
     it "should create correct actions" do
       expect(@inspector).to match("api_user_comments GET, HEAD  /api/users/:user_id/comments   Nested::Controllers::Users::Comments::Index")
       expect(@inspector).to match("api_users GET, HEAD  /api/users                     Nested::Controllers::Users::Index")
     end
   end
 
-  describe "overriding controller without namespace" do
+  describe "overriding controller without prefix" do
     before do
       @router = Hanami::Router.new do
         resources :users do

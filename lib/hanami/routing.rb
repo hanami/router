@@ -178,7 +178,7 @@ module Hanami
     end
 
     require "hanami/routing/endpoint"
-    require "hanami/routing/namespace"
+    require "hanami/routing/prefix"
     require "hanami/routing/resource"
     require "hanami/routing/resources"
     require "hanami/routing/force_ssl"

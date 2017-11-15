@@ -107,12 +107,12 @@ module Hanami
           @resource_name ||= @options[:name].to_s
         end
 
-        # Namespace
+        # Prefix
         #
         # @api private
-        # @since 0.2.0
-        def namespace
-          @namespace ||= Utils::PathPrefix.new @options[:namespace]
+        # @since x.x.x
+        def prefix
+          @prefix ||= Utils::PathPrefix.new(@options[:prefix])
         end
 
         # Load a subclass, according to the given action name
@@ -141,21 +141,21 @@ module Hanami
           self.class.verb
         end
 
-        # The namespaced URL relative path
+        # The prefixed relative URL
         #
         # @example
-        #   require 'hanami/router'
+        #   require "hanami/router"
         #
         #   Hanami::Router.new do
-        #     resources 'flowers'
+        #     resources "flowers"
         #
-        #     namespace 'animals' do
-        #       resources 'mammals'
+        #     prefix "animals" do
+        #       resources "mammals"
         #     end
         #   end
         #
-        #   # It will generate paths like '/flowers', '/flowers/:id' ..
-        #   # It will generate paths like '/animals/mammals', '/animals/mammals/:id' ..
+        #   # It will generate paths like "/flowers", "/flowers/:id" ..
+        #   # It will generate paths like "/animals/mammals", "/animals/mammals/:id" ..
         #
         # @api private
         # @since 0.1.0
@@ -173,19 +173,19 @@ module Hanami
         # @api private
         # @since 0.1.0
         def rest_path
-          namespace.join(_nested_rest_path || resource_name.to_s)
+          prefix.join(_nested_rest_path || resource_name.to_s)
         end
 
-        # The namespaced name of the action within the whole context of the router.
+        # The prefixed name of the action within the whole context of the router.
         #
         # @example
-        #   require 'hanami/router'
+        #   require "hanami/router"
         #
         #   Hanami::Router.new do
-        #     resources 'flowers'
+        #     resources "flowers"
         #
-        #     namespace 'animals' do
-        #       resources 'mammals'
+        #     prefix "animals" do
+        #       resources "mammals"
         #     end
         #   end
         #
@@ -195,7 +195,7 @@ module Hanami
         # @api private
         # @since 0.1.0
         def as
-          namespace.relative_join(_singularized_as, self.class.named_route_separator).to_sym
+          prefix.relative_join(_singularized_as, self.class.named_route_separator).to_sym
         end
 
         # The name of the RESTful action.

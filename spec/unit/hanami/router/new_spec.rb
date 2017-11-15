@@ -18,7 +18,7 @@ RSpec.describe Hanami::Router do
         get "/named_route", to: e, as: :named_route
         resource  "avatar"
         resources "flowers"
-        namespace "admin" do
+        prefix "admin" do
           get "/dashboard", to: e
         end
       end
@@ -84,7 +84,7 @@ RSpec.describe Hanami::Router do
       expect(app.get("/avatar", lint: true).status).to eq(200)
     end
 
-    it "recognizes namespaced path" do
+    it "recognizes prefixed path" do
       expect(app.get("/admin/dashboard", lint: true).status).to eq(200)
     end
   end
