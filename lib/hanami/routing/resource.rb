@@ -94,7 +94,7 @@ module Hanami
       # @api private
       # @since 0.4.0
       def _resource(klass, name, options, &blk)
-        options = options.merge(separator: @options[:separator], namespace: @options[:namespace])
+        options = options.merge(separator: @options[:separator], prefix: @options[:prefix])
         klass.new(@router, [@name, name].join(NESTED_ROUTES_SEPARATOR), options, self, &blk)
       end
 

@@ -79,7 +79,7 @@ Hanami::Router.new do
 
   mount Api::App, at: '/api'
 
-  namespace 'admin' do
+  prefix 'admin' do
     get '/users', to: Users::Index
   end
 
@@ -199,13 +199,14 @@ router.url(:hanami)  # => "https://hanamirb.org/hanami"
 
 
 
-### Namespaced routes:
+### Prefixed routes:
 
 ```ruby
-router = Hanami::Router.new
-router.namespace 'animals' do
-  namespace 'mammals' do
-    get '/cats', to: ->(env) { [200, {}, ['Meow!']] }, as: :cats
+router = Hanami::Router.new do
+  prefix "animals" do
+    prefix "mammals" do
+      get "/cats", to: ->(env) { [200, {}, ["Meow!"]] }, as: :cats
+    end
   end
 end
 

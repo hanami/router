@@ -623,50 +623,42 @@ module Hanami
       add_route(GET, path, to)
     end
 
-    # Defines a Ruby block: all the routes defined within it will be namespaced
+    # Defines a Ruby block: all the routes defined within it will be prefixed
     # with the given relative path.
     #
-    # Namespaces blocks can be nested multiple times.
+    # Prefix blocks can be nested multiple times.
     #
-    # @param namespace [String] the relative path where the nested routes will
+    # @param path [String] the relative path where the nested routes will
     #   be mounted
     # @param blk [Proc] the block that defines the resources
     #
-    # @return [Hanami::Routing::Namespace] the generated namespace.
+    # @return [void]
     #
-    # @since 0.1.0
+    # @since x.x.x
     #
     # @see Hanami::Router
     #
     # @example Basic example
-    #   require 'hanami/router'
+    #   require "hanami/router"
     #
     #   Hanami::Router.new do
-    #     namespace 'trees' do
-    #       get '/sequoia', to: endpoint # => '/trees/sequoia'
+    #     prefix "trees" do
+    #       get "/sequoia", to: endpoint # => "/trees/sequoia"
     #     end
     #   end
     #
-    # @example Nested namespaces
-    #   require 'hanami/router'
+    # @example Nested prefix
+    #   require "hanami/router"
     #
     #   Hanami::Router.new do
-    #     namespace 'animals' do
-    #       namespace 'mammals' do
-    #         get '/cats', to: endpoint # => '/animals/mammals/cats'
+    #     prefix "animals" do
+    #       prefix "mammals" do
+    #         get "/cats", to: endpoint # => "/animals/mammals/cats"
     #       end
     #     end
     #   end
-    #
-    # @example
-    #   require 'hanami/router'
-    #
-    #   router = Hanami::Router.new
-    #   router.namespace 'trees' do
-    #     get '/sequoia', to: endpoint # => '/trees/sequoia'
-    #   end
-    def namespace(namespace, &blk)
-      Routing::Namespace.new(self, namespace, &blk)
+    def prefix(path, &blk)
+      Routing::Prefix.new(self, path, &blk)
     end
 
     # Defines a set of named routes for a single RESTful resource.
