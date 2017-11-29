@@ -2,3 +2,5 @@
 # alphabetically
 inherit_from:
   - https://raw.githubusercontent.com/hanami/devtools/master/.rubocop-unstable.yml
+Performance/RegexpMatch:
+  Enabled: false
