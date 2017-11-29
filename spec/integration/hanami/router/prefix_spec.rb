@@ -480,7 +480,7 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      %w[get post delete put patch trace options link unlink].each do |verb|
+      RSpec::Support::HTTP.verbs.each do |verb|
         it "accepts #{verb} for a prefixed mount" do
           expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq("home")
         end

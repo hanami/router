@@ -12,7 +12,7 @@ RSpec.describe Hanami::Router do
 
   let(:app) { Rack::MockRequest.new(router) }
 
-  %w[get post delete put patch trace options link unlink].each do |verb|
+  RSpec::Support::HTTP.verbs.each do |verb|
     it "accepts #{verb} for a class endpoint" do
       expect(app.request(verb.upcase, "/backend", lint: true).body). to eq("home")
     end

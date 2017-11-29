@@ -3,7 +3,7 @@
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
 
-  %w[get post delete put patch trace options].each do |verb|
+  RSpec::Support::HTTP.verbs.each do |verb|
     context "##{verb}" do
       let(:router) do
         r = response
