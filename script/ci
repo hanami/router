@@ -10,29 +10,6 @@ run_unit_tests() {
   bundle exec rake spec:coverage
 }
 
-run_isolation_tests() {
-  local pwd=$PWD
-  local root="$pwd/spec/isolation"
-
-  for test in $(find $root -name '*_spec.rb')
-  do
-    run_isolation_test $test
-
-    if [ $? -ne 0 ]; then
-      local exit_code=$?
-      echo "Failing test: $test"
-      exit $exit_code
-    fi
-  done
-}
-
-run_isolation_test() {
-  local test=$1
-
-  printf "\n\n\nRunning: $test\n"
-  ruby $test --options spec/isolation/.rspec
-}
-
 run_test() {
   local test=$1
 
@@ -42,8 +19,7 @@ run_test() {
 
 main() {
   run_code_quality_checks &&
-    run_unit_tests &&
-    run_isolation_tests
+    run_unit_tests
 }
 
 main
