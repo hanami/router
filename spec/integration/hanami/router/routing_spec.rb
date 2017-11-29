@@ -3,7 +3,7 @@
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
 
-  RSpec::Support::HTTP.verbs.each do |verb|
+  RSpec::Support::HTTP.mountable_verbs.each do |verb|
     context "##{verb}" do
       let(:router) do
         r = response
@@ -20,107 +20,111 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      context "path recognition" do
-        context "fixed string" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
+      RSpec::Support::HTTP.verbs.each do |requested|
+        next unless RSpec::Support::HTTP.testable?(verb, requested)
 
-          it "recognizes" do
-            actual = app.request(verb.upcase, "/hanami", lint: true)
+        context "path recognition" do
+          context "fixed string" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
 
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
-          end
-        end
+            it "recognizes" do
+              actual = app.request(requested.upcase, "/hanami", lint: true)
 
-        context "moving parts string" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!") }
-
-          it "recognizes" do
-            actual = app.request(verb.upcase, "/hanami/23", lint: true)
-
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
-          end
-        end
-
-        context "globbing string" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!") }
-
-          it "recognizes" do
-            actual = app.request(verb.upcase, "/hanami/all", lint: true)
-
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
-          end
-        end
-
-        context "format string" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!") }
-
-          it "recognizes" do
-            actual = app.request(verb.upcase, "/hanami/all.json", lint: true)
-
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
-          end
-        end
-
-        context "block" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
-
-          it "recognizes" do
-            actual = app.request(verb.upcase, "/block", lint: true)
-
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
-          end
-        end
-      end
-
-      context "named routes" do
-        context "symbol" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "12" }, "Named route!") }
-
-          it "recognizes by the given symbol" do
-            expect(router.path(:"#{ verb }_named_route")).to eq("/named_route")
-            expect(router.url(:"#{ verb }_named_route")).to  eq("http://localhost/named_route")
-          end
-        end
-
-        context "compiled variables" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "13" }, "Named %route!") }
-
-          it "recognizes" do
-            expect(router.path(:"#{ verb }_named_route_var", var: "route")).to eq("/named_route")
-            expect(router.url(:"#{ verb }_named_route_var", var: "route")).to  eq("http://localhost/named_route")
-          end
-        end
-
-        context "custom url parts" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "30" }, "Named route with custom parts!") }
-
-          it "recognizes" do
-            r      = response
-            router = Hanami::Router.new(scheme: "https", host: "hanamirb.org", port: 443) do
-              __send__ verb, "/custom_named_route", to: ->(_) { r }, as: :"#{verb}_custom_named_route"
+              expect(actual.status).to eq(response.status)
+              expect(actual.header).to eq(response.header)
+              expect(actual.body).to   eq(response.body)
             end
+          end
 
-            expect(router.url(:"#{verb}_custom_named_route")).to eq("https://hanamirb.org/custom_named_route")
+          context "moving parts string" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!") }
+
+            it "recognizes" do
+              actual = app.request(requested.upcase, "/hanami/23", lint: true)
+
+              expect(actual.status).to eq(response.status)
+              expect(actual.header).to eq(response.header)
+              expect(actual.body).to   eq(response.body)
+            end
+          end
+
+          context "globbing string" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!") }
+
+            it "recognizes" do
+              actual = app.request(requested.upcase, "/hanami/all", lint: true)
+
+              expect(actual.status).to eq(response.status)
+              expect(actual.header).to eq(response.header)
+              expect(actual.body).to   eq(response.body)
+            end
+          end
+
+          context "format string" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!") }
+
+            it "recognizes" do
+              actual = app.request(requested.upcase, "/hanami/all.json", lint: true)
+
+              expect(actual.status).to eq(response.status)
+              expect(actual.header).to eq(response.header)
+              expect(actual.body).to   eq(response.body)
+            end
+          end
+
+          context "block" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+
+            it "recognizes" do
+              actual = app.request(requested.upcase, "/block", lint: true)
+
+              expect(actual.status).to eq(response.status)
+              expect(actual.header).to eq(response.header)
+              expect(actual.body).to   eq(response.body)
+            end
           end
         end
-      end
 
-      describe "constraints" do
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!") }
+        context "named routes" do
+          context "symbol" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "12" }, "Named route!") }
 
-        it "recognize when called with matching constraints" do
-          expect(app.request(verb.upcase, "/books/23", lint: true)).to be(response)
-          expect(app.request(verb.upcase, "/books/awdwror", lint: true).status).to eq(404)
+            it "recognizes by the given symbol" do
+              expect(router.path(:"#{ verb }_named_route")).to eq("/named_route")
+              expect(router.url(:"#{ verb }_named_route")).to  eq("http://localhost/named_route")
+            end
+          end
+
+          context "compiled variables" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "13" }, "Named %route!") }
+
+            it "recognizes" do
+              expect(router.path(:"#{ verb }_named_route_var", var: "route")).to eq("/named_route")
+              expect(router.url(:"#{ verb }_named_route_var", var: "route")).to  eq("http://localhost/named_route")
+            end
+          end
+
+          context "custom url parts" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "30" }, "Named route with custom parts!") }
+
+            it "recognizes" do
+              r      = response
+              router = Hanami::Router.new(scheme: "https", host: "hanamirb.org", port: 443) do
+                __send__ verb, "/custom_named_route", to: ->(_) { r }, as: :"#{verb}_custom_named_route"
+              end
+
+              expect(router.url(:"#{verb}_custom_named_route")).to eq("https://hanamirb.org/custom_named_route")
+            end
+          end
+        end
+
+        describe "constraints" do
+          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!") }
+
+          it "recognize when called with matching constraints" do
+            expect(app.request(requested.upcase, "/books/23", lint: true)).to be(response)
+            expect(app.request(requested.upcase, "/books/awdwror", lint: true).status).to eq(404)
+          end
         end
       end
     end

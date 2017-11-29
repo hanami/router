@@ -126,7 +126,7 @@ module Hanami
       # @api private
       def match?(env)
         match_path?(env) &&
-          @verb == env[REQUEST_METHOD]
+          @verb.include?(env[REQUEST_METHOD])
       end
 
       # @since x.x.x

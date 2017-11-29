@@ -482,7 +482,7 @@ RSpec.describe Hanami::Router do
 
       RSpec::Support::HTTP.verbs.each do |verb|
         it "accepts #{verb} for a prefixed mount" do
-          expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq("home")
+          expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq(body_for("home", verb))
         end
       end
     end

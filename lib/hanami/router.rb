@@ -1007,7 +1007,10 @@ module Hanami
       if (response = @force_ssl.call(env))
         response
       else
-        (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
+        enforce_head(
+          env,
+          (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
+        )
       end
     end
 
@@ -1258,6 +1261,7 @@ module Hanami
     PARAMS = "router.params"
 
     GET     = "GET"
+    HEAD    = "HEAD"
     POST    = "POST"
     PUT     = "PUT"
     PATCH   = "PATCH"
@@ -1270,6 +1274,8 @@ module Hanami
     NOT_FOUND   = ->(_) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
     NOT_ALLOWED = ->(_) { [405, { "Content-Length" => "18" }, ["Method Not Allowed"]] }.freeze
     ROOT = "/"
+
+    BODY = 2
 
     # Application
     #
@@ -1312,10 +1318,30 @@ module Hanami
 
       path     = path.to_s
       endpoint = Routing::Endpoint.find(to, @namespace)
-      route    = Routing::Route.new(verb, @prefix.join(path).to_s, endpoint, constraints)
+      route    = Routing::Route.new(verb_for(verb), @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)
       @named[as] = route unless as.nil?
+    end
+
+    def enforce_head(env, response)
+      if env[REQUEST_METHOD] == HEAD
+        if response.respond_to?(:body)
+          response.body = []
+        else
+          response[BODY] = []
+        end
+      end
+
+      response
+    end
+
+    def verb_for(value)
+      if value == GET
+        [GET, HEAD]
+      else
+        [value]
+      end
     end
   end
 end
