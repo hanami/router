@@ -232,7 +232,7 @@ module Hanami
 
       # @api private
       def resolve_action(string)
-        return unless string =~ action_separator
+        return unless string.match?(action_separator)
 
         controller, action = string.split(action_separator).map { |token| classify(token) }
         format(@pattern, controller: controller, action: action)

@@ -122,7 +122,7 @@ module Hanami
         return if !routable? || redirect?
         namespace = NAMESPACE % @namespace
 
-        if destination.match(namespace)
+        if destination.match?(namespace)
           Hanami::Utils::String.transform(
             destination.sub(namespace, NAMESPACE_REPLACEMENT),
             :underscore, [:rsub, ACTION_PATH_SEPARATOR, ACTION_SEPARATOR]
