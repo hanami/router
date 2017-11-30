@@ -6,7 +6,7 @@ module RSpec
       private
 
       def body_for(value, verb)
-        return "" if verb.casecmp?("head")
+        return "" if verb.downcase == "head" # rubocop:disable Performance/Casecmp
         value
       end
     end
