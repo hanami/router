@@ -16,7 +16,7 @@ module Hanami
     QUERY_STRING   = "QUERY_STRING"
     REQUEST_METHOD = "REQUEST_METHOD"
 
-    HTTP_VERBS = %w[get post delete put patch trace options].freeze
+    HTTP_VERBS = %w[get post delete put patch trace options link unlink].freeze
 
     PARAMS = "router.params"
 
