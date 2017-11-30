@@ -74,6 +74,7 @@ module Hanami
   #   end
   #
   #   # All the requests starting with "/api" will be forwarded to Api::App
+  #
   class Router # rubocop:disable Metrics/ClassLength
     # This error is raised when <tt>#call</tt> is invoked on a non-routable
     # recognized route.
@@ -234,7 +235,6 @@ module Hanami
     #
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
-    # rubocop:disable Metrics/ParameterLists
     # rubocop:disable Metrics/MethodLength
     def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, parsers: [], force_ssl: false, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes      = []
@@ -250,7 +250,6 @@ module Hanami
       freeze
     end
     # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/ParameterLists
 
     # Freeze the router
     #
@@ -406,8 +405,8 @@ module Hanami
     #
     #    # It will map to Flowers::Index.new, which is the
     #    # Hanami::Controller convention.
-    def get(path, to: nil, as: nil, **constraints, &blk)
-      add_route(GET, path, to, as, constraints, &blk)
+    def get(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(GET, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a POST request for the given path.
@@ -425,8 +424,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def post(path, to: nil, as: nil, **constraints, &blk)
-      add_route(POST, path, to, as, constraints, &blk)
+    def post(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(POST, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a PUT request for the given path.
@@ -444,8 +443,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def put(path, to: nil, as: nil, **constraints, &blk)
-      add_route(PUT, path, to, as, constraints, &blk)
+    def put(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(PUT, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a PATCH request for the given path.
@@ -463,8 +462,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def patch(path, to: nil, as: nil, **constraints, &blk)
-      add_route(PATCH, path, to, as, constraints, &blk)
+    def patch(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(PATCH, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a DELETE request for the given path.
@@ -482,8 +481,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def delete(path, to: nil, as: nil, **constraints, &blk)
-      add_route(DELETE, path, to, as, constraints, &blk)
+    def delete(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(DELETE, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a TRACE request for the given path.
@@ -501,8 +500,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def trace(path, to: nil, as: nil, **constraints, &blk)
-      add_route(TRACE, path, to, as, constraints, &blk)
+    def trace(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(TRACE, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a LINK request for the given path.
@@ -520,8 +519,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.8.0
-    def link(path, to: nil, as: nil, **constraints, &blk)
-      add_route(LINK, path, to, as, constraints, &blk)
+    def link(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(LINK, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts an UNLINK request for the given path.
@@ -539,8 +538,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.8.0
-    def unlink(path, to: nil, as: nil, **constraints, &blk)
-      add_route(UNLINK, path, to, as, constraints, &blk)
+    def unlink(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(UNLINK, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a route that accepts a OPTIONS request for the given path.
@@ -558,8 +557,8 @@ module Hanami
     # @see Hanami::Router#get
     #
     # @since 0.1.0
-    def options(path, to: nil, as: nil, **constraints, &blk)
-      add_route(OPTIONS, path, to, as, constraints, &blk)
+    def options(path, to: nil, as: nil, namespace: nil, **constraints, &blk)
+      add_route(OPTIONS, path, to, as, namespace, constraints, &blk)
     end
 
     # Defines a root route (a GET route for '/')
@@ -588,8 +587,8 @@ module Hanami
     #
     #   router.path(:root) # => "/"
     #   router.url(:root)  # => "https://hanamirb.org/"
-    def root(to: nil, &blk)
-      add_route(GET, ROOT_PATH, to, :root, &blk)
+    def root(to: nil, as: :root, prefix: Utils::PathPrefix.new, namespace: nil, &blk)
+      add_route(GET, prefix.join(ROOT_PATH), to, as, namespace, &blk)
     end
 
     # Defines an HTTP redirect
@@ -657,8 +656,31 @@ module Hanami
     #       end
     #     end
     #   end
-    def prefix(path, &blk)
-      Routing::Prefix.new(self, path, &blk)
+    def prefix(path, namespace: nil, &blk)
+      Routing::Prefix.new(self, path, namespace, &blk)
+    end
+
+    # Defines a scope for routes.
+    #
+    # A scope is a combination of a path prefix and a Ruby namespace.
+    #
+    # @param prefix [String] the path prefix
+    # @param namespace [Module] the Ruby namespace where to lookup endpoints
+    # @param blk [Proc] the routes definition block
+    #
+    # @since x.x.x
+    # @api private
+    #
+    # @example
+    #   require "hanami/router"
+    #
+    #   Hanami::Router.new do
+    #     scope "/admin", namespace: Admin::Controllers do
+    #       root to: "home#index"
+    #     end
+    #   end
+    def scope(prefix, namespace:, &blk)
+      Routing::Scope.new(self, prefix, namespace, &blk)
     end
 
     # Defines a set of named routes for a single RESTful resource.
@@ -1313,11 +1335,11 @@ module Hanami
       end
     end
 
-    def add_route(verb, path, to, as = nil, constraints = {}, &blk) # rubocop:disable Metrics/ParameterLists
+    def add_route(verb, path, to, as = nil, namespace = nil, constraints = {}, &blk)
       to ||= blk
 
       path     = path.to_s
-      endpoint = Routing::Endpoint.find(to, @namespace)
+      endpoint = Routing::Endpoint.find(to, namespace || @namespace)
       route    = Routing::Route.new(verb_for(verb), @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)

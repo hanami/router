@@ -48,8 +48,96 @@ module Web
         end
       end
     end # Dashboard
+
+    module Sessions
+      class New
+        def call(_params)
+          [200, {}, ["Hello from Web::Controllers::Sessions::New"]]
+        end
+      end
+
+      class Create
+        def call(_params)
+          [200, {}, ["Hello from Web::Controllers::Sessions::Create"]]
+        end
+      end
+    end
+
+    module Settings
+      class Show
+        def call(_params)
+          [200, {}, ["Hello from Web::Controllers::Settings::Show"]]
+        end
+      end
+    end
+
+    module Users
+      class Show
+        def call(_params)
+          [200, {}, ["Hello from Web::Controllers::Users::Show"]]
+        end
+      end
+    end
+
+    module Topics
+      class Show
+        def call(_params)
+          [200, {}, ["Hello from Web::Controllers::Topics::Show"]]
+        end
+      end
+    end
   end
 end # Web
+
+module Admin
+  module Controllers
+    module Home
+      class Index
+        def call(_params)
+          [200, {}, ["Hello from Admin::Controllers::Home::Index"]]
+        end
+      end
+    end # Home
+
+    module Sessions
+      class New
+        def call(_params)
+          [200, {}, ["Hello from Admin::Controllers::Sessions::New"]]
+        end
+      end
+
+      class Create
+        def call(_params)
+          [200, {}, ["Hello from Admin::Controllers::Sessions::Create"]]
+        end
+      end
+    end
+
+    module Settings
+      class Show
+        def call(_params)
+          [200, {}, ["Hello from Admin::Controllers::Settings::Show"]]
+        end
+      end
+    end
+
+    module Users
+      class Show
+        def call(_params)
+          [200, {}, ["Hello from Admin::Controllers::Users::Show"]]
+        end
+      end
+    end
+
+    module Topics
+      class Show
+        def call(_params)
+          [200, {}, ["Hello from Admin::Controllers::Topics::Show"]]
+        end
+      end
+    end
+  end
+end
 
 module Front
   class App
