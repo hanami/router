@@ -16,7 +16,13 @@ module Hanami
     QUERY_STRING   = "QUERY_STRING"
     REQUEST_METHOD = "REQUEST_METHOD"
 
+    HTTP_VERBS = %w[get post delete put patch trace options].freeze
+
     PARAMS = "router.params"
+
+    def self.http_verbs
+      HTTP_VERBS
+    end
 
     # @since 0.5.0
     class Error < ::StandardError
