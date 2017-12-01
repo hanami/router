@@ -15,9 +15,10 @@ module Hanami
     class Prefix < SimpleDelegator
       # @api private
       # @since x.x.x
-      def initialize(router, path, &blk)
-        @router = router
-        @path   = Utils::PathPrefix.new(path)
+      def initialize(router, path, namespace, &blk)
+        @router    = router
+        @namespace = namespace
+        @path      = Utils::PathPrefix.new(path)
         __setobj__(@router)
         instance_eval(&blk)
       end
@@ -25,55 +26,55 @@ module Hanami
       # @api private
       # @since x.x.x
       def get(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def post(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def put(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def patch(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def delete(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def trace(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def options(path, options = {}, &endpoint)
-        super(@path.join(path), options, &endpoint)
+        super(@path.join(path), options.merge(namespace: @namespace), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def resource(name, options = {})
-        super name, options.merge(prefix: @path.relative_join(options[:prefix]))
+        super(name, options.merge(prefix: @path.relative_join(options[:prefix]), namespace: @namespace))
       end
 
       # @api private
       # @since x.x.x
       def resources(name, options = {})
-        super name, options.merge(prefix: @path.relative_join(options[:prefix]))
+        super(name, options.merge(prefix: @path.relative_join(options[:prefix]), namespace: @namespace))
       end
 
       # @api private
@@ -93,7 +94,7 @@ module Hanami
       # @api private
       # @since x.x.x
       def prefix(path, &blk)
-        self.class.new(self, path, &blk)
+        self.class.new(self, path, @namespace, &blk)
       end
     end
   end

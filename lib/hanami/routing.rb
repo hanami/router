@@ -185,6 +185,7 @@ module Hanami
 
     require "hanami/routing/endpoint"
     require "hanami/routing/prefix"
+    require "hanami/routing/scope"
     require "hanami/routing/resource"
     require "hanami/routing/resources"
     require "hanami/routing/force_ssl"

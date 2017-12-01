@@ -2,5 +2,8 @@
 # alphabetically
 inherit_from:
   - https://raw.githubusercontent.com/hanami/devtools/master/.rubocop-unstable.yml
+Metrics/ParameterLists:
+  Exclude:
+    - "lib/hanami/router.rb"
 Performance/RegexpMatch:
   Enabled: false
