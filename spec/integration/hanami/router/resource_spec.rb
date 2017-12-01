@@ -2,10 +2,11 @@
 
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
+  let(:configuration) { Action::Configuration.new("resource") }
 
   describe "#resource" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resource "avatar"
       end
     end
@@ -42,7 +43,7 @@ RSpec.describe Hanami::Router do
 
     context ":only option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resource "profile", only: %i[edit update]
         end
       end
@@ -67,7 +68,7 @@ RSpec.describe Hanami::Router do
 
     context ":except option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resource "profile", except: %i[new show create destroy]
         end
       end
@@ -92,7 +93,7 @@ RSpec.describe Hanami::Router do
 
     context "member" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resource "profile", only: [:new] do
             member do
               patch "activate"
@@ -115,7 +116,7 @@ RSpec.describe Hanami::Router do
 
     context "collection" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resource "profile", only: [:new] do
             collection do
               get "keys"
@@ -138,7 +139,7 @@ RSpec.describe Hanami::Router do
 
     context "controller" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resource "profile", controller: "keys", only: [:new]
         end
       end
@@ -151,7 +152,7 @@ RSpec.describe Hanami::Router do
 
     context ":as option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resource "keyboard", as: "piano" do
             collection do
               get "search"

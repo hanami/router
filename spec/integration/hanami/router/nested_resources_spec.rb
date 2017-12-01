@@ -2,6 +2,7 @@
 
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
+  let(:configuration) { Action::Configuration.new("nested_resources") }
 
   context "resource > resource > resource" do
     let(:router) do

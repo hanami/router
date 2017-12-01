@@ -84,7 +84,7 @@ module Hanami
         #
         # @since 0.1.0
         def generate(&blk)
-          @router.send verb, path, to: endpoint, as: as, namespace: namespace
+          @router.send verb, path, to: endpoint, as: as, namespace: namespace, configuration: configuration
           instance_eval(&blk) if block_given?
         end
 
@@ -121,6 +121,14 @@ module Hanami
         # @since x.x.x
         def namespace
           @namespace ||= @options[:namespace]
+        end
+
+        # Configuration
+        #
+        # @api private
+        # @since x.x.x
+        def configuration
+          @configuration ||= @options[:configuration]
         end
 
         # Load a subclass, according to the given action name
@@ -306,7 +314,8 @@ module Hanami
           action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
 
           @router.__send__ verb, path(action_name),
-                           to: endpoint(action_name), as: as(action_name), namespace: namespace
+                           to: endpoint(action_name), as: as(action_name),
+                           namespace: namespace, configuration: configuration
         end
 
         private

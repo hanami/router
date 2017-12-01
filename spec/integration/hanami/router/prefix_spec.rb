@@ -3,6 +3,7 @@
 RSpec.describe Hanami::Router do
   describe "#prefix" do
     let(:app) { Rack::MockRequest.new(router) }
+    let(:configuration) { Action::Configuration.new("prefix") }
 
     it "recognizes get path" do
       router = described_class.new do
@@ -104,7 +105,7 @@ RSpec.describe Hanami::Router do
       end
 
       it "defines #resource correctly" do
-        router = described_class.new do
+        router = described_class.new(configuration: configuration) do
           prefix "users" do
             prefix "management" do
               resource "avatar"
@@ -119,7 +120,7 @@ RSpec.describe Hanami::Router do
       end
 
       it "defines #resources correctly" do
-        router = described_class.new do
+        router = described_class.new(configuration: configuration) do
           prefix "vegetals" do
             prefix "pretty" do
               resources "flowers"
@@ -166,7 +167,7 @@ RSpec.describe Hanami::Router do
 
     context "restful resources" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           prefix "vegetals" do
             resources "flowers"
           end
@@ -210,7 +211,7 @@ RSpec.describe Hanami::Router do
 
       context ":only option" do
         let(:router) do
-          described_class.new do
+          described_class.new(configuration: configuration) do
             prefix "electronics" do
               resources "keyboards", only: %i[index edit]
             end
@@ -238,7 +239,7 @@ RSpec.describe Hanami::Router do
 
       context ":except option" do
         let(:router) do
-          described_class.new do
+          described_class.new(configuration: configuration) do
             prefix "electronics" do
               resources "keyboards", except: %i[new show update destroy]
             end
@@ -267,7 +268,7 @@ RSpec.describe Hanami::Router do
 
       context "additional actions" do
         let(:router) do
-          described_class.new do
+          described_class.new(configuration: configuration) do
             prefix "electronics" do
               resources "keyboards" do
                 collection { get "search" }
@@ -291,7 +292,7 @@ RSpec.describe Hanami::Router do
 
     context "named RESTful resources" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           prefix "vegetals" do
             resources "flowers", as: "tulips"
           end
@@ -336,7 +337,7 @@ RSpec.describe Hanami::Router do
 
     context "restful resource" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           prefix "settings" do
             resource "avatar"
           end
@@ -375,7 +376,7 @@ RSpec.describe Hanami::Router do
 
       context ":only option" do
         let(:router) do
-          described_class.new do
+          described_class.new(configuration: configuration) do
             prefix "settings" do
               resource "profile", only: %i[edit update]
             end
@@ -402,7 +403,7 @@ RSpec.describe Hanami::Router do
 
       context ":except option" do
         let(:router) do
-          described_class.new do
+          described_class.new(configuration: configuration) do
             prefix "settings" do
               resource "profile", except: %i[edit update]
             end
@@ -433,7 +434,7 @@ RSpec.describe Hanami::Router do
 
     context "named RESTful resource" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           prefix "settings" do
             resource "avatar", as: "icon"
           end

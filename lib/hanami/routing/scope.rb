@@ -15,70 +15,71 @@ module Hanami
     class Scope < SimpleDelegator
       # @api private
       # @since x.x.x
-      def initialize(router, prefix, namespace, &blk)
-        @router    = router
-        @namespace = namespace
-        @prefix    = Utils::PathPrefix.new(prefix)
+      def initialize(router, prefix, namespace, configuration, &blk)
+        @router        = router
+        @namespace     = namespace
+        @configuration = configuration
+        @prefix        = Utils::PathPrefix.new(prefix)
         __setobj__(@router)
         instance_eval(&blk)
       end
 
       def root(to:, as: :root, **, &blk)
-        super(to: to, as: route_name(as), prefix: @prefix, namespace: @namespace, &blk)
+        super(to: to, as: route_name(as), prefix: @prefix, namespace: @namespace, configuration: @configuration, &blk)
       end
 
       # @api private
       # @since x.x.x
       def get(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def post(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def put(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def patch(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def delete(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def trace(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def options(path, as: nil, **options, &endpoint)
-        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace), &endpoint)
+        super(@prefix.join(path), options.merge(as: route_name(as), namespace: @namespace, configuration: @configuration), &endpoint)
       end
 
       # @api private
       # @since x.x.x
       def resource(name, options = {})
-        super(name, options.merge(prefix: @prefix.relative_join(options[:prefix]), namespace: @namespace))
+        super(name, options.merge(prefix: @prefix.relative_join(options[:prefix]), namespace: @namespace, configuration: @configuration))
       end
 
       # @api private
       # @since x.x.x
       def resources(name, options = {})
-        super(name, options.merge(prefix: @prefix.relative_join(options[:prefix]), namespace: @namespace))
+        super(name, options.merge(prefix: @prefix.relative_join(options[:prefix]), namespace: @namespace, configuration: @configuration))
       end
 
       # @api private
@@ -96,7 +97,7 @@ module Hanami
       # @api private
       # @since x.x.x
       def prefix(path, &blk)
-        super(@prefix.join(path), namespace: @namespace, &blk)
+        super(@prefix.join(path), namespace: @namespace, configuration: @configuration, &blk)
       end
 
       private

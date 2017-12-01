@@ -25,63 +25,74 @@ module Middleware
   end
 end
 
+class Action
+  class Configuration
+    attr_reader :name
+
+    def initialize(name)
+      @name = name
+    end
+  end
+
+  attr_reader :configuration
+
+  def initialize(configuration:)
+    raise ArgumentError.new("invalid configuration for #{self.class.name}: #{configuration.inspect}") unless configuration.is_a?(Configuration)
+    @configuration = configuration
+  end
+end
+
 module Web
   module Controllers
     module Home
-      class Index
-        # mocking class call method for middleware
-        def self.call(env)
-          code, headers, body = new.call(env)
-          [code, headers.merge("X-Middleware" => "CALLED"), body]
-        end
-
-        def call(_params)
+      class Index < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Home::Index"]]
         end
       end
     end # Home
 
     module Dashboard
-      class Index
-        def call(_params)
+      class Index < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Dashboard::Index"]]
         end
       end
     end # Dashboard
 
     module Sessions
-      class New
-        def call(_params)
+      class New < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Sessions::New"]]
         end
       end
 
-      class Create
-        def call(_params)
+      class Create < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Sessions::Create"]]
         end
       end
     end
 
     module Settings
-      class Show
-        def call(_params)
+      class Show < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Settings::Show"]]
         end
       end
     end
 
     module Users
-      class Show
-        def call(_params)
+      class Show < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Users::Show"]]
         end
       end
     end
 
     module Topics
-      class Show
-        def call(_params)
+      class Show < Action
+        def call(*)
           [200, {}, ["Hello from Web::Controllers::Topics::Show"]]
         end
       end
@@ -92,46 +103,46 @@ end # Web
 module Admin
   module Controllers
     module Home
-      class Index
-        def call(_params)
+      class Index < Action
+        def call(*)
           [200, {}, ["Hello from Admin::Controllers::Home::Index"]]
         end
       end
     end # Home
 
     module Sessions
-      class New
-        def call(_params)
+      class New < Action
+        def call(*)
           [200, {}, ["Hello from Admin::Controllers::Sessions::New"]]
         end
       end
 
-      class Create
-        def call(_params)
+      class Create < Action
+        def call(*)
           [200, {}, ["Hello from Admin::Controllers::Sessions::Create"]]
         end
       end
     end
 
     module Settings
-      class Show
-        def call(_params)
+      class Show < Action
+        def call(*)
           [200, {}, ["Hello from Admin::Controllers::Settings::Show"]]
         end
       end
     end
 
     module Users
-      class Show
-        def call(_params)
+      class Show < Action
+        def call(*)
           [200, {}, ["Hello from Admin::Controllers::Users::Show"]]
         end
       end
     end
 
     module Topics
-      class Show
-        def call(_params)
+      class Show < Action
+        def call(*)
           [200, {}, ["Hello from Admin::Controllers::Topics::Show"]]
         end
       end
@@ -242,143 +253,143 @@ module Controllers
 end
 
 module Avatar
-  class New
-    def call(_env)
+  class New < Action
+    def call(*)
       [200, {}, ["Avatar::New"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["Avatar::Create"]]
     end
   end
 
-  class Show
-    def call(_env)
+  class Show < Action
+    def call(*)
       [200, {}, ["Avatar::Show"]]
     end
   end
 
-  class Edit
-    def call(_env)
+  class Edit < Action
+    def call(*)
       [200, {}, ["Avatar::Edit"]]
     end
   end
 
-  class Update
-    def call(_env)
+  class Update < Action
+    def call(*)
       [200, {}, ["Avatar::Update"]]
     end
   end
 
-  class Destroy
-    def call(_env)
+  class Destroy < Action
+    def call(*)
       [200, {}, ["Avatar::Destroy"]]
     end
   end
 end # Avatar
 
 module Profile
-  class Show
-    def call(_env)
+  class Show < Action
+    def call(*)
       [200, {}, ["Profile::Show"]]
     end
   end
 
-  class New
-    def call(_env)
+  class New < Action
+    def call(*)
       [200, {}, ["Profile::New"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["Profile::Create"]]
     end
   end
 
-  class Edit
-    def call(_env)
+  class Edit < Action
+    def call(*)
       [200, {}, ["Profile::Edit"]]
     end
   end
 
-  class Update
-    def call(_env)
+  class Update < Action
+    def call(*)
       [200, {}, ["Profile::Update"]]
     end
   end
 
-  class Destroy
-    def call(_env)
+  class Destroy < Action
+    def call(*)
       [200, {}, ["Profile::Destroy"]]
     end
   end
 
-  class Activate
-    def call(_env)
+  class Activate < Action
+    def call(*)
       [200, {}, ["Profile::Activate"]]
     end
   end
 
-  class Deactivate
-    def call(_env)
+  class Deactivate < Action
+    def call(*)
       [200, {}, ["Profile::Deactivate"]]
     end
   end
 
-  class Keys
-    def call(_env)
+  class Keys < Action
+    def call(*)
       [200, {}, ["Profile::Keys"]]
     end
   end
 
-  class Activities
-    def call(_env)
+  class Activities < Action
+    def call(*)
       [200, {}, ["Profile::Activities"]]
     end
   end
 end # Profile
 
 module Flowers
-  class Index
-    def call(_env)
+  class Index < Action
+    def call(*)
       [200, {}, ["Flowers::Index"]]
     end
   end
 
-  class New
-    def call(_env)
+  class New < Action
+    def call(*)
       [200, {}, ["Flowers::New"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["Flowers::Create"]]
     end
   end
 
-  class Show
+  class Show < Action
     def call(env)
       [200, {}, ["Flowers::Show " + env["router.params"][:id]]]
     end
   end
 
-  class Edit
+  class Edit < Action
     def call(env)
       [200, {}, ["Flowers::Edit " + env["router.params"][:id]]]
     end
   end
 
-  class Update
+  class Update < Action
     def call(env)
       [200, {}, ["Flowers::Update " + env["router.params"][:id]]]
     end
   end
 
-  class Destroy
+  class Destroy < Action
     def call(env)
       [200, {}, ["Flowers::Destroy " + env["router.params"][:id]]]
     end
@@ -386,105 +397,105 @@ module Flowers
 end # Flowers
 
 module Keyboards
-  class Index
-    def call(_env)
+  class Index < Action
+    def call(*)
       [200, {}, ["Keyboards::Index"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["Keyboards::Create"]]
     end
   end
 
-  class Edit
+  class Edit < Action
     def call(env)
       [200, {}, ["Keyboards::Edit " + env["router.params"][:id]]]
     end
   end
 
-  class Show
+  class Show < Action
     def call(env)
       [200, {}, ["Keyboards::Show " + env["router.params"][:id]]]
     end
   end
 
-  class Search
-    def call(_env)
+  class Search < Action
+    def call(*)
       [200, {}, ["Keyboards::Search"]]
     end
   end
 
-  class Screenshot
+  class Screenshot < Action
     def call(env)
       [200, {}, ["Keyboards::Screenshot " + env["router.params"][:id]]]
     end
   end
 
-  class Print
+  class Print < Action
     def call(env)
       [200, {}, ["Keyboards::Print " + env["router.params"][:id]]]
     end
   end
 
-  class Characters
-    def call(_env)
+  class Characters < Action
+    def call(*)
       [200, {}, ["Keyboards::Characters"]]
     end
   end
 end # Keyboards
 
 module Keys
-  class Index
-    def call(_env)
+  class Index < Action
+    def call(*)
       [200, {}, ["Keys::Index"]]
     end
   end
 
-  class New
-    def call(_env)
+  class New < Action
+    def call(*)
       [200, {}, ["Keys::New"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["Keys::Create"]]
     end
   end
 
-  class Edit
+  class Edit < Action
     def call(env)
       [200, {}, ["Keys::Edit " + env["router.params"][:id]]]
     end
   end
 
-  class Update
+  class Update < Action
     def call(env)
       [200, {}, ["Keys::Update " + env["router.params"][:id]]]
     end
   end
 
-  class Show
+  class Show < Action
     def call(env)
       [200, {}, ["Keys::Show " + env["router.params"][:id]]]
     end
   end
 
-  class Destroy
+  class Destroy < Action
     def call(env)
       [200, {}, ["Keys::Destroy " + env["router.params"][:id]]]
     end
   end
 
-  class Search
-    def call(_env)
+  class Search < Action
+    def call(*)
       [200, {}, ["Keys::Search"]]
     end
   end
 
-  class Screenshot
+  class Screenshot < Action
     def call(env)
       [200, {}, ["Keys::Screenshot " + env["router.params"][:id]]]
     end
@@ -519,8 +530,8 @@ class RackMiddlewareInstanceMethod
 end
 
 module CreditCards
-  class Index
-    def call(_env)
+  class Index < Action
+    def call(*)
       [200, {}, ["Hello from CreditCards::Index"]]
     end
   end

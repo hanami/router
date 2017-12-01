@@ -3,24 +3,24 @@
 module Prefix
   module Controllers
     module Home
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["home"]]
         end
       end
     end
 
     module Users
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["users"]]
         end
       end
     end
 
     module Asteroid
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["asteroid"]]
         end
       end
@@ -31,7 +31,7 @@ end
 RSpec.describe Hanami::Router do
   describe "with prefix option" do
     let(:router) do
-      Hanami::Router.new(scheme: "https", host: "hanami.test", port: 443, prefix: "/admin", namespace: Prefix::Controllers) do
+      Hanami::Router.new(scheme: "https", host: "hanami.test", port: 443, prefix: "/admin", namespace: Prefix::Controllers, configuration: Action::Configuration.new("prefix")) do
         get     "/home", to: "home#index", as: :get_home
         post    "/home", to: "home#index", as: :post_home
         put     "/home", to: "home#index", as: :put_home

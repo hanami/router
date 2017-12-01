@@ -16,7 +16,7 @@ RSpec.describe Hanami::Routing::Endpoint do
       end
 
       it "finds Hanami action" do
-        expect(described_class.find("home#index", Web::Controllers)).to be_kind_of(Web::Controllers::Home::Index)
+        expect(described_class.find("home#index", Web::Controllers, Action::Configuration.new("web"))).to be_kind_of(Web::Controllers::Home::Index)
       end
 
       it "returns a lazy endpoint when the class cannot be found" do

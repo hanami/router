@@ -48,6 +48,8 @@ module Hanami
       #   compatible proc (`Proc`), or as any other Rack compatible object
       #   (`Object`)
       # @param namespace [Module] the Ruby module where to lookup the endpoint
+      # @param configuration [Hanami::Controller::Configuration] the action
+      #   configuration
       #
       # @raise [Hanami::Routing::NotCallableEndpointError] if the found object
       #   doesn't implement Rack protocol (`#call`)
@@ -57,10 +59,10 @@ module Hanami
       #
       # @since x.x.x
       # @api private
-      def self.find(name, namespace)
+      def self.find(name, namespace, configuration = nil)
         endpoint = case name
                    when String
-                     find_string(name, namespace || DEFAULT_NAMESPACE)
+                     find_string(name, namespace || DEFAULT_NAMESPACE, configuration)
                    when Class
                      name.respond_to?(:call) ? name : name.new
                    else
@@ -86,6 +88,8 @@ module Hanami
       #
       # @param name [String] the endpoint name
       # @param namespace [Module] the Ruby module where to lookup the endpoint
+      # @param configuration [Hanami::Controller::Configuration] the action
+      #   configuration
       #
       # @return [Object, Hanami::Routing::LazyEndpoint] a Rack compatible
       #   endpoint
@@ -100,15 +104,26 @@ module Hanami
       # @example Hanami Action
       #   Hanami::Routing::Endpoint.find("home#index", Web::Controllers)
       #     # => #<Web::Controllers::Home::Index:0x007ff6df06f468>
-      def self.find_string(name, namespace)
+      def self.find_string(name, namespace, configuration)
         n     = Utils::String.new(name.sub(ACTION_SEPARATOR, ACTION_SEPARATOR_REPLACEMENT)).classify.to_s
         klass = Utils::Class.load!(n, namespace)
-        klass.new
+
+        if hanami_action?(name, n)
+          klass.new(configuration: configuration)
+        else
+          klass.new
+        end
       rescue NameError
         Hanami::Routing::LazyEndpoint.new(n, namespace)
       end
 
       private_class_method :find_string
+
+      def self.hanami_action?(name, endpoint)
+        name != endpoint
+      end
+
+      private_class_method :hanami_action?
     end
 
     # Routing endpoint
