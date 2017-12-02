@@ -540,8 +540,8 @@ end
 module Travels
   module Controllers
     module Journeys
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["Hello from Travels::Controllers::Journeys::Index"]]
         end
       end
@@ -613,110 +613,111 @@ end
 
 # resource > resource > resource
 module User
-  class New
-    def call(_env)
+  class New < Action
+    def call(*)
       [200, {}, ["User::New"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["User::Create"]]
     end
   end
 
-  class Show
-    def call(_env)
+  class Show < Action
+    def call(*)
       [200, {}, ["User::Show"]]
     end
   end
 
-  class Edit
-    def call(_env)
+  class Edit < Action
+    def call(*)
       [200, {}, ["User::Edit"]]
     end
   end
 
-  class Update
-    def call(_env)
+  class Update < Action
+    def call(*)
       [200, {}, ["User::Update"]]
     end
   end
 
-  class Destroy
-    def call(_env)
+  class Destroy < Action
+    def call(*)
       [200, {}, ["User::Destroy"]]
     end
   end
+
   module Post
-    class New
-      def call(_env)
+    class New < Action
+      def call(*)
         [200, {}, ["User::Post::New"]]
       end
     end
 
-    class Create
-      def call(_env)
+    class Create < Action
+      def call(*)
         [200, {}, ["User::Post::Create"]]
       end
     end
 
-    class Show
-      def call(_env)
+    class Show < Action
+      def call(*)
         [200, {}, ["User::Post::Show"]]
       end
     end
 
-    class Edit
-      def call(_env)
+    class Edit < Action
+      def call(*)
         [200, {}, ["User::Post::Edit"]]
       end
     end
 
-    class Update
-      def call(_env)
+    class Update < Action
+      def call(*)
         [200, {}, ["User::Post::Update"]]
       end
     end
 
-    class Destroy
-      def call(_env)
+    class Destroy < Action
+      def call(*)
         [200, {}, ["User::Post::Destroy"]]
       end
     end
     module Comment
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["User::Post::Comment::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["User::Post::Comment::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["User::Post::Comment::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["User::Post::Comment::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["User::Post::Comment::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["User::Post::Comment::Destroy"]]
         end
       end
@@ -728,44 +729,44 @@ end
 module User
   module Post
     module Comments
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::Index"]]
         end
       end
 
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["User::Post::Comments::Destroy"]]
         end
       end
@@ -776,87 +777,87 @@ end
 # resource > resources > resources
 module User
   module Posts
-    class Index
-      def call(_env)
+    class Index < Action
+      def call(*)
         [200, {}, ["User::Posts::Index"]]
       end
     end
 
-    class New
-      def call(_env)
+    class New < Action
+      def call(*)
         [200, {}, ["User::Posts::New"]]
       end
     end
 
-    class Create
-      def call(_env)
+    class Create < Action
+      def call(*)
         [200, {}, ["User::Posts::Create"]]
       end
     end
 
-    class Show
-      def call(_env)
+    class Show < Action
+      def call(*)
         [200, {}, ["User::Posts::Show"]]
       end
     end
 
-    class Edit
-      def call(_env)
+    class Edit < Action
+      def call(*)
         [200, {}, ["User::Posts::Edit"]]
       end
     end
 
-    class Update
-      def call(_env)
+    class Update < Action
+      def call(*)
         [200, {}, ["User::Posts::Update"]]
       end
     end
 
-    class Destroy
-      def call(_env)
+    class Destroy < Action
+      def call(*)
         [200, {}, ["User::Posts::Destroy"]]
       end
     end
 
     module Comments
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::Index"]]
         end
       end
 
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["User::Posts::Comments::Destroy"]]
         end
       end
@@ -868,38 +869,38 @@ end
 module User
   module Posts
     module Comment
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["User::Posts::Comment::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["User::Posts::Comment::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["User::Posts::Comment::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["User::Posts::Comment::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["User::Posts::Comment::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["User::Posts::Comment::Destroy"]]
         end
       end
@@ -909,130 +910,130 @@ end
 
 # resources > resources > resources
 module Users
-  class Index
-    def call(_env)
+  class Index < Action
+    def call(*)
       [200, {}, ["Users::Index"]]
     end
   end
 
-  class New
-    def call(_env)
+  class New < Action
+    def call(*)
       [200, {}, ["Users::New"]]
     end
   end
 
-  class Create
-    def call(_env)
+  class Create < Action
+    def call(*)
       [200, {}, ["Users::Create"]]
     end
   end
 
-  class Show
-    def call(_env)
+  class Show < Action
+    def call(*)
       [200, {}, ["Users::Show"]]
     end
   end
 
-  class Edit
-    def call(_env)
+  class Edit < Action
+    def call(*)
       [200, {}, ["Users::Edit"]]
     end
   end
 
-  class Update
-    def call(_env)
+  class Update < Action
+    def call(*)
       [200, {}, ["Users::Update"]]
     end
   end
 
-  class Destroy
-    def call(_env)
+  class Destroy < Action
+    def call(*)
       [200, {}, ["Users::Destroy"]]
     end
   end
 
   module Posts
-    class Index
-      def call(_env)
+    class Index < Action
+      def call(*)
         [200, {}, ["Users::Posts::Index"]]
       end
     end
 
-    class New
-      def call(_env)
+    class New < Action
+      def call(*)
         [200, {}, ["Users::Posts::New"]]
       end
     end
 
-    class Create
-      def call(_env)
+    class Create < Action
+      def call(*)
         [200, {}, ["Users::Posts::Create"]]
       end
     end
 
-    class Show
-      def call(_env)
+    class Show < Action
+      def call(*)
         [200, {}, ["Users::Posts::Show"]]
       end
     end
 
-    class Edit
-      def call(_env)
+    class Edit < Action
+      def call(*)
         [200, {}, ["Users::Posts::Edit"]]
       end
     end
 
-    class Update
-      def call(_env)
+    class Update < Action
+      def call(*)
         [200, {}, ["Users::Posts::Update"]]
       end
     end
 
-    class Destroy
-      def call(_env)
+    class Destroy < Action
+      def call(*)
         [200, {}, ["Users::Posts::Destroy"]]
       end
     end
 
     module Comments
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::Index"]]
         end
       end
 
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comments::Destroy"]]
         end
       end
@@ -1044,38 +1045,38 @@ end # User
 module Users
   module Posts
     module Comment
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comment::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comment::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comment::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comment::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comment::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["Users::Posts::Comment::Destroy"]]
         end
       end
@@ -1086,104 +1087,105 @@ end
 # resources > resource > resources
 module Users
   module Post
-    class New
-      def call(_env)
+    class New < Action
+      def call(*)
         [200, {}, ["Users::Post::New"]]
       end
     end
 
-    class Create
-      def call(_env)
+    class Create < Action
+      def call(*)
         [200, {}, ["Users::Post::Create"]]
       end
     end
 
-    class Show
-      def call(_env)
+    class Show < Action
+      def call(*)
         [200, {}, ["Users::Post::Show"]]
       end
     end
 
-    class Edit
-      def call(_env)
+    class Edit < Action
+      def call(*)
         [200, {}, ["Users::Post::Edit"]]
       end
     end
 
-    class Update
-      def call(_env)
+    class Update < Action
+      def call(*)
         [200, {}, ["Users::Post::Update"]]
       end
     end
 
-    class Destroy
-      def call(_env)
+    class Destroy < Action
+      def call(*)
         [200, {}, ["Users::Post::Destroy"]]
       end
     end
 
-    class Search
-      def call(_env)
+    class Search < Action
+      def call(*)
         [200, {}, ["Users::Post::Search"]]
       end
     end
 
-    class Screenshot
-      def call(_env)
+    class Screenshot < Action
+      def call(*)
         [200, {}, ["Users::Post::Screenshot"]]
       end
     end
+
     module Comments
-      class Index
-        def call(_env)
+      class Index < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Index"]]
         end
       end
 
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Destroy"]]
         end
       end
 
-      class Search
-        def call(_env)
+      class Search < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Search"]]
         end
       end
 
-      class Screenshot
-        def call(_env)
+      class Screenshot < Action
+        def call(*)
           [200, {}, ["Users::Post::Comments::Screenshot"]]
         end
       end
@@ -1195,38 +1197,38 @@ end
 module Users
   module Post
     module Comment
-      class New
-        def call(_env)
+      class New < Action
+        def call(*)
           [200, {}, ["Users::Post::Comment::New"]]
         end
       end
 
-      class Create
-        def call(_env)
+      class Create < Action
+        def call(*)
           [200, {}, ["Users::Post::Comment::Create"]]
         end
       end
 
-      class Show
-        def call(_env)
+      class Show < Action
+        def call(*)
           [200, {}, ["Users::Post::Comment::Show"]]
         end
       end
 
-      class Edit
-        def call(_env)
+      class Edit < Action
+        def call(*)
           [200, {}, ["Users::Post::Comment::Edit"]]
         end
       end
 
-      class Update
-        def call(_env)
+      class Update < Action
+        def call(*)
           [200, {}, ["Users::Post::Comment::Update"]]
         end
       end
 
-      class Destroy
-        def call(_env)
+      class Destroy < Action
+        def call(*)
           [200, {}, ["Users::Post::Comment::Destroy"]]
         end
       end
