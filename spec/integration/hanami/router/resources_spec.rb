@@ -2,10 +2,11 @@
 
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
+  let(:configuration) { Action::Configuration.new("resources") }
 
   describe "#resources" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resources "flowers"
       end
     end
@@ -47,7 +48,7 @@ RSpec.describe Hanami::Router do
 
     context ":only option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resources "keyboards", only: %i[index edit]
         end
       end
@@ -73,7 +74,7 @@ RSpec.describe Hanami::Router do
 
     context ":except option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resources "keyboards", except: %i[new show update destroy]
         end
       end
@@ -100,7 +101,7 @@ RSpec.describe Hanami::Router do
 
     context "member" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resources "keyboards", only: [:show] do
             member do
               get "screenshot"
@@ -123,7 +124,7 @@ RSpec.describe Hanami::Router do
 
     context "collection" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resources "keyboards", only: [:show] do
             collection do
               get "search"
@@ -146,7 +147,7 @@ RSpec.describe Hanami::Router do
 
     context ":controller option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resources "keyboards", controller: "keys" do
             collection do
               get "search"
@@ -180,7 +181,7 @@ RSpec.describe Hanami::Router do
 
     context ":as option" do
       let(:router) do
-        described_class.new do
+        described_class.new(configuration: configuration) do
           resources "keyboards", as: "pianos" do
             collection do
               get "search"

@@ -3,9 +3,11 @@
 RSpec.describe Hanami::Router do
   describe "#recognize" do
     let(:router) do
-      Hanami::Router.new(namespace: Web::Controllers) do
-        get "/",              to: "home#index",                       as: :home
-        get "/dashboard",     to: Web::Controllers::Dashboard::Index, as: :dashboard
+      configuration = Action::Configuration.new("recognize")
+
+      Hanami::Router.new(namespace: Web::Controllers, configuration: configuration) do
+        get "/",              to: "home#index",                                                         as: :home
+        get "/dashboard",     to: Web::Controllers::Dashboard::Index.new(configuration: configuration), as: :dashboard
         get "/rack_class",    to: RackMiddleware,                     as: :rack_class
         get "/rack_app",      to: RackMiddlewareInstanceMethod,       as: :rack_app
         get "/proc",          to: ->(_env) { [200, {}, ["OK"]] },     as: :proc
@@ -26,7 +28,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:11 (lambda)")
+        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/proc")
@@ -39,7 +41,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:12 (lambda)")
+        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/resources/1")
@@ -63,7 +65,7 @@ RSpec.describe Hanami::Router do
         expect(route.params).to eq({})
       end
 
-      it "recognizes action from class" do
+      it "recognizes action from instance" do
         env   = Rack::MockRequest.env_for("/dashboard", method: :get)
         route = router.recognize(env)
 
@@ -176,7 +178,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:11 (lambda)")
+        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/proc")
@@ -188,7 +190,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:12 (lambda)")
+        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/resources/1")
@@ -211,7 +213,7 @@ RSpec.describe Hanami::Router do
         expect(route.params).to eq({})
       end
 
-      it "recognizes action from class" do
+      it "recognizes action from instance" do
         route = router.recognize("/dashboard")
 
         _, _, body = *route.call({})
@@ -332,7 +334,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:11 (lambda)")
+        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/proc")
@@ -344,7 +346,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:12 (lambda)")
+        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/resources/1")
@@ -367,7 +369,7 @@ RSpec.describe Hanami::Router do
         expect(route.params).to eq({})
       end
 
-      it "recognizes action from class" do
+      it "recognizes action from instance" do
         route = router.recognize(:dashboard)
 
         _, _, body = *route.call({})

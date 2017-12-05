@@ -12,7 +12,7 @@ RSpec.describe Hanami::Router do
     let(:router) do
       e = endpoint
 
-      described_class.new do
+      described_class.new(configuration: Action::Configuration.new("new")) do
         root                to: e
         get "/route",       to: e
         get "/named_route", to: e, as: :named_route

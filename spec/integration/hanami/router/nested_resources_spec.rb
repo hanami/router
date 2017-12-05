@@ -2,10 +2,11 @@
 
 RSpec.describe Hanami::Router do
   let(:app) { Rack::MockRequest.new(router) }
+  let(:configuration) { Action::Configuration.new("nested_resources") }
 
   context "resource > resource > resource" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resource :user do
           resource :post do
             resource :comment
@@ -131,7 +132,7 @@ RSpec.describe Hanami::Router do
 
   context "resource > resource > resources" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resource :user do
           resource :post do
             resources :comments
@@ -187,7 +188,7 @@ RSpec.describe Hanami::Router do
 
   context "resource > resources > resources" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resource :user do
           resources :posts do
             resources :comments
@@ -287,7 +288,7 @@ RSpec.describe Hanami::Router do
 
   context "resource > resources > resource" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resource :user do
           resources :posts do
             resource :comment
@@ -337,7 +338,7 @@ RSpec.describe Hanami::Router do
 
   context "resources > resources > resources" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resources :users do
           resources :posts do
             resources :comments
@@ -481,7 +482,7 @@ RSpec.describe Hanami::Router do
 
   context "resources > resources > resource" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resources :users do
           resources :posts do
             resource :comment
@@ -531,7 +532,7 @@ RSpec.describe Hanami::Router do
 
   context "resources > resource > resources" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resources :users do
           resource :post do
             resources :comments do
@@ -656,7 +657,7 @@ RSpec.describe Hanami::Router do
 
   context "resources > resource > resource" do
     let(:router) do
-      described_class.new do
+      described_class.new(configuration: configuration) do
         resources :users do
           resource :post do
             resource :comment

@@ -5,7 +5,7 @@ RSpec.describe Hanami::Router do
     let(:app) { Rack::MockRequest.new(router) }
     let(:router) do
       described_class.new do
-        scope "/admin", namespace: Admin::Controllers do
+        scope "/admin", namespace: Admin::Controllers, configuration: Action::Configuration.new("admin") do
           root to: "home#index"
 
           get  "/signin", to: "sessions#new", as: :signin
@@ -22,7 +22,7 @@ RSpec.describe Hanami::Router do
           mount Backend::App, at: "/backend"
         end
 
-        scope "/", namespace: Web::Controllers do
+        scope "/", namespace: Web::Controllers, configuration: Action::Configuration.new("web") do
           root to: "home#index"
 
           get  "/signin", to: "sessions#new", as: :signin
