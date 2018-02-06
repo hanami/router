@@ -433,10 +433,10 @@ router.path(:identity_avatar)       # => /identity/avatar
 router.path(:new_identity_avatar)   # => /identity/avatar/new
 router.path(:edit_identity_avatar)  # => /identity/avatar/new
 
-router.path(:identity_api_keys)     # => /identity/api_keys
-router.path(:identity_api_key)      # => /identity/api_keys/:id
-router.path(:new_identity_api_key)  # => /identity/api_keys/new
-router.path(:edit_identity_api_key) # => /identity/api_keys/:id/edit
+router.path(:identity_api_keys)            # => /identity/api_keys
+router.path(:identity_api_key, id: 1)      # => /identity/api_keys/:id
+router.path(:new_identity_api_key)         # => /identity/api_keys/new
+router.path(:edit_identity_api_key, id: 1) # => /identity/api_keys/:id/edit
 ```
 
 
