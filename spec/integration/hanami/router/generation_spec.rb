@@ -7,7 +7,7 @@ RSpec.describe Hanami::Router do
     context "variable" do
       let(:router) do
         described_class.new do
-          get "/:var", as: :a, to: ->() {}
+          get "/:var", as: :a, to: -> {}
         end
       end
 
@@ -22,7 +22,7 @@ RSpec.describe Hanami::Router do
     context "unicode variable" do
       let(:router) do
         described_class.new do
-          get "/:var", as: :a, to: ->() {}
+          get "/:var", as: :a, to: -> {}
         end
       end
 
@@ -36,7 +36,7 @@ RSpec.describe Hanami::Router do
     context "multiple variables" do
       let(:router) do
         described_class.new do
-          get "/:var/:baz", as: :a, to: ->() {}
+          get "/:var/:baz", as: :a, to: -> {}
         end
       end
 
@@ -50,11 +50,11 @@ RSpec.describe Hanami::Router do
     context "multiple fixed" do
       let(:router) do
         described_class.new do
-          get "/",              as: :a, to: ->() {}
-          get "/test",          as: :b, to: ->() {}
-          get "/test/time",     as: :c, to: ->() {}
-          get "/one/more/what", as: :d, to: ->() {}
-          get "/test.html",     as: :e, to: ->() {}
+          get "/",              as: :a, to: -> {}
+          get "/test",          as: :b, to: -> {}
+          get "/test/time",     as: :c, to: -> {}
+          get "/one/more/what", as: :d, to: -> {}
+          get "/test.html",     as: :e, to: -> {}
         end
       end
 
@@ -72,7 +72,7 @@ RSpec.describe Hanami::Router do
     context "variable with query string" do
       let(:router) do
         described_class.new do
-          get "/:var", as: :a, to: ->() {}
+          get "/:var", as: :a, to: -> {}
         end
       end
 
@@ -86,7 +86,7 @@ RSpec.describe Hanami::Router do
     context "fixed with mandatory format" do
       let(:router) do
         described_class.new do
-          get "/test.:format", as: :a, to: ->() {}
+          get "/test.:format", as: :a, to: -> {}
         end
       end
 
@@ -100,7 +100,7 @@ RSpec.describe Hanami::Router do
     context "fixed with optional format" do
       let(:router) do
         described_class.new do
-          get "/test(.:format)", as: :a, to: ->() {}
+          get "/test(.:format)", as: :a, to: -> {}
         end
       end
 
@@ -115,7 +115,7 @@ RSpec.describe Hanami::Router do
     context "variable with mandatory format" do
       let(:router) do
         described_class.new do
-          get "/:var.:format", as: :a, to: ->() {}
+          get "/:var.:format", as: :a, to: -> {}
         end
       end
 
@@ -129,7 +129,7 @@ RSpec.describe Hanami::Router do
     context "variable with optional format" do
       let(:router) do
         described_class.new do
-          get "/:var(.:format)", as: :a, to: ->() {}
+          get "/:var(.:format)", as: :a, to: -> {}
         end
       end
 
@@ -144,7 +144,7 @@ RSpec.describe Hanami::Router do
     context "variable with optional variable" do
       let(:router) do
         described_class.new do
-          get "/:var1(/:var2)", as: :a, to: ->() {}
+          get "/:var1(/:var2)", as: :a, to: -> {}
         end
       end
 
@@ -159,7 +159,7 @@ RSpec.describe Hanami::Router do
     context "variable with optional variable and format" do
       let(:router) do
         described_class.new do
-          get "/:var1(/:var2.:format)", as: :a, to: ->() {}
+          get "/:var1(/:var2.:format)", as: :a, to: -> {}
         end
       end
 
@@ -173,7 +173,7 @@ RSpec.describe Hanami::Router do
     context "variable with optional nested variables" do
       let(:router) do
         described_class.new do
-          get "/:var1(/:var2(/:var3))", as: :a, to: ->() {}
+          get "/:var1(/:var2(/:var3))", as: :a, to: -> {}
         end
       end
 

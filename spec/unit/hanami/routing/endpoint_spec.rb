@@ -36,7 +36,7 @@ RSpec.describe Hanami::Routing::Endpoint do
 
     context "proc" do
       it "returns the given proc" do
-        endpoint = ->() {}
+        endpoint = -> {}
         expect(described_class.find(endpoint, nil)).to be(endpoint)
       end
     end

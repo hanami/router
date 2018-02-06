@@ -172,7 +172,7 @@ module Hanami
         # cleaned up.
         result = begin
                    klass
-                 rescue # rubocop:disable Lint/RescueWithoutErrorClass
+                 rescue
                    nil
                  end
 

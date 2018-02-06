@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Lint/RescueWithoutErrorClass
 class GenerationTestCase
   include ::RSpec::Matchers
   def initialize(router)
@@ -71,4 +70,3 @@ class GenerationTestCase
     "http://localhost#{expected}"
   end
 end
-# rubocop:enable Lint/RescueWithoutErrorClass

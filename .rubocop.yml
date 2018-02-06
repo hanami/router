@@ -5,5 +5,12 @@ inherit_from:
 Metrics/ParameterLists:
   Exclude:
     - "lib/hanami/router.rb"
+Style/FormatStringToken:
+  Enabled: false
 Performance/RegexpMatch:
   Enabled: false
+Style/RescueStandardError:
+  Enabled: false
+Style/CommentedKeyword:
+  Exclude:
+    - "spec/**/*.rb"
