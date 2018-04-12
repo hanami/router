@@ -309,8 +309,8 @@ module Hanami
 
         # @since 0.1.0
         # @api private
-        def method_missing(m, *args) # rubocop:disable Style/MethodMissing
-          verb        = m
+        def method_missing(method_name, *args) # rubocop:disable Style/MethodMissing
+          verb        = method_name
           action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
 
           @router.__send__ verb, path(action_name),

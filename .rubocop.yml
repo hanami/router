@@ -14,3 +14,8 @@ Style/RescueStandardError:
 Style/CommentedKeyword:
   Exclude:
     - "spec/**/*.rb"
+Naming/UncommunicativeMethodParamName:
+  AllowedNames:
+    - 'as'
+    - 'at'
+    - 'to'

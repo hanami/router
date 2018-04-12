@@ -4,23 +4,23 @@ require "rexml/document"
 require "hanami/routing/parsing/parser"
 
 class MyMiddleware
-  def call(_)
+  def call(*)
   end
 end
 
 module Middleware
   class Runtime
-    def call(_)
+    def call(*)
     end
   end
 
   class ClassMiddleware
-    def self.call(_)
+    def self.call(*)
     end
   end
 
   class InstanceMiddleware
-    def call(_)
+    def call(*)
     end
   end
 end
