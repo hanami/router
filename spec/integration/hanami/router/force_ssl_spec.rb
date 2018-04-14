@@ -1,4 +1,14 @@
 RSpec.describe Hanami::Router do
+  before do
+    @original_stderr = $stderr
+    $stderr = File.open(File::NULL, "w")
+  end
+
+  after do
+    $stderr = @original_stderr
+    @original_stderr = nil
+  end
+
   # Bug https://github.com/hanami/router/issues/73
   it 'respects the Rack spec' do
     router = Hanami::Router.new(force_ssl: true)
@@ -6,6 +16,16 @@ RSpec.describe Hanami::Router do
     app = Rack::MockRequest.new(router)
 
     app.get('/http_destination', lint: true)
+  end
+
+  context "force_ssl deprecation" do
+    it 'display a message when force_ssl is true' do
+      expect { Hanami::Router.new(force_ssl: true) }.to output(/force_ssl option is deprecated, please delegate this behaviour to Nginx\/Apache or use a Rack middleware like `rack-ssl`/).to_stderr
+    end
+
+    it "don't display a message when force_ssl is false" do
+      expect { Hanami::Router.new(force_ssl: false) }.to_not output(/force_ssl option is deprecated, please delegate this behaviour to Nginx\/Apache or use a Rack middleware like `rack-ssl`/).to_stderr
+    end
   end
 
   %w[get].each do |verb|
