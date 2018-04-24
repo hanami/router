@@ -1,4 +1,14 @@
 RSpec.describe Hanami::Router do
+  before do
+    @original_stderr = $stderr
+    $stderr = File.open(File::NULL, "w")
+  end
+
+  after do
+    $stderr = @original_stderr
+    @original_stderr = nil
+  end
+
   # Bug https://github.com/hanami/router/issues/73
   it 'respects the Rack spec' do
     router = Hanami::Router.new(force_ssl: true)
