@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rack/request"
+require "dry/inflector"
 require "hanami/routing"
 require "hanami/utils/hash"
 
@@ -76,6 +77,10 @@ module Hanami
   #   # All the requests starting with "/api" will be forwarded to Api::App
   #
   class Router # rubocop:disable Metrics/ClassLength
+    # @since x.x.x
+    # @api private
+    attr_reader :inflector
+
     # This error is raised when <tt>#call</tt> is invoked on a non-routable
     # recognized route.
     #
@@ -154,6 +159,8 @@ module Hanami
     #   (defaults to `Hanami::Routing::Route`)
     # @option options [String] :action_separator the separator between controller
     #   and action name (eg. 'dashboard#show', where '#' is the :action_separator)
+    # @option options [Object, #pluralize, #singularize] :inflector
+    #   the inflector class (defaults to `Dry::Inflector.new`)
     # @option options [Array<Symbol,String,Object #mime_types, parse>] :parsers
     #   the body parsers for mime types
     #
@@ -236,7 +243,7 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, parsers: [], force_ssl: false, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, parsers: [], inflector: Dry::Inflector.new, force_ssl: false, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes        = []
       @named         = {}
       @namespace     = namespace
@@ -245,6 +252,7 @@ module Hanami
       @prefix        = Utils::PathPrefix.new(prefix)
       @parsers       = Routing::Parsers.new(parsers)
       @force_ssl     = Hanami::Routing::ForceSsl.new(force_ssl, host: host, port: port)
+      @inflector     = inflector
       @not_found     = not_found
       @not_allowed   = not_allowed
       instance_eval(&blk) unless blk.nil?
