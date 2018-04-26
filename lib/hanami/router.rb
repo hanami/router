@@ -1035,10 +1035,7 @@ module Hanami
       if (response = @force_ssl.call(env))
         response
       else
-        enforce_head(
-          env,
-          (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
-        )
+        (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
       end
     end
 
@@ -1353,18 +1350,6 @@ module Hanami
 
       @routes.push(route)
       @named[as] = route unless as.nil?
-    end
-
-    def enforce_head(env, response)
-      if env[REQUEST_METHOD] == HEAD
-        if response.respond_to?(:body)
-          response.body = []
-        else
-          response[BODY] = []
-        end
-      end
-
-      response
     end
 
     def verb_for(value)

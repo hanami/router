@@ -2,7 +2,7 @@
 
 RSpec.describe Hanami::Router do
   describe "#scope" do
-    let(:app) { Rack::MockRequest.new(router) }
+    let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
     let(:router) do
       described_class.new do
         scope "/admin", namespace: Admin::Controllers, configuration: Action::Configuration.new("admin") do

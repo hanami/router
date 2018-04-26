@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
+def build_response(response, requested)
+  return response unless requested == "head"
+  response.body = []
+  response
+end
+
 RSpec.describe Hanami::Router do
-  let(:app) { Rack::MockRequest.new(router) }
+  let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
 
   RSpec::Support::HTTP.mountable_verbs.each do |verb|
     context "##{verb}" do
@@ -25,7 +31,7 @@ RSpec.describe Hanami::Router do
 
         context "path recognition" do
           context "fixed string" do
-            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
+            let(:response) { build_response(Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!"), requested) }
 
             it "recognizes" do
               actual = app.request(requested.upcase, "/hanami", lint: true)
@@ -37,7 +43,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "moving parts string" do
-            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!") }
+            let(:response) { build_response(Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!"), requested) }
 
             it "recognizes" do
               actual = app.request(requested.upcase, "/hanami/23", lint: true)
@@ -49,7 +55,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "globbing string" do
-            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!") }
+            let(:response) { build_response(Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!"), requested) }
 
             it "recognizes" do
               actual = app.request(requested.upcase, "/hanami/all", lint: true)
@@ -61,7 +67,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "format string" do
-            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!") }
+            let(:response) { build_response(Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!"), requested) }
 
             it "recognizes" do
               actual = app.request(requested.upcase, "/hanami/all.json", lint: true)
@@ -73,7 +79,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "block" do
-            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+            let(:response) { build_response(Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!"), requested) }
 
             it "recognizes" do
               actual = app.request(requested.upcase, "/block", lint: true)
@@ -119,7 +125,7 @@ RSpec.describe Hanami::Router do
         end
 
         describe "constraints" do
-          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!") }
+          let(:response) { build_response(Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!"), requested) }
 
           it "recognize when called with matching constraints" do
             expect(app.request(requested.upcase, "/books/23", lint: true)).to be(response)

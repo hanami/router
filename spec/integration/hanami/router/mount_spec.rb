@@ -10,7 +10,7 @@ RSpec.describe Hanami::Router do
     end
   end
 
-  let(:app) { Rack::MockRequest.new(router) }
+  let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
 
   RSpec::Support::HTTP.verbs.each do |verb|
     it "accepts #{verb} for a class endpoint" do

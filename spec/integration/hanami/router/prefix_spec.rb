@@ -2,7 +2,7 @@
 
 RSpec.describe Hanami::Router do
   describe "#prefix" do
-    let(:app) { Rack::MockRequest.new(router) }
+    let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
     let(:configuration) { Action::Configuration.new("prefix") }
 
     it "recognizes get path" do
