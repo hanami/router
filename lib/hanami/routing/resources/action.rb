@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "hanami/utils/string"
 require "hanami/utils/path_prefix"
 require "hanami/routing/resource"
 
@@ -41,7 +40,7 @@ module Hanami
         # @api private
         # @since 0.4.0
         def as
-          Hanami::Utils::String.pluralize(super).to_sym
+          @router.inflector.pluralize(super).to_sym
         end
       end
 
@@ -53,7 +52,7 @@ module Hanami
       # @see Hanami::Router#resources
       class CollectionAction < Resource::CollectionAction
         def as(action_name)
-          Hanami::Utils::String.pluralize(super(action_name)).to_sym
+          @router.inflector.pluralize(super(action_name)).to_sym
         end
       end
 

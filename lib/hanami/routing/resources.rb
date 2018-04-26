@@ -43,7 +43,7 @@ module Hanami
       # @api private
       # @since 0.4.0
       def wildcard_param(route_param = nil)
-        "/:#{Hanami::Utils::String.singularize(route_param)}_id/"
+        "/:#{@router.inflector.singularize(route_param)}_id/"
       end
     end
   end

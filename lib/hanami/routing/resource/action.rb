@@ -279,7 +279,7 @@ module Hanami
         def _singularized_as
           name = @options[:as] ? @options[:as].to_s : resource_name
           name.split(NESTED_ROUTES_SEPARATOR).map do |n|
-            Hanami::Utils::String.singularize(n)
+            @router.inflector.singularize(n)
           end
         end
 
@@ -309,8 +309,8 @@ module Hanami
 
         # @since 0.1.0
         # @api private
-        def method_missing(m, *args) # rubocop:disable Style/MethodMissing
-          verb        = m
+        def method_missing(method_name, *args) # rubocop:disable Style/MethodMissing
+          verb        = method_name
           action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
 
           @router.__send__ verb, path(action_name),

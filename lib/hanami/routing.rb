@@ -86,7 +86,7 @@ module Hanami
         freeze
       end
 
-      def call(_)
+      def call(*)
         [@status, { LOCATION => @path }, []]
       end
 
