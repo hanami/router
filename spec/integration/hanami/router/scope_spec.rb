@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require "rack/head"
+
 RSpec.describe Hanami::Router do
   describe "#scope" do
-    let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
+    let(:app) { Rack::MockRequest.new(router) }
     let(:router) do
       described_class.new do
         scope "/admin", namespace: Admin::Controllers, configuration: Action::Configuration.new("admin") do
@@ -77,10 +79,19 @@ RSpec.describe Hanami::Router do
     end
 
     context "mount" do
-      RSpec::Support::HTTP.verbs.each do |verb|
+      RSpec::Support::HTTP.mountable_verbs.each do |verb|
         it "accepts #{verb} for a mounted app" do
           expect(app.request(verb.upcase, "/backend", lint: true).body).to eq(body_for("home", verb))
           expect(app.request(verb.upcase, "/admin/backend", lint: true).body).to eq(body_for("home", verb))
+        end
+      end
+
+      context "HEAD" do
+        let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
+
+        it "accepts head for mounted app" do
+          expect(app.request("HEAD", "/backend", lint: true).body).to eq(body_for("home", "head"))
+          expect(app.request("HEAD", "/admin/backend", lint: true).body).to eq(body_for("home", "head"))
         end
       end
     end
