@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rack/head"
+
 RSpec.describe Hanami::Router do
   describe "#prefix" do
     let(:app) { Rack::MockRequest.new(router) }
@@ -481,9 +483,17 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      RSpec::Support::HTTP.verbs.each do |verb|
+      RSpec::Support::HTTP.mountable_verbs.each do |verb|
         it "accepts #{verb} for a prefixed mount" do
           expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq(body_for("home", verb))
+        end
+      end
+
+      context "HEAD" do
+        let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
+
+        it "accepts head for a prefixed mount" do
+          expect(app.request("HEAD", "/api/backend", lint: true).body).to eq(body_for("home", "head"))
         end
       end
     end
