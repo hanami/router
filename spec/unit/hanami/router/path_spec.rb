@@ -9,6 +9,10 @@ RSpec.describe Hanami::Router do
     @router.get('/files/*',              to: endpoint, as: :glob)
     @router.resources(:leaves,                         as: :resources)
     @router.resource(:stem,                            as: :singular_resource)
+    @router.get('/books/:slug',
+                slug: /^[a-z]+$/,
+                to: endpoint,
+                as: :slug_constraints)
   end
 
   after do
@@ -36,6 +40,14 @@ RSpec.describe Hanami::Router do
 
     it "raises error when constraints aren't satisfied" do
       expect { @router.path(:constraints, id: 'x') }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :constraints - please check given arguments')
+    end
+
+    it 'recognizes string with variables and constraints' do
+      expect(@router.path(:slug_constraints, slug: "hello")).to eq('/books/hello')
+    end
+
+    it "raises error when constraints aren't satisfied" do
+      expect { @router.path(:slug_constraints, slug: '123') }.to raise_error(Hanami::Routing::InvalidRouteException, 'No route (path) could be generated for :slug_constraints - please check given arguments')
     end
 
     it 'recognizes optional variables' do
