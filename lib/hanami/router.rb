@@ -243,7 +243,7 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, parsers: [], inflector: Dry::Inflector.new, force_ssl: false, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, parsers: [], inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes        = []
       @named         = {}
       @namespace     = namespace
@@ -251,7 +251,6 @@ module Hanami
       @base          = Routing::Uri.build(scheme: scheme, host: host, port: port)
       @prefix        = Utils::PathPrefix.new(prefix)
       @parsers       = Routing::Parsers.new(parsers)
-      @force_ssl     = Hanami::Routing::ForceSsl.new(force_ssl, host: host, port: port)
       @inflector     = inflector
       @not_found     = not_found
       @not_allowed   = not_allowed
@@ -1040,11 +1039,7 @@ module Hanami
     #
     # @since 0.1.0
     def call(env)
-      if (response = @force_ssl.call(env))
-        response
-      else
-        (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
-      end
+      (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
     end
 
     def fallback(env)
