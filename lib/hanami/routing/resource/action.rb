@@ -305,17 +305,19 @@ module Hanami
           instance_eval(&blk) if block_given?
         end
 
-        protected
-
         # @since 0.1.0
         # @api private
-        def method_missing(method_name, *args) # rubocop:disable Style/MethodMissing
+        def method_missing(method_name, *args) # rubocop:disable Style/MethodMissingSuper
           verb        = method_name
           action_name = Utils::PathPrefix.new(args.first).relative_join(nil)
 
           @router.__send__ verb, path(action_name),
                            to: endpoint(action_name), as: as(action_name),
                            namespace: namespace, configuration: configuration
+        end
+
+        def respond_to_missing?(method_name, include_all)
+          @router.respond_to?(method_name, include_all)
         end
 
         private
