@@ -1,7 +1,7 @@
 language: ruby
 sudo: false
 cache: bundler
-script: 'bundle exec rake spec:coverage --trace'
+script: ./script/ci
 rvm:
   - 2.3.6
   - 2.4.2

@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+run_unit_tests() {
+  bundle exec rake spec:coverage
+}
+
+main() {
+  run_unit_tests
+}
+
+main
