@@ -188,7 +188,6 @@ module Hanami
     require "hanami/routing/scope"
     require "hanami/routing/resource"
     require "hanami/routing/resources"
-    require "hanami/routing/force_ssl"
     require "hanami/routing/parsers"
     require "hanami/routing/recognized_route"
   end
