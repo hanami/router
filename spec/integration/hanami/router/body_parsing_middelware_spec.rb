@@ -6,12 +6,17 @@ RSpec.describe 'Body parsing' do
       [200, {}, [env['router.params'].inspect]]
     }
 
-    @routes = Hanami::Router.new(parsers: [:json, XmlParser.new]) do
+    @routes = Hanami::Router.new do
       patch '/books/:id',   to: endpoint
       patch '/authors/:id', to: endpoint
     end
 
-    @app = Rack::MockRequest.new(@routes)
+    hanami_app = Hanami::Routing::Middleware::BodyParser.new(@routes) do
+      add_parser :json
+      add_parser XmlMiddelwareParser
+    end
+
+    @app = Rack::MockRequest.new(hanami_app)
   end
 
   it 'is successful (JSON)' do
