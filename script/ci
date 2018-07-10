@@ -10,13 +10,6 @@ run_unit_tests() {
   bundle exec rake spec:coverage
 }
 
-run_test() {
-  local test=$1
-
-  printf "\n\n\nRunning: $test\n"
-  COVERAGE=true bundle exec rspec $test
-}
-
 main() {
   run_code_quality_checks &&
     run_unit_tests
