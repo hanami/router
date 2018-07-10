@@ -67,6 +67,7 @@ module Hanami
       # @since 0.1.0
       # @api private
       def initialize(options = {}, &blk)
+        Hanami::Utils::Deprecation.new('options[:parsers] is deprecated and it will be removed in future versions')
         @compiled         = false
         @uri_parser       = URI::Parser.new
         super(options, &nil)
