@@ -1,24 +1,16 @@
-require 'rake'
-require 'rake/testtask'
-require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
+# frozen_string_literal: true
 
-Rake::TestTask.new do |t|
-  t.pattern = 'test/**/*_test.rb'
-  t.libs.push 'test'
-end
+require "rake"
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
+require "hanami/devtools/rake_tasks"
 
 namespace :spec do
   RSpec::Core::RakeTask.new(:unit) do |task|
-    file_list = FileList['spec/**/*_spec.rb']
+    file_list = FileList["spec/**/*_spec.rb"]
 
     task.pattern = file_list
   end
-
-  task :coverage do
-    ENV['COVERAGE'] = 'true'
-    Rake::Task['spec:unit'].invoke
-  end
 end
 
-task default: 'spec:unit'
+task default: "spec:unit"

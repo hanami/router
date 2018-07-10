@@ -4,12 +4,12 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://h
 
 ## Status
 
-[![Gem Version](http://img.shields.io/gem/v/hanami-router.svg)](https://badge.fury.io/rb/hanami-router)
-[![Build Status](http://img.shields.io/travis/hanami/router/master.svg)](https://travis-ci.org/hanami/router?branch=master)
-[![Coverage](http://img.shields.io/coveralls/hanami/router/master.svg)](https://coveralls.io/r/hanami/router)
-[![Code Climate](http://img.shields.io/codeclimate/github/hanami/router.svg)](https://codeclimate.com/github/hanami/router)
-[![Dependencies](http://img.shields.io/gemnasium/hanami/router.svg)](https://gemnasium.com/hanami/router)
-[![Inline docs](http://inch-ci.org/github/hanami/router.png)](http://inch-ci.org/github/hanami/router)
+[![Gem Version](https://badge.fury.io/rb/hanami-router.svg)](https://badge.fury.io/rb/hanami-router)
+[![TravisCI](https://travis-ci.org/hanami/router.svg?branch=master)](https://travis-ci.org/hanami/router)
+[![CircleCI](https://circleci.com/gh/hanami/router/tree/master.svg?style=svg)](https://circleci.com/gh/hanami/router/tree/master)
+[![Test Coverage](https://codecov.io/gh/hanami/router/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/router)
+[![Depfu](https://badges.depfu.com/badges/5f6b8e8fa3b0d082539f0b0f84d55960/overview.svg)](https://depfu.com/github/hanami/router?project=Bundler)
+[![Inline Docs](http://inch-ci.org/github/hanami/router.svg)](http://inch-ci.org/github/hanami/router)
 
 ## Contact
 
