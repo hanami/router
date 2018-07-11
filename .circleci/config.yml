@@ -6,7 +6,7 @@ version: 2
 jobs:
   "ruby-2.3":
     docker:
-       - image: circleci/ruby:2.3.7
+       - image: hanami/ruby-2.3
     working_directory: ~/hanami-utils
     steps:
       - checkout
@@ -31,7 +31,7 @@ jobs:
             ./script/ci
   "ruby-2.4":
     docker:
-       - image: circleci/ruby:2.4.4
+       - image: hanami/ruby-2.4
     working_directory: ~/hanami-utils
     steps:
       - checkout
@@ -56,7 +56,7 @@ jobs:
             ./script/ci
   "ruby-2.5":
     docker:
-       - image: circleci/ruby:2.5.1
+       - image: hanami/ruby-2.5
     working_directory: ~/hanami-utils
     steps:
       - checkout
@@ -81,7 +81,7 @@ jobs:
             ./script/ci
   "jruby-9.1":
     docker:
-       - image: circleci/jruby:9.1.17.0
+       - image: hanami/jruby-9.1
     working_directory: ~/hanami-utils
     steps:
       - checkout
@@ -106,7 +106,7 @@ jobs:
             ./script/ci
   "jruby-9.2":
     docker:
-       - image: circleci/jruby:9.2.0.0
+       - image: hanami/jruby-9.2
     working_directory: ~/hanami-utils
     steps:
       - checkout
