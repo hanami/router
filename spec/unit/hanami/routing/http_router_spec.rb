@@ -27,9 +27,10 @@ RSpec.describe Hanami::Routing::HttpRouter do
   end
 
   describe '#new' do
-    it 'shows deprecation warning regarding options[:parsers]'do
-      expect(Hanami::Utils::Deprecation).to receive(:new).with('options[:parsers] is deprecated and it will be removed in future versions')
-      Hanami::Routing::HttpRouter.new
+    it 'shows deprecation warning regarding options[:parsers]' do
+      expect {
+        Hanami::Routing::HttpRouter.new(parsers: [:json])
+      }.to output(/Hanami::Router options\[:parsers\] is deprecated and it will be removed in future versions/).to_stderr
     end
   end
 
