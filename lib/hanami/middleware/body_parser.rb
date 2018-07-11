@@ -53,11 +53,24 @@ module Hanami
       end
 
       def initialize(parsers)
-        @@parsers = parsers
+        @parsers = parsers
       end
 
       def middleware
         Class.new do
+
+          # We do not have access to the scope of BodyParser, we have to find a way to pass the
+          # parser to the Middleware, we use this method to set the previous built parsers so
+          # later we can access them
+          class << self
+            attr_reader :parsers
+
+            def set_parsers(parsers)
+              @parsers = parsers
+              self
+            end
+          end
+
           def initialize(app)
             @app = app
           end
@@ -88,7 +101,7 @@ module Hanami
 
           # @api private
           def _parse(env, body)
-            @@parsers[
+            self.class.parsers[
               media_type(env)
             ].parse(body)
           end
@@ -105,7 +118,7 @@ module Hanami
             content_type = env[CONTENT_TYPE]
             content_type.nil? || content_type.empty? ? nil : content_type
           end
-        end
+        end.set_parsers(@parsers)
       end
     end
   end
