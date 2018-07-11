@@ -1,5 +1,3 @@
-require 'hanami/routing/middleware/body_parser'
-
 RSpec.describe 'Body parsing' do
   before do
     endpoint = lambda { |env|

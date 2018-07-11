@@ -1,6 +1,6 @@
 require 'rexml/document'
 require 'hanami/routing/parsing/parser'
-require 'hanami/routing/middleware/parser'
+require 'hanami/middleware/body_parser'
 
 module Web
   module Controllers
@@ -380,7 +380,7 @@ module Keys
   end
 end # Keyboards
 
-class XmlMiddelwareParser < Hanami::Routing::Middleware::Parser
+class XmlMiddelwareParser < Hanami::Middleware::Parsing::Parser
   def mime_types
     ['application/xml', 'text/xml']
   end

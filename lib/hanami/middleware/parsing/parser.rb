@@ -3,7 +3,7 @@ require 'hanami/utils/string'
 require 'hanami/routing/error'
 
 module Hanami
-  module Routing
+  module Middleware
     module Parsing
       # @since 0.2.0
       class Parser
@@ -14,7 +14,8 @@ module Hanami
           when String, Symbol
             require_parser(parser)
           else
-            parser
+            raise Hanami::Routing::Parsing::UnknownParserError.new(parser) unless parser?(parser)
+            parser.new
           end
         end
 
@@ -25,19 +26,23 @@ module Hanami
 
         # @since 0.2.0
         def parse(body)
-          Hash.new
+          body
         end
 
         private
         # @since 0.2.0
         # @api private
         def self.require_parser(parser)
-          require "hanami/routing/parsing/#{ parser }_parser"
+          require "hanami/middleware/parsing/#{ parser }_parser"
 
           parser = Utils::String.classify(parser)
-          Utils::Class.load!("Hanami::Routing::Parsing::#{ parser }Parser").new
+          Utils::Class.load!("Hanami::Middleware::Parsing::#{ parser }Parser").new
         rescue LoadError, NameError
-          raise UnknownParserError.new(parser)
+          raise Hanami::Routing::Parsing::UnknownParserError.new(parser)
+        end
+
+        def self.parser?(parser)
+          parser.is_a?(Class) && parser < Parser
         end
       end
     end
