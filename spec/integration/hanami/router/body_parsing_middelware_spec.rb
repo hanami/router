@@ -5,14 +5,27 @@ RSpec.describe 'Body parsing' do
     endpoint = lambda { |env|
       [200, {}, [env['router.params'].inspect]]
     }
+    not_parsed_endpoint = lambda { |env|
+      [200, {}, ['Hello']]
+    }
 
     @routes = Hanami::Router.new do
       patch '/books/:id',   to: endpoint
       patch '/authors/:id', to: endpoint
+      get   '/books',       to: not_parsed_endpoint
     end
 
     middleware = Hanami::Middleware::BodyParser.new(@routes, [:json, XmlMiddelwareParser])
     @app = Rack::MockRequest.new(middleware)
+  end
+
+  context 'Not POST, PUT, PATCH request' do
+    it 'is successful' do
+      response = @app.get('/books', 'CONTENT_TYPE' => 'text/plain', lint: true)
+
+      expect(response.status).to eq(200)
+      expect(response.body).to eq('Hello')
+    end
   end
 
   context 'JSON' do

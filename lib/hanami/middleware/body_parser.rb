@@ -35,7 +35,7 @@ module Hanami
 
       def call(env)
         body = env[RACK_INPUT].read
-        return env if body.empty?
+        return @app.call(env) if body.empty?
 
         env[RACK_INPUT].rewind    # somebody might try to read this stream
 
