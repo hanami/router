@@ -1,10 +1,10 @@
 require 'hanami/middleware/body_parser'
 require 'rack/mock'
 
-RSpec.describe Hanami::Middleware::Parsing::Parser do
+RSpec.describe Hanami::Middleware::BodyParser::Parser do
   describe 'JSON parser'do
     let(:app) { -> (env) { [200, {}, "app"] } }
-    let(:middleware) { Hanami::Middleware::BodyParser.new([:json]).new(app) }
+    let(:middleware) { Hanami::Middleware::BodyParser.new(app, [:json]) }
     let(:env) { Rack::MockRequest.env_for('/', method: 'POST', 'CONTENT_TYPE' => content_type, input: body) }
     let(:body)         { '' }
     let(:content_type) { '' }
@@ -40,7 +40,7 @@ RSpec.describe Hanami::Middleware::Parsing::Parser do
       describe 'with malformed json' do
         let(:body) { %({"hanami":"ok" "attribute":"ok"}) }
         it 'raises an exception' do
-          expect { middleware.call(env) }.to raise_error(Hanami::Routing::Parsing::BodyParsingError)
+          expect { middleware.call(env) }.to raise_error(Hanami::Middleware::BodyParser::BodyParsingError)
         end
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe Hanami::Middleware::Parsing::Parser do
         let(:body) {  %({"hanami":"ok" "attribute":"ok"}) }
 
         it 'raises an exception' do
-          expect { middleware.call(env) }.to raise_error(Hanami::Routing::Parsing::BodyParsingError)
+          expect { middleware.call(env) }.to raise_error(Hanami::Middleware::BodyParser::BodyParsingError)
         end
       end
     end

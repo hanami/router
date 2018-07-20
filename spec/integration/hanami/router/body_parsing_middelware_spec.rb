@@ -11,9 +11,8 @@ RSpec.describe 'Body parsing' do
       patch '/authors/:id', to: endpoint
     end
 
-    rack_app = Hanami::Middleware::BodyParser.new([:json, XmlMiddelwareParser]).new(@routes)
-
-    @app = Rack::MockRequest.new(rack_app)
+    middleware = Hanami::Middleware::BodyParser.new(@routes, [:json, XmlMiddelwareParser])
+    @app = Rack::MockRequest.new(middleware)
   end
 
   context 'JSON' do

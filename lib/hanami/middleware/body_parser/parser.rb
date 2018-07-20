@@ -1,59 +1,59 @@
 require 'hanami/utils/class'
 require 'hanami/utils/string'
-require 'hanami/routing/error'
+require 'hanami/routing/parsing/parser'
 
 module Hanami
-  module Routing
-    module Parsing
+  module Middleware
+    class BodyParser
       # Body parsing error
       # This is raised when parser fails to parse the body
       #
-      # @since 0.5.0
-      class BodyParsingError < Hanami::Routing::Error
+      # @since x.x.x
+      class BodyParsingError < Hanami::Routing::Parsing::BodyParsingError
       end
 
-      # @since 0.2.0
-      class UnknownParserError < Hanami::Routing::Error
-        # @since 0.2.0
-        # @api private
-        def initialize(parser)
-          super("Unknown Parser: `#{ parser }'")
-        end
+      # @since x.x.x
+      class UnknownParserError < Hanami::Routing::Parsing::UnknownParserError
       end
 
-      # @since 0.2.0
+      # @since x.x.x
       class Parser
-        # @since 0.2.0
+        # @since x.x.x
         # @api private
         def self.for(parser)
           case parser
           when String, Symbol
             require_parser(parser)
           else
-            parser
+            raise UnknownParserError.new(parser) unless parser?(parser)
+            parser.new
           end
         end
 
-        # @since 0.2.0
+        # @since x.x.x
         def mime_types
           raise NotImplementedError
         end
 
-        # @since 0.2.0
+        # @since x.x.x
         def parse(body)
-          Hash.new
+          body
         end
 
         private
-        # @since 0.2.0
+        # @since x.x.x
         # @api private
         def self.require_parser(parser)
-          require "hanami/routing/parsing/#{ parser }_parser"
+          require "hanami/middleware/body_parser/#{ parser }_parser"
 
           parser = Utils::String.classify(parser)
-          Utils::Class.load!("Hanami::Routing::Parsing::#{ parser }Parser").new
+          Utils::Class.load!("Hanami::Middleware::BodyParser::#{ parser }Parser").new
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)
+        end
+
+        def self.parser?(parser)
+          parser.is_a?(Class) && parser < Parser
         end
       end
     end
