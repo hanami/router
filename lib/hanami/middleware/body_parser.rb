@@ -1,5 +1,7 @@
-require 'hanami/middleware/body_parser/parser'
-require 'hanami/utils/hash'
+# frozen_string_literal: true
+
+require "hanami/middleware/body_parser/parser"
+require "hanami/utils/hash"
 
 module Hanami
   module Middleware
@@ -8,25 +10,25 @@ module Hanami
     class BodyParser
       # @since x.x.x
       # @api private
-      CONTENT_TYPE       = 'CONTENT_TYPE'.freeze
+      CONTENT_TYPE       = "CONTENT_TYPE"
 
       # @since x.x.x
       # @api private
-      MEDIA_TYPE_MATCHER = /\s*[;,]\s*/.freeze
+      MEDIA_TYPE_MATCHER = /\s*[;,]\s*/
 
       # @since x.x.x
       # @api private
-      RACK_INPUT    = 'rack.input'.freeze
+      RACK_INPUT    = "rack.input"
 
       # @since x.x.x
       # @api private
-      ROUTER_PARAMS = 'router.params'.freeze
+      ROUTER_PARAMS = "router.params"
 
       # @api private
-      ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
+      ROUTER_PARSED_BODY = "router.parsed_body"
 
       # @api private
-      FALLBACK_KEY  = '_'.freeze
+      FALLBACK_KEY = "_"
 
       def initialize(app, parsers)
         @app = app
@@ -48,8 +50,8 @@ module Hanami
 
       private
 
-      def build_parsers(parsers)
-        result  = Hash.new
+      def build_parsers(parsers) # rubocop:disable Metrics/MethodLength
+        result  = {}
         args    = Array(parsers)
         return result if args.empty?
 
@@ -83,9 +85,9 @@ module Hanami
 
       # @api private
       def media_type(env)
-        if ct = content_type(env)
-          ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
-        end
+        ct = content_type(env)
+        return unless ct
+        ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
       end
 
       # @api private

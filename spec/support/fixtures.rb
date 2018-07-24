@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rexml/document'
-require 'hanami/routing/parsing/parser'
-require 'hanami/middleware/body_parser'
+require "rexml/document"
+require "hanami/routing/parsing/parser"
+require "hanami/middleware/body_parser"
 
 class MyMiddleware
   def call(*)
@@ -505,14 +505,14 @@ end # Keyboards
 
 class XmlMiddelwareParser < Hanami::Middleware::BodyParser::Parser
   def mime_types
-    ['application/xml', 'text/xml']
+    ["application/xml", "text/xml"]
   end
 
   def parse(body)
     result = {}
 
     xml = REXML::Document.new(body)
-    xml.elements.each('*') {|el| result[el.name] = el.text }
+    xml.elements.each("*") { |el| result[el.name] = el.text }
 
     result
   end
