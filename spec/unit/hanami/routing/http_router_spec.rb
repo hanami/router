@@ -26,6 +26,14 @@ RSpec.describe Hanami::Routing::HttpRouter do
     end
   end
 
+  describe '#new' do
+    it 'shows deprecation warning regarding options[:parsers]' do
+      expect {
+        Hanami::Routing::HttpRouter.new(parsers: [:json])
+      }.to output(/Hanami::Router options\[:parsers\] is deprecated and it will be removed in future versions/).to_stderr
+    end
+  end
+
   describe '#rewrite_partial_path_info' do
     before do
       @request_env = nil

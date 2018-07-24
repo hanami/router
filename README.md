@@ -594,12 +594,14 @@ It comes with a built-in JSON parser and allows to pass custom parsers.
 
 ```ruby
 require 'hanami/router'
+require 'hanami/middleware/body_parser'
 
-endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
-
-router = Hanami::Router.new(parsers: [:json]) do
-  patch '/books/:id', to: endpoint
+app = Hanami::Router.new do
+  patch '/books/:id', to: ->(env) { [200, {},[env['router.params'].inspect]] }
 end
+
+use Hanami::Middleware::BodyParser, :json
+run app
 ```
 
 ```shell
@@ -615,7 +617,7 @@ curl http://localhost:2300/books/1    \
 If the json can't be parsed an exception is raised:
 
 ```ruby
-Hanami::Routing::Parsing::BodyParsingError
+Hanami::Middleware::BodyParser::BodyParsingError
 ```
 
 ##### `multi_json`
@@ -626,9 +628,10 @@ If you want to use a different JSON backend, include `multi_json` in your `Gemfi
 
 ```ruby
 require 'hanami/router'
+require 'hanami/middleware/body_parser'
 
 # See Hanami::Routing::Parsing::Parser
-class XmlParser
+class XmlParser < Hanami::Middleware::BodyParser::Parser
   def mime_types
     ['application/xml', 'text/xml']
   end
@@ -637,15 +640,16 @@ class XmlParser
   def parse(body)
     # parse xml
   rescue SomeXmlParsingError => e
-    raise Hanami::Routing::Parsing::BodyParsingError.new(e)
+    raise Hanami::Middleware::BodyParser::BodyParsingError.new(e)
   end
 end
 
-endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
-
-router = Hanami::Router.new(parsers: [XmlParser.new]) do
-  patch '/authors/:id', to: endpoint
+app = Hanami::Router.new do
+  patch '/authors/:id', to: ->(env) { [200, {},[env['router.params'].inspect]] }
 end
+
+use Hanami::Middleware::BodyParser, XmlParser
+run app
 ```
 
 ```shell

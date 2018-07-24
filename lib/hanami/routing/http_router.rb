@@ -67,6 +67,10 @@ module Hanami
       # @since 0.1.0
       # @api private
       def initialize(options = {}, &blk)
+        if options[:parsers]
+          depecration_message = 'Hanami::Router options[:parsers] is deprecated and it will be removed in future versions'
+          Hanami::Utils::Deprecation.new(depecration_message)
+        end
         @compiled         = false
         @uri_parser       = URI::Parser.new
         super(options, &nil)
