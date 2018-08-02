@@ -3,10 +3,10 @@ require 'hanami/utils/json'
 module Hanami
   module Middleware
     class BodyParser
-      # @since x.x.x
+      # @since 1.3.0
       # @api private
       class JsonParser < Parser
-        # @since x.x.x
+        # @since 1.3.0
         # @api private
         def mime_types
           ['application/json', 'application/vnd.api+json']
@@ -20,7 +20,7 @@ module Hanami
         #
         # @raise [Hanami::Middleware::BodyParser::BodyParsingError] when the body can't be parsed.
         #
-        # @since x.x.x
+        # @since 1.3.0
         # @api private
         def parse(body)
           Hanami::Utils::Json.parse(body)
