@@ -10,17 +10,17 @@ module Hanami
       # Body parsing error
       # This is raised when parser fails to parse the body
       #
-      # @since x.x.x
+      # @since 1.3.0
       class BodyParsingError < Hanami::Routing::Parsing::BodyParsingError
       end
 
-      # @since x.x.x
+      # @since 1.3.0
       class UnknownParserError < Hanami::Routing::Parsing::UnknownParserError
       end
 
-      # @since x.x.x
+      # @since 1.3.0
       class Parser
-        # @since x.x.x
+        # @since 1.3.0
         # @api private
         def self.for(parser)
           case parser
@@ -32,17 +32,19 @@ module Hanami
           end
         end
 
-        # @since x.x.x
+        # @since 1.3.0
         def mime_types
           raise NotImplementedError
         end
 
-        # @since x.x.x
+        # @since 1.3.0
         def parse(body)
           body
         end
 
-        # @since x.x.x
+        private
+
+        # @since 1.3.0
         # @api private
         def self.require_parser(parser)
           require "hanami/middleware/body_parser/#{parser}_parser"

@@ -1,7 +1,14 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
-## v1.3.0.beta1 (unreleased)
+## v1.3.0.beta1 - 2018-08-08
+### Added
+- [Luca Guidi] Official support for JRuby 9.2.0.0
+- [Gustavo Caso] Introduce `Hanami::Middleware::BodyParser` Rack middleware to parse payload of non-GET HTTP requests.
+
+### Deprecated
+- [Alfonso Uceda] Deprecate `Hanami::Router.new(force_ssl: true)`. Use webserver (eg. Nginx), Rack middleware (eg. `rack-ssl`), or another strategy to force HTTPS connection.
+- [Gustavo Caso] Deprecate `Hanami::Router.new(body_parsers: [:json])`. Use `Hanami::Middleware::BodyParser` instead.
 
 ## v1.2.0 - 2018-04-11
 

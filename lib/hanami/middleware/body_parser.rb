@@ -5,22 +5,22 @@ require "hanami/utils/hash"
 
 module Hanami
   module Middleware
-    # @since x.x.x
+    # @since 1.3.0
     # @api private
     class BodyParser
-      # @since x.x.x
+      # @since 1.3.0
       # @api private
       CONTENT_TYPE       = "CONTENT_TYPE"
 
-      # @since x.x.x
+      # @since 1.3.0
       # @api private
       MEDIA_TYPE_MATCHER = /\s*[;,]\s*/
 
-      # @since x.x.x
+      # @since 1.3.0
       # @api private
       RACK_INPUT    = "rack.input"
 
-      # @since x.x.x
+      # @since 1.3.0
       # @api private
       ROUTER_PARAMS = "router.params"
 
