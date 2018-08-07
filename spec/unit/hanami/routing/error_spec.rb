@@ -6,8 +6,6 @@ RSpec.describe Hanami::Routing::Error do
   end
 
   it "is parent to all custom exception" do
-    expect(Hanami::Middleware::BodyParser::BodyParsingError.superclass).to eq(Hanami::Routing::Error)
-    expect(Hanami::Middleware::BodyParser::UnknownParserError.superclass).to eq(Hanami::Routing::Error)
     expect(Hanami::Routing::InvalidRouteException.superclass).to eq(Hanami::Routing::Error)
     expect(Hanami::Routing::EndpointNotFound.superclass).to eq(Hanami::Routing::Error)
   end
