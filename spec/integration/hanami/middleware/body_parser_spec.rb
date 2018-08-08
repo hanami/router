@@ -15,15 +15,6 @@ RSpec.describe Hanami::Middleware::BodyParser do
           expect(e.message).to eq("Unknown Parser: `a_parser'")
         end
       end
-
-      # This spec will have to be remove once we remove the Hanami::Routing::Parsing module
-      it "rescues old error from parsing module" do
-        begin
-          Hanami::Middleware::BodyParser.new(app, :a_parser)
-        rescue Hanami::Routing::Parsing::UnknownParserError => e
-          expect(e.message).to eq("Unknown Parser: `a_parser'")
-        end
-      end
     end
 
     context "when parser is a class" do

@@ -631,7 +631,7 @@ If you want to use a different JSON backend, include `multi_json` in your `Gemfi
 require 'hanami/router'
 require 'hanami/middleware/body_parser'
 
-# See Hanami::Routing::Parsing::Parser
+# See Hanami::Middleware::BodyParser::Parser
 class XmlParser < Hanami::Middleware::BodyParser::Parser
   def mime_types
     ['application/xml', 'text/xml']

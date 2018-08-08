@@ -161,8 +161,6 @@ module Hanami
     #   and action name (eg. 'dashboard#show', where '#' is the :action_separator)
     # @option options [Object, #pluralize, #singularize] :inflector
     #   the inflector class (defaults to `Dry::Inflector.new`)
-    # @option options [Array<Symbol,String,Object #mime_types, parse>] :parsers
-    #   the body parsers for mime types
     #
     # @param blk [Proc] the optional block to define the routes
     #
@@ -185,50 +183,52 @@ module Hanami
     #   end
     #
     # @example Body parsers
-    #   require 'json'
-    #   require 'hanami/router'
     #
-    #   # It parses JSON body and makes the attributes available to the params
+    #  require 'hanami/router'
+    #  require 'hanami/middleware/body_parser'
     #
-    #   endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
+    #  app = Hanami::Router.new do
+    #    patch '/books/:id', to: ->(env) { [200, {},[env['router.params'].inspect]] }
+    #  end
     #
-    #   router = Hanami::Router.new(parsers: [:json]) do
-    #     patch '/books/:id', to: endpoint
-    #   end
+    #  use Hanami::Middleware::BodyParser, :json
+    #  run app
     #
-    #   # From the shell
+    #  # From the shell
     #
-    #   curl http://localhost:2300/books/1    \
-    #     -H "Content-Type: application/json" \
-    #     -H "Accept: application/json"       \
-    #     -d '{"published":"true"}'           \
-    #     -X PATCH
+    #  curl http://localhost:2300/books/1    \
+    #    -H "Content-Type: application/json" \
+    #    -H "Accept: application/json"       \
+    #    -d '{"published":"true"}'           \
+    #    -X PATCH
     #
     #   # It returns
     #
     #   [200, {}, ["{:published=>\"true\",:id=>\"1\"}"]]
     #
     # @example Custom body parser
-    #   require 'hanami/router'
     #
-    #   class XmlParser
-    #     def mime_types
-    #       ['application/xml', 'text/xml']
-    #     end
+    #  require 'hanami/router'
+    #  require 'hanami/middleware/body_parser'
     #
-    #     # Parse body and return a Hash
-    #     def parse(body)
-    #       # ...
-    #     end
+    #
+    #  class XmlParser < Hanami::Middleware::BodyParser::Parser
+    #    def mime_types
+    #      ['application/xml', 'text/xml']
+    #    end
+    #
+    #    # Parse body and return a Hash
+    #    def parse(body)
+    #      # parse xml
+    #    end
+    #  end
+    #
+    #   app = Hanami::Router.new do
+    #     patch '/authors/:id', to: ->(env) { [200, {},[env['router.params'].inspect]] }
     #   end
     #
-    #   # It parses XML body and makes the attributes available to the params
-    #
-    #   endpoint = ->(env) { [200, {},[env['router.params'].inspect]] }
-    #
-    #   router = Hanami::Router.new(parsers: [XmlParser.new]) do
-    #     patch '/authors/:id', to: endpoint
-    #   end
+    #   use Hanami::Middleware::BodyParser, XmlParser
+    #   run app
     #
     #   # From the shell
     #
@@ -243,14 +243,13 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, parsers: [], inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes        = []
       @named         = {}
       @namespace     = namespace
       @configuration = configuration
       @base          = Routing::Uri.build(scheme: scheme, host: host, port: port)
       @prefix        = Utils::PathPrefix.new(prefix)
-      @parsers       = Routing::Parsers.new(parsers)
       @inflector     = inflector
       @not_found     = not_found
       @not_allowed   = not_allowed
@@ -1039,7 +1038,7 @@ module Hanami
     #
     # @since 0.1.0
     def call(env)
-      (@routes.find { |r| r.match?(env) } || fallback(env)).call(@parsers.call(env))
+      (@routes.find { |r| r.match?(env) } || fallback(env)).call(env)
     end
 
     def fallback(env)
