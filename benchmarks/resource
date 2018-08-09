@@ -33,7 +33,7 @@ Benchmark.bm(50) do |b|
   end
 
   $lazy.each do |w|
-    eval "#{ Hanami::Utils::String.new(w).classify }Controller = Class.new($resource_controller)"
+    eval "#{ Hanami::Utils::String.classify(w) }Controller = Class.new($resource_controller)"
   end
 
   b.report 'recognizing routes (lazy endpoints)' do
