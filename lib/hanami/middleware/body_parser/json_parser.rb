@@ -1,7 +1,7 @@
 require 'hanami/utils/json'
 
 module Hanami
-  module Middleware
+  class Middleware
     class BodyParser
       # @since 1.3.0
       # @api private
