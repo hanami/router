@@ -2,7 +2,7 @@ require 'hanami/middleware/body_parser/parser'
 require 'hanami/utils/hash'
 
 module Hanami
-  module Middleware
+  class Middleware
     # @since 1.3.0
     # @api private
     class BodyParser

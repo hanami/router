@@ -3,7 +3,7 @@ require 'hanami/utils/string'
 require 'hanami/routing/parsing/parser'
 
 module Hanami
-  module Middleware
+  class Middleware
     class BodyParser
       # Body parsing error
       # This is raised when parser fails to parse the body
