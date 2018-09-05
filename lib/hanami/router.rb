@@ -81,6 +81,10 @@ module Hanami
     # @api private
     attr_reader :inflector
 
+    # @since x.x.x
+    # @api private
+    attr_reader :resolver
+
     # This error is raised when <tt>#call</tt> is invoked on a non-routable
     # recognized route.
     #
@@ -243,12 +247,13 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+    def initialize(scheme: "http", host: "localhost", port: 80, resolver: Routing::EndpointResolver.new, prefix: "", namespace: nil, configuration: nil, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes        = []
       @named         = {}
       @namespace     = namespace
       @configuration = configuration
       @base          = Routing::Uri.build(scheme: scheme, host: host, port: port)
+      @resolver      = resolver
       @prefix        = Utils::PathPrefix.new(prefix)
       @inflector     = inflector
       @not_found     = not_found
@@ -1026,7 +1031,8 @@ module Hanami
     #   # 4. That Proc is used as it is, because it respond to #call
     #   # 5. That string is resolved as Dashboard::Index (Hanami::Controller)
     def mount(app, at:, host: nil)
-      app = App.new(@prefix.join(at).to_s, Routing::Endpoint.find(app, @namespace), host: host)
+      # app = App.new(@prefix.join(at).to_s, Routing::Endpoint.find(app, @namespace), host: host)
+      app = App.new(@prefix.join(at).to_s, resolver.(app, @namespace), host: host)
       @routes.push(app)
     end
 
@@ -1347,7 +1353,9 @@ module Hanami
       config ||= configuration
 
       path     = path.to_s
-      endpoint = Routing::Endpoint.find(to, namespace || @namespace, config)
+      # endpoint = Routing::Endpoint.find(to, namespace || @namespace, config)
+      endpoint = resolver.(to, namespace || @namespace, config)
+
       route    = Routing::Route.new(verb_for(verb), @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)

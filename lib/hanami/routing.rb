@@ -184,6 +184,7 @@ module Hanami
     end
 
     require "hanami/routing/endpoint"
+    require "hanami/routing/endpoint_resolver"
     require "hanami/routing/prefix"
     require "hanami/routing/scope"
     require "hanami/routing/resource"
