@@ -1,3 +1,4 @@
+require_relative 'parser'
 require 'hanami/utils/json'
 
 module Hanami

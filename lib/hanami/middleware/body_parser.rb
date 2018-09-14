@@ -1,5 +1,6 @@
-require 'hanami/middleware/body_parser/parser'
 require 'hanami/utils/hash'
+require_relative 'body_parser/class_interface'
+require_relative 'body_parser/parser'
 
 module Hanami
   module Middleware
@@ -8,7 +9,7 @@ module Hanami
     class BodyParser
       # @since 1.3.0
       # @api private
-      CONTENT_TYPE       = 'CONTENT_TYPE'.freeze
+      CONTENT_TYPE = 'CONTENT_TYPE'.freeze
 
       # @since 1.3.0
       # @api private
@@ -16,7 +17,7 @@ module Hanami
 
       # @since 1.3.0
       # @api private
-      RACK_INPUT    = 'rack.input'.freeze
+      RACK_INPUT = 'rack.input'.freeze
 
       # @since 1.3.0
       # @api private
@@ -26,7 +27,9 @@ module Hanami
       ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
 
       # @api private
-      FALLBACK_KEY  = '_'.freeze
+      FALLBACK_KEY = '_'.freeze
+
+      extend ClassInterface
 
       def initialize(app, parsers)
         @app = app
@@ -37,32 +40,30 @@ module Hanami
         body = env[RACK_INPUT].read
         return @app.call(env) if body.empty?
 
-        env[RACK_INPUT].rewind    # somebody might try to read this stream
+        env[RACK_INPUT].rewind # somebody might try to read this stream
 
-        env[ROUTER_PARAMS] ||= {} # prepare params
-        env[ROUTER_PARSED_BODY] = _parse(env, body)
-        env[ROUTER_PARAMS]      = _symbolize(env[ROUTER_PARSED_BODY]).merge(env[ROUTER_PARAMS])
+        if (parser = @parsers[media_type(env)])
+          env[ROUTER_PARSED_BODY] = parser.parse(body)
+          env[ROUTER_PARAMS]      = _symbolize(env[ROUTER_PARSED_BODY])
+        end
 
         @app.call(env)
       end
 
       private
 
-      def build_parsers(parsers)
-        result  = Hash.new
-        args    = Array(parsers)
-        return result if args.empty?
+      # @api private
+      def build_parsers(parser_names)
+        parser_names = Array(parser_names)
+        return {} if parser_names.empty?
 
-        args.each do |arg|
-          parser = Parser.for(arg)
+        parser_names.each_with_object({}) do |name, parsers|
+          parser = self.class.for(name)
 
           parser.mime_types.each do |mime|
-            result[mime] = parser
+            parsers[mime] = parser
           end
         end
-
-        result.default = Parser.new
-        result
       end
 
       # @api private
@@ -72,13 +73,6 @@ module Hanami
         else
           { FALLBACK_KEY => body }
         end
-      end
-
-      # @api private
-      def _parse(env, body)
-        @parsers[
-          media_type(env)
-        ].parse(body)
       end
 
       # @api private
