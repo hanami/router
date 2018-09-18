@@ -1,4 +1,3 @@
-require_relative 'parser'
 require 'hanami/utils/json'
 
 module Hanami
@@ -6,7 +5,7 @@ module Hanami
     class BodyParser
       # @since 1.3.0
       # @api private
-      class JsonParser < Parser
+      class JsonParser
         # @since 1.3.0
         # @api private
         def mime_types

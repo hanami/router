@@ -1,5 +1,4 @@
 require_relative 'errors'
-require_relative 'parser'
 
 module Hanami
   module Middleware
@@ -8,18 +7,32 @@ module Hanami
         # @since x.x.x
         # @api private
         def for(parser)
-          if parser_name?(parser)
-            require_parser(parser)
-          elsif parser_class?(parser)
-            parser.new
-          elsif parser_instance?(parser)
-            parser
-          else
-            raise UnknownParserError.new(parser)
-          end
+          parser =
+            case parser
+            when String, Symbol
+              require_parser(parser)
+            when Class
+              parser.new
+            else
+              parser
+            end
+
+          ensure_parser parser
+
+          parser
         end
 
         private
+
+        # @api private
+        PARSER_METHODS = %i[mime_types parse].freeze
+
+        # @api private
+        def ensure_parser(parser)
+          unless PARSER_METHODS.all? { |method| parser.respond_to?(method) }
+            raise UnknownParserError.new(parser)
+          end
+        end
 
         # @since 1.3.0
         # @api private
@@ -30,21 +43,6 @@ module Hanami
           Utils::Class.load!("Hanami::Middleware::BodyParser::#{ parser }Parser").new
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)
-        end
-
-        # @api private
-        def parser_name?(parser)
-          parser.is_a?(String) || parser.is_a?(Symbol)
-        end
-
-        # @api private
-        def parser_class?(parser)
-          parser.is_a?(Class) && parser < Parser
-        end
-
-        # @api private
-        def parser_instance?(parser)
-          parser.class < Parser
         end
       end
     end

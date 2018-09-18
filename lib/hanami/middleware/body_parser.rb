@@ -1,6 +1,5 @@
 require 'hanami/utils/hash'
 require_relative 'body_parser/class_interface'
-require_relative 'body_parser/parser'
 
 module Hanami
   module Middleware
