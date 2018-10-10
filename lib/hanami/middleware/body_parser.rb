@@ -1,5 +1,5 @@
-require 'hanami/middleware/body_parser/parser'
 require 'hanami/utils/hash'
+require_relative 'body_parser/class_interface'
 
 module Hanami
   module Middleware
@@ -8,7 +8,7 @@ module Hanami
     class BodyParser
       # @since 1.3.0
       # @api private
-      CONTENT_TYPE       = 'CONTENT_TYPE'.freeze
+      CONTENT_TYPE = 'CONTENT_TYPE'.freeze
 
       # @since 1.3.0
       # @api private
@@ -16,7 +16,7 @@ module Hanami
 
       # @since 1.3.0
       # @api private
-      RACK_INPUT    = 'rack.input'.freeze
+      RACK_INPUT = 'rack.input'.freeze
 
       # @since 1.3.0
       # @api private
@@ -26,7 +26,9 @@ module Hanami
       ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
 
       # @api private
-      FALLBACK_KEY  = '_'.freeze
+      FALLBACK_KEY = '_'.freeze
+
+      extend ClassInterface
 
       def initialize(app, parsers)
         @app = app
@@ -54,7 +56,7 @@ module Hanami
         return {} if parser_names.empty?
 
         parser_names.each_with_object({}) { |name, parsers|
-          parser = Parser.for(name)
+          parser = self.class.for(name)
 
           parser.mime_types.each do |mime|
             parsers[mime] = parser

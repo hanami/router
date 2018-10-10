@@ -4,38 +4,21 @@ require 'rack/mock'
 RSpec.describe Hanami::Middleware::BodyParser do
   let(:app) { -> (env) { [200, {}, "app"] } }
 
-  describe '#add_parser' do
-    context 'unknown parser' do
-      it 'raises error' do
-        begin
-          Hanami::Middleware::BodyParser.new(app, :a_parser)
-        rescue Hanami::Middleware::BodyParser::UnknownParserError => e
-          expect(e.message).to eq("Unknown Parser: `a_parser'")
-        end
-      end
-
-      # This spec will have to be remove once we remove the Hanami::Routing::Parsing module
-      it 'rescues old error from parsing module' do
-        begin
-          Hanami::Middleware::BodyParser.new(app, :a_parser)
-        rescue Hanami::Routing::Parsing::UnknownParserError => e
-          expect(e.message).to eq("Unknown Parser: `a_parser'")
-        end
+  context 'unknown parser' do
+    it 'raises error' do
+      begin
+        Hanami::Middleware::BodyParser.new(app, :a_parser)
+      rescue Hanami::Middleware::BodyParser::UnknownParserError => e
+        expect(e.message).to eq("Unknown Parser: `a_parser'")
       end
     end
 
-    context 'when parser is a class' do
-      it 'allows to pass parser that inherit from Middleware::Parser' do
-        expect {
-          Hanami::Middleware::BodyParser.new(app, XmlMiddelwareParser)
-        }.to_not raise_error
-      end
-
-      it 'raises error if parser do not inherit from Middleware::Parser' do
-        parser = CsvMiddelwareParser = Class.new
-        expect {
-          Hanami::Middleware::BodyParser.new(app, parser)
-        }.to raise_error(Hanami::Middleware::BodyParser::UnknownParserError)
+    # This spec will have to be remove once we remove the Hanami::Routing::Parsing module
+    it 'rescues old error from parsing module' do
+      begin
+        Hanami::Middleware::BodyParser.new(app, :a_parser)
+      rescue Hanami::Routing::Parsing::UnknownParserError => e
+        expect(e.message).to eq("Unknown Parser: `a_parser'")
       end
     end
   end
