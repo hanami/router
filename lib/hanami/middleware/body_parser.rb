@@ -39,32 +39,29 @@ module Hanami
         body = env[RACK_INPUT].read
         return @app.call(env) if body.empty?
 
-        env[RACK_INPUT].rewind    # somebody might try to read this stream
+        env[RACK_INPUT].rewind # somebody might try to read this stream
 
-        env[ROUTER_PARAMS] ||= {} # prepare params
-        env[ROUTER_PARSED_BODY] = _parse(env, body)
-        env[ROUTER_PARAMS]      = _symbolize(env[ROUTER_PARSED_BODY]).merge(env[ROUTER_PARAMS])
+        if (parser = @parsers[media_type(env)])
+          env[ROUTER_PARSED_BODY] = parser.parse(body)
+          env[ROUTER_PARAMS] = _symbolize(env[ROUTER_PARSED_BODY])
+        end
 
         @app.call(env)
       end
 
       private
 
-      def build_parsers(parsers) # rubocop:disable Metrics/MethodLength
-        result  = {}
-        args    = Array(parsers)
-        return result if args.empty?
+      def build_parsers(parser_names)
+        parser_names = Array(parser_names)
+        return {} if parser_names.empty?
 
-        args.each do |arg|
-          parser = Parser.for(arg)
+        parser_names.each_with_object({}) do |name, parsers|
+          parser = Parser.for(name)
 
           parser.mime_types.each do |mime|
-            result[mime] = parser
+            parsers[mime] = parser
           end
         end
-
-        result.default = Parser.new
-        result
       end
 
       # @api private
