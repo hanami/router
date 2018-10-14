@@ -3,7 +3,7 @@
 require "hanami/middleware/body_parser"
 require "rack/mock"
 
-RSpec.describe Hanami::Middleware::BodyParser::Parser do
+RSpec.describe Hanami::Middleware::BodyParser do
   describe "JSON parser" do
     subject(:env) do
       Rack::MockRequest.env_for("/", method: "POST", "CONTENT_TYPE" => content_type, input: body).tap do |env|

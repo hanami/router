@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require "hanami/middleware/body_parser/parser"
 require "hanami/utils/hash"
+require "hanami/middleware/error"
+require_relative "body_parser/class_interface"
 
 module Hanami
   module Middleware
@@ -10,7 +11,7 @@ module Hanami
     class BodyParser
       # @since 1.3.0
       # @api private
-      CONTENT_TYPE       = "CONTENT_TYPE"
+      CONTENT_TYPE = "CONTENT_TYPE"
 
       # @since 1.3.0
       # @api private
@@ -18,7 +19,7 @@ module Hanami
 
       # @since 1.3.0
       # @api private
-      RACK_INPUT    = "rack.input"
+      RACK_INPUT = "rack.input"
 
       # @since 1.3.0
       # @api private
@@ -29,6 +30,8 @@ module Hanami
 
       # @api private
       FALLBACK_KEY = "_"
+
+      extend ClassInterface
 
       def initialize(app, parsers)
         @app = app
@@ -56,7 +59,7 @@ module Hanami
         return {} if parser_names.empty?
 
         parser_names.each_with_object({}) do |name, parsers|
-          parser = Parser.for(name)
+          parser = self.class.for(name)
 
           parser.mime_types.each do |mime|
             parsers[mime] = parser
@@ -84,6 +87,7 @@ module Hanami
       def media_type(env)
         ct = content_type(env)
         return unless ct
+
         ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
       end
 
