@@ -70,6 +70,7 @@ module Hanami
                    end
 
         raise NotCallableEndpointError.new(endpoint) unless endpoint.respond_to?(:call)
+
         endpoint
       end
 

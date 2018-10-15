@@ -38,6 +38,7 @@ class Action
 
   def initialize(configuration:)
     raise ArgumentError.new("invalid configuration for #{self.class.name}: #{configuration.inspect}") unless configuration.is_a?(Configuration)
+
     @configuration = configuration
   end
 end

@@ -53,9 +53,11 @@ module Hanami
         @namespace = namespace
 
         return if route.nil?
+
         @endpoint = route.instance_variable_get(:@endpoint)
 
         return unless routable?
+
         route.call(@env)
         @params = @env["router.params"]
       end
@@ -120,6 +122,7 @@ module Hanami
       #   puts router.recognize('/books/23').action # => "books#show"
       def action
         return if !routable? || redirect?
+
         namespace = NAMESPACE % @namespace
 
         if destination.match(namespace)
@@ -152,6 +155,7 @@ module Hanami
       #   puts router.recognize('/foo').routable? # => false
       def routable?
         return false if @endpoint.nil?
+
         @endpoint.respond_to?(:routable?) ? @endpoint.routable? : true
       end
 
@@ -176,6 +180,7 @@ module Hanami
       #   puts router.recognize('/').redirect?     # => false
       def redirect?
         return false if @endpoint.nil?
+
         @endpoint.respond_to?(:redirect?) ? @endpoint.redirect? : false
       end
 
@@ -201,6 +206,7 @@ module Hanami
       #   puts router.recognize('/').destination_path     # => nil
       def redirection_path
         return unless redirect?
+
         @endpoint.destination_path if @endpoint.respond_to?(:destination_path)
       end
 
