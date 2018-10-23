@@ -5,8 +5,11 @@ require_relative 'errors'
  module Hanami
    module Middleware
      class BodyParser
+       # @api private
+       # @since 1.3.0
        module ClassInterface
          # @api private
+         # @since 1.3.0
          def for(parser)
            parser =
              case parser
@@ -26,9 +29,11 @@ require_relative 'errors'
          private
 
          # @api private
+         # @since 1.3.0
          PARSER_METHODS = %i[mime_types parse].freeze
 
          # @api private
+         # @since 1.3.0
          def ensure_parser(parser)
            unless PARSER_METHODS.all? { |method| parser.respond_to?(method) }
              raise InvalidParserError.new(parser)
@@ -36,6 +41,7 @@ require_relative 'errors'
          end
 
          # @api private
+         # @since 1.3.0
          def require_parser(parser)
            require "hanami/middleware/body_parser/#{parser}_parser"
 
