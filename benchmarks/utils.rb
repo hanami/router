@@ -46,11 +46,11 @@ $named_routes = $named_routes.map do |r|
 end
 
 $resource.each do |w|
-  eval "#{ Hanami::Utils::String.new(w).classify }Controller = Class.new($resource_controller)"
+  eval "#{ Hanami::Utils::String.classify(w) }Controller = Class.new($resource_controller)"
 end
 
 $resources.each do |w|
-  eval "#{ Hanami::Utils::String.new(w).classify }Controller = Class.new($resources_controller)"
+  eval "#{ Hanami::Utils::String.classify(w) }Controller = Class.new($resources_controller)"
 end
 
 GC.start

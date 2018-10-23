@@ -28,7 +28,7 @@ Benchmark.bm(50) do |b|
   app    = Rack::MockRequest.new(router)
 
   $named_routes.each do |(name, _)|
-    eval "#{ Hanami::Utils::String.new(name).classify } = Class.new($controller)"
+    eval "#{ Hanami::Utils::String.classify(name) } = Class.new($controller)"
   end
 
   b.report 'generating named routes (class endpoints)' do
@@ -60,7 +60,7 @@ Benchmark.bm(50) do |b|
   end
 
   $lazy.each do |(name, _)|
-    eval "#{ Hanami::Utils::String.new(name).classify } = Class.new($controller)"
+    eval "#{ Hanami::Utils::String.classify(name) } = Class.new($controller)"
   end
 
   b.report 'recognizing routes (lazy endpoints)' do
