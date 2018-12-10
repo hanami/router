@@ -15,7 +15,7 @@ module Hanami
 
       # @since 1.3.0
       # @api private
-      MEDIA_TYPE_MATCHER = /\s*[;,]\s*/
+      MEDIA_TYPE_MATCHER = /\s*[;,]\s*/.freeze
 
       # @since 1.3.0
       # @api private

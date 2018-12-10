@@ -12,9 +12,7 @@ module Hanami
       module ClassInterface
         # @api private
         # @since 1.3.0
-        #
-        # rubocop:disable Metrics/MethodLength
-        def for(parser)
+        def for(parser) # rubocop:disable Metrics/MethodLength
           parser =
             case parser
             when String, Symbol
@@ -25,22 +23,25 @@ module Hanami
               parser
             end
 
-          ensure_parser(parser)
+          ensure_parser parser
+
           parser
         end
-        # rubocop:enable Metrics/MethodLength
 
         private
 
         # @api private
+        # @since 1.3.0
         PARSER_METHODS = %i[mime_types parse].freeze
 
         # @api private
+        # @since 1.3.0
         def ensure_parser(parser)
           raise InvalidParserError.new(parser) unless PARSER_METHODS.all? { |method| parser.respond_to?(method) }
         end
 
         # @api private
+        # @since 1.3.0
         def require_parser(parser)
           require "hanami/middleware/body_parser/#{parser}_parser"
 

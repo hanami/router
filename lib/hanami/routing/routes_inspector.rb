@@ -25,9 +25,9 @@ module Hanami
       # @since 0.5.0
       # @api private
       INSPECTOR_HEADER_HASH =  Hash[
-        name:     "Name",
-        methods:  "Method",
-        path:     "Path",
+        name: "Name",
+        methods: "Method",
+        path: "Path",
         endpoint: "Action"
       ].freeze
 
@@ -194,9 +194,9 @@ module Hanami
       # @see Hanami::Routing::RoutesInspector#to_s
       def inspect_route(formatter, route, base_path)
         formatter % Hash[
-          name:     route.name,
-          methods:  route.request_methods.to_a.join(HTTP_METHODS_SEPARATOR),
-          path:     base_path.join(route.path_for_generation),
+          name: route.name,
+          methods: route.request_methods.to_a.join(HTTP_METHODS_SEPARATOR),
+          path: base_path.join(route.path_for_generation),
           endpoint: route.dest.inspect
         ]
       end
