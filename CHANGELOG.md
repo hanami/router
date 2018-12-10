@@ -1,6 +1,10 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v1.3.0 - 2018-10-24
+### Fixed
+- [Tim Riley] Skip attempting to parse unknown types in `Hanami::Middleware::BodyParser`
+
 ## v1.3.0.beta1 - 2018-08-08
 ### Added
 - [Luca Guidi] Official support for JRuby 9.2.0.0
