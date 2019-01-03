@@ -5,9 +5,10 @@ before_script:
   - gem update --system
 script: ./script/ci
 rvm:
-  - 2.4.4
-  - 2.3.7
-  - 2.5.1
+  - 2.3.8
+  - 2.4.5
+  - 2.5.3
+  - 2.6.0
   - jruby-9.1.9.0
   - ruby-head
   - jruby-head
