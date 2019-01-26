@@ -5,19 +5,13 @@ before_script:
   - gem update --system
 script: ./script/ci
 rvm:
-  - 2.3.8
-  - 2.4.5
-  - 2.5.3
-  - 2.6.0
-  - jruby-9.1.9.0
+  - 2.5
+  - 2.6
   - ruby-head
-  - jruby-head
 
 matrix:
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby-head
-    - rvm: jruby-9.1.9.0
 
 notifications:
   webhooks:

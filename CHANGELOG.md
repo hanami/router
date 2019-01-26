@@ -1,6 +1,10 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.alpha1 - 2019-01-30
+### Changed
+- [Luca Guidi] Drop support for Ruby: MRI 2.3, and 2.4.
+
 ## v1.3.1 - 2019-01-18
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.6
