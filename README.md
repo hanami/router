@@ -22,7 +22,7 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://h
 
 ## Rubies
 
-__Hanami::Router__ supports Ruby (MRI) 2.3+, JRuby 9.1.5.0+
+__Hanami::Router__ supports Ruby (MRI) 2.5+
 
 
 ## Installation
@@ -701,13 +701,8 @@ __Hanami::Router__ uses [Semantic Versioning 2.0.0](http://semver.org)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-## Acknowledgements
-
-Thanks to Joshua Hull ([@joshbuddy](https://github.com/joshbuddy)) for his
-[http_router](http://rubygems.org/gems/http_router).
-
 ## Copyright
 
-Copyright © 2014-2017 Luca Guidi – Released under MIT License
+Copyright © 2014-2019 Luca Guidi – Released under MIT License
 
 This project was formerly known as Lotus (`lotus-router`).

@@ -8,11 +8,9 @@ RSpec.describe Hanami::Middleware::BodyParser do
 
   context "unknown parser" do
     it "raises error" do
-      begin
-        Hanami::Middleware::BodyParser.new(app, :a_parser)
-      rescue Hanami::Middleware::BodyParser::UnknownParserError => e
-        expect(e.message).to eq("Unknown body parser: `:a_parser'")
-      end
+      Hanami::Middleware::BodyParser.new(app, :a_parser)
+    rescue Hanami::Middleware::BodyParser::UnknownParserError => e
+      expect(e.message).to eq("Unknown body parser: `:a_parser'")
     end
   end
 end

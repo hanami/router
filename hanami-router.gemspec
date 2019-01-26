@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.executables   = []
   spec.test_files    = spec.files.grep(%r{^(test)/})
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.3.0"
+  spec.required_ruby_version = ">= 2.5.0"
 
   spec.add_dependency "rack",               "~> 2.0"
   spec.add_dependency "mustermann",         "~> 1.0"
