@@ -69,7 +69,7 @@ module Hanami
 
       # @api private
       def _symbolize(body)
-        if body.is_a?(Hash)
+        if body.is_a?(::Hash)
           Utils::Hash.deep_symbolize(body)
         else
           { FALLBACK_KEY => body }

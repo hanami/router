@@ -24,7 +24,7 @@ module Hanami
       #
       # @since 0.5.0
       # @api private
-      INSPECTOR_HEADER_HASH =  Hash[
+      INSPECTOR_HEADER_HASH = ::Hash[
         name: "Name",
         methods: "Method",
         path: "Path",
