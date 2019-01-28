@@ -8,7 +8,7 @@ module Hanami
     unless defined?(Error)
       # Base error for Rack middleware
       #
-      # @since x.x.x
+      # @since 2.0.0
       class Error < ::StandardError
       end
     end

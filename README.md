@@ -47,14 +47,23 @@ $ gem install hanami-router
 
 ## Getting Started
 
+Create a file named `config.ru`
+
 ```ruby
-require 'hanami/router'
+# frozen_string_literal: true
+require "hanami/router"
 
 app = Hanami::Router.new do
-  get '/', to: ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }
+  get "/", to: ->(env) { [200, {}, ["Welcome to Hanami!"]] }
 end
 
-Rack::Server.start app: app, Port: 2300
+run app
+```
+
+From the shell:
+
+```shell
+$ bundle exec rackup
 ```
 
 ## Usage
@@ -68,38 +77,38 @@ For the standalone usage, it supports neat features:
 
 ```ruby
 Hanami::Router.new do
-  root                to: ->(env) { [200, {}, ['Hello']] }
-  get '/lambda',      to: ->(env) { [200, {}, ['World']] }
-  get '/dashboard',   to: Dashboard::Index
-  get '/rack-app',    to: RackApp.new
-  get '/flowers',     to: 'flowers#index'
-  get '/flowers/:id', to: 'flowers#show'
+  root                to: ->(env) { [200, {}, ["Hello"]] }
+  get "/lambda",      to: ->(env) { [200, {}, ["World"]] }
+  get "/dashboard",   to: Dashboard::Index
+  get "/rack-app",    to: RackApp.new
+  get "/flowers",     to: "flowers#index"
+  get "/flowers/:id", to: "flowers#show"
 
-  redirect '/legacy', to: '/'
+  redirect "/legacy", to: "/"
 
-  mount Api::App, at: '/api'
+  mount Api::App, at: "/api"
 
-  prefix 'admin' do
-    get '/users', to: Users::Index
+  prefix "admin" do
+    get "/users", to: Users::Index
   end
 
-  resource 'identity' do
+  resource "identity" do
     member do
-      get '/avatar'
+      get "/avatar"
     end
 
     collection do
-      get '/api_keys'
+      get "/api_keys"
     end
   end
 
-  resources 'robots' do
+  resources "robots" do
     member do
-      patch '/activate'
+      patch "/activate"
     end
 
     collection do
-      get '/search'
+      get "/search"
     end
   end
 end
@@ -110,8 +119,9 @@ end
 ### Fixed string matching:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/hanami', to: ->(env) { [200, {}, ['Hello from Hanami!']] }
+Hanami::Router.new do
+  get "/hanami", to: ->(env) { [200, {}, ["Hello from Hanami!"]] }
+end
 ```
 
 
@@ -119,8 +129,9 @@ router.get '/hanami', to: ->(env) { [200, {}, ['Hello from Hanami!']] }
 ### String matching with variables:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/flowers/:id', to: ->(env) { [200, {}, ["Hello from Flower no. #{ env['router.params'][:id] }!"]] }
+Hanami::Router.new do
+  get "/flowers/:id", to: ->(env) { [200, {}, ["Hello from Flower no. #{ env["router.params"][:id] }!"]] }
+end
 ```
 
 
@@ -128,8 +139,9 @@ router.get '/flowers/:id', to: ->(env) { [200, {}, ["Hello from Flower no. #{ en
 ### Variables Constraints:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/flowers/:id', id: /\d+/, to: ->(env) { [200, {}, [":id must be a number!"]] }
+Hanami::Router.new do
+  get "/flowers/:id", id: /\d+/, to: ->(env) { [200, {}, [":id must be a number!"]] }
+end
 ```
 
 
@@ -137,8 +149,9 @@ router.get '/flowers/:id', id: /\d+/, to: ->(env) { [200, {}, [":id must be a nu
 ### String matching with globbing:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/*', to: ->(env) { [200, {}, ["This is catch all: #{ env['router.params'].inspect }!"]] }
+Hanami::Router.new do
+  get "/*match", to: ->(env) { [200, {}, ["This is catch all: #{ env["router.params"].inspect }!"]] }
+end
 ```
 
 
@@ -146,8 +159,9 @@ router.get '/*', to: ->(env) { [200, {}, ["This is catch all: #{ env['router.par
 ### String matching with optional tokens:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/hanami(.:format)' to: ->(env) { [200, {}, ["You've requested #{ env['router.params'][:format] }!"]] }
+Hanami::Router.new do
+  get "/hanami(.:format)" to: ->(env) { [200, {}, ["You"ve requested #{ env["router.params"][:format] }!"]] }
+end
 ```
 
 
@@ -155,15 +169,17 @@ router.get '/hanami(.:format)' to: ->(env) { [200, {}, ["You've requested #{ env
 ### Support for the most common HTTP methods:
 
 ```ruby
-router   = Hanami::Router.new
-endpoint = ->(env) { [200, {}, ['Hello from Hanami!']] }
+endpoint = ->(env) { [200, {}, ["Hello from Hanami!"]] }
 
-router.get    '/hanami', to: endpoint
-router.post   '/hanami', to: endpoint
-router.put    '/hanami', to: endpoint
-router.patch  '/hanami', to: endpoint
-router.delete '/hanami', to: endpoint
-router.trace  '/hanami', to: endpoint
+Hanami::Router.new do
+  get     "/hanami", to: endpoint
+  post    "/hanami", to: endpoint
+  put     "/hanami", to: endpoint
+  patch   "/hanami", to: endpoint
+  delete  "/hanami", to: endpoint
+  trace   "/hanami", to: endpoint
+  options "/hanami", to: endpoint
+end
 ```
 
 
@@ -171,8 +187,9 @@ router.trace  '/hanami', to: endpoint
 ### Root:
 
 ```ruby
-router = Hanami::Router.new
-router.root to: ->(env) { [200, {}, ['Hello from Hanami!']] }
+Hanami::Router.new do
+  root to: ->(env) { [200, {}, ["Hello from Hanami!"]] }
+end
 ```
 
 
@@ -180,9 +197,10 @@ router.root to: ->(env) { [200, {}, ['Hello from Hanami!']] }
 ### Redirect:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/redirect_destination', to: ->(env) { [200, {}, ['Redirect destination!']] }
-router.redirect '/legacy', to: '/redirect_destination'
+Hanami::Router.new do
+  get "/redirect_destination", to: ->(env) { [200, {}, ["Redirect destination!"]] }
+  redirect "/legacy",          to: "/redirect_destination"
+end
 ```
 
 
@@ -190,8 +208,9 @@ router.redirect '/legacy', to: '/redirect_destination'
 ### Named routes:
 
 ```ruby
-router = Hanami::Router.new(scheme: 'https', host: 'hanamirb.org')
-router.get '/hanami', to: ->(env) { [200, {}, ['Hello from Hanami!']] }, as: :hanami
+router = Hanami::Router.new(scheme: "https", host: "hanamirb.org") do
+  get "/hanami", to: ->(env) { [200, {}, ["Hello from Hanami!"]] }, as: :hanami
+end
 
 router.path(:hanami) # => "/hanami"
 router.url(:hanami)  # => "https://hanamirb.org/hanami"
@@ -221,11 +240,11 @@ router.path(:animals_mammals_cats) # => "/animals/mammals/cats"
 
 ```ruby
 Hanami::Router.new do
-  mount RackOne,                             at: '/rack1'
-  mount RackTwo,                             at: '/rack2'
-  mount RackThree.new,                       at: '/rack3'
-  mount ->(env) {[200, {}, ['Rack Four']]},  at: '/rack4'
-  mount 'dashboard#index',                   at: '/dashboard'
+  mount RackOne,                            at: "/rack1"
+  mount RackTwo,                            at: "/rack2"
+  mount RackThree.new,                      at: "/rack3"
+  mount ->(env) {[200, {}, ["Rack Four"]]}, at: "/rack4"
+  mount "dashboard#index",                  at: "/dashboard"
 end
 ```
 
@@ -242,11 +261,12 @@ end
 Everything that responds to `#call` is invoked as it is:
 
 ```ruby
-router = Hanami::Router.new
-router.get '/hanami',      to: ->(env) { [200, {}, ['Hello from Hanami!']] }
-router.get '/middleware', to: Middleware
-router.get '/rack-app',   to: RackApp.new
-router.get '/method',     to: ActionControllerSubclass.action(:new)
+Hanami::Router.new do
+  get "/hanami",     to: ->(env) { [200, {}, ["Hello from Hanami!"]] }
+  get "/middleware", to: Middleware
+  get "/rack-app",   to: RackApp.new
+  get "/method",     to: ActionControllerSubclass.action(:new)
+end
 ```
 
 
@@ -259,23 +279,25 @@ class RackApp
   end
 end
 
-router = Hanami::Router.new
-router.get '/hanami', to: 'rack_app' # it will map to RackApp.new
+Hanami::Router.new do
+  get "/hanami", to: "rack_app" # it will map to RackApp.new
+end
 ```
 
 It also supports Controller + Action syntax:
 
 ```ruby
 module Flowers
-  class Index
-    def call(env)
+  class Index < Hanami::Action
+    def handle(*)
       # ...
     end
   end
 end
 
-router = Hanami::Router.new
-router.get '/flowers', to: 'flowers#index' # it will map to Flowers::Index.new
+Hanami::Router.new do
+  get "/flowers", to: "flowers#index" # it will map to Flowers::Index.new
+end
 ```
 
 
@@ -284,7 +306,7 @@ router.get '/flowers', to: 'flowers#index' # it will map to Flowers::Index.new
 
 ```ruby
 router = Hanami::Router.new
-router.call(Rack::MockRequest.env_for('/unknown')).status # => 404
+router.call(Rack::MockRequest.env_for("/unknown")).status # => 404
 ```
 
 ### Controllers:
@@ -294,7 +316,7 @@ It allows to declare an action as an endpoint, with a special syntax: `<controll
 
 ```ruby
 Hanami::Router.new do
-  get '/', to: 'welcome#index'
+  get "/", to: "welcome#index"
 end
 ```
 
@@ -311,7 +333,7 @@ controllers are available under `Bookshelf::Controllers`.
 
 ```ruby
 Hanami::Router.new(namespace: Bookshelf::Controllers) do
-  get '/', to: 'welcome#index'
+  get "/", to: "welcome#index"
 end
 ```
 
@@ -320,8 +342,9 @@ In the example above, the router will look for the `Bookshelf::Controllers::Welc
 ### RESTful Resource:
 
 ```ruby
-router = Hanami::Router.new
-router.resource 'identity'
+Hanami::Router.new do
+  resource "identity"
+end
 ```
 
 It will map:
@@ -381,41 +404,46 @@ It will map:
 If you don't need all the default endpoints, just do:
 
 ```ruby
-router = Hanami::Router.new
-router.resource 'identity', only: [:edit, :update]
+Hanami::Router.new do
+  resource "identity", only: [:edit, :update]
+end
 
 #### which is equivalent to:
 
-router.resource 'identity', except: [:show, :new, :create, :destroy]
+Hanami::Router.new do
+  resource "identity", except: [:show, :new, :create, :destroy]
+end
 ```
 
 
 If you need extra endpoints:
 
 ```ruby
-router = Hanami::Router.new
-router.resource 'identity' do
-  member do
-    get 'avatar'           # maps to Identity::Avatar
-  end
+router = Hanami::Router.new do
+           resource "identity" do
+             member do
+               get "avatar"           # maps to Identity::Avatar
+             end
 
-  collection do
-    get 'authorizations'   # maps to Identity::Authorizations
-  end
-end
+             collection do
+               get "authorizations"   # maps to Identity::Authorizations
+             end
+           end
+         end
 
-router.path(:avatar_identity)         # => /identity/avatar
-router.path(:authorizations_identity) # => /identity/authorizations
+router.path(:avatar_identity)         # => "/identity/avatar"
+router.path(:authorizations_identity) # => "/identity/authorizations"
 ```
 
 
 Configure controller:
 
 ```ruby
-router = Hanami::Router.new
-router.resource 'profile', controller: 'identity'
+router = Hanami::Router.new do
+  resource "profile", controller: "identity"
+end
 
-router.path(:profile) # => /profile # Will route to Identity::Show
+router.path(:profile) # => "/profile" # Will route to Identity::Show
 ```
 
 #### Nested Resources
@@ -423,20 +451,21 @@ router.path(:profile) # => /profile # Will route to Identity::Show
 We can nest resource(s):
 
 ```ruby
-router = Hanami::Router.new
-router.resource :identity do
-  resource  :avatar
-  resources :api_keys
-end
+router = Hanami::Router.new do
+           resource :identity do
+             resource  :avatar
+             resources :api_keys
+           end
+         end
 
-router.path(:identity_avatar)       # => /identity/avatar
-router.path(:new_identity_avatar)   # => /identity/avatar/new
-router.path(:edit_identity_avatar)  # => /identity/avatar/new
+router.path(:identity_avatar)       # => "/identity/avatar"
+router.path(:new_identity_avatar)   # => "/identity/avatar/new"
+router.path(:edit_identity_avatar)  # => "/identity/avatar/new"
 
-router.path(:identity_api_keys)            # => /identity/api_keys
-router.path(:identity_api_key, id: 1)      # => /identity/api_keys/:id
-router.path(:new_identity_api_key)         # => /identity/api_keys/new
-router.path(:edit_identity_api_key, id: 1) # => /identity/api_keys/:id/edit
+router.path(:identity_api_keys)            # => "/identity/api_keys"
+router.path(:identity_api_key, id: 1)      # => "/identity/api_keys/:id"
+router.path(:new_identity_api_key)         # => "/identity/api_keys/new"
+router.path(:edit_identity_api_key, id: 1) # => "/identity/api_keys/:id/edit"
 ```
 
 
@@ -444,8 +473,9 @@ router.path(:edit_identity_api_key, id: 1) # => /identity/api_keys/:id/edit
 ### RESTful Resources:
 
 ```ruby
-router = Hanami::Router.new
-router.resources 'flowers'
+Hanami::Router.new do
+  resources "flowers"
+end
 ```
 
 It will map:
@@ -511,9 +541,9 @@ It will map:
 
 
 ```ruby
-router.path(:flowers)             # => /flowers
-router.path(:flower, id: 23)      # => /flowers/23
-router.path(:edit_flower, id: 23) # => /flowers/23/edit
+router.path(:flowers)             # => "/flowers"
+router.path(:flower, id: 23)      # => "/flowers/23"
+router.path(:edit_flower, id: 23) # => "/flowers/23/edit"
 ```
 
 
@@ -521,41 +551,46 @@ router.path(:edit_flower, id: 23) # => /flowers/23/edit
 If you don't need all the default endpoints, just do:
 
 ```ruby
-router = Hanami::Router.new
-router.resources 'flowers', only: [:new, :create, :show]
+Hanami::Router.new do
+  resources "flowers", only: [:new, :create, :show]
+end
 
 #### which is equivalent to:
 
-router.resources 'flowers', except: [:index, :edit, :update, :destroy]
+Hanami::Router.new do
+  resources "flowers", except: [:index, :edit, :update, :destroy]
+end
 ```
 
 
 If you need extra endpoints:
 
 ```ruby
-router = Hanami::Router.new
-router.resources 'flowers' do
-  member do
-    get 'toggle' # maps to Flowers::Toggle
-  end
+router = Hanami::Router.new do
+           resources "flowers" do
+             member do
+               get "toggle" # maps to Flowers::Toggle
+             end
 
-  collection do
-    get 'search' # maps to Flowers::Search
-  end
-end
+             collection do
+               get "search" # maps to Flowers::Search
+             end
+           end
+         end
 
-router.path(:toggle_flower, id: 23)  # => /flowers/23/toggle
-router.path(:search_flowers)         # => /flowers/search
+router.path(:toggle_flower, id: 23) # => "/flowers/23/toggle"
+router.path(:search_flowers)        # => "/flowers/search"
 ```
 
 
 Configure controller:
 
 ```ruby
-router = Hanami::Router.new
-router.resources 'blossoms', controller: 'flowers'
+router = Hanami::Router.new do
+           resources "blossoms", controller: "flowers"
+         end
 
-router.path(:blossom, id: 23) # => /blossoms/23 # Will route to Flowers::Show
+router.path(:blossom, id: 23) # => "/blossoms/23" # Will route to Flowers::Show
 ```
 
 #### Nested Resources
@@ -563,20 +598,21 @@ router.path(:blossom, id: 23) # => /blossoms/23 # Will route to Flowers::Show
 We can nest resource(s):
 
 ```ruby
-router = Hanami::Router.new
-router.resources :users do
-  resource  :avatar
-  resources :favorites
-end
+router = Hanami::Router.new do
+           resources :users do
+             resource  :avatar
+             resources :favorites
+           end
+         end
 
-router.path(:user_avatar,      user_id: 1)  # => /users/1/avatar
-router.path(:new_user_avatar,  user_id: 1)  # => /users/1/avatar/new
-router.path(:edit_user_avatar, user_id: 1)  # => /users/1/avatar/edit
+router.path(:user_avatar,      user_id: 1)  # => "/users/1/avatar"
+router.path(:new_user_avatar,  user_id: 1)  # => "/users/1/avatar/new"
+router.path(:edit_user_avatar, user_id: 1)  # => "/users/1/avatar/edit"
 
-router.path(:user_favorites, user_id: 1)             # => /users/1/favorites
-router.path(:user_favorite, user_id: 1, id: 2)       # => /users/1/favorites/2
-router.path(:new_user_favorites, user_id: 1)         # => /users/1/favorites/new
-router.path(:edit_user_favorites, user_id: 1, id: 2) # => /users/1/favorites/2/edit
+router.path(:user_favorites, user_id: 1)             # => "/users/1/favorites"
+router.path(:user_favorite, user_id: 1, id: 2)       # => "/users/1/favorites/2"
+router.path(:new_user_favorites, user_id: 1)         # => "/users/1/favorites/new"
+router.path(:edit_user_favorites, user_id: 1, id: 2) # => "/users/1/favorites/2/edit"
 ```
 
 ### Body Parsers
@@ -594,11 +630,13 @@ It comes with a built-in JSON parser and allows to pass custom parsers.
 #### JSON Parsing
 
 ```ruby
-require 'hanami/router'
-require 'hanami/middleware/body_parser'
+# frozen_string_literal: true
+
+require "hanami/router"
+require "hanami/middleware/body_parser"
 
 app = Hanami::Router.new do
-  patch '/books/:id', to: ->(env) { [200, {},[env['router.params'].inspect]] }
+  patch "/books/:id", to: ->(env) { [200, {}, [env["router.params"].inspect]] }
 end
 
 use Hanami::Middleware::BodyParser, :json
@@ -628,13 +666,15 @@ If you want to use a different JSON backend, include `multi_json` in your `Gemfi
 #### Custom Parsers
 
 ```ruby
-require 'hanami/router'
-require 'hanami/middleware/body_parser'
+# frozen_string_literal: true
+
+require "hanami/router"
+require "hanami/middleware/body_parser"
 
 # See Hanami::Middleware::BodyParser::Parser
 class XmlParser < Hanami::Middleware::BodyParser::Parser
   def mime_types
-    ['application/xml', 'text/xml']
+    ["application/xml", "text/xml"]
   end
 
   # Parse body and return a Hash
@@ -646,7 +686,7 @@ class XmlParser < Hanami::Middleware::BodyParser::Parser
 end
 
 app = Hanami::Router.new do
-  patch '/authors/:id', to: ->(env) { [200, {},[env['router.params'].inspect]] }
+  patch "/authors/:id", to: ->(env) { [200, {}, [env["router.params"].inspect]] }
 end
 
 use Hanami::Middleware::BodyParser, XmlParser
@@ -666,13 +706,15 @@ curl http://localhost:2300/authors/1 \
 ## Testing
 
 ```ruby
-require 'hanami/router'
+# frozen_string_literal: true
+
+require "hanami/router"
 
 router = Hanami::Router.new do
-  get '/books/:id', to: 'books#show', as: :book
+  get "/books/:id", to: "books#show", as: :book
 end
 
-route = router.recognize('/books/23')
+route = router.recognize("/books/23")
 route.verb      # "GET"
 route.action    # => "books#show"
 route.params    # => {:id=>"23"}
@@ -684,7 +726,7 @@ route.action    # => "books#show"
 route.params    # => {:id=>"23"}
 route.routable? # => true
 
-route = router.recognize('/books/23', method: :post)
+route = router.recognize("/books/23", method: :post)
 route.verb      # "POST"
 route.routable? # => false
 ```

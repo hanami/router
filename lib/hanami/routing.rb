@@ -43,7 +43,7 @@ module Hanami
     class EndpointNotFound < Error
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     class NotCallableEndpointError < Error
       def initialize(endpoint)
         super("#{endpoint.inspect} isn't compatible with Rack. Please make sure it implements #call.")
@@ -52,14 +52,14 @@ module Hanami
 
     # HTTP redirect
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     class Redirect
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       LOCATION = "Location"
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       STATUS_RANGE = (300..399).freeze
 
@@ -75,7 +75,7 @@ module Hanami
       #
       # @raise [ArgumentError] if path is nil, or status code isn't a redirect
       #
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def initialize(path, status)
         raise ArgumentError.new("Path is nil") if path.nil?
@@ -128,32 +128,32 @@ module Hanami
         raise Hanami::Routing::InvalidRouteException.new(e.message)
       end
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def match?(env)
         match_path?(env) &&
           @verb.include?(env[REQUEST_METHOD])
       end
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def match_path?(env)
         @path =~ env[PATH_INFO]
       end
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     module Uri
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       HTTP  = "http"
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       HTTPS = "https"
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       DEFAULT_SCHEME = HTTP
 
@@ -166,7 +166,7 @@ module Hanami
       # @raise [ArgumentError] if one of `scheme`, `host`, `port` is `nil`, or
       #   if `scheme` is unknown
       #
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def self.build(scheme:, host:, port:)
         raise ArgumentError.new("host is nil") if host.nil?

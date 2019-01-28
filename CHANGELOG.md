@@ -2,8 +2,20 @@
 Rack compatible HTTP router for Ruby
 
 ## v2.0.0.alpha1 - 2019-01-30
+### Added
+- [Luca Guidi] Introduce `Hanami::Router#scope` to support single routing tier for Hanami
+- [Semyon Pupkov] Added `inflector:` option for `Hanami::Router#initialize` based on `dry-inflector`
+
 ### Changed
 - [Luca Guidi] Drop support for Ruby: MRI 2.3, and 2.4.
+- [Luca Guidi] Renamed `Hanami::Router#namespace` => `#prefix`
+- [Gustavo Caso] Remove body cleanup for `HEAD` requests
+- [Semyon Pupkov] Remove the ability to force SSL (`force_ssl:` option for `Hanami::Router#initialize`)
+- [Gustavo Caso] Remove router body parsers (`parsers:` option for `Hanami::Router#initialize`)
+- [Luca Guidi] Globbed path requires named capture (was `get "/files/*"`, now is `get "/files/*names"`)
+- [Luca Guidi] Router is frozen after initialization
+- [Luca Guidi] All the code base respects the frozen string pragma
+- [Luca Guidi] `Hanami::Router#initialize` requires `configuration:` option if routes endpoints are `Hanami::Action` subclasses
 
 ## v1.3.1 - 2019-01-18
 ### Added

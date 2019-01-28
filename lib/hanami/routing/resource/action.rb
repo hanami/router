@@ -110,7 +110,7 @@ module Hanami
         # Prefix
         #
         # @api private
-        # @since x.x.x
+        # @since 2.0.0
         def prefix
           @prefix ||= Utils::PathPrefix.new(@options[:prefix])
         end
@@ -118,7 +118,7 @@ module Hanami
         # Namespace
         #
         # @api private
-        # @since x.x.x
+        # @since 2.0.0
         def namespace
           @namespace ||= @options[:namespace]
         end
@@ -126,7 +126,7 @@ module Hanami
         # Configuration
         #
         # @api private
-        # @since x.x.x
+        # @since 2.0.0
         def configuration
           @configuration ||= @options[:configuration]
         end

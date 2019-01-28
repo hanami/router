@@ -77,7 +77,7 @@ module Hanami
   #   # All the requests starting with "/api" will be forwarded to Api::App
   #
   class Router # rubocop:disable Metrics/ClassLength
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     attr_reader :inflector
 
@@ -260,7 +260,7 @@ module Hanami
 
     # Freeze the router
     #
-    # @since x.x.x
+    # @since 2.0.0
     def freeze
       @routes.freeze
       super
@@ -640,7 +640,7 @@ module Hanami
     #
     # @return [void]
     #
-    # @since x.x.x
+    # @since 2.0.0
     #
     # @see Hanami::Router
     #
@@ -677,7 +677,7 @@ module Hanami
     #   configuration
     # @param blk [Proc] the routes definition block
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     #
     # @example
@@ -1308,7 +1308,7 @@ module Hanami
 
     # Application
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     class App
       def initialize(path, endpoint, host: nil)

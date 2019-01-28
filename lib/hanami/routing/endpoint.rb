@@ -8,10 +8,10 @@ module Hanami
   module Routing
     # Routes endpoint
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     module Endpoint
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       #
       # FIXME: Shall this be the default of Utils::Class.load! ?
@@ -19,7 +19,7 @@ module Hanami
 
       # Controller / action separator for Hanami
       #
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       #
       # @example
@@ -37,7 +37,7 @@ module Hanami
       # Given the `"home#index"` string, with the `Web::Controllers` namespace,
       # it will try to load `Web::Controllers::Home::Index` action.
       #
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       ACTION_SEPARATOR_REPLACEMENT = "/"
 
@@ -57,7 +57,7 @@ module Hanami
       # @return [Object, Hanami::Routing::LazyEndpoint] a Rack compatible
       #   endpoint
       #
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def self.find(name, namespace, configuration = nil)
         endpoint = case name
@@ -95,7 +95,7 @@ module Hanami
       # @return [Object, Hanami::Routing::LazyEndpoint] a Rack compatible
       #   endpoint
       #
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       #
       # @example Basic Usage
