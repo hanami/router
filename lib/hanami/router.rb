@@ -243,7 +243,7 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint::Resolver.new, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes            = []
       @named             = {}
       @namespace         = namespace
@@ -1027,7 +1027,7 @@ module Hanami
     #   # 4. That Proc is used as it is, because it respond to #call
     #   # 5. That string is resolved as Dashboard::Index (Hanami::Controller)
     def mount(app, at:, host: nil)
-      app = App.new(@prefix.join(at).to_s, @endpoint_resolver.find(app, @namespace), host: host)
+      app = App.new(@prefix.join(at).to_s, @endpoint_resolver.call(app, @namespace), host: host)
       @routes.push(app)
     end
 
@@ -1348,7 +1348,7 @@ module Hanami
       config ||= configuration
 
       path     = path.to_s
-      endpoint = @endpoint_resolver.find(to, namespace || @namespace, config)
+      endpoint = @endpoint_resolver.call(to, namespace || @namespace, config)
       route    = Routing::Route.new(verb_for(verb), @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)
