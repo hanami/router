@@ -243,17 +243,17 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, finder: Routing::Endpoint, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
-      @routes        = []
-      @named         = {}
-      @namespace     = namespace
-      @configuration = configuration
-      @base          = Routing::Uri.build(scheme: scheme, host: host, port: port)
-      @prefix        = Utils::PathPrefix.new(prefix)
-      @finder        = finder
-      @inflector     = inflector
-      @not_found     = not_found
-      @not_allowed   = not_allowed
+    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+      @routes            = []
+      @named             = {}
+      @namespace         = namespace
+      @configuration     = configuration
+      @base              = Routing::Uri.build(scheme: scheme, host: host, port: port)
+      @prefix            = Utils::PathPrefix.new(prefix)
+      @endpoint_resolver = endpoint_resolver
+      @inflector         = inflector
+      @not_found         = not_found
+      @not_allowed       = not_allowed
       instance_eval(&blk) unless blk.nil?
       freeze
     end
@@ -1027,7 +1027,7 @@ module Hanami
     #   # 4. That Proc is used as it is, because it respond to #call
     #   # 5. That string is resolved as Dashboard::Index (Hanami::Controller)
     def mount(app, at:, host: nil)
-      app = App.new(@prefix.join(at).to_s, @finder.find(app, @namespace), host: host)
+      app = App.new(@prefix.join(at).to_s, @endpoint_resolver.find(app, @namespace), host: host)
       @routes.push(app)
     end
 
@@ -1160,7 +1160,7 @@ module Hanami
     #   route.params    # => {:id=>"1"}
     def recognize(env, options = {}, params = nil)
       env   = env_for(env, options, params)
-      # FIXME: this finder is shared with #call and should be extracted
+      # FIXME: this endpoint_resolver is shared with #call and should be extracted
       route = @routes.find { |r| r.match?(env) }
 
       Routing::RecognizedRoute.new(route, env, @namespace)
@@ -1348,7 +1348,7 @@ module Hanami
       config ||= configuration
 
       path     = path.to_s
-      endpoint = @finder.find(to, namespace || @namespace, config)
+      endpoint = @endpoint_resolver.find(to, namespace || @namespace, config)
       route    = Routing::Route.new(verb_for(verb), @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)
