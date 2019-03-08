@@ -631,7 +631,7 @@ require 'hanami/router'
 require 'hanami/middleware/body_parser'
 
 # See Hanami::Routing::Parsing::Parser
-class XmlParser < Hanami::Middleware::BodyParser::Parser
+class XmlParser
   def mime_types
     ['application/xml', 'text/xml']
   end
