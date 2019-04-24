@@ -245,10 +245,10 @@ module Hanami
     # rubocop:disable Metrics/MethodLength
     def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint::Resolver.new, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @routes            = []
-      @named             = {}
       @namespace         = namespace
       @configuration     = configuration
-      @base              = Routing::Uri.build(scheme: scheme, host: host, port: port)
+      @base_url          = Routing::Uri.build(scheme: scheme, host: host, port: port)
+      @named             = Routing::Named.new
       @prefix            = Utils::PathPrefix.new(prefix)
       @endpoint_resolver = endpoint_resolver
       @inflector         = inflector
@@ -1190,9 +1190,7 @@ module Hanami
     #   router.path(:login, return_to: '/dashboard') # => "/login?return_to=%2Fdashboard"
     #   router.path(:framework, name: 'router')      # => "/router"
     def path(route, args = {})
-      @named.fetch(route).path(args)
-    rescue KeyError
-      raise Hanami::Routing::InvalidRouteException.new("No route could be generated for #{route.inspect} - please check given arguments")
+      @named.get(route, args)
     end
 
     # Generate a URL for a specified named route.
@@ -1219,7 +1217,7 @@ module Hanami
     #   router.url(:login, return_to: '/dashboard') # => "https://hanamirb.org/login?return_to=%2Fdashboard"
     #   router.url(:framework, name: 'router')      # => "https://hanamirb.org/router"
     def url(route, args = {})
-      @base + path(route, args)
+      @base_url + path(route, args)
     end
 
     # Returns an routes inspector
@@ -1352,7 +1350,7 @@ module Hanami
       route    = Routing::Route.new(verb_for(verb), @prefix.join(path).to_s, endpoint, constraints)
 
       @routes.push(route)
-      @named[as] = route unless as.nil?
+      @named.set(as, route) unless as.nil?
     end
 
     def verb_for(value)
