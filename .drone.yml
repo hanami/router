@@ -67,7 +67,6 @@ steps:
     path: /usr/local/bundle
   commands:
   - COVERAGE=true bundle exec rake spec:unit
- ./script/test isolation
 
 - name: integration
   image: ruby:2.5
@@ -115,7 +114,6 @@ steps:
     path: /usr/local/bundle
   commands:
   - COVERAGE=true bundle exec rake spec:unit
- ./script/test isolation
 
 - name: integration
   image: ruby:2.4
@@ -163,7 +161,6 @@ steps:
     path: /usr/local/bundle
   commands:
   - COVERAGE=true bundle exec rake spec:unit
- ./script/test isolation
 
 - name: integration
   image: ruby:2.3
