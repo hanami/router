@@ -124,8 +124,8 @@ module Hanami
       # @api private
       def path(args)
         @path.expand(:append, args)
-      rescue Mustermann::ExpandError => e
-        raise Hanami::Routing::InvalidRouteException.new(e.message)
+      rescue Mustermann::ExpandError => exception
+        raise Hanami::Routing::InvalidRouteException.new(exception.message)
       end
 
       # @since 2.0.0

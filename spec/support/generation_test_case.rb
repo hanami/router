@@ -39,9 +39,9 @@ class GenerationTestCase
 
   def _rescue(name, expected, args)
     yield
-  rescue => e
+  rescue => exception
     puts "Failed with #{name}, #{expected.inspect}, #{args.inspect}"
-    raise e
+    raise exception
   end
 
   def _actual(type, name, args) # rubocop:disable Metrics/MethodLength

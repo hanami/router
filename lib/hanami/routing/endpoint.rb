@@ -113,8 +113,8 @@ module Hanami
       # @api private
       def klass
         Utils::Class.load!(@name, @namespace)
-      rescue NameError => e
-        raise EndpointNotFound.new(e.message)
+      rescue NameError => exception
+        raise EndpointNotFound.new(exception.message)
       end
     end
   end
