@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "hanami/utils/json"
+require_relative "parser"
 require_relative "errors"
 
 module Hanami
@@ -8,7 +9,7 @@ module Hanami
     class BodyParser
       # @since 1.3.0
       # @api private
-      class JsonParser
+      class JsonParser < Parser
         # @since 1.3.0
         # @api private
         def mime_types

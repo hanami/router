@@ -17,7 +17,7 @@ RSpec.describe "Body parsing" do
       get   "/books",       to: not_parsed_endpoint
     end
 
-    middleware = Hanami::Middleware::BodyParser.new(@routes, [:json, XmlMiddelwareParser])
+    middleware = Hanami::Middleware::BodyParser.new(@routes, [:json, XMLBodyParser])
     @app = Rack::MockRequest.new(middleware)
   end
 
