@@ -1343,7 +1343,7 @@ module Hanami
 
         env[SCRIPT_NAME] = @prefix
         env[PATH_INFO]   = env[PATH_INFO].sub(@prefix, "")
-        env[PATH_INFO]   = "/" if env[PATH_INFO] == ""
+        env[PATH_INFO] = "/#{env[PATH_INFO]}" unless env[PATH_INFO].start_with?("/")
 
         @endpoint.call(env)
       end
