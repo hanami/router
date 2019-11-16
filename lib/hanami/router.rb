@@ -256,7 +256,6 @@ module Hanami
       @not_found         = not_found
       @not_allowed       = not_allowed
       instance_exec(context, &blk) if blk
-      freeze
     end
     # rubocop:enable Metrics/MethodLength
 

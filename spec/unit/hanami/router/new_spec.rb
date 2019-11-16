@@ -29,10 +29,6 @@ RSpec.describe Hanami::Router do
       expect(router).to be_instance_of(Hanami::Router)
     end
 
-    it "returns frozen instance" do
-      expect(router).to be_frozen
-    end
-
     it "evaluates routes passed from Hanami::Router.define" do
       routes = Hanami::Router.define { post "/domains", to: ->(_env) { [201, {}, ["Domain Created"]] } }
       router = Hanami::Router.new(&routes)
