@@ -81,8 +81,6 @@ module Hanami
     # @api private
     attr_reader :inflector
 
-    attr_reader :middlewares
-
     # This error is raised when <tt>#call</tt> is invoked on a non-routable
     # recognized route.
     #
@@ -247,7 +245,6 @@ module Hanami
     # rubocop:disable Metrics/MethodLength
     def initialize(context: nil, scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint::Resolver.new, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
       @context           = context
-      @middlewares       = []
       @routes            = []
       @namespace         = namespace
       @configuration     = configuration
@@ -301,10 +298,6 @@ module Hanami
     #   router.defined? # => true
     def defined?
       @routes.any?
-    end
-
-    def use(*args, &block)
-      @middlewares << (args << block)
     end
 
     # Defines a route that accepts a GET request for the given path.
