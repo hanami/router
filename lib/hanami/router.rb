@@ -243,7 +243,8 @@ module Hanami
     #   [200, {}, ["{:name=>\"LG\",:id=>\"1\"}"]]
     #
     # rubocop:disable Metrics/MethodLength
-    def initialize(scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint::Resolver.new, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+    def initialize(context: nil, scheme: "http", host: "localhost", port: 80, prefix: "", namespace: nil, configuration: nil, endpoint_resolver: Routing::Endpoint::Resolver.new, inflector: Dry::Inflector.new, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, &blk)
+      @context           = context
       @routes            = []
       @namespace         = namespace
       @configuration     = configuration
@@ -254,8 +255,7 @@ module Hanami
       @inflector         = inflector
       @not_found         = not_found
       @not_allowed       = not_allowed
-      instance_eval(&blk) unless blk.nil?
-      freeze
+      instance_exec(context, &blk) if blk
     end
     # rubocop:enable Metrics/MethodLength
 
@@ -1335,7 +1335,7 @@ module Hanami
 
         env[SCRIPT_NAME] = @prefix
         env[PATH_INFO]   = env[PATH_INFO].sub(@prefix, "")
-        env[PATH_INFO]   = "/" if env[PATH_INFO] == ""
+        env[PATH_INFO] = "/#{env[PATH_INFO]}" unless env[PATH_INFO].start_with?("/")
 
         @endpoint.call(env)
       end
