@@ -15,6 +15,10 @@ module Hanami
     require "hanami/router/params"
     require "hanami/router/trie"
 
+    def self.define(&blk)
+      blk
+    end
+
     def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, &blk)
       @base_url = base_url
       @prefix = Prefix.new(prefix)
@@ -158,7 +162,7 @@ module Hanami
           url = path(env, params)
           return env_for(url, params, options)
         rescue Hanami::Router::InvalidRouteException
-          ::Rack::MockRequest.env_for("", options)
+          EMPTY_RACK_ENV.dup
         end
       else
         env
@@ -177,6 +181,7 @@ module Hanami
 
     PARAMS = "router.params"
     EMPTY_PARAMS = {}.freeze
+    EMPTY_RACK_ENV = {}
 
     def lookup(env)
       endpoint = fixed(env)

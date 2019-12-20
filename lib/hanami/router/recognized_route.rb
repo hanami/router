@@ -8,8 +8,6 @@ module Hanami
     #
     # @see Hanami::Router#recognize
     class RecognizedRoute
-      attr_reader :endpoint
-
       def initialize(endpoint, env)
         @endpoint = endpoint
         @env = env
@@ -58,6 +56,12 @@ module Hanami
 
       def params
         @env["router.params"]
+      end
+
+      def endpoint
+        return nil if redirect?
+
+        @endpoint
       end
 
       def routable?
