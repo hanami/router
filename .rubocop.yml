@@ -12,7 +12,7 @@ Style/RescueStandardError:
 Style/CommentedKeyword:
   Exclude:
     - "spec/**/*.rb"
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   AllowedNames:
     - 'as'
     - 'at'
