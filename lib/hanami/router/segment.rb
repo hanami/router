@@ -116,8 +116,6 @@ module Hanami
 
         var = variable.sub(/\A\:/, "")
         @expandable = if (opt_var = optional_variable(variable))
-        # require "byebug"
-        # byebug
                         @expandable.sub(opt_var.to_s, "{{#{opt_var.to_s.sub(variable, var)}}}")
                       else
                         @expandable.sub(variable, "{#{var}}")

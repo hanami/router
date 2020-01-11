@@ -25,6 +25,7 @@ module Hanami
       @resolver = resolver
       @fixed = {}
       @variable = {}
+      @globbed = {}
       @named = {}
       instance_eval(&blk)
     end
@@ -128,6 +129,14 @@ module Hanami
       @variable[env["REQUEST_METHOD"]]&.find(env["PATH_INFO"])
     end
 
+    def globbed(env)
+      @globbed[env["REQUEST_METHOD"]]&.find do |path, to|
+        if (match = path.match(env["PATH_INFO"]))
+          return [to, match.named_captures]
+        end
+      end
+    end
+
     def not_allowed(env)
       (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return NOT_ALLOWED
     end
@@ -187,14 +196,17 @@ module Hanami
       endpoint = fixed(env)
       return [endpoint, EMPTY_PARAMS] if endpoint
 
-      variable(env)
+      variable(env) || globbed(env)
     end
 
     def add_route(http_method, path, to, as, constraints)
       path = _prefixed_path(path)
       to = @resolver.call(path, to)
 
-      if variable?(path)
+      if globbed?(path)
+        @globbed[http_method] ||= []
+        @globbed[http_method] << [Segment.fabricate(path, **constraints), to]
+      elsif variable?(path)
         @variable[http_method] ||= Trie.new
         @variable[http_method].add(path, to, constraints)
       else
@@ -202,8 +214,7 @@ module Hanami
         @fixed[http_method][path] = to
       end
 
-      # FIXME: pass constraints
-      @named[_prefixed_name(as)] = Segment.fabricate(path, {}) if as
+      @named[_prefixed_name(as)] = Segment.fabricate(path, **constraints) if as
     end
 
     # def add_route(http_method, path, to, as, constraints, &blk)
@@ -226,6 +237,10 @@ module Hanami
 
     def variable?(path)
       /:/.match?(path)
+    end
+
+    def globbed?(path)
+      /\*/.match?(path)
     end
 
     def _prefixed_path(path)

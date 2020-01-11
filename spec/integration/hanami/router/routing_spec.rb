@@ -109,7 +109,7 @@ RSpec.describe Hanami::Router do
           __send__ verb, "/hanami/*glob",         to: ->(_) { r }
           __send__ verb, "/books/:id",            to: ->(_) { r }, id: /\d+/
           __send__ verb, "/named_route",          to: ->(_) { r }, as: :"#{verb}_named_route"
-          __send__ verb, "/named_:var",           to: ->(_) { r }, as: :"#{ verb }_named_route_var"
+          __send__ verb, "/named_:var",           to: ->(_) { r }, as: :"#{verb}_named_route_var"
           __send__(verb, "/block")                          { |_| r }
         end
       end
@@ -123,8 +123,8 @@ RSpec.describe Hanami::Router do
           let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "12" }, "Named route!") }
 
           it "recognizes by the given symbol" do
-            expect(router.path(:"#{ verb }_named_route")).to eq("/named_route")
-            expect(router.url(:"#{ verb }_named_route")).to  eq("http://localhost/named_route")
+            expect(router.path(:"#{verb}_named_route")).to eq("/named_route")
+            expect(router.url(:"#{verb}_named_route")).to  eq("http://localhost/named_route")
           end
         end
 
@@ -132,8 +132,8 @@ RSpec.describe Hanami::Router do
           let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "13" }, "Named %route!") }
 
           it "recognizes" do
-            expect(router.path(:"#{ verb }_named_route_var", var: "route")).to eq("/named_route")
-            expect(router.url(:"#{ verb }_named_route_var", var: "route")).to  eq("http://localhost/named_route")
+            expect(router.path(:"#{verb}_named_route_var", var: "route")).to eq("/named_route")
+            expect(router.url(:"#{verb}_named_route_var", var: "route")).to  eq("http://localhost/named_route")
           end
         end
 

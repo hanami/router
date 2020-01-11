@@ -302,6 +302,7 @@ RSpec.describe Hanami::Router do
       end
     end
 
+    # FIXME: decide if keep relative paths, or force to use only absolute format
     describe "relative optional format" do
       let(:router) do
         described_class.new do

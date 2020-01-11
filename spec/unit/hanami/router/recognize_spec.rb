@@ -354,7 +354,7 @@ RSpec.describe Hanami::Router do
       end
 
       it "returns not routeable result when cannot recognize" do
-        route = router.recognize(:home, {}, { method: :post })
+        route = router.recognize(:home, {}, method: :post)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
