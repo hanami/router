@@ -34,11 +34,11 @@ RSpec.describe Hanami::Router do
       router.public_send(verb, '/http_destination', to: ->(_env) { [200, {}, ['http destination!']] })
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true).to_a
 
       expect(status).to eq(301)
       expect(headers['Location']).to eq('https://localhost:443/http_destination')
-      expect(body.body).to eq('')
+      expect(body).to eq([])
     end
 
     it "force_ssl to true and scheme is https, return 200, verb: #{verb}" do
@@ -46,11 +46,11 @@ RSpec.describe Hanami::Router do
       router.public_send(verb, '/http_destination', to: ->(_env) { [200, {}, ['http destination!']] })
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, 'https://hanami.test/http_destination', lint: true)
+      status, headers, body = app.public_send(verb, 'https://hanami.test/http_destination', lint: true).to_a
 
       expect(status).to eq(200)
       expect(headers['Location']).to be_nil
-      expect(body.body).to eq('http destination!')
+      expect(body).to eq(['http destination!'])
     end
   end
 
@@ -60,11 +60,11 @@ RSpec.describe Hanami::Router do
       router.public_send(verb, '/http_destination', to: ->(_env) { [200, {}, ['http destination!']] })
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true).to_a
 
       expect(status).to eq(307)
       expect(headers['Location']).to eq('https://localhost:443/http_destination')
-      expect(body.body).to eq('')
+      expect(body).to eq([])
     end
 
     it "force_ssl to true and added query string, verb: #{verb}" do
@@ -73,11 +73,11 @@ RSpec.describe Hanami::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true).to_a
 
       expect(status).to eq(307)
       expect(headers['Location']).to eq('https://localhost:443/http_destination?foo=bar')
-      expect(body.body).to eq('')
+      expect(body).to eq([])
     end
 
     it "force_ssl to true and added port, verb: #{verb}" do
@@ -86,11 +86,11 @@ RSpec.describe Hanami::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true).to_a
 
       expect(status).to eq(307)
       expect(headers['Location']).to eq('https://localhost:4000/http_destination?foo=bar')
-      expect(body.body).to eq('')
+      expect(body).to eq([])
     end
 
     it "force_ssl to true, added host and port, verb: #{verb}" do
@@ -99,11 +99,11 @@ RSpec.describe Hanami::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination?foo=bar', lint: true).to_a
 
       expect(status).to eq(307)
       expect(headers['Location']).to eq('https://hanamirb.org:4000/http_destination?foo=bar')
-      expect(body.body).to eq('')
+      expect(body).to eq([])
     end
 
     it "force_ssl to false and scheme is http, return 200 and doesn't return new location, verb: #{verb}" do
@@ -112,11 +112,11 @@ RSpec.describe Hanami::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true).to_a
 
       expect(status).to eq(200)
       expect(headers['Location']).to be_nil
-      expect(body.body).to eq('http destination!')
+      expect(body).to eq(['http destination!'])
     end
 
     it "force_ssl to false and scheme is https, return 200 and doesn't return new location, verb: #{verb}" do
@@ -125,11 +125,11 @@ RSpec.describe Hanami::Router do
 
       app = Rack::MockRequest.new(router)
 
-      status, headers, body = app.public_send(verb, '/http_destination', lint: true)
+      status, headers, body = app.public_send(verb, '/http_destination', lint: true).to_a
 
       expect(status).to eq(200)
       expect(headers['Location']).to be_nil
-      expect(body.body).to eq('http destination!')
+      expect(body).to eq(['http destination!'])
     end
   end
 end

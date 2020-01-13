@@ -4,7 +4,8 @@ RSpec.describe 'Pass on response' do
     @app    = Rack::MockRequest.new(@routes)
   end
 
-  it 'is successful' do
+  # See https://github.com/hanami/router/pull/197
+  xit 'is successful' do
     response = @app.get('/', lint: true)
     expect(response.status).to eq(200)
   end
