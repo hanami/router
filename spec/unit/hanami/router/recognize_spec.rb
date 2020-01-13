@@ -118,7 +118,7 @@ RSpec.describe Hanami::Router do
 
         _, headers, body = *route.call({})
 
-        expect(body).to be_kind_of(Rack::BodyProxy)
+        expect(body).to eq([])
         expect(headers).to eq("Location" => "/")
 
         expect(route.routable?).to be(true)
@@ -262,7 +262,7 @@ RSpec.describe Hanami::Router do
 
         _, headers, body = *route.call({})
 
-        expect(body).to be_kind_of(Rack::BodyProxy)
+        expect(body).to eq([])
         expect(headers).to eq("Location" => "/")
 
         expect(route.routable?).to be(true)

@@ -12,38 +12,38 @@ RSpec.describe Hanami::Router do
     describe "##{verb}" do
       describe 'path recognition' do
         it 'recognize fixed string' do
-          response = [200, {}, ['Fixed!']]
+          response = [200, {"Content-Length" => "6"}, ['Fixed!']]
           @router.send(verb, '/hanami', to: ->(_env) { response })
 
-          expect(@app.request(verb.upcase, '/hanami', lint: true)).to be(response)
+          expect(@app.request(verb.upcase, '/hanami', lint: true).to_a).to eq(response)
         end
 
         it 'recognize moving parts string' do
-          response = [200, {}, ['Moving!']]
+          response = [200, {"Content-Length" => "7"}, ['Moving!']]
           @router.send(verb, '/hanami/:id', to: ->(_env) { response })
 
-          expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to be(response)
+          expect(@app.request(verb.upcase, '/hanami/23', lint: true).to_a).to eq(response)
         end
 
         it 'recognize globbing string' do
-          response = [200, {}, ['Globbing!']]
+          response = [200, {"Content-Length" => "9"}, ['Globbing!']]
           @router.send(verb, '/hanami/*', to: ->(_env) { response })
 
-          expect(@app.request(verb.upcase, '/hanami/all', lint: true)).to be(response)
+          expect(@app.request(verb.upcase, '/hanami/all', lint: true).to_a).to eq(response)
         end
 
         it 'recognize format string' do
-          response = [200, {}, ['Format!']]
+          response = [200, {"Content-Length" => "7"}, ['Format!']]
           @router.send(verb, '/hanami/:id(.:format)', to: ->(_env) { response })
 
-          expect(@app.request(verb.upcase, '/hanami/all.json', lint: true)).to be(response)
+          expect(@app.request(verb.upcase, '/hanami/all.json', lint: true).to_a).to eq(response)
         end
 
         it 'accepts a block' do
-          response = [200, {}, ['Block!']]
+          response = [200, {"Content-Length" => "6"}, ['Block!']]
           @router.send(verb, '/block') { |_e| response }
 
-          expect(@app.request(verb.upcase, '/block', lint: true)).to be(response)
+          expect(@app.request(verb.upcase, '/block', lint: true).to_a).to eq(response)
         end
       end
 
@@ -78,10 +78,10 @@ RSpec.describe Hanami::Router do
 
       describe 'constraints' do
         it 'recognize when called with matching constraints' do
-          response = [200, {}, ['Moving with constraints!']]
+          response = [200, {"Content-Length" => "24"}, ['Moving with constraints!']]
           @router.send(verb, '/hanami/:id', to: ->(_env) { response }, id: /\d+/)
 
-          expect(@app.request(verb.upcase, '/hanami/23', lint: true)).to be(response)
+          expect(@app.request(verb.upcase, '/hanami/23', lint: true).to_a).to eq(response)
 
           expect(@app.request(verb.upcase, '/hanami/flower', lint: true).status).to eq(404)
         end
@@ -92,17 +92,17 @@ RSpec.describe Hanami::Router do
   describe 'root' do
     describe 'path recognition' do
       it 'recognize fixed string' do
-        response = [200, {}, ['Fixed!']]
+        response = [200, {"Content-Length"=>"6"}, ['Fixed!']]
         @router.root(to: ->(_env) { response })
 
-        expect(@app.request('GET', '/', lint: true)).to be(response)
+        expect(@app.request('GET', '/', lint: true).to_a.to_a).to eq(response)
       end
 
       it 'accepts a block' do
-        response = [200, {}, ['Block!']]
+        response = [200, {"Content-Length"=>"6"}, ['Block!']]
         @router.root { |_e| response }
 
-        expect(@app.request('GET', '/', lint: true)).to be(response)
+        expect(@app.request('GET', '/', lint: true).to_a.to_a).to eq(response)
       end
     end
 

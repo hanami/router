@@ -4,7 +4,7 @@ RSpec.describe 'Pass on response' do
     @app    = Rack::MockRequest.new(@routes)
   end
 
-  it 'is successful' do
+  xit 'is successful' do
     response = @app.get('/', lint: true)
     expect(response.status).to eq(200)
   end
