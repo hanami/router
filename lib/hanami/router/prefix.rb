@@ -2,6 +2,10 @@
 
 module Hanami
   class Router
+    # URL Path prefix
+    #
+    # @since x.x.x
+    # @api private
     class Prefix
       def initialize(prefix)
         @prefix = prefix

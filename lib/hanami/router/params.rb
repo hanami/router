@@ -2,8 +2,12 @@
 
 module Hanami
   class Router
+    # Params utilities
+    #
+    # @since x.x.x
+    # @api private
     class Params
-      def self.deep_symbolize(params)
+      def self.deep_symbolize(params) # rubocop:disable Metrics/MethodLength
         params.each_with_object({}) do |(key, value), output|
           output[key.to_sym] =
             case value

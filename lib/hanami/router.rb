@@ -169,7 +169,7 @@ module Hanami
       when ::Symbol
         begin
           url = path(env, params)
-          return env_for(url, params, options)
+          return env_for(url, params, options) # rubocop:disable Style/RedundantReturn
         rescue Hanami::Router::InvalidRouteException
           EMPTY_RACK_ENV.dup
         end
@@ -190,7 +190,7 @@ module Hanami
 
     PARAMS = "router.params"
     EMPTY_PARAMS = {}.freeze
-    EMPTY_RACK_ENV = {}
+    EMPTY_RACK_ENV = {}.freeze
 
     def lookup(env)
       endpoint = fixed(env)
@@ -199,6 +199,8 @@ module Hanami
       variable(env) || globbed(env)
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def add_route(http_method, path, to, as, constraints)
       path = _prefixed_path(path)
       to = @resolver.call(path, to)
@@ -216,6 +218,8 @@ module Hanami
 
       @named[_prefixed_name(as)] = Segment.fabricate(path, **constraints) if as
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # def add_route(http_method, path, to, as, constraints, &blk)
     #   (to || blk) or raise "missing endpoint"

@@ -27,6 +27,7 @@ module Hanami
         end
       end
 
+      # rubocop:disable Metrics/MethodLength
       def get(segment)
         return nil unless @variable || @fixed
 
@@ -45,6 +46,7 @@ module Hanami
 
         [found, captured&.named_captures]
       end
+      # rubocop:enable Metrics/MethodLength
 
       def leaf?
         @to

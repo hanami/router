@@ -9,7 +9,7 @@ RSpec.describe Hanami::Router do
         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
 
         it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami", lint: true)).to be(response)
+          expect(app.request(verb.upcase, "/hanami", lint: true)).to eq_response(response)
         end
       end
 
@@ -17,7 +17,7 @@ RSpec.describe Hanami::Router do
         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!") }
 
         it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami/23", lint: true)).to be(response)
+          expect(app.request(verb.upcase, "/hanami/23", lint: true)).to eq_response(response)
         end
       end
 
@@ -25,7 +25,7 @@ RSpec.describe Hanami::Router do
         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!") }
 
         it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami/all", lint: true)).to be(response)
+          expect(app.request(verb.upcase, "/hanami/all", lint: true)).to eq_response(response)
         end
       end
 
@@ -33,7 +33,7 @@ RSpec.describe Hanami::Router do
         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!") }
 
         it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami/all.json", lint: true)).to be(response)
+          expect(app.request(verb.upcase, "/hanami/all.json", lint: true)).to eq_response(response)
         end
       end
 
@@ -41,7 +41,7 @@ RSpec.describe Hanami::Router do
         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
 
         it "recognizes" do
-          expect(app.request(verb.upcase, "/block", lint: true)).to be(response)
+          expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
         end
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe Hanami::Router do
       let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!") }
 
       it "recognize when called with matching constraints" do
-        expect(app.request(verb.upcase, "/books/23", lint: true)).to be(response)
+        expect(app.request(verb.upcase, "/books/23", lint: true)).to eq_response(response)
         expect(app.request(verb.upcase, "/books/awdwror", lint: true).status).to eq(404)
       end
     end
@@ -60,38 +60,38 @@ RSpec.describe Hanami::Router do
     context "path recognition" do
       context "fixed string" do
         it "recognizes" do
-          expect(app.request("HEAD", "/hanami", lint: true)).to be(response)
+          expect(app.request("HEAD", "/hanami", lint: true)).to eq_response(response)
         end
       end
 
       context "moving parts string" do
         it "recognizes" do
-          expect(app.request("HEAD", "/hanami/23", lint: true)).to be(response)
+          expect(app.request("HEAD", "/hanami/23", lint: true)).to eq_response(response)
         end
       end
 
       context "globbing string" do
         it "recognizes" do
-          expect(app.request("HEAD", "/hanami/all", lint: true)).to be(response)
+          expect(app.request("HEAD", "/hanami/all", lint: true)).to eq_response(response)
         end
       end
 
       context "format string" do
         it "recognizes" do
-          expect(app.request("HEAD", "/hanami/all.json", lint: true)).to be(response)
+          expect(app.request("HEAD", "/hanami/all.json", lint: true)).to eq_response(response)
         end
       end
 
       context "block" do
         it "recognizes" do
-          expect(app.request("HEAD", "/block", lint: true)).to be(response)
+          expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
         end
       end
     end
 
     describe "constraints" do
       it "recognize when called with matching constraints" do
-        expect(app.request("HEAD", "/books/23", lint: true)).to be(response)
+        expect(app.request("HEAD", "/books/23", lint: true)).to eq_response(response)
         expect(app.request("HEAD", "/books/awdwror", lint: true).status).to eq(404)
       end
     end
