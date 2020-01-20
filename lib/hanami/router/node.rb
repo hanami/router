@@ -62,25 +62,8 @@ module Hanami
         /:/.match?(segment)
       end
 
-      def segment_for(segment, constraints) # rubocop:disable Metrics/MethodLength
-        capture = {}
-
-        unless constraints.empty?
-          found = nil
-          variable = segment.sub(/\A:/, "")
-          constraints.each do |k, v|
-            break if found
-
-            found = v if k.to_s == variable
-          end
-
-          capture = { variable.to_sym => found } if found
-        end
-
-        Segment.fabricate(segment, capture)
-      end
-
-      def extract_constraints(segment, constraints)
+      def segment_for(segment, constraints)
+        Segment.fabricate(segment, **constraints)
       end
 
       def fixed?(matcher)

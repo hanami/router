@@ -45,7 +45,8 @@ module Hanami
       private
 
       def for_each_segment(path, &blk)
-        _, *segments = path.split("/")
+        # _, *segments = path.split(/\/(?:\()*/)
+        _, *segments = path.split(/\//)
         segments.each(&blk)
       end
     end

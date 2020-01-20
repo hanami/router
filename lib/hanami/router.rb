@@ -21,7 +21,9 @@ module Hanami
 
     def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, &blk)
       @base_url = base_url
-      @prefix = Prefix.new(prefix)
+      # TODO: verify if Prefix can handle both name and path prefix
+      @path_prefix = Prefix.new(prefix)
+      @name_prefix = Prefix.new("")
       @resolver = resolver
       @fixed = {}
       @variable = {}
@@ -40,7 +42,7 @@ module Hanami
 
       endpoint.call(
         _params(env, params)
-      )
+      ).to_a
     end
 
     def root(to:)
@@ -89,13 +91,16 @@ module Hanami
     end
 
     def scope(path, &blk)
-      prefix = @prefix
+      path_prefix = @path_prefix
+      name_prefix = @name_prefix
 
       begin
-        @prefix = @prefix.join(path)
+        @path_prefix = @path_prefix.join(path.to_s)
+        @name_prefix = @name_prefix.join(path.to_s)
         instance_eval(&blk)
       ensure
-        @prefix = prefix
+        @path_prefix = path_prefix
+        @name_prefix = name_prefix
       end
     end
 
@@ -248,11 +253,11 @@ module Hanami
     end
 
     def _prefixed_path(path)
-      @prefix.join(path).to_s
+      @path_prefix.join(path).to_s
     end
 
     def _prefixed_name(name)
-      @prefix.relative_join(name, "_").to_sym
+      @name_prefix.relative_join(name, "_").to_sym
     end
 
     def _redirect(to, code)
@@ -260,7 +265,8 @@ module Hanami
         raise UnknownHTTPStatusCodeError.new(code)
       end
 
-      Redirect.new(to, ->(*) { [code, { "Location" => to }, [body]] })
+      destination = _prefixed_path(to)
+      Redirect.new(destination, ->(*) { [code, { "Location" => destination }, [body]] })
     end
 
     def _params(env, params)

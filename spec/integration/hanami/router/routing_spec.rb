@@ -37,13 +37,14 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      context "block" do
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+      # FIXME: enable again with block syntax
+      #       context "block" do
+      #         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
 
-        it "recognizes" do
-          expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
-        end
-      end
+      #         it "recognizes" do
+      #           expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
+      #         end
+      #       end
     end
 
     describe "constraints" do
@@ -82,11 +83,12 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      context "block" do
-        it "recognizes" do
-          expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
-        end
-      end
+      # FIXME: add when block syntax is enabled
+      #       context "block" do
+      #         it "recognizes" do
+      #           expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
+      #         end
+      #       end
     end
 
     describe "constraints" do
@@ -110,7 +112,8 @@ RSpec.describe Hanami::Router do
           __send__ verb, "/books/:id",            to: ->(_) { r }, id: /\d+/
           __send__ verb, "/named_route",          to: ->(_) { r }, as: :"#{verb}_named_route"
           __send__ verb, "/named_:var",           to: ->(_) { r }, as: :"#{verb}_named_route_var"
-          __send__(verb, "/block")                          { |_| r }
+          # FIXME: introduce again with block syntax
+          # __send__(verb, "/block")                          { |_| r }
         end
       end
 
@@ -142,7 +145,7 @@ RSpec.describe Hanami::Router do
 
           it "recognizes" do
             r      = response
-            router = Hanami::Router.new(scheme: "https", host: "hanamirb.org", port: 443) do
+            router = Hanami::Router.new(base_url: "https://hanamirb.org") do
               __send__ verb, "/custom_named_route", to: ->(_) { r }, as: :"#{verb}_custom_named_route"
             end
 
@@ -153,7 +156,7 @@ RSpec.describe Hanami::Router do
 
       context "#HEAD" do
         let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
-        let(:response) { Rack::MockResponse.new(405, { "Content-Length" => "18" }, []) }
+        let(:response) { Rack::MockResponse.new(405, { "Content-Length" => "11" }, []) }
 
         it_behaves_like "mountable rack endpoint HEAD"
       end
@@ -189,25 +192,26 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      context "block" do
-        let(:router) do
-          r = response
+      # FIXME: enable when block syntax will be enabled
+      # context "block" do
+      #   let(:router) do
+      #     r = response
 
-          described_class.new do
-            root { |_| r }
-          end
-        end
+      #     described_class.new do
+      #       root { |_| r }
+      #     end
+      #   end
 
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+      #   let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
 
-        it "recognizes" do
-          actual = app.request("GET", "/", lint: true)
+      #   it "recognizes" do
+      #     actual = app.request("GET", "/", lint: true)
 
-          expect(actual.status).to eq(response.status)
-          expect(actual.header).to eq(response.header)
-          expect(actual.body).to   eq(response.body)
-        end
-      end
+      #     expect(actual.status).to eq(response.status)
+      #     expect(actual.header).to eq(response.header)
+      #     expect(actual.body).to   eq(response.body)
+      #   end
+      # end
     end
   end
 end
