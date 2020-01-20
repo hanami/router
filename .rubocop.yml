@@ -5,6 +5,11 @@ inherit_from:
 Metrics/ParameterLists:
   Exclude:
     - "lib/hanami/router.rb"
+Naming/MethodParameterName:
+  AllowedNames:
+    - 'as'
+    - 'at'
+    - 'to'
 Style/FormatStringToken:
   Enabled: false
 Style/RescueStandardError:
@@ -12,8 +17,3 @@ Style/RescueStandardError:
 Style/CommentedKeyword:
   Exclude:
     - "spec/**/*.rb"
-Naming/UncommunicativeMethodParamName:
-  AllowedNames:
-    - 'as'
-    - 'at'
-    - 'to'

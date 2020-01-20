@@ -117,7 +117,7 @@ module Hanami
         env[PARAMS].merge!(@path.params(env[PATH_INFO]))
         env[PARAMS] = Utils::Hash.deep_symbolize(env[PARAMS])
 
-        @endpoint.call(env)
+        @endpoint.call(env).to_a
       end
 
       # @since 0.1.0

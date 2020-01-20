@@ -1268,7 +1268,7 @@ module Hanami
       when Symbol
         begin
           url = path(env, params || options)
-          return env_for(url, options)
+          return env_for(url, options) # rubocop:disable Style/RedundantReturn
         rescue Hanami::Routing::InvalidRouteException
           {}
         end
