@@ -5,24 +5,19 @@ require "rack/head"
 RSpec.describe Hanami::Router do
   let(:router) do
     Hanami::Router.new do
-      mount Api::App.new,                  at: "/api2"
-      mount Api::App,                      at: "/api"
+      mount Api::App.new,                  at: "/api"
       mount Backend::App,                  at: "/backend"
-      mount ->(_) { [200, {}, ["proc"]] }, at: "/proc"
+      mount ->(*) { [200, { "Content-Length" => "4" }, ["proc"]] }, at: "/proc"
     end
   end
 
   shared_examples "mountable rack endpoint" do
-    it "accepts for a class endpoint" do
-      expect(app.request(verb.upcase, "/backend", lint: true).body).to eq(body_for("home", verb))
-    end
-
-    it "accepts for an instance endpoint when a class is given" do
+    it "accepts an instance endpoint" do
       expect(app.request(verb.upcase, "/api", lint: true).body).to eq(body_for("home", verb))
     end
 
-    it "accepts for an instance endpoint" do
-      expect(app.request(verb.upcase, "/api2", lint: true).body).to eq(body_for("home", verb))
+    it "accepts for a class endpoint" do
+      expect(app.request(verb.upcase, "/backend", lint: true).body).to eq(body_for("home", verb))
     end
 
     it "accepts for a proc endpoint" do

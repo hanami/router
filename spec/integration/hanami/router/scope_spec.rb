@@ -76,29 +76,28 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    # FIXME: uncomment when implementing `Hanami::Router#mount`
-    #     describe "mount" do
-    #       let(:router) do
-    #         described_class.new do
-    #           scope "api" do
-    #             mount Backend::App, at: "/backend"
-    #           end
-    #         end
-    #       end
+    describe "mount" do
+      let(:router) do
+        described_class.new do
+          scope "api" do
+            mount Backend::App, at: "/backend"
+          end
+        end
+      end
 
-    #       RSpec::Support::HTTP.mountable_verbs.each do |verb|
-    #         it "accepts #{verb} for a scoped mount" do
-    #           expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq(body_for("home", verb))
-    #         end
-    #       end
+      RSpec::Support::HTTP.mountable_verbs.each do |verb|
+        it "accepts #{verb} for a scoped mount" do
+          expect(app.request(verb.upcase, "/api/backend", lint: true).body).to eq(body_for("home", verb))
+        end
+      end
 
-    #       context "HEAD" do
-    #         let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
+      context "HEAD" do
+        let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
 
-    #         it "accepts head for a scoped mount" do
-    #           expect(app.request("HEAD", "/api/backend", lint: true).body).to eq(body_for("home", "head"))
-    #         end
-    #       end
-    #     end
+        it "accepts head for a scoped mount" do
+          expect(app.request("HEAD", "/api/backend", lint: true).body).to eq(body_for("home", "head"))
+        end
+      end
+    end
   end
 end

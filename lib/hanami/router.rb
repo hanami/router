@@ -28,6 +28,7 @@ module Hanami
       @fixed = {}
       @variable = {}
       @globbed = {}
+      @mounted = {}
       @named = {}
       instance_eval(&blk)
     end
@@ -104,6 +105,12 @@ module Hanami
       end
     end
 
+    def mount(app, at:, **constraints)
+      path = _prefixed_path(at)
+      prefix = Segment.fabricate(path, **constraints)
+      @mounted[prefix] = @resolver.call(path, app)
+    end
+
     def path(name, variables = {})
       @named.fetch(name.to_sym) do
         raise InvalidRouteException.new(name)
@@ -135,11 +142,29 @@ module Hanami
     end
 
     def globbed(env)
-      @globbed[env["REQUEST_METHOD"]]&.find do |path, to|
+      @globbed[env["REQUEST_METHOD"]]&.each do |path, to|
         if (match = path.match(env["PATH_INFO"]))
           return [to, match.named_captures]
         end
       end
+
+      nil
+    end
+
+    def mounted(env)
+      @mounted.each do |prefix, app|
+        next unless (match = prefix.peek_match(env["PATH_INFO"]))
+
+        # TODO: ensure compatibility with existing env["SCRIPT_NAME"]
+        # TODO: cleanup this code
+        env["SCRIPT_NAME"] = env["SCRIPT_NAME"].to_s + prefix.to_s
+        env["PATH_INFO"] = env["PATH_INFO"].sub(prefix.to_s, "")
+        env["PATH_INFO"] = "/" if env["PATH_INFO"] == ""
+
+        return [app, match.named_captures]
+      end
+
+      nil
     end
 
     def not_allowed(env)
@@ -201,7 +226,7 @@ module Hanami
       endpoint = fixed(env)
       return [endpoint, EMPTY_PARAMS] if endpoint
 
-      variable(env) || globbed(env)
+      variable(env) || globbed(env) || mounted(env)
     end
 
     # rubocop:disable Metrics/AbcSize
