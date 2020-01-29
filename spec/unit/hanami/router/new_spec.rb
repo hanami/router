@@ -2,11 +2,6 @@
 
 RSpec.describe Hanami::Router do
   describe "#initialize" do
-    before do
-      class MockRoute
-      end
-    end
-
     let(:app) { Rack::MockRequest.new(router) }
     let(:endpoint) { ->(_) { [200, {}, [""]] } }
     let(:router) do
