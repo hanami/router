@@ -3,102 +3,6 @@
 require "rack/head"
 
 RSpec.describe Hanami::Router do
-  shared_examples "mountable rack endpoint" do |verb|
-    context "path recognition" do
-      context "fixed string" do
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
-
-        it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami", lint: true)).to eq_response(response)
-        end
-      end
-
-      context "moving parts string" do
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!") }
-
-        it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami/23", lint: true)).to eq_response(response)
-        end
-      end
-
-      context "globbing string" do
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!") }
-
-        it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami/all", lint: true)).to eq_response(response)
-        end
-      end
-
-      context "format string" do
-        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!") }
-
-        it "recognizes" do
-          expect(app.request(verb.upcase, "/hanami/all.json", lint: true)).to eq_response(response)
-        end
-      end
-
-      # FIXME: enable again with block syntax
-      #       context "block" do
-      #         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
-
-      #         it "recognizes" do
-      #           expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
-      #         end
-      #       end
-    end
-
-    describe "constraints" do
-      let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!") }
-
-      it "recognize when called with matching constraints" do
-        expect(app.request(verb.upcase, "/books/23", lint: true)).to eq_response(response)
-        expect(app.request(verb.upcase, "/books/awdwror", lint: true).status).to eq(404)
-      end
-    end
-  end
-
-  shared_examples "mountable rack endpoint HEAD" do
-    context "path recognition" do
-      context "fixed string" do
-        it "recognizes" do
-          expect(app.request("HEAD", "/hanami", lint: true)).to eq_response(response)
-        end
-      end
-
-      context "moving parts string" do
-        it "recognizes" do
-          expect(app.request("HEAD", "/hanami/23", lint: true)).to eq_response(response)
-        end
-      end
-
-      context "globbing string" do
-        it "recognizes" do
-          expect(app.request("HEAD", "/hanami/all", lint: true)).to eq_response(response)
-        end
-      end
-
-      context "format string" do
-        it "recognizes" do
-          expect(app.request("HEAD", "/hanami/all.json", lint: true)).to eq_response(response)
-        end
-      end
-
-      # FIXME: add when block syntax is enabled
-      #       context "block" do
-      #         it "recognizes" do
-      #           expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
-      #         end
-      #       end
-    end
-
-    describe "constraints" do
-      it "recognize when called with matching constraints" do
-        expect(app.request("HEAD", "/books/23", lint: true)).to eq_response(response)
-        expect(app.request("HEAD", "/books/awdwror", lint: true).status).to eq(404)
-      end
-    end
-  end
-
   RSpec::Support::HTTP.mountable_verbs.each do |verb|
     context "##{verb}" do
       let(:router) do
@@ -119,7 +23,57 @@ RSpec.describe Hanami::Router do
 
       let(:app) { Rack::MockRequest.new(router) }
 
-      it_behaves_like "mountable rack endpoint", verb
+      context "path recognition" do
+        context "fixed string" do
+          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
+
+          it "recognizes" do
+            expect(app.request(verb.upcase, "/hanami", lint: true)).to eq_response(response)
+          end
+        end
+
+        context "moving parts string" do
+          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Moving!") }
+
+          it "recognizes" do
+            expect(app.request(verb.upcase, "/hanami/23", lint: true)).to eq_response(response)
+          end
+        end
+
+        context "globbing string" do
+          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Globbing!") }
+
+          it "recognizes" do
+            expect(app.request(verb.upcase, "/hanami/all", lint: true)).to eq_response(response)
+          end
+        end
+
+        context "format string" do
+          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "7" }, "Format!") }
+
+          it "recognizes" do
+            expect(app.request(verb.upcase, "/hanami/all.json", lint: true)).to eq_response(response)
+          end
+        end
+
+        # FIXME: enable again with block syntax
+        #       context "block" do
+        #         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+
+        #         it "recognizes" do
+        #           expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
+        #         end
+        #       end
+      end
+
+      describe "constraints" do
+        let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "24" }, "Moving with constraints!") }
+
+        it "recognize when called with matching constraints" do
+          expect(app.request(verb.upcase, "/books/23", lint: true)).to eq_response(response)
+          expect(app.request(verb.upcase, "/books/awdwror", lint: true).status).to eq(404)
+        end
+      end
 
       context "named routes" do
         context "symbol" do
@@ -158,7 +112,45 @@ RSpec.describe Hanami::Router do
         let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
         let(:response) { Rack::MockResponse.new(405, { "Content-Length" => "11" }, []) }
 
-        it_behaves_like "mountable rack endpoint HEAD"
+        context "path recognition" do
+          context "fixed string" do
+            it "recognizes" do
+              expect(app.request("HEAD", "/hanami", lint: true)).to eq_response(response)
+            end
+          end
+
+          context "moving parts string" do
+            it "recognizes" do
+              expect(app.request("HEAD", "/hanami/23", lint: true)).to eq_response(response)
+            end
+          end
+
+          context "globbing string" do
+            it "recognizes" do
+              expect(app.request("HEAD", "/hanami/all", lint: true)).to eq_response(response)
+            end
+          end
+
+          context "format string" do
+            it "recognizes" do
+              expect(app.request("HEAD", "/hanami/all.json", lint: true)).to eq_response(response)
+            end
+          end
+
+          # FIXME: add when block syntax is enabled
+          #       context "block" do
+          #         it "recognizes" do
+          #           expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
+          #         end
+          #       end
+        end
+
+        describe "constraints" do
+          it "recognize when called with matching constraints" do
+            expect(app.request("HEAD", "/books/23", lint: true)).to eq_response(response)
+            expect(app.request("HEAD", "/books/awdwror", lint: true).status).to eq(404)
+          end
+        end
       end
     end
   end # main each
