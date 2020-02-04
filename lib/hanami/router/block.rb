@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "rack/request"
+require "rack/response"
+
 module Hanami
   class Router
     # Block endpoint
@@ -16,33 +19,45 @@ module Hanami
 
         attr_reader :env
 
-        def status
-          200
+        def request
+          @request ||= Request.new(env, env["router.params"])
         end
+        alias req request
 
-        def headers
-          {}
+        def response
+          @response ||= Response.new
         end
-
-        def params
-          env["router.params"]
-        end
+        alias res response
 
         # @api private
         def call
-          [status, headers, [instance_exec(&@blk)]]
+          body = instance_exec(&@blk)
+          [response.status, response.headers, [body]]
         end
       end
 
+      # Block request
+      class Request < Rack::Request
+        def initialize(env, params)
+          super(env)
+          @params = params
+        end
+      end
+
+      # Block response
+      class Response < Rack::Response
+      end
+
       # @api private
-      def initialize(blk)
+      def initialize(context_class, blk)
+        @context_class = context_class || Context
         @blk = blk
         freeze
       end
 
       # @api private
       def call(env)
-        Context.new(@blk, env).call
+        @context_class.new(@blk, env).call
       end
     end
   end

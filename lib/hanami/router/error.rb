@@ -8,6 +8,15 @@ module Hanami
     class Error < StandardError
     end
 
+    # Missing endpoint error. It's raised when the route definition is missing `to:` endpoint and a block.
+    #
+    # @since x.x.x
+    class MissingEndpointError < Error
+      def initialize(path)
+        super("missing endpoint for #{path.inspect}")
+      end
+    end
+
     # Invalid route exception. It's raised when the router cannot recognize a route
     #
     # @since x.x.x

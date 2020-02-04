@@ -7,18 +7,20 @@ require "hanami/router/params"
 require "hanami/router/redirect"
 require "hanami/router/prefix"
 require "hanami/router/trie"
+require "hanami/router/block"
 require "rack/utils"
 
 module Hanami
   class Router
     # Inner router
     class Inner # rubocop:disable Metrics/ClassLength
-      def initialize(base_url, prefix, resolver)
+      def initialize(base_url, prefix, resolver, block_context)
         @base_url = base_url
         # TODO: verify if Prefix can handle both name and path prefix
         @path_prefix = Prefix.new(prefix)
         @name_prefix = Prefix.new("")
         @resolver = resolver
+        @block_context = block_context
         @fixed = {}
         @variable = {}
         @globbed = {}
@@ -48,8 +50,15 @@ module Hanami
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
-      def add_route(http_method, path, to, as, constraints)
+      # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/ParameterLists
+      # rubocop:disable Metrics/PerceivedComplexity
+      def add_route(http_method, path, to, as, constraints, &blk)
         path = prefixed_path(path)
+
+        (to || blk) or raise MissingEndpointError.new(path)
+        to = Block.new(@block_context, blk) if to.nil?
+
         to = @resolver.call(path, to)
 
         if globbed?(path)
@@ -65,6 +74,9 @@ module Hanami
 
         @named[prefixed_name(as)] = Segment.fabricate(path, **constraints) if as
       end
+      # rubocop:enable Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/ParameterLists
+      # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
 

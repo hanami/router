@@ -16,8 +16,8 @@ module Hanami
       blk
     end
 
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, &blk)
-      @inner = Inner.new(base_url, prefix, resolver)
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, &blk)
+      @inner = Inner.new(base_url, prefix, resolver, block_context)
       @stack = Middleware::Stack.new
       instance_eval(&blk)
       freeze
@@ -34,45 +34,45 @@ module Hanami
       @app.call(env)
     end
 
-    def root(to:)
-      get("/", to: to, as: :root)
+    def root(to: nil, &blk)
+      get("/", to: to, as: :root, &blk)
     end
 
-    def get(path, to:, as: nil, **constraints)
-      add_route("GET", path, to, as, constraints)
-      add_route("HEAD", path, to, as, constraints)
+    def get(path, to: nil, as: nil, **constraints, &blk)
+      add_route("GET", path, to, as, constraints, &blk)
+      add_route("HEAD", path, to, as, constraints, &blk)
     end
 
-    def post(path, to:, as: nil, **constraints)
-      add_route("POST", path, to, as, constraints)
+    def post(path, to: nil, as: nil, **constraints, &blk)
+      add_route("POST", path, to, as, constraints, &blk)
     end
 
-    def patch(path, to:, as: nil, **constraints)
-      add_route("PATCH", path, to, as, constraints)
+    def patch(path, to: nil, as: nil, **constraints, &blk)
+      add_route("PATCH", path, to, as, constraints, &blk)
     end
 
-    def put(path, to:, as: nil, **constraints)
-      add_route("PUT", path, to, as, constraints)
+    def put(path, to: nil, as: nil, **constraints, &blk)
+      add_route("PUT", path, to, as, constraints, &blk)
     end
 
-    def delete(path, to:, as: nil, **constraints)
-      add_route("DELETE", path, to, as, constraints)
+    def delete(path, to: nil, as: nil, **constraints, &blk)
+      add_route("DELETE", path, to, as, constraints, &blk)
     end
 
-    def trace(path, to:, as: nil, **constraints)
-      add_route("TRACE", path, to, as, constraints)
+    def trace(path, to: nil, as: nil, **constraints, &blk)
+      add_route("TRACE", path, to, as, constraints, &blk)
     end
 
-    def options(path, to:, as: nil, **constraints)
-      add_route("OPTIONS", path, to, as, constraints)
+    def options(path, to: nil, as: nil, **constraints, &blk)
+      add_route("OPTIONS", path, to, as, constraints, &blk)
     end
 
-    def link(path, to:, as: nil, **constraints)
-      add_route("LINK", path, to, as, constraints)
+    def link(path, to: nil, as: nil, **constraints, &blk)
+      add_route("LINK", path, to, as, constraints, &blk)
     end
 
-    def unlink(path, to:, as: nil, **constraints)
-      add_route("UNLINK", path, to, as, constraints)
+    def unlink(path, to: nil, as: nil, **constraints, &blk)
+      add_route("UNLINK", path, to, as, constraints, &blk)
     end
 
     def redirect(path, to:, as: nil, code: DEFAULT_REDIRECT_CODE)
@@ -157,8 +157,8 @@ module Hanami
 
     attr_reader :inner, :stack
 
-    def add_route(http_method, path, to, as, constraints)
-      inner.add_route(http_method, path, to, as, constraints)
+    def add_route(http_method, path, to, as, constraints, &blk)
+      inner.add_route(http_method, path, to, as, constraints, &blk)
     end
   end
 end

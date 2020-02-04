@@ -10,15 +10,14 @@ RSpec.describe Hanami::Router do
           r = response
 
           described_class.new do
-            __send__ verb, "/hanami",               to: ->(_) { r }
-            __send__ verb, "/hanami/:id",           to: ->(_) { r }
-            __send__ verb, "/hanami/:id(.:format)", to: ->(_) { r }
-            __send__ verb, "/hanami/*glob",         to: ->(_) { r }
-            __send__ verb, "/books/:id",            to: ->(_) { r }, id: /\d+/
-            __send__ verb, "/named_route",          to: ->(_) { r }, as: :"#{verb}_named_route"
-            __send__ verb, "/named_:var",           to: ->(_) { r }, as: :"#{verb}_named_route_var"
-            # FIXME: introduce again with block syntax
-            # __send__(verb, "/block")                          { |_| r }
+            __send__ verb, "/hanami",               to: ->(*) { r }
+            __send__ verb, "/hanami/:id",           to: ->(*) { r }
+            __send__ verb, "/hanami/:id(.:format)", to: ->(*) { r }
+            __send__ verb, "/hanami/*glob",         to: ->(*) { r }
+            __send__ verb, "/books/:id",            to: ->(*) { r }, id: /\d+/
+            __send__ verb, "/named_route",          to: ->(*) { r }, as: :"#{verb}_named_route"
+            __send__ verb, "/named_:var",           to: ->(*) { r }, as: :"#{verb}_named_route_var"
+            __send__(verb, "/block")                          { |*| r.body }
           end
         end
 
@@ -57,14 +56,13 @@ RSpec.describe Hanami::Router do
             end
           end
 
-          # FIXME: enable again with block syntax
-          #       context "block" do
-          #         let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+          context "block" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
 
-          #         it "recognizes" do
-          #           expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
-          #         end
-          #       end
+            it "recognizes" do
+              expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
+            end
+          end
         end
 
         describe "constraints" do
@@ -138,12 +136,13 @@ RSpec.describe Hanami::Router do
               end
             end
 
-            # FIXME: add when block syntax is enabled
-            #       context "block" do
-            #         it "recognizes" do
-            #           expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
-            #         end
-            #       end
+            unless verb == "get"
+              context "block" do
+                it "recognizes" do
+                  expect(app.request("HEAD", "/block", lint: true)).to eq_response(response)
+                end
+              end
+            end
           end
 
           describe "constraints" do
@@ -185,26 +184,25 @@ RSpec.describe Hanami::Router do
           end
         end
 
-        # FIXME: enable when block syntax will be enabled
-        # context "block" do
-        #   let(:router) do
-        #     r = response
+        context "block" do
+          let(:router) do
+            r = response
 
-        #     described_class.new do
-        #       root { |_| r }
-        #     end
-        #   end
+            described_class.new do
+              root { |*| r.body }
+            end
+          end
 
-        #   let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
+          let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Block!") }
 
-        #   it "recognizes" do
-        #     actual = app.request("GET", "/", lint: true)
+          it "recognizes" do
+            actual = app.request("GET", "/", lint: true)
 
-        #     expect(actual.status).to eq(response.status)
-        #     expect(actual.header).to eq(response.header)
-        #     expect(actual.body).to   eq(response.body)
-        #   end
-        # end
+            expect(actual.status).to eq(response.status)
+            expect(actual.header).to eq(response.header)
+            expect(actual.body).to   eq(response.body)
+          end
+        end
       end
     end
   end
