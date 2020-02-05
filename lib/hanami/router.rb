@@ -14,17 +14,19 @@ module Hanami
     require "hanami/router/prefix"
     require "hanami/router/params"
     require "hanami/router/trie"
+    require "hanami/router/block"
 
     def self.define(&blk)
       blk
     end
 
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, &blk)
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, &blk) # rubocop:disable Metrics/MethodLength
       @base_url = base_url
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @resolver = resolver
+      @block_context = block_context
       @fixed = {}
       @variable = {}
       @globbed = {}
@@ -46,48 +48,48 @@ module Hanami
       ).to_a
     end
 
-    def root(to:)
-      get("/", to: to, as: :root)
+    def root(to: nil, &blk)
+      get("/", to: to, as: :root, &blk)
     end
 
-    def get(path, to:, as: nil, **constraints)
-      add_route("GET", path, to, as, constraints)
-      add_route("HEAD", path, to, as, constraints)
+    def get(path, to: nil, as: nil, **constraints, &blk)
+      add_route("GET", path, to, as, constraints, &blk)
+      add_route("HEAD", path, to, as, constraints, &blk)
     end
 
-    def post(path, to:, as: nil, **constraints)
-      add_route("POST", path, to, as, constraints)
+    def post(path, to: nil, as: nil, **constraints, &blk)
+      add_route("POST", path, to, as, constraints, &blk)
     end
 
-    def patch(path, to:, as: nil, **constraints)
-      add_route("PATCH", path, to, as, constraints)
+    def patch(path, to: nil, as: nil, **constraints, &blk)
+      add_route("PATCH", path, to, as, constraints, &blk)
     end
 
-    def put(path, to:, as: nil, **constraints)
-      add_route("PUT", path, to, as, constraints)
+    def put(path, to: nil, as: nil, **constraints, &blk)
+      add_route("PUT", path, to, as, constraints, &blk)
     end
 
-    def delete(path, to:, as: nil, **constraints)
-      add_route("DELETE", path, to, as, constraints)
+    def delete(path, to: nil, as: nil, **constraints, &blk)
+      add_route("DELETE", path, to, as, constraints, &blk)
     end
 
-    def trace(path, to:, as: nil, **constraints)
-      add_route("TRACE", path, to, as, constraints)
+    def trace(path, to: nil, as: nil, **constraints, &blk)
+      add_route("TRACE", path, to, as, constraints, &blk)
     end
 
-    def options(path, to:, as: nil, **constraints)
-      add_route("OPTIONS", path, to, as, constraints)
+    def options(path, to: nil, as: nil, **constraints, &blk)
+      add_route("OPTIONS", path, to, as, constraints, &blk)
     end
 
-    def link(path, to:, as: nil, **constraints)
-      add_route("LINK", path, to, as, constraints)
+    def link(path, to: nil, as: nil, **constraints, &blk)
+      add_route("LINK", path, to, as, constraints, &blk)
     end
 
-    def unlink(path, to:, as: nil, **constraints)
-      add_route("UNLINK", path, to, as, constraints)
+    def unlink(path, to: nil, as: nil, **constraints, &blk)
+      add_route("UNLINK", path, to, as, constraints, &blk)
     end
 
-    def redirect(path, to:, as: nil, code: DEFAULT_REDIRECT_CODE)
+    def redirect(path, to: nil, as: nil, code: DEFAULT_REDIRECT_CODE)
       get(path, to: _redirect(to, code), as: as)
     end
 
@@ -106,7 +108,7 @@ module Hanami
     end
 
     def mount(app, at:, **constraints)
-      path = _prefixed_path(at)
+      path = prefixed_path(at)
       prefix = Segment.fabricate(path, **constraints)
       @mounted[prefix] = @resolver.call(path, app)
     end
@@ -229,45 +231,46 @@ module Hanami
       variable(env) || globbed(env) || mounted(env)
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    def add_route(http_method, path, to, as, constraints)
-      path = _prefixed_path(path)
-      to = @resolver.call(path, to)
+    def add_route(http_method, path, to, as, constraints, &blk)
+      path = prefixed_path(path)
+      to = resolve_endpoint(path, to, blk)
 
       if globbed?(path)
-        @globbed[http_method] ||= []
-        @globbed[http_method] << [Segment.fabricate(path, **constraints), to]
+        add_globbed_route(http_method, path, to, constraints)
       elsif variable?(path)
-        @variable[http_method] ||= Trie.new
-        @variable[http_method].add(path, to, constraints)
+        add_variable_route(http_method, path, to, constraints)
       else
-        @fixed[http_method] ||= {}
-        @fixed[http_method][path] = to
+        add_fixed_route(http_method, path, to)
       end
 
-      @named[_prefixed_name(as)] = Segment.fabricate(path, **constraints) if as
+      add_named_route(path, as, constraints) if as
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
-    # def add_route(http_method, path, to, as, constraints, &blk)
-    #   (to || blk) or raise "missing endpoint"
-    #   to = Block.new(blk) if to.nil?
+    def resolve_endpoint(path, to, blk)
+      (to || blk) or raise MissingEndpointError.new(path)
+      to = Block.new(@block_context, blk) if to.nil?
 
-    #   path = _prefixed_path(path)
+      @resolver.call(path, to)
+    end
 
-    #   if variable?(path)
-    #     @variable[http_method] ||= Trie.new
-    #     @variable[http_method].add(path, to, constraints)
-    #   else
-    #     @fixed[http_method] ||= {}
-    #     @fixed[http_method][path] = to
-    #   end
+    def add_globbed_route(http_method, path, to, constraints)
+      @globbed[http_method] ||= []
+      @globbed[http_method] << [Segment.fabricate(path, **constraints), to]
+    end
 
-    #   # FIXME: pass constraints
-    #   @named[_prefixed_name(as)] = Segment.fabricate(path, {}) if as
-    # end
+    def add_variable_route(http_method, path, to, constraints)
+      @variable[http_method] ||= Trie.new
+      @variable[http_method].add(path, to, constraints)
+    end
+
+    def add_fixed_route(http_method, path, to)
+      @fixed[http_method] ||= {}
+      @fixed[http_method][path] = to
+    end
+
+    def add_named_route(path, as, constraints)
+      @named[prefixed_name(as)] = Segment.fabricate(path, **constraints)
+    end
 
     def variable?(path)
       /:/.match?(path)
@@ -277,11 +280,11 @@ module Hanami
       /\*/.match?(path)
     end
 
-    def _prefixed_path(path)
+    def prefixed_path(path)
       @path_prefix.join(path).to_s
     end
 
-    def _prefixed_name(name)
+    def prefixed_name(name)
       @name_prefix.relative_join(name, "_").to_sym
     end
 
@@ -290,7 +293,7 @@ module Hanami
         raise UnknownHTTPStatusCodeError.new(code)
       end
 
-      destination = _prefixed_path(to)
+      destination = prefixed_path(to)
       Redirect.new(destination, ->(*) { [code, { "Location" => destination }, [body]] })
     end
 

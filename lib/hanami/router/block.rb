@@ -16,12 +16,20 @@ module Hanami
 
         attr_reader :env
 
-        def status
-          200
+        def status(value = nil)
+          if value
+            @status = value
+          else
+            @status ||= 200
+          end
         end
 
-        def headers
-          {}
+        def headers(value = nil)
+          if value
+            @headers = value
+          else
+            @headers ||= {}
+          end
         end
 
         def params
@@ -30,19 +38,21 @@ module Hanami
 
         # @api private
         def call
-          [status, headers, [instance_exec(&@blk)]]
+          body = instance_exec(&@blk)
+          [status, headers, [body]]
         end
       end
 
       # @api private
-      def initialize(blk)
+      def initialize(context_class, blk)
+        @context_class = context_class || Context
         @blk = blk
         freeze
       end
 
       # @api private
       def call(env)
-        Context.new(@blk, env).call
+        @context_class.new(@blk, env).call
       end
     end
   end
