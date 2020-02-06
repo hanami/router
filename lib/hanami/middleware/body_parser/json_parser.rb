@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "hanami/utils/json"
+require "json"
 require_relative "errors"
 
 module Hanami
@@ -26,8 +26,8 @@ module Hanami
         # @since 1.3.0
         # @api private
         def parse(body)
-          Hanami::Utils::Json.parse(body)
-        rescue Hanami::Utils::Json::ParserError => exception
+          JSON.parse(body)
+        rescue StandardError => exception
           raise BodyParsingError.new(exception.message)
         end
       end
