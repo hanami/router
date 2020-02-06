@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rack/utils"
+# require "rack/utils"
 require "mustermann/rails"
 
 module Hanami
