@@ -15,23 +15,28 @@ module Hanami
     require "hanami/router/params"
     require "hanami/router/trie"
     require "hanami/router/block"
+    require "hanami/router/url_helpers"
+
+    # URL helpers for other Hanami integrations
+    #
+    # @api private
+    attr_reader :url_helpers
 
     def self.define(&blk)
       blk
     end
 
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, &blk) # rubocop:disable Metrics/MethodLength
-      @base_url = base_url
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, &blk)
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
+      @url_helpers = UrlHelpers.new(base_url)
       @resolver = resolver
       @block_context = block_context
       @fixed = {}
       @variable = {}
       @globbed = {}
       @mounted = {}
-      @named = {}
       instance_eval(&blk)
     end
 
@@ -114,15 +119,11 @@ module Hanami
     end
 
     def path(name, variables = {})
-      @named.fetch(name.to_sym) do
-        raise InvalidRouteException.new(name)
-      end.expand(:append, variables)
-    rescue Mustermann::ExpandError => exception
-      raise InvalidRouteExpansionException.new(name, exception.message)
+      @url_helpers.path(name, variables)
     end
 
     def url(name, variables = {})
-      @base_url + path(name, variables)
+      @url_helpers.url(name, variables)
     end
 
     def recognize(env, params = {}, options = {})
@@ -269,7 +270,7 @@ module Hanami
     end
 
     def add_named_route(path, as, constraints)
-      @named[prefixed_name(as)] = Segment.fabricate(path, **constraints)
+      @url_helpers.add(prefixed_name(as), Segment.fabricate(path, **constraints))
     end
 
     def variable?(path)
