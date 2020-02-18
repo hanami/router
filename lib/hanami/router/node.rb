@@ -38,7 +38,7 @@ module Hanami
       #
       # rubocop:disable Metrics/MethodLength
       def get(segment)
-        return nil unless @variable || @fixed
+        return unless @variable || @fixed
 
         found = nil
         captured = nil
