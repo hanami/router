@@ -9,12 +9,18 @@ module Hanami
     # @api private
     # @since x.x.x
     class Trie
+      # @api private
+      # @since x.x.x
       attr_reader :root
 
+      # @api private
+      # @since x.x.x
       def initialize
         @root = Node.new
       end
 
+      # @api private
+      # @since x.x.x
       def add(path, to, constraints)
         node = @root
         for_each_segment(path) do |segment|
@@ -24,6 +30,8 @@ module Hanami
         node.leaf!(to)
       end
 
+      # @api private
+      # @since x.x.x
       def find(path)
         node = @root
         params = {}
@@ -44,8 +52,9 @@ module Hanami
 
       private
 
+      # @api private
+      # @since x.x.x
       def for_each_segment(path, &blk)
-        # _, *segments = path.split(/\/(?:\()*/)
         _, *segments = path.split(/\//)
         segments.each(&blk)
       end

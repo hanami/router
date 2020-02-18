@@ -4,7 +4,7 @@ module Hanami
   class Router
     # Represents a result of router path recognition.
     #
-    # @since x.x.x
+    # @since 0.5.0
     #
     # @see Hanami::Router#recognize
     class RecognizedRoute
@@ -54,24 +54,34 @@ module Hanami
         @env["PATH_INFO"]
       end
 
+      # @since 0.7.0
+      # @api public
       def params
         @env["router.params"]
       end
 
+      # @since 0.7.0
+      # @api public
       def endpoint
         return nil if redirect?
 
         @endpoint
       end
 
+      # @since 0.7.0
+      # @api public
       def routable?
         !@endpoint.nil?
       end
 
+      # @since 0.7.0
+      # @api public
       def redirect?
         @endpoint.is_a?(Redirect)
       end
 
+      # @since 0.7.0
+      # @api public
       def redirection_path
         return nil unless redirect?
 

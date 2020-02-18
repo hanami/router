@@ -7,6 +7,14 @@ module Hanami
     # @since x.x.x
     # @api private
     class Params
+      # Deep symbolize Hash params
+      #
+      # @param [Hash] the params to symbolize
+      #
+      # @return [Hash] the symbolized params
+      #
+      # @api private
+      # @since x.x.x
       def self.deep_symbolize(params) # rubocop:disable Metrics/MethodLength
         params.each_with_object({}) do |(key, value), output|
           output[key.to_sym] =

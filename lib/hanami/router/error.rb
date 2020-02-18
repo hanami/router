@@ -4,7 +4,7 @@ module Hanami
   class Router
     # Base error
     #
-    # @since x.x.x
+    # @since 0.5.0
     class Error < StandardError
     end
 
