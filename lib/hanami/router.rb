@@ -25,22 +25,6 @@ module Hanami
 
     # Returns the given block as it is.
     #
-    # When Hanami::Router is used as a standalone gem and the routes are defined
-    # into a configuration file, some systems could raise an exception.
-    #
-    # Imagine the following file into a Ruby on Rails application:
-    #
-    #   get "/", to: "api#index"
-    #
-    # Because Ruby on Rails in production mode use to eager load code and the
-    # routes file uses top level method calls, it crashes the application.
-    #
-    # If we wrap these routes with `Hanami::Router.define`, the block
-    # doesn't get yielded but just returned to the caller as it is.
-    #
-    # Usually the receiver of this block is `Hanami::Router#initialize`,
-    # which finally evaluates the block.
-    #
     # @param blk [Proc] a set of route definitions
     #
     # @return [Proc] the given block
@@ -50,7 +34,7 @@ module Hanami
     # @example
     #   # apps/web/config/routes.rb
     #   Hanami::Router.define do
-    #     get "/", to: "home#index"
+    #     get "/", to: ->(*) { ... }
     #   end
     def self.define(&blk)
       blk
@@ -428,7 +412,7 @@ module Hanami
     # The additional arguments will be used to compose the relative URL - in
     #   case it has tokens to match - and for compose the query string.
     #
-    # @param route [Symbol] the route name
+    # @param name [Symbol] the route name
     #
     # @return [String]
     #
@@ -443,8 +427,8 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new(base_url: "https://hanamirb.org") do
-    #     get "/login", to: "sessions#new",    as: :login
-    #     get "/:name", to: "frameworks#show", as: :framework
+    #     get "/login", to: ->(*) { ... }, as: :login
+    #     get "/:name", to: ->(*) { ... }, as: :framework
     #   end
     #
     #   router.path(:login)                          # => "/login"
@@ -458,7 +442,7 @@ module Hanami
     # The additional arguments will be used to compose the relative URL - in
     #   case it has tokens to match - and for compose the query string.
     #
-    # @param route [Symbol] the route name
+    # @param name [Symbol] the route name
     #
     # @return [String]
     #
@@ -473,8 +457,8 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new(base_url: "https://hanamirb.org") do
-    #     get "/login", to: "sessions#new",    as: :login
-    #     get "/:name", to: "frameworks#show", as: :framework
+    #     get "/login", to: ->(*) { ... }, as: :login
+    #     get "/:name", to: ->(*) { ... }, as: :framework
     #   end
     #
     #   router.url(:login)                          # => "https://hanamirb.org/login"
@@ -505,7 +489,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize("/books/23")
@@ -517,7 +501,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize(Rack::MockRequest.env_for("/books/23"))
@@ -529,7 +513,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize(:book, id: 23)
@@ -541,7 +525,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize("/books")
@@ -552,7 +536,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize("/books/23", method: :post)
@@ -563,7 +547,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize(Rack::MockRequest.env_for("/books/23", method: :post))
@@ -574,7 +558,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize(:book)
@@ -585,7 +569,7 @@ module Hanami
     #   require "hanami/router"
     #
     #   router = Hanami::Router.new do
-    #     get "/books/:id", to: "books#show", as: :book
+    #     get "/books/:id", to: ->(*) { ... }, as: :book
     #   end
     #
     #   route = router.recognize(:book, {method: :post}, {id: 1})

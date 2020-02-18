@@ -9,7 +9,7 @@ module Hanami
     class Params
       # Deep symbolize Hash params
       #
-      # @param [Hash] the params to symbolize
+      # @param params [Hash] the params to symbolize
       #
       # @return [Hash] the symbolized params
       #
