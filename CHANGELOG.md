@@ -1,7 +1,7 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
-## v2.0.0.alpha2 - 2020-02-18
+## v2.0.0.alpha2 - 2020-02-19
 ### Added
 - [Luca Guidi] Block syntax. Routes definition accept a block which returning value is the body of the Rack response.
 - [Luca Guidi] Added `resolver:` option to `Hanami::Router#initialize` to provide your own strategy to load endpoints.
