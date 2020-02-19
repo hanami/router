@@ -2,23 +2,16 @@
 
 RSpec.describe Hanami::Router do
   describe "#initialize" do
-    before do
-      class MockRoute
-      end
-    end
-
     let(:app) { Rack::MockRequest.new(router) }
     let(:endpoint) { ->(_) { [200, {}, [""]] } }
     let(:router) do
       e = endpoint
 
-      described_class.new(configuration: Action::Configuration.new("new")) do
+      described_class.new do
         root                to: e
         get "/route",       to: e
         get "/named_route", to: e, as: :named_route
-        resource  "avatar"
-        resources "flowers"
-        prefix "admin" do
+        scope "admin" do
           get "/dashboard", to: e
         end
       end
@@ -29,7 +22,8 @@ RSpec.describe Hanami::Router do
       expect(router).to be_instance_of(Hanami::Router)
     end
 
-    it "evaluates routes passed from Hanami::Router.define" do
+    # FIXME: check if Hanami::Router.define is still needed
+    xit "evaluates routes passed from Hanami::Router.define" do
       routes = Hanami::Router.define { post "/domains", to: ->(_env) { [201, {}, ["Domain Created"]] } }
       router = Hanami::Router.new(&routes)
 
@@ -45,14 +39,15 @@ RSpec.describe Hanami::Router do
     end
 
     it "sets options" do
-      router = Hanami::Router.new(scheme: "https") do
-        root to: ->(env) {}
+      router = Hanami::Router.new(base_url: "https://hanami.test") do
+        root to: ->(*) {}
       end
 
       expect(router.url(:root)).to match("https")
     end
 
-    it "checks if there are defined routes" do
+    # FIXME: verify if Hanami::Router#defined? is still needed
+    xit "checks if there are defined routes" do
       router = Hanami::Router.new
       expect(router.defined?).to be false
 
@@ -70,14 +65,6 @@ RSpec.describe Hanami::Router do
 
     it "recognizes named path" do
       expect(app.get("/named_route", lint: true).status).to eq(200)
-    end
-
-    it "recognizes resource" do
-      expect(app.get("/avatar", lint: true).status).to eq(200)
-    end
-
-    it "recognizes resources" do
-      expect(app.get("/avatar", lint: true).status).to eq(200)
     end
 
     it "recognizes prefixed path" do

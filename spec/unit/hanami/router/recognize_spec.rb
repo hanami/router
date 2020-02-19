@@ -5,14 +5,14 @@ RSpec.describe Hanami::Router do
     let(:router) do
       configuration = Action::Configuration.new("recognize")
 
-      Hanami::Router.new(namespace: Web::Controllers, configuration: configuration) do
-        get "/",              to: "home#index",                                                         as: :home
+      Hanami::Router.new do
+        get "/",              to: ->(*) { [200, {}, ["HOME"]] },                                        as: :home
         get "/dashboard",     to: Web::Controllers::Dashboard::Index.new(configuration: configuration), as: :dashboard
-        get "/rack_class",    to: RackMiddleware,                     as: :rack_class
-        get "/rack_app",      to: RackMiddlewareInstanceMethod,       as: :rack_app
-        get "/proc",          to: ->(_env) { [200, {}, ["OK"]] },     as: :proc
-        get "/resources/:id", to: ->(_env) { [200, {}, ["PARAMS"]] }, as: :params
-        get "/missing",       to: "missing#index",                    as: :missing
+        get "/rack_class",    to: RackMiddleware,                                                       as: :rack_class
+        get "/rack_app",      to: RackMiddlewareInstanceMethod.new,                                     as: :rack_app
+        get "/proc",          to: ->(*) { [200, {}, ["OK"]] },                                          as: :proc
+        get "/resources/:id", to: ->(*) { [200, {}, ["PARAMS"]] },                                      as: :params
+        get "/missing",       to: "missing#index",                                                      as: :missing
         redirect "/home",     to: "/"
       end
     end
@@ -28,7 +28,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
+        expect(route.endpoint.inspect).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/proc")
@@ -41,28 +41,11 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
+        expect(route.endpoint.inspect).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/resources/1")
         expect(route.params).to eq(id: "1")
-      end
-
-      it "recognizes action with naming convention (home#index)" do
-        env   = Rack::MockRequest.env_for("/", method: :get)
-        route = router.recognize(env)
-
-        _, _, body = *route.call({})
-
-        expect(body).to eq(["Hello from Web::Controllers::Home::Index"])
-
-        expect(route.routable?).to be(true)
-        expect(route.redirect?).to be(false)
-        expect(route.action).to eq("home#index")
-        expect(route.redirection_path).to be(nil)
-        expect(route.verb).to eq("GET")
-        expect(route.path).to eq("/")
-        expect(route.params).to eq({})
       end
 
       it "recognizes action from instance" do
@@ -75,7 +58,8 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("dashboard#index")
+        # TODO: with the mixin that adds supports for actions, it's worth considering to add `#action` method
+        expect(route.endpoint.class).to eq(Web::Controllers::Dashboard::Index)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/dashboard")
@@ -92,7 +76,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("RackMiddleware")
+        expect(route.endpoint).to eq(RackMiddleware)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/rack_class")
@@ -109,7 +93,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("RackMiddlewareInstanceMethod")
+        expect(route.endpoint.class).to eq(RackMiddlewareInstanceMethod)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/rack_app")
@@ -122,12 +106,12 @@ RSpec.describe Hanami::Router do
 
         _, headers, body = *route.call({})
 
-        expect(body).to eq([])
+        expect(body).to eq(["Moved Permanently"])
         expect(headers).to eq("Location" => "/")
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(true)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to eq("/")
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/home")
@@ -140,14 +124,16 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("POST")
         expect(route.path).to eq("/")
         expect(route.params).to eq({})
       end
 
-      it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
+      # TODO: Given LazyEnpoint is a concept that is tight to Endpoint resolution and we don't have
+      # endpoint resolution anymore, is still worth to keep this concept around?
+      xit "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         env   = Rack::MockRequest.env_for("/missing", method: :get)
         route = router.recognize(env)
 
@@ -164,7 +150,7 @@ RSpec.describe Hanami::Router do
         env   = Rack::MockRequest.env_for("/", method: :post)
         route = router.recognize(env)
 
-        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
+        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, "Cannot find routable endpoint for: POST /")
       end
     end
 
@@ -178,7 +164,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
+        expect(route.endpoint.inspect).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/proc")
@@ -190,43 +176,11 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
+        expect(route.endpoint.inspect).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/resources/1")
         expect(route.params).to eq(id: "1")
-      end
-
-      it "recognizes action with naming convention (home#index)" do
-        route = router.recognize("/")
-
-        _, _, body = *route.call({})
-
-        expect(body).to eq(["Hello from Web::Controllers::Home::Index"])
-
-        expect(route.routable?).to be(true)
-        expect(route.redirect?).to be(false)
-        expect(route.action).to eq("home#index")
-        expect(route.redirection_path).to be(nil)
-        expect(route.verb).to eq("GET")
-        expect(route.path).to eq("/")
-        expect(route.params).to eq({})
-      end
-
-      it "recognizes action from instance" do
-        route = router.recognize("/dashboard")
-
-        _, _, body = *route.call({})
-
-        expect(body).to eq(["Hello from Web::Controllers::Dashboard::Index"])
-
-        expect(route.routable?).to be(true)
-        expect(route.redirect?).to be(false)
-        expect(route.action).to eq("dashboard#index")
-        expect(route.redirection_path).to be(nil)
-        expect(route.verb).to eq("GET")
-        expect(route.path).to eq("/dashboard")
-        expect(route.params).to eq({})
       end
 
       it "recognizes action from rack middleware class" do
@@ -238,7 +192,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("RackMiddleware")
+        expect(route.endpoint).to eq(RackMiddleware)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/rack_class")
@@ -254,7 +208,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("RackMiddlewareInstanceMethod")
+        expect(route.endpoint.class).to eq(RackMiddlewareInstanceMethod)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/rack_app")
@@ -266,12 +220,12 @@ RSpec.describe Hanami::Router do
 
         _, headers, body = *route.call({})
 
-        expect(body).to eq([])
+        expect(body).to eq(["Moved Permanently"])
         expect(headers).to eq("Location" => "/")
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(true)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to eq("/")
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/home")
@@ -279,18 +233,20 @@ RSpec.describe Hanami::Router do
       end
 
       it "returns not routeable result when cannot recognize" do
-        route = router.recognize("/", method: :post)
+        route = router.recognize("/", {}, method: :post)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("POST")
         expect(route.path).to eq("/")
         expect(route.params).to eq({})
       end
 
-      it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
+      # TODO: Given LazyEnpoint is a concept that is tight to Endpoint resolution and we don't have
+      # endpoint resolution anymore, is still worth to keep this concept around?
+      xit "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         route = router.recognize("/missing")
 
         expect(route.routable?).to be(false)
@@ -304,9 +260,9 @@ RSpec.describe Hanami::Router do
 
       it "raises error if #call is invoked for not routeable object when cannot recognize" do
         env   = Rack::MockRequest.env_for("/", method: :post)
-        route = router.recognize("/", method: :post)
+        route = router.recognize("/", {}, method: :post)
 
-        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
+        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, "Cannot find routable endpoint for: POST /")
       end
 
       it "raises error if #call is invoked for unknown path" do
@@ -314,13 +270,13 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/unknown")
         expect(route.params).to eq({})
 
-        expect { route.call({}) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for GET "/unknown"')
+        expect { route.call({}) }.to raise_error(Hanami::Router::NotRoutableEndpointError, "Cannot find routable endpoint for: GET /unknown")
       end
     end
 
@@ -334,7 +290,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
+        expect(route.endpoint.inspect).to include("spec/unit/hanami/router/recognize_spec.rb:13 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/proc")
@@ -346,43 +302,11 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
+        expect(route.endpoint.inspect).to include("spec/unit/hanami/router/recognize_spec.rb:14 (lambda)")
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/resources/1")
         expect(route.params).to eq(id: "1")
-      end
-
-      it "recognizes action with naming convention (home#index)" do
-        route = router.recognize(:home)
-
-        _, _, body = *route.call({})
-
-        expect(body).to eq(["Hello from Web::Controllers::Home::Index"])
-
-        expect(route.routable?).to be(true)
-        expect(route.redirect?).to be(false)
-        expect(route.action).to eq("home#index")
-        expect(route.redirection_path).to be(nil)
-        expect(route.verb).to eq("GET")
-        expect(route.path).to eq("/")
-        expect(route.params).to eq({})
-      end
-
-      it "recognizes action from instance" do
-        route = router.recognize(:dashboard)
-
-        _, _, body = *route.call({})
-
-        expect(body).to eq(["Hello from Web::Controllers::Dashboard::Index"])
-
-        expect(route.routable?).to be(true)
-        expect(route.redirect?).to be(false)
-        expect(route.action).to eq("dashboard#index")
-        expect(route.redirection_path).to be(nil)
-        expect(route.verb).to eq("GET")
-        expect(route.path).to eq("/dashboard")
-        expect(route.params).to eq({})
       end
 
       it "recognizes action from rack middleware class" do
@@ -394,7 +318,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("RackMiddleware")
+        expect(route.endpoint).to eq(RackMiddleware)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/rack_class")
@@ -410,7 +334,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(false)
-        expect(route.action).to eq("RackMiddlewareInstanceMethod")
+        expect(route.endpoint.class).to eq(RackMiddlewareInstanceMethod)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/rack_app")
@@ -422,7 +346,7 @@ RSpec.describe Hanami::Router do
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to be(nil)
         expect(route.path).to be(nil)
@@ -430,23 +354,25 @@ RSpec.describe Hanami::Router do
       end
 
       it "returns not routeable result when cannot recognize" do
-        route = router.recognize(:home, { method: :post }, {})
+        route = router.recognize(:home, {}, method: :post)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("POST")
         expect(route.path).to eq("/")
         expect(route.params).to eq({})
       end
 
-      it "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
+      # TODO: Given LazyEnpoint is a concept that is tight to Endpoint resolution and we don't have
+      # endpoint resolution anymore, is still worth to keep this concept around?
+      xit "returns not routeable result when the lazy endpoint doesn't correspond to an action" do
         route = router.recognize(:missing)
 
         expect(route.routable?).to be(false)
         expect(route.redirect?).to be(false)
-        expect(route.action).to be(nil)
+        expect(route.endpoint).to be(nil)
         expect(route.redirection_path).to be(nil)
         expect(route.verb).to eq("GET")
         expect(route.path).to eq("/missing")
@@ -455,9 +381,9 @@ RSpec.describe Hanami::Router do
 
       it "raises error if #call is invoked for not routeable object when cannot recognize" do
         env   = Rack::MockRequest.env_for("/", method: :post)
-        route = router.recognize(:home, { method: :post }, {})
+        route = router.recognize(:home, {}, method: :post)
 
-        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, 'Cannot find routable endpoint for POST "/"')
+        expect { route.call(env) }.to raise_error(Hanami::Router::NotRoutableEndpointError, "Cannot find routable endpoint for: POST /")
       end
     end
   end

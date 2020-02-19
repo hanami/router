@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require "hanami/utils/class"
-require "hanami/utils/string"
 require_relative "errors"
 
 module Hanami
   module Middleware
+    # HTTP request body parser
     class BodyParser
       # @api private
       # @since 1.3.0
@@ -45,10 +44,17 @@ module Hanami
         def require_parser(parser)
           require "hanami/middleware/body_parser/#{parser}_parser"
 
-          parser = Utils::String.classify(parser)
-          Utils::Class.load!("Hanami::Middleware::BodyParser::#{parser}Parser").new
+          load_parser!("#{classify(parser)}Parser").new
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)
+        end
+
+        def classify(parser)
+          parser.to_s.split(/_/).map(&:capitalize).join
+        end
+
+        def load_parser!(class_name)
+          Hanami::Middleware::BodyParser.const_get(class_name, false)
         end
       end
     end
