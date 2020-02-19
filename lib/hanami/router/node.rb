@@ -7,14 +7,14 @@ module Hanami
     # Trie node
     #
     # @api private
-    # @since x.x.x
+    # @since 2.0.0
     class Node
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       attr_reader :to
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def initialize
         @variable = nil
         @fixed = nil
@@ -22,7 +22,7 @@ module Hanami
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def put(segment, constraints)
         if variable?(segment)
           @variable ||= {}
@@ -34,7 +34,7 @@ module Hanami
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       #
       # rubocop:disable Metrics/MethodLength
       def get(segment)
@@ -58,13 +58,13 @@ module Hanami
       # rubocop:enable Metrics/MethodLength
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def leaf?
         @to
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def leaf!(to)
         @to = to
       end
@@ -72,19 +72,19 @@ module Hanami
       private
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def variable?(segment)
         /:/.match?(segment)
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def segment_for(segment, constraints)
         Segment.fabricate(segment, **constraints)
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def fixed?(matcher)
         matcher.names.empty?
       end

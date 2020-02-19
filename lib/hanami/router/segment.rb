@@ -6,10 +6,10 @@ module Hanami
   class Router
     # Route path
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     class Segment
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def self.fabricate(segment, **constraints)
         Mustermann.new(segment, type: :rails, version: "5.0", capture: constraints)

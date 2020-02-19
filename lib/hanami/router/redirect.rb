@@ -4,21 +4,21 @@ module Hanami
   class Router
     # HTTP Redirect
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     class Redirect
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       attr_reader :destination
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def initialize(destination, endpoint)
         @destination = destination
         @endpoint = endpoint
       end
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def call(env)
         @endpoint.call(env)

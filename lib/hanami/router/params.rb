@@ -4,7 +4,7 @@ module Hanami
   class Router
     # Params utilities
     #
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     class Params
       # Deep symbolize Hash params
@@ -14,7 +14,7 @@ module Hanami
       # @return [Hash] the symbolized params
       #
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def self.deep_symbolize(params) # rubocop:disable Metrics/MethodLength
         params.each_with_object({}) do |(key, value), output|
           output[key.to_sym] =

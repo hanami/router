@@ -10,7 +10,7 @@ module Hanami
 
     # Missing endpoint error. It's raised when the route definition is missing `to:` endpoint and a block.
     #
-    # @since x.x.x
+    # @since 2.0.0
     class MissingEndpointError < Error
       def initialize(path)
         super("missing endpoint for #{path.inspect}")
@@ -19,7 +19,7 @@ module Hanami
 
     # Invalid route exception. It's raised when the router cannot recognize a route
     #
-    # @since x.x.x
+    # @since 2.0.0
     class InvalidRouteException < Error
       def initialize(name)
         super("No route could be generated for #{name.inspect} - please check given arguments")
@@ -29,7 +29,7 @@ module Hanami
     # Invalid route expansion exception. It's raised when the router recognizes
     # a route but given variables cannot be expanded into a path/url
     #
-    # @since x.x.x
+    # @since 2.0.0
     #
     # @see Hanami::Router#path
     # @see Hanami::Router#url
@@ -41,7 +41,7 @@ module Hanami
 
     # Handle unknown HTTP status codes
     #
-    # @since x.x.x
+    # @since 2.0.0
     class UnknownHTTPStatusCodeError < Error
       def initialize(code)
         super("Unknown HTTP status code: #{code.inspect}")

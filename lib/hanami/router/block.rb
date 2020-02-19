@@ -5,14 +5,14 @@ module Hanami
     # Block endpoint
     #
     # @api private
-    # @since x.x.x
+    # @since 2.0.0
     class Block
       # Context to handle a single incoming HTTP request for a block endpoint
       #
-      # @since x.x.x
+      # @since 2.0.0
       class Context
         # @api private
-        # @since x.x.x
+        # @since 2.0.0
         def initialize(blk, env)
           @blk = blk
           @env = env
@@ -22,7 +22,7 @@ module Hanami
         #
         # @return [Hash] the Rack env
         #
-        # @since x.x.x
+        # @since 2.0.0
         attr_reader :env
 
         # @overload status
@@ -57,13 +57,13 @@ module Hanami
         #
         # @return [Hash] the HTTP params
         #
-        # @since x.x.x
+        # @since 2.0.0
         def params
           env["router.params"]
         end
 
         # @api private
-        # @since x.x.x
+        # @since 2.0.0
         def call
           body = instance_exec(&@blk)
           [status, headers, [body]]
@@ -71,7 +71,7 @@ module Hanami
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def initialize(context_class, blk)
         @context_class = context_class || Context
         @blk = blk
@@ -79,7 +79,7 @@ module Hanami
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def call(env)
         @context_class.new(@blk, env).call
       end

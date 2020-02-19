@@ -7,20 +7,20 @@ module Hanami
     # Trie data structure to store routes
     #
     # @api private
-    # @since x.x.x
+    # @since 2.0.0
     class Trie
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       attr_reader :root
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def initialize
         @root = Node.new
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def add(path, to, constraints)
         node = @root
         for_each_segment(path) do |segment|
@@ -31,7 +31,7 @@ module Hanami
       end
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def find(path)
         node = @root
         params = {}
@@ -53,7 +53,7 @@ module Hanami
       private
 
       # @api private
-      # @since x.x.x
+      # @since 2.0.0
       def for_each_segment(path, &blk)
         _, *segments = path.split(/\//)
         segments.each(&blk)

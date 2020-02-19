@@ -20,7 +20,7 @@ module Hanami
     # URL helpers for other Hanami integrations
     #
     # @api private
-    # @since x.x.x
+    # @since 2.0.0
     attr_reader :url_helpers
 
     # Returns the given block as it is.
@@ -353,7 +353,7 @@ module Hanami
     # @param path [String] the scope path to be used as a path prefix
     # @param blk [Proc] the routes definitions withing the scope
     #
-    # @since x.x.x
+    # @since 2.0.0
     #
     # @see #path
     #
@@ -586,19 +586,19 @@ module Hanami
       )
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def fixed(env)
       @fixed.dig(env["REQUEST_METHOD"], env["PATH_INFO"])
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def variable(env)
       @variable[env["REQUEST_METHOD"]]&.find(env["PATH_INFO"])
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def globbed(env)
       @globbed[env["REQUEST_METHOD"]]&.each do |path, to|
@@ -610,7 +610,7 @@ module Hanami
       nil
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def mounted(env)
       @mounted.each do |prefix, app|
@@ -628,13 +628,13 @@ module Hanami
       nil
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def not_allowed(env)
       (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return NOT_ALLOWED
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def not_found
       NOT_FOUND
@@ -675,43 +675,43 @@ module Hanami
 
     private
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     DEFAULT_BASE_URL = "http://localhost"
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     DEFAULT_PREFIX = "/"
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     DEFAULT_RESOLVER = ->(_, to) { to }
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     DEFAULT_REDIRECT_CODE = 301
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     NOT_FOUND = [404, { "Content-Length" => "9" }, ["Not Found"]].freeze
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     NOT_ALLOWED = [405, { "Content-Length" => "11" }, ["Not Allowed"]].freeze
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     PARAMS = "router.params"
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     EMPTY_PARAMS = {}.freeze
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     EMPTY_RACK_ENV = {}.freeze
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def lookup(env)
       endpoint = fixed(env)
@@ -720,7 +720,7 @@ module Hanami
       variable(env) || globbed(env) || mounted(env)
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def add_route(http_method, path, to, as, constraints, &blk)
       path = prefixed_path(path)
@@ -737,7 +737,7 @@ module Hanami
       add_named_route(path, as, constraints) if as
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def resolve_endpoint(path, to, blk)
       (to || blk) or raise MissingEndpointError.new(path)
@@ -746,58 +746,58 @@ module Hanami
       @resolver.call(path, to)
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def add_globbed_route(http_method, path, to, constraints)
       @globbed[http_method] ||= []
       @globbed[http_method] << [Segment.fabricate(path, **constraints), to]
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def add_variable_route(http_method, path, to, constraints)
       @variable[http_method] ||= Trie.new
       @variable[http_method].add(path, to, constraints)
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def add_fixed_route(http_method, path, to)
       @fixed[http_method] ||= {}
       @fixed[http_method][path] = to
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def add_named_route(path, as, constraints)
       @url_helpers.add(prefixed_name(as), Segment.fabricate(path, **constraints))
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def variable?(path)
       /:/.match?(path)
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def globbed?(path)
       /\*/.match?(path)
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def prefixed_path(path)
       @path_prefix.join(path).to_s
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def prefixed_name(name)
       @name_prefix.relative_join(name, "_").to_sym
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def _redirect(to, code)
       body = Rack::Utils::HTTP_STATUS_CODES.fetch(code) do
@@ -808,7 +808,7 @@ module Hanami
       Redirect.new(destination, ->(*) { [code, { "Location" => destination }, [body]] })
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def _params(env, params)
       params ||= {}
@@ -819,7 +819,7 @@ module Hanami
       env
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def _not_allowed_fixed(env)
       found = false
@@ -833,7 +833,7 @@ module Hanami
       found
     end
 
-    # @since x.x.x
+    # @since 2.0.0
     # @api private
     def _not_allowed_variable(env)
       found = false
