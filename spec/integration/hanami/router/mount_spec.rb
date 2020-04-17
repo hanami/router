@@ -8,6 +8,7 @@ RSpec.describe Hanami::Router do
       mount Api::App.new,                  at: "/api"
       mount Backend::App,                  at: "/backend"
       mount ->(*) { [200, { "Content-Length" => "4" }, ["proc"]] }, at: "/proc"
+      mount ->(*) { [200, { "Content-Length" => "8" }, ["trailing"]] }, at: "/trailing/"
     end
   end
 
@@ -22,6 +23,10 @@ RSpec.describe Hanami::Router do
 
     it "accepts for a proc endpoint" do
       expect(app.request(verb.upcase, "/proc", lint: true).body).to eq(body_for("proc", verb))
+    end
+
+    it "accepts for a route using trailing slash" do
+      expect(app.request(verb.upcase, "/trailing/", lint: true).body).to eq(body_for("trailing", verb))
     end
 
     it "accepts sub paths when is requested" do

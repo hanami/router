@@ -10,7 +10,9 @@ RSpec.describe Hanami::Router do
           r = response
 
           described_class.new do
+            __send__ verb, "/",                     to: ->(*) { r }
             __send__ verb, "/hanami",               to: ->(*) { r }
+            __send__ verb, "/trailing/",            to: ->(*) { r }
             __send__ verb, "/hanami/:id",           to: ->(*) { r }
             __send__ verb, "/hanami/:id(.:format)", to: ->(*) { r }
             __send__ verb, "/hanami/*glob",         to: ->(*) { r }
@@ -24,6 +26,22 @@ RSpec.describe Hanami::Router do
         let(:app) { Rack::MockRequest.new(router) }
 
         context "path recognition" do
+          context "root trailing slash" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "14" }, "Trailing root!") }
+
+            it "recognizes" do
+              expect(app.request(verb.upcase, "/", lint: true)).to eq_response(response)
+            end
+          end
+
+          context "trailing slash" do
+            let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "9" }, "Trailing!") }
+
+            it "recognizes" do
+              expect(app.request(verb.upcase, "/trailing/", lint: true)).to eq_response(response)
+            end
+          end
+
           context "fixed string" do
             let(:response) { Rack::MockResponse.new(200, { "Content-Length" => "6" }, "Fixed!") }
 

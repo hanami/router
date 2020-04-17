@@ -32,6 +32,18 @@ RSpec.describe Hanami::Router do
       expect(app.request("OPTIONS", "/trees/cherry", lint: true).body).to eq("Cherry (OPTIONS)!")
     end
 
+    it "allows trailing slash" do
+      router = described_class.new do
+        scope "trees/" do
+          root to: ->(*) { [200, {}, ["Trees (GET)!"]] }
+        end
+      end
+
+      app = Rack::MockRequest.new(router)
+
+      expect(app.request("GET", "/trees/", lint: true).body).to eq("Trees (GET)!")
+    end
+
     context "nested" do
       it "defines HTTP methods correctly" do
         router = described_class.new do
