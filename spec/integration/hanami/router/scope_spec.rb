@@ -9,6 +9,7 @@ RSpec.describe Hanami::Router do
     it "recognizes get path" do
       router = described_class.new do
         scope "trees" do
+          root               to: ->(*) { [200, {}, ["Trees (GET)!"]] }
           get     "/cherry", to: ->(*) { [200, {}, ["Cherry (GET)!"]] }
           post    "/cherry", to: ->(*) { [200, {}, ["Cherry (POST)!"]] }
           put     "/cherry", to: ->(*) { [200, {}, ["Cherry (PUT)!"]] }
@@ -21,6 +22,7 @@ RSpec.describe Hanami::Router do
 
       app = Rack::MockRequest.new(router)
 
+      expect(app.request("GET", "/trees", lint: true).body).to eq("Trees (GET)!")
       expect(app.request("GET", "/trees/cherry", lint: true).body).to eq("Cherry (GET)!")
       expect(app.request("POST", "/trees/cherry", lint: true).body).to eq("Cherry (POST)!")
       expect(app.request("PUT", "/trees/cherry", lint: true).body).to eq("Cherry (PUT)!")
@@ -28,6 +30,18 @@ RSpec.describe Hanami::Router do
       expect(app.request("DELETE", "/trees/cherry", lint: true).body).to eq("Cherry (DELETE)!")
       expect(app.request("TRACE", "/trees/cherry", lint: true).body).to eq("Cherry (TRACE)!")
       expect(app.request("OPTIONS", "/trees/cherry", lint: true).body).to eq("Cherry (OPTIONS)!")
+    end
+
+    it "allows trailing slash" do
+      router = described_class.new do
+        scope "trees/" do
+          root to: ->(*) { [200, {}, ["Trees (GET)!"]] }
+        end
+      end
+
+      app = Rack::MockRequest.new(router)
+
+      expect(app.request("GET", "/trees/", lint: true).body).to eq("Trees (GET)!")
     end
 
     context "nested" do
