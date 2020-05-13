@@ -666,7 +666,7 @@ module Hanami
           url = path(env, params)
           return env_for(url, params, options) # rubocop:disable Style/RedundantReturn
         rescue Hanami::Router::InvalidRouteException
-          EMPTY_RACK_ENV.dup
+          EMPTY_RACK_ENV
         end
       else
         env
