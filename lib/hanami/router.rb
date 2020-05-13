@@ -631,13 +631,13 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return NOT_ALLOWED
+      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return [405, { "Content-Length" => "11" }, ["Not Allowed"]]
     end
 
     # @since 2.0.0
     # @api private
     def not_found
-      NOT_FOUND
+      [404, { "Content-Length" => "9" }, ["Not Found"]]
     end
 
     protected
@@ -693,14 +693,6 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    NOT_FOUND = [404, { "Content-Length" => "9" }, ["Not Found"]].freeze
-
-    # @since 2.0.0
-    # @api private
-    NOT_ALLOWED = [405, { "Content-Length" => "11" }, ["Not Allowed"]].freeze
-
-    # @since 2.0.0
-    # @api private
     PARAMS = "router.params"
 
     # @since 2.0.0
@@ -715,7 +707,7 @@ module Hanami
     # @api private
     def lookup(env)
       endpoint = fixed(env)
-      return [endpoint, EMPTY_PARAMS] if endpoint
+      return [endpoint, EMPTY_PARAMS.dup] if endpoint
 
       variable(env) || globbed(env) || mounted(env)
     end

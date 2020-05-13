@@ -3,6 +3,34 @@
 require "rexml/document"
 require "hanami/middleware/body_parser"
 
+require "securerandom"
+
+class RandomMiddleware
+  HEADER_PREFIX = "X-Random"
+  private_constant :HEADER_PREFIX
+
+  def self.headers_count(headers)
+    headers.find_all { |header, _| header.start_with?(HEADER_PREFIX) }.count
+  end
+
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    status, headers, body = @app.call(env)
+    headers["#{HEADER_PREFIX}-#{random}"] = "1"
+
+    [status, headers, body]
+  end
+
+  private
+
+  def random
+    SecureRandom.hex(8)
+  end
+end
+
 class MyMiddleware
   def call(*)
   end
