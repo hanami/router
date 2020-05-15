@@ -631,13 +631,13 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return NOT_ALLOWED
+      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return [405, { "Content-Length" => "11" }, ["Not Allowed"]]
     end
 
     # @since 2.0.0
     # @api private
     def not_found
-      NOT_FOUND
+      [404, { "Content-Length" => "9" }, ["Not Found"]]
     end
 
     protected
@@ -666,7 +666,7 @@ module Hanami
           url = path(env, params)
           return env_for(url, params, options) # rubocop:disable Style/RedundantReturn
         rescue Hanami::Router::InvalidRouteException
-          EMPTY_RACK_ENV.dup
+          {} # Empty Rack env
         end
       else
         env
@@ -693,29 +693,13 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    NOT_FOUND = [404, { "Content-Length" => "9" }, ["Not Found"]].freeze
-
-    # @since 2.0.0
-    # @api private
-    NOT_ALLOWED = [405, { "Content-Length" => "11" }, ["Not Allowed"]].freeze
-
-    # @since 2.0.0
-    # @api private
     PARAMS = "router.params"
-
-    # @since 2.0.0
-    # @api private
-    EMPTY_PARAMS = {}.freeze
-
-    # @since 2.0.0
-    # @api private
-    EMPTY_RACK_ENV = {}.freeze
 
     # @since 2.0.0
     # @api private
     def lookup(env)
       endpoint = fixed(env)
-      return [endpoint, EMPTY_PARAMS] if endpoint
+      return [endpoint, {}] if endpoint
 
       variable(env) || globbed(env) || mounted(env)
     end
