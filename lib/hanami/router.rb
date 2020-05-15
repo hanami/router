@@ -71,7 +71,7 @@ module Hanami
       @variable = {}
       @globbed = {}
       @mounted = {}
-      instance_eval(&blk)
+      instance_eval(&blk) if blk
     end
 
     # Resolve the given Rack env to a registered endpoint and invokes it.
