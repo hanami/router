@@ -666,7 +666,7 @@ module Hanami
           url = path(env, params)
           return env_for(url, params, options) # rubocop:disable Style/RedundantReturn
         rescue Hanami::Router::InvalidRouteException
-          EMPTY_RACK_ENV
+          {} # Empty Rack env
         end
       else
         env
@@ -697,17 +697,9 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    EMPTY_PARAMS = {}.freeze
-
-    # @since 2.0.0
-    # @api private
-    EMPTY_RACK_ENV = {}.freeze
-
-    # @since 2.0.0
-    # @api private
     def lookup(env)
       endpoint = fixed(env)
-      return [endpoint, EMPTY_PARAMS.dup] if endpoint
+      return [endpoint, {}] if endpoint
 
       variable(env) || globbed(env) || mounted(env)
     end
