@@ -17,6 +17,11 @@ RSpec.describe Hanami::Router do
       end
     end
 
+    it "returns instance of Hanami::Router" do
+      router = Hanami::Router.new
+      expect(router).to be_instance_of(Hanami::Router)
+    end
+
     it "returns instance of Hanami::Router with empty block" do
       router = Hanami::Router.new {}
       expect(router).to be_instance_of(Hanami::Router)
