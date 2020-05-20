@@ -1,6 +1,12 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.alpha3 - 2020-05-20
+### Fixed
+- [Luca Guidi] `Hanami::Router#initialize` do not yield block if not given
+- [Luca Guidi] Ensure to not accidentally cache response headers for HTTP 404 and 405
+- [Luca Guidi] Ensure scoped root to not be added as trailing slash
+
 ## v2.0.0.alpha2 - 2020-02-19
 ### Added
 - [Luca Guidi] Block syntax. Routes definition accept a block which returning value is the body of the Rack response.
