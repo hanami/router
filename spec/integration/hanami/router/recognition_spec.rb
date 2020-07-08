@@ -350,7 +350,7 @@ RSpec.describe Hanami::Router do
     describe "variable with optional constrainted format" do
       let(:router) do
         described_class.new do
-          get "/:test(.:format)", format: /[^\.]+/, as: :variable, to: RecognitionTestCase.endpoint("variable")
+          get "/:test(.:format)", format: /[^.]+/, as: :variable, to: RecognitionTestCase.endpoint("variable")
         end
       end
 

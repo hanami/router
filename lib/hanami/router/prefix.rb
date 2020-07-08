@@ -25,7 +25,7 @@ module Hanami
       # @api private
       def relative_join(path, separator = DEFAULT_SEPARATOR)
         _join(path.to_s)
-          .gsub(DEFAULT_SEPARATOR_REGEXP, separator)[1..-1]
+          .gsub(DEFAULT_SEPARATOR_REGEXP, separator)[1..]
       end
 
       # @since 2.0.0
@@ -52,7 +52,7 @@ module Hanami
 
       # @since 2.0.0
       # @api private
-      DOUBLE_DEFAULT_SEPARATOR_REGEXP = /[\/]{2,}/.freeze
+      DOUBLE_DEFAULT_SEPARATOR_REGEXP = /\/{2,}/.freeze
 
       # @since 2.0.0
       # @api private
