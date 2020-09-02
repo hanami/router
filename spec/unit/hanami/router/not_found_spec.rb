@@ -27,6 +27,20 @@ RSpec.describe Hanami::Router do
       request("/", app)
     end
 
+    context "with default_app option" do
+      let(:default_app) { ->(_env) { [499, { "Content-Type" => "application/json" }, [JSON.dump({ error: "not_found" })]] } }
+      subject { described_class.new(default_app: default_app) {} }
+
+      it "uses it" do
+        env = Rack::MockRequest.env_for("/")
+        status, headers, body = subject.call(env)
+
+        expect(status).to eq(499)
+        expect(headers).to eq("Content-Type" => "application/json")
+        expect(body).to eq(['{"error":"not_found"}'])
+      end
+    end
+
     private
 
     def request(path, app, http_method = :get)
