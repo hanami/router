@@ -225,6 +225,13 @@ router = Hanami::Router.new
 router.call(Rack::MockRequest.env_for("/unknown")).status # => 404
 ```
 
+### Explicit Not Found:
+
+```ruby
+router = Hanami::Router.new(default_app: ->(_) { [499, {}, []]})
+router.call(Rack::MockRequest.env_for("/unknown")).status # => 499
+```
+
 ### Body Parsers
 
 Rack ignores request bodies unless they come from a form submission.
