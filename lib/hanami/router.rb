@@ -17,6 +17,12 @@ module Hanami
     require "hanami/router/block"
     require "hanami/router/url_helpers"
 
+    # Default response when no route was matched
+    #
+    # @api private
+    # @since 2.0.0
+    NOT_FOUND = ->(_) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
+
     # URL helpers for other Hanami integrations
     #
     # @api private
@@ -61,14 +67,14 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, default_app: not_found, &blk)
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, not_found: NOT_FOUND, &blk)
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @url_helpers = UrlHelpers.new(base_url)
       @resolver = resolver
       @block_context = block_context
-      @default_app = default_app
+      @not_found = not_found
       @fixed = {}
       @variable = {}
       @globbed = {}
@@ -88,7 +94,7 @@ module Hanami
 
       unless endpoint
         return not_allowed(env) ||
-               @default_app.call(env)
+               not_found(env)
       end
 
       endpoint.call(
@@ -638,8 +644,8 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    def not_found
-      ->(_) { [404, { "Content-Length" => "9" }, ["Not Found"]] }
+    def not_found(env)
+      @not_found.call(env)
     end
 
     protected

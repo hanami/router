@@ -228,7 +228,7 @@ router.call(Rack::MockRequest.env_for("/unknown")).status # => 404
 ### Explicit Not Found:
 
 ```ruby
-router = Hanami::Router.new(default_app: ->(_) { [499, {}, []]})
+router = Hanami::Router.new(not_found: ->(_) { [499, {}, []]})
 router.call(Rack::MockRequest.env_for("/unknown")).status # => 499
 ```
 
