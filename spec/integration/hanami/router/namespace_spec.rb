@@ -9,6 +9,13 @@ RSpec.describe Hanami::Router do
   end
 
   describe '#namespace' do
+    it 'does not require a block' do
+      subrouter = @router.namespace 'trees'
+      subrouter.get '/plane-tree', to: ->(_env) { [200, {}, ['Trees (GET)!']] }
+
+      expect(@app.request('GET', '/trees/plane-tree', lint: true).body).to eq('Trees (GET)!')
+    end
+
     it 'recognizes get path' do
       @router.namespace 'trees' do
         get '/plane-tree', to: ->(_env) { [200, {}, ['Trees (GET)!']] }

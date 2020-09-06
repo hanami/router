@@ -18,7 +18,7 @@ module Hanami
         @router = router
         @name   = Utils::PathPrefix.new(name)
         __setobj__(@router)
-        instance_eval(&blk)
+        instance_eval(&blk) if blk
       end
 
       # @api private
