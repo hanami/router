@@ -696,12 +696,12 @@ module Hanami
     # @since 2.0.0
     # @api private
     PARAMS = "router.params"
-    
+
     # Default response when no route was matched
     #
     # @api private
     # @since 2.0.0
-    NOT_FOUND = ->(*) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
+    NOT_FOUND = ->(*) { [404, {"Content-Length" => "9"}, ["Not Found"]] }.freeze
 
     # @since 2.0.0
     # @api private
