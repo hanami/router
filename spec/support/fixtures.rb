@@ -402,25 +402,25 @@ module Flowers
 
   class Show < Action
     def call(env)
-      [200, {}, ["Flowers::Show " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Show #{env["router.params"][:id]}"]]
     end
   end
 
   class Edit < Action
     def call(env)
-      [200, {}, ["Flowers::Edit " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Edit #{env["router.params"][:id]}"]]
     end
   end
 
   class Update < Action
     def call(env)
-      [200, {}, ["Flowers::Update " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Update #{env["router.params"][:id]}"]]
     end
   end
 
   class Destroy < Action
     def call(env)
-      [200, {}, ["Flowers::Destroy " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Destroy #{env["router.params"][:id]}"]]
     end
   end
 end # Flowers
@@ -440,13 +440,13 @@ module Keyboards
 
   class Edit < Action
     def call(env)
-      [200, {}, ["Keyboards::Edit " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Edit #{env["router.params"][:id]}"]]
     end
   end
 
   class Show < Action
     def call(env)
-      [200, {}, ["Keyboards::Show " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Show #{env["router.params"][:id]}"]]
     end
   end
 
@@ -458,13 +458,13 @@ module Keyboards
 
   class Screenshot < Action
     def call(env)
-      [200, {}, ["Keyboards::Screenshot " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Screenshot #{env["router.params"][:id]}"]]
     end
   end
 
   class Print < Action
     def call(env)
-      [200, {}, ["Keyboards::Print " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Print #{env["router.params"][:id]}"]]
     end
   end
 
@@ -496,25 +496,25 @@ module Keys
 
   class Edit < Action
     def call(env)
-      [200, {}, ["Keys::Edit " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Edit #{env["router.params"][:id]}"]]
     end
   end
 
   class Update < Action
     def call(env)
-      [200, {}, ["Keys::Update " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Update #{env["router.params"][:id]}"]]
     end
   end
 
   class Show < Action
     def call(env)
-      [200, {}, ["Keys::Show " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Show #{env["router.params"][:id]}"]]
     end
   end
 
   class Destroy < Action
     def call(env)
-      [200, {}, ["Keys::Destroy " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Destroy #{env["router.params"][:id]}"]]
     end
   end
 
@@ -526,7 +526,7 @@ module Keys
 
   class Screenshot < Action
     def call(env)
-      [200, {}, ["Keys::Screenshot " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Screenshot #{env["router.params"][:id]}"]]
     end
   end
 end # Keyboards
