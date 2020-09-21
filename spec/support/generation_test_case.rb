@@ -23,9 +23,9 @@ class GenerationTestCase
     tests.each do |test|
       name, expected, args = *test
       args = begin
-               args.dup
+        args.dup
       rescue
-               nil
+        nil
       end
 
       _rescue name, expected, args do
