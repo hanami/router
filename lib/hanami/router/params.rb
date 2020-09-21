@@ -15,7 +15,7 @@ module Hanami
       #
       # @api private
       # @since 2.0.0
-      def self.deep_symbolize(params) # rubocop:disable Metrics/MethodLength
+      def self.deep_symbolize(params)
         params.each_with_object({}) do |(key, value), output|
           output[key.to_sym] =
             case value

@@ -312,7 +312,7 @@ RSpec.describe Hanami::Router do
 
       xit "recognizes route(s)" do
         runner.run!([
-                      # [:fixed, "/.html", { format: "html" }],
+          # [:fixed, "/.html", { format: "html" }],
           [:fixed, "/", {format: nil}]
         ])
       end
@@ -350,7 +350,7 @@ RSpec.describe Hanami::Router do
     describe "variable with optional constrainted format" do
       let(:router) do
         described_class.new do
-          get "/:test(.:format)", format: /[^\.]+/, as: :variable, to: RecognitionTestCase.endpoint("variable")
+          get "/:test(.:format)", format: /[^.]+/, as: :variable, to: RecognitionTestCase.endpoint("variable")
         end
       end
 
@@ -541,8 +541,8 @@ RSpec.describe Hanami::Router do
       it "recognizes route(s)" do
         runner.run!([
           [:regex, "/common/123", {common_variable: "common", matched: "123"}],
-                      # FIXME
-                      # [:noregex, '/common/other', { common_variable: 'common', unmatched: 'other' }],
+          # FIXME
+          # [:noregex, '/common/other', { common_variable: 'common', unmatched: 'other' }],
           [:post, "/common/123", {common_variable: "common", matched: "123"}, "POST"],
           [:post, "/common/other", {common_variable: "common", matched: "other"}, "POST"]
         ])
@@ -560,11 +560,11 @@ RSpec.describe Hanami::Router do
       it "recognizes route(s)" do
         runner.run!([
           [:regex, "/123/number", {test: "123"}]
-                      # FIXME: this passes if `:greedy` route has the same constraint of the other (`test: /\d+/`)
-                      #        this because the returned segment for the two /:test is different because of the contraint.
-                      #        this makes Node `@variable` to set them in two different children where the first shadows the latter
-                      #        a potential solution could be to use `Segment.new` and implement `#==`
-                      # [:greedy, "/123/anything", { test: "123" }]
+          # FIXME: this passes if `:greedy` route has the same constraint of the other (`test: /\d+/`)
+          #        this because the returned segment for the two /:test is different because of the contraint.
+          #        this makes Node `@variable` to set them in two different children where the first shadows the latter
+          #        a potential solution could be to use `Segment.new` and implement `#==`
+          # [:greedy, "/123/anything", { test: "123" }]
         ])
       end
     end

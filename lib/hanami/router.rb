@@ -6,7 +6,7 @@ module Hanami
   # Rack compatible, lightweight and fast HTTP Router.
   #
   # @since 0.1.0
-  class Router # rubocop:disable Metrics/ClassLength
+  class Router
     require "hanami/router/version"
     require "hanami/router/error"
     require "hanami/router/segment"
@@ -655,7 +655,7 @@ module Hanami
     #
     # @see Hanami::Router#recognize
     # @see http://www.rubydoc.info/github/rack/rack/Rack%2FMockRequest.env_for
-    def env_for(env, params = {}, options = {}) # rubocop:disable Metrics/MethodLength
+    def env_for(env, params = {}, options = {})
       require "rack/mock"
 
       case env

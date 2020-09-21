@@ -19,7 +19,7 @@ class GenerationTestCase
     end
   end
 
-  def _for_each_test(type, tests) # rubocop:disable Metrics/MethodLength
+  def _for_each_test(type, tests)
     tests.each do |test|
       name, expected, args = *test
       args = begin
@@ -44,7 +44,7 @@ class GenerationTestCase
     raise exception
   end
 
-  def _actual(type, name, args) # rubocop:disable Metrics/MethodLength
+  def _actual(type, name, args)
     case args
     when Hash
       @router.send(type, name, args)

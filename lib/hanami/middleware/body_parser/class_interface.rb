@@ -11,7 +11,7 @@ module Hanami
       module ClassInterface
         # @api private
         # @since 1.3.0
-        def for(parser) # rubocop:disable Metrics/MethodLength
+        def for(parser)
           parser =
             case parser
             when String, Symbol

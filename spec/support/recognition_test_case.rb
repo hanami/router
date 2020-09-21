@@ -14,8 +14,6 @@ class RecognitionTestCase
     @router = router
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def run!(tests)
     tests.each do |(name, request, params, verb)|
       env                   = Rack::MockRequest.env_for(request)
@@ -32,6 +30,4 @@ class RecognitionTestCase
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 end
