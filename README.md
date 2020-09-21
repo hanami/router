@@ -5,7 +5,6 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://h
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-router.svg)](https://badge.fury.io/rb/hanami-router)
-[![Build Status](https://ci.hanamirb.org/api/badges/hanami/router/status.svg)](https://ci.hanamirb.org/hanami/router)
 [![CircleCI](https://circleci.com/gh/hanami/router/tree/master.svg?style=svg)](https://circleci.com/gh/hanami/router/tree/master)
 [![Test Coverage](https://codecov.io/gh/hanami/router/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/router)
 [![Depfu](https://badges.depfu.com/badges/5f6b8e8fa3b0d082539f0b0f84d55960/overview.svg)](https://depfu.com/github/hanami/router?project=Bundler)
