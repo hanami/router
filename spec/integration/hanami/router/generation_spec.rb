@@ -14,7 +14,7 @@ RSpec.describe Hanami::Router do
       it "generates relative and absolute URLs" do
         runner.run!([
           [:a, "/test", {var: "test"}],
-                      [:a, "/test", {var: "test"}]
+          [:a, "/test", {var: "test"}]
         ])
       end
     end
@@ -61,10 +61,10 @@ RSpec.describe Hanami::Router do
       it "generates relative and absolute URLs" do
         runner.run!([
           [:a, "/"],
-                      [:b, "/test"],
-                      [:c, "/test/time"],
-                      [:d, "/one/more/what"],
-                      [:e, "/test.html"]
+          [:b, "/test"],
+          [:c, "/test/time"],
+          [:d, "/one/more/what"],
+          [:e, "/test.html"]
         ])
       end
     end
@@ -107,7 +107,7 @@ RSpec.describe Hanami::Router do
       it "generates relative and absolute URLs" do
         runner.run!([
           [:a, "/test.html", {format: "html"}],
-                      [:a, "/test"]
+          [:a, "/test"]
         ])
       end
     end
@@ -136,7 +136,7 @@ RSpec.describe Hanami::Router do
       it "generates relative and absolute URLs" do
         runner.run!([
           [:a, "/test.html", {var: "test", format: "html"}],
-                      [:a, "/test", {var: "test"}]
+          [:a, "/test", {var: "test"}]
         ])
       end
     end
@@ -151,7 +151,7 @@ RSpec.describe Hanami::Router do
       xit "generates relative and absolute URLs" do
         runner.run!([
           [:a, "/foo/bar", {var1: "foo", var2: "bar"}],
-                      [:a, "/foo", {var1: "foo"}]
+          [:a, "/foo", {var1: "foo"}]
         ])
       end
     end
@@ -180,8 +180,8 @@ RSpec.describe Hanami::Router do
       xit "generates relative and absolute URLs" do
         runner.run!([
           [:a, "/var/fooz/baz", {var1: "var", var2: "fooz", var3: "baz"}],
-                      [:a, "/var/fooz", {var1: "var", var2: "fooz"}],
-                      [:a, "/var", {var1: "var"}]
+          [:a, "/var/fooz", {var1: "var", var2: "fooz"}],
+          [:a, "/var", {var1: "var"}]
         ])
       end
     end
