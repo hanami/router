@@ -3,7 +3,7 @@
 RSpec.describe Hanami::Router do
   subject do
     described_class.new do
-      get "/", to: ->(*) { [200, { "Content-Length" => "4" }, ["root"]] }
+      get "/", to: ->(*) { [200, {"Content-Length" => "4"}, ["root"]] }
     end
   end
 

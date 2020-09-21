@@ -7,7 +7,7 @@ class RecognitionTestCase
   REQUEST_METHOD = "REQUEST_METHOD"
 
   def self.endpoint(body)
-    ->(env) { [200, { HEADER_ENV => env }, [body]] }
+    ->(env) { [200, {HEADER_ENV => env}, [body]] }
   end
 
   def initialize(router)

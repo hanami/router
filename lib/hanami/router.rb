@@ -631,13 +631,13 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return [405, { "Content-Length" => "11" }, ["Not Allowed"]]
+      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return [405, {"Content-Length" => "11"}, ["Not Allowed"]]
     end
 
     # @since 2.0.0
     # @api private
     def not_found
-      [404, { "Content-Length" => "9" }, ["Not Found"]]
+      [404, {"Content-Length" => "9"}, ["Not Found"]]
     end
 
     protected
@@ -789,7 +789,7 @@ module Hanami
       end
 
       destination = prefixed_path(to)
-      Redirect.new(destination, ->(*) { [code, { "Location" => destination }, [body]] })
+      Redirect.new(destination, ->(*) { [code, {"Location" => destination}, [body]] })
     end
 
     # @since 2.0.0
