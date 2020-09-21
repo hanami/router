@@ -36,7 +36,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       #
-      def get(segment)
+      def get(segment) # rubocop:disable Metrics/PerceivedComplexity
         return unless @variable || @fixed
 
         found = nil

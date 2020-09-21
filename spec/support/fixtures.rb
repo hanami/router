@@ -65,7 +65,9 @@ class Action
   attr_reader :configuration
 
   def initialize(configuration:)
-    raise ArgumentError.new("invalid configuration for #{self.class.name}: #{configuration.inspect}") unless configuration.is_a?(Configuration)
+    unless configuration.is_a?(Configuration)
+      raise ArgumentError.new("invalid configuration for #{self.class.name}: #{configuration.inspect}")
+    end
 
     @configuration = configuration
   end

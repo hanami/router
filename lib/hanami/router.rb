@@ -61,14 +61,14 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, not_found: NOT_FOUND, &blk)
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, &blk) # rubocop:disable Layout/LineLength
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @url_helpers = UrlHelpers.new(base_url)
       @resolver = resolver
-      @block_context = block_context
       @not_found = not_found
+      @block_context = block_context
       @fixed = {}
       @variable = {}
       @globbed = {}
@@ -633,7 +633,8 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return [405, {"Content-Length" => "11"}, ["Not Allowed"]]
+      (_not_allowed_fixed(env) ||
+       _not_allowed_variable(env)) and return [405, {"Content-Length" => "11"}, ["Not Allowed"]]
     end
 
     # @since 2.0.0
