@@ -27,8 +27,8 @@ RSpec.describe Hanami::Router do
       request("/", app)
     end
 
-    context "with default_app option" do
-      let(:not_found) { ->(_env) { [499, { "Content-Type" => "application/json" }, [JSON.dump({ error: "not_found" })]] } }
+    context "with not_found option" do
+      let(:not_found) { ->(*) { [499, { "Content-Type" => "application/json" }, [JSON.dump({ error: "not_found" })]] } }
       subject { described_class.new(not_found: not_found) {} }
 
       it "uses it" do
