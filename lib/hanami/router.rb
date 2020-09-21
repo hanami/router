@@ -17,12 +17,6 @@ module Hanami
     require "hanami/router/block"
     require "hanami/router/url_helpers"
 
-    # Default response when no route was matched
-    #
-    # @api private
-    # @since 2.0.0
-    NOT_FOUND = ->(_) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
-
     # URL helpers for other Hanami integrations
     #
     # @api private
@@ -702,6 +696,12 @@ module Hanami
     # @since 2.0.0
     # @api private
     PARAMS = "router.params"
+    
+    # Default response when no route was matched
+    #
+    # @api private
+    # @since 2.0.0
+    NOT_FOUND = ->(*) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
 
     # @since 2.0.0
     # @api private
