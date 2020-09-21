@@ -14,11 +14,11 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://hanamirb.org"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-router.gemspec`.split($INPUT_RECORD_SEPARATOR)
+  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-router.gemspec`.split($/)
   spec.executables   = []
   spec.test_files    = spec.files.grep(%r{^(test)/})
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.5.0"
+  spec.required_ruby_version = ">= 2.6.0"
 
   spec.add_dependency "rack",               "~> 2.0"
   spec.add_dependency "mustermann",         "~> 1.0"
@@ -28,4 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake",      "~> 13"
   spec.add_development_dependency "rack-test", "~> 1.0"
   spec.add_development_dependency "rspec",     "~> 3.8"
+
+  spec.add_development_dependency "rubocop", "0.91"
+  spec.add_development_dependency "rubocop-performance", "1.8.1"
 end
