@@ -24,7 +24,7 @@ class GenerationTestCase
       name, expected, args = *test
       args = begin
                args.dup
-             rescue
+      rescue
                nil
       end
 
