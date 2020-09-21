@@ -26,7 +26,7 @@ class GenerationTestCase
                args.dup
              rescue
                nil
-             end
+      end
 
       _rescue name, expected, args do
         actual   = _actual(type, name, args)
