@@ -27,7 +27,7 @@ module Hanami
       # @see Hanami::Router::RecognizedRoute#routable?
       # @see Hanami::Router::NotRoutableEndpointError
       def call(env)
-        if routable? # rubocop:disable Style/GuardClause
+        if routable?
           @endpoint.call(env)
         else
           raise NotRoutableEndpointError.new(@env)

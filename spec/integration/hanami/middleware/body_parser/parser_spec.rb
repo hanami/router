@@ -53,11 +53,11 @@ RSpec.describe Hanami::Middleware::BodyParser do
       let(:content_type) { "application/vnd.api+json" }
 
       it "parses params from body" do
-        expect(env["router.params"]).to eq(data: { attribute: "ok" })
+        expect(env["router.params"]).to eq(data: {attribute: "ok"})
       end
 
       it "stores parsed body" do
-        expect(env["router.parsed_body"]).to eq("data" => { "attribute" => "ok" })
+        expect(env["router.parsed_body"]).to eq("data" => {"attribute" => "ok"})
       end
 
       describe "with malformed json" do

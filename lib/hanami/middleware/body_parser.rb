@@ -72,7 +72,7 @@ module Hanami
         if body.is_a?(::Hash)
           Router::Params.deep_symbolize(body)
         else
-          { FALLBACK_KEY => body }
+          {FALLBACK_KEY => body}
         end
       end
 

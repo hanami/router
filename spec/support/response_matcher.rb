@@ -11,6 +11,10 @@ RSpec::Matchers.define :eq_response do |expected|
   end
 
   failure_message do |actual|
-    "expected that #{actual} would be a #{expected.class} ([#{expected.status.inspect}, #{expected.headers.inspect}, #{expected.body.inspect}])\ngot a #{actual.class} ([#{actual.status.inspect}, #{actual.headers.inspect}, #{actual.body.inspect}])"
+    <<~MESSAGE
+      expected that #{actual}
+      would be a #{expected.class} ([#{expected.status.inspect}, #{expected.headers.inspect}, #{expected.body.inspect}])
+      got a #{actual.class} ([#{actual.status.inspect}, #{actual.headers.inspect}, #{actual.body.inspect}])
+    MESSAGE
   end
 end

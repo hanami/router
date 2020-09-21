@@ -6,7 +6,7 @@ module Hanami
   # Rack compatible, lightweight and fast HTTP Router.
   #
   # @since 0.1.0
-  class Router # rubocop:disable Metrics/ClassLength
+  class Router
     require "hanami/router/version"
     require "hanami/router/error"
     require "hanami/router/segment"
@@ -61,14 +61,14 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, block_context: nil, not_found: NOT_FOUND, &blk)
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, &blk) # rubocop:disable Layout/LineLength
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @url_helpers = UrlHelpers.new(base_url)
       @resolver = resolver
-      @block_context = block_context
       @not_found = not_found
+      @block_context = block_context
       @fixed = {}
       @variable = {}
       @globbed = {}
@@ -633,7 +633,8 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      (_not_allowed_fixed(env) || _not_allowed_variable(env)) and return [405, { "Content-Length" => "11" }, ["Not Allowed"]]
+      (_not_allowed_fixed(env) ||
+       _not_allowed_variable(env)) and return [405, {"Content-Length" => "11"}, ["Not Allowed"]]
     end
 
     # @since 2.0.0
@@ -657,7 +658,7 @@ module Hanami
     #
     # @see Hanami::Router#recognize
     # @see http://www.rubydoc.info/github/rack/rack/Rack%2FMockRequest.env_for
-    def env_for(env, params = {}, options = {}) # rubocop:disable Metrics/MethodLength
+    def env_for(env, params = {}, options = {})
       require "rack/mock"
 
       case env
@@ -696,12 +697,12 @@ module Hanami
     # @since 2.0.0
     # @api private
     PARAMS = "router.params"
-    
+
     # Default response when no route was matched
     #
     # @api private
     # @since 2.0.0
-    NOT_FOUND = ->(*) { [404, { "Content-Length" => "9" }, ["Not Found"]] }.freeze
+    NOT_FOUND = ->(*) { [404, {"Content-Length" => "9"}, ["Not Found"]] }.freeze
 
     # @since 2.0.0
     # @api private
@@ -797,7 +798,7 @@ module Hanami
       end
 
       destination = prefixed_path(to)
-      Redirect.new(destination, ->(*) { [code, { "Location" => destination }, [body]] })
+      Redirect.new(destination, ->(*) { [code, {"Location" => destination}, [body]] })
     end
 
     # @since 2.0.0

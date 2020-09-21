@@ -36,8 +36,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       #
-      # rubocop:disable Metrics/MethodLength
-      def get(segment)
+      def get(segment) # rubocop:disable Metrics/PerceivedComplexity
         return unless @variable || @fixed
 
         found = nil
@@ -55,7 +54,6 @@ module Hanami
 
         [found, captured&.named_captures]
       end
-      # rubocop:enable Metrics/MethodLength
 
       # @api private
       # @since 2.0.0

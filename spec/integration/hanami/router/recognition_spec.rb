@@ -13,9 +13,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:empty, "/"],
-                      [:empty, ""]
-                    ])
+          [:empty, "/"],
+          [:empty, ""]
+        ])
       end
     end
 
@@ -28,8 +28,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/"]
-                    ])
+          [:fixed, "/"]
+        ])
       end
     end
 
@@ -42,8 +42,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/test"]
-                    ])
+          [:fixed, "/test"]
+        ])
       end
     end
 
@@ -56,8 +56,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/test/one"]
-                    ])
+          [:fixed, "/test/one"]
+        ])
       end
     end
 
@@ -70,8 +70,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/test/one/two"]
-                    ])
+          [:fixed, "/test/one/two"]
+        ])
       end
     end
 
@@ -84,8 +84,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/test.html"]
-                    ])
+          [:fixed, "/test.html"]
+        ])
       end
     end
 
@@ -98,8 +98,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/.html"]
-                    ])
+          [:fixed, "/.html"]
+        ])
       end
     end
 
@@ -112,8 +112,8 @@ RSpec.describe Hanami::Router do
 
       xit "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/f%C3%B8%C3%B8"]
-                    ])
+          [:fixed, "/f%C3%B8%C3%B8"]
+        ])
       end
     end
 
@@ -126,9 +126,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed, "/optional", { all: "optional" }],
-                      [:globbed, "/", { all: "" }]
-                    ])
+          [:globbed, "/optional", {all: "optional"}],
+          [:globbed, "/", {all: ""}]
+        ])
       end
     end
 
@@ -142,10 +142,10 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed, "/test/optional", { all: "/optional" }],
-                      [:globbed, "/test/optional/", { all: "/optional/" }],
-                      [:root, "/foo/optional", { all: "foo/optional" }]
-                    ])
+          [:globbed, "/test/optional", {all: "/optional"}],
+          [:globbed, "/test/optional/", {all: "/optional/"}],
+          [:root, "/foo/optional", {all: "foo/optional"}]
+        ])
       end
     end
 
@@ -158,8 +158,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes variable(s)" do
         runner.run!([
-                      [:variable, "/two", { one: "two" }]
-                    ])
+          [:variable, "/two", {one: "two"}]
+        ])
       end
     end
 
@@ -172,8 +172,8 @@ RSpec.describe Hanami::Router do
 
       xit "recognizes variable(s)" do
         runner.run!([
-                      [:variable, "/%E6%AE%BA%E3%81%99", { var: "殺す" }]
-                    ])
+          [:variable, "/%E6%AE%BA%E3%81%99", {var: "殺す"}]
+        ])
       end
     end
 
@@ -186,8 +186,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/test/three", { one: "three" }]
-                    ])
+          [:variable, "/test/three", {one: "three"}]
+        ])
       end
     end
 
@@ -201,9 +201,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/two", { one: "two" }],
-                      [:fixed, "/one"]
-                    ])
+          [:variable, "/two", {one: "two"}],
+          [:fixed, "/one"]
+        ])
       end
     end
 
@@ -217,10 +217,10 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/two/one", { var: "two" }],
-                      [:fixed, "/one"],
-                      [nil, "/two"]
-                    ])
+          [:variable, "/two/one", {var: "two"}],
+          [:fixed, "/one"],
+          [nil, "/two"]
+        ])
       end
     end
 
@@ -234,9 +234,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/foo/id", { id: "id" }],
-                      [:fixed, "/foo"]
-                    ])
+          [:variable, "/foo/id", {id: "id"}],
+          [:fixed, "/foo"]
+        ])
       end
     end
 
@@ -250,9 +250,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/foo/foo2", { foo: "foo" }],
-                      [:fixed, "/foo/foo"]
-                    ])
+          [:variable, "/foo/foo2", {foo: "foo"}],
+          [:fixed, "/foo/foo"]
+        ])
       end
     end
 
@@ -265,11 +265,11 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/test123", { foo: "test123" }],
-                      [:variable, "/123", { foo: "123" }],
-                      [nil, "/test123andmore"],
-                      [nil, "/lesstest123"]
-                    ])
+          [:variable, "/test123", {foo: "test123"}],
+          [:variable, "/123", {foo: "123"}],
+          [nil, "/test123andmore"],
+          [nil, "/lesstest123"]
+        ])
       end
     end
 
@@ -282,8 +282,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/test.html", { format: "html" }]
-                    ])
+          [:fixed, "/test.html", {format: "html"}]
+        ])
       end
     end
 
@@ -296,9 +296,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:fixed, "/test.html", { format: "html" }],
-                      [:fixed, "/test", { format: nil }]
-                    ])
+          [:fixed, "/test.html", {format: "html"}],
+          [:fixed, "/test", {format: nil}]
+        ])
       end
     end
 
@@ -312,9 +312,9 @@ RSpec.describe Hanami::Router do
 
       xit "recognizes route(s)" do
         runner.run!([
-                      # [:fixed, "/.html", { format: "html" }],
-                      [:fixed, "/", { format: nil }]
-                    ])
+          # [:fixed, "/.html", { format: "html" }],
+          [:fixed, "/", {format: nil}]
+        ])
       end
     end
 
@@ -327,8 +327,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/foo.bar", { test: "foo", format: "bar" }]
-                    ])
+          [:variable, "/foo.bar", {test: "foo", format: "bar"}]
+        ])
       end
     end
 
@@ -341,23 +341,23 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/foo", { test: "foo", format: nil }],
-                      [:variable, "/foo.bar", { test: "foo", format: "bar" }]
-                    ])
+          [:variable, "/foo", {test: "foo", format: nil}],
+          [:variable, "/foo.bar", {test: "foo", format: "bar"}]
+        ])
       end
     end
 
     describe "variable with optional constrainted format" do
       let(:router) do
         described_class.new do
-          get "/:test(.:format)", format: /[^\.]+/, as: :variable, to: RecognitionTestCase.endpoint("variable")
+          get "/:test(.:format)", format: /[^.]+/, as: :variable, to: RecognitionTestCase.endpoint("variable")
         end
       end
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/asd@asd.com.json", { test: "asd@asd.com", format: "json" }]
-                    ])
+          [:variable, "/asd@asd.com.json", {test: "asd@asd.com", format: "json"}]
+        ])
       end
     end
 
@@ -370,8 +370,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variable, "/test/one/two/three", { variable: "one/two/three" }]
-                    ])
+          [:globbed_variable, "/test/one/two/three", {variable: "one/two/three"}]
+        ])
       end
     end
 
@@ -384,9 +384,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variable, "/test/one/two/three/test", { variable: "one/two/three" }],
-                      [nil, "/test/one/two/three"]
-                    ])
+          [:globbed_variable, "/test/one/two/three/test", {variable: "one/two/three"}],
+          [nil, "/test/one/two/three"]
+        ])
       end
     end
 
@@ -399,9 +399,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variables, "/test/one/two/three/test/four/five/six", { variable: "one/two/three", variable2: "four/five/six" }],
-                      [nil, "/test/one/two/three"]
-                    ])
+          [:globbed_variables, "/test/one/two/three/test/four/five/six", {variable: "one/two/three", variable2: "four/five/six"}],
+          [nil, "/test/one/two/three"]
+        ])
       end
     end
 
@@ -414,8 +414,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variables, "/test/one-two/three/four/five.six", { test: "one", variable: "two/three/four/five", format: "six" }]
-                    ])
+          [:variables, "/test/one-two/three/four/five.six", {test: "one", variable: "two/three/four/five", format: "six"}]
+        ])
       end
     end
 
@@ -428,10 +428,10 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variable, "/test/asd/123", { variable: "asd/123" }],
-                      [:globbed_variable, "/test/asd/asd123", { variable: "asd/asd123" }],
-                      [:globbed_variable, "/test/asd/qwe", { variable: "asd/qwe" }]
-                    ])
+          [:globbed_variable, "/test/asd/123", {variable: "asd/123"}],
+          [:globbed_variable, "/test/asd/asd123", {variable: "asd/asd123"}],
+          [:globbed_variable, "/test/asd/qwe", {variable: "asd/qwe"}]
+        ])
       end
     end
 
@@ -444,11 +444,11 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [nil, "/test/asd/123"],
-                      [nil, "/test/asd/asd123"],
-                      [nil, "/test/asd/qwe"],
-                      [:globbed_variable, "/test/asd/qwe/test", { variable: "asd/qwe" }]
-                    ])
+          [nil, "/test/asd/123"],
+          [nil, "/test/asd/asd123"],
+          [nil, "/test/asd/qwe"],
+          [:globbed_variable, "/test/asd/qwe/test", {variable: "asd/qwe"}]
+        ])
       end
     end
 
@@ -461,8 +461,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variable, "/test/asd/qwe/help", { variable: "asd/qwe", test: "help" }]
-                    ])
+          [:globbed_variable, "/test/asd/qwe/help", {variable: "asd/qwe", test: "help"}]
+        ])
       end
     end
 
@@ -475,8 +475,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variable, "/test/asd/qwe.html", { variable: "asd/qwe", format: "html" }]
-                    ])
+          [:globbed_variable, "/test/asd/qwe.html", {variable: "asd/qwe", format: "html"}]
+        ])
       end
     end
 
@@ -489,11 +489,11 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [nil, "/test/asd/123"],
-                      [nil, "/test/asd/asd123"],
-                      [nil, "/test/asd/qwe"],
-                      [:globbed_variable, "/test/asd/qwe.html", { variable: "asd/qwe", format: "html" }]
-                    ])
+          [nil, "/test/asd/123"],
+          [nil, "/test/asd/asd123"],
+          [nil, "/test/asd/qwe"],
+          [:globbed_variable, "/test/asd/qwe.html", {variable: "asd/qwe", format: "html"}]
+        ])
       end
     end
 
@@ -506,11 +506,11 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:globbed_variable, "/test/asd/123", { variable: "asd/123", format: nil }],
-                      [:globbed_variable, "/test/asd/asd123", { variable: "asd/asd123", format: nil }],
-                      [:globbed_variable, "/test/asd/qwe", { variable: "asd/qwe", format: nil }],
-                      [:globbed_variable, "/test/asd/qwe.html", { variable: "asd/qwe", format: "html" }]
-                    ])
+          [:globbed_variable, "/test/asd/123", {variable: "asd/123", format: nil}],
+          [:globbed_variable, "/test/asd/asd123", {variable: "asd/asd123", format: nil}],
+          [:globbed_variable, "/test/asd/qwe", {variable: "asd/qwe", format: nil}],
+          [:globbed_variable, "/test/asd/qwe.html", {variable: "asd/qwe", format: "html"}]
+        ])
       end
     end
 
@@ -523,9 +523,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [nil, "/test/asd/123"],
-                      [:globbed_variable, "/test/asd/qwe.html", { variable: "asd/qwe" }]
-                    ])
+          [nil, "/test/asd/123"],
+          [:globbed_variable, "/test/asd/qwe.html", {variable: "asd/qwe"}]
+        ])
       end
     end
 
@@ -540,12 +540,12 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:regex, "/common/123", { common_variable: "common", matched: "123" }],
-                      # FIXME
-                      # [:noregex, '/common/other', { common_variable: 'common', unmatched: 'other' }],
-                      [:post, "/common/123", { common_variable: "common", matched: "123" }, "POST"],
-                      [:post, "/common/other", { common_variable: "common", matched: "other" }, "POST"]
-                    ])
+          [:regex, "/common/123", {common_variable: "common", matched: "123"}],
+          # FIXME
+          # [:noregex, '/common/other', { common_variable: 'common', unmatched: 'other' }],
+          [:post, "/common/123", {common_variable: "common", matched: "123"}, "POST"],
+          [:post, "/common/other", {common_variable: "common", matched: "other"}, "POST"]
+        ])
       end
     end
 
@@ -559,13 +559,13 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:regex, "/123/number", { test: "123" }]
-                      # FIXME: this passes if `:greedy` route has the same constraint of the other (`test: /\d+/`)
-                      #        this because the returned segment for the two /:test is different because of the contraint.
-                      #        this makes Node `@variable` to set them in two different children where the first shadows the latter
-                      #        a potential solution could be to use `Segment.new` and implement `#==`
-                      # [:greedy, "/123/anything", { test: "123" }]
-                    ])
+          [:regex, "/123/number", {test: "123"}]
+          # FIXME: this passes if `:greedy` route has the same constraint of the other (`test: /\d+/`)
+          #        this because the returned segment for the two /:test is different because of the contraint.
+          #        this makes Node `@variable` to set them in two different children where the first shadows the latter
+          #        a potential solution could be to use `Segment.new` and implement `#==`
+          # [:greedy, "/123/anything", { test: "123" }]
+        ])
       end
     end
 
@@ -578,8 +578,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:regex, "/test/", { test: "test" }]
-                    ])
+          [:regex, "/test/", {test: "test"}]
+        ])
       end
     end
 
@@ -592,8 +592,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:regex, "/test.html", { test: "test.html" }]
-                    ])
+          [:regex, "/test.html", {test: "test.html"}]
+        ])
       end
     end
 
@@ -606,9 +606,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:regex, "/123", { test: "123" }],
-                      [nil, "/a123"]
-                    ])
+          [:regex, "/123", {test: "123"}],
+          [nil, "/a123"]
+        ])
       end
     end
 
@@ -621,14 +621,14 @@ RSpec.describe Hanami::Router do
 
       xit "recognizes route(s)" do
         runner.run!([
-                      [:nested, "/one"],
-                      [:nested, "/one/two"],
-                      [:nested, "/one/two/three"],
-                      [:nested, "/one/two/three/four"],
-                      [:nested, "/one/two/three/five"],
-                      [:nested, "/one/two/three/four/five"],
-                      [nil, "/one/two/four/five"]
-                    ])
+          [:nested, "/one"],
+          [:nested, "/one/two"],
+          [:nested, "/one/two/three"],
+          [:nested, "/one/two/three/four"],
+          [:nested, "/one/two/three/five"],
+          [:nested, "/one/two/three/four/five"],
+          [nil, "/one/two/four/five"]
+        ])
       end
     end
 
@@ -641,8 +641,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:escaped, "/test:variable"]
-                    ])
+          [:escaped, "/test:variable"]
+        ])
       end
     end
 
@@ -655,8 +655,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:escaped, "/test(hello)", { variable: "hello" }]
-                    ])
+          [:escaped, "/test(hello)", {variable: "hello"}]
+        ])
       end
     end
 
@@ -669,8 +669,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:escaped, "/test*variable"]
-                    ])
+          [:escaped, "/test*variable"]
+        ])
       end
     end
 
@@ -683,8 +683,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:escaped, "/testvariable*"]
-                    ])
+          [:escaped, "/testvariable*"]
+        ])
       end
     end
 
@@ -697,8 +697,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/one-value-time", { variable: "value" }]
-                    ])
+          [:variable, "/one-value-time", {variable: "value"}]
+        ])
       end
     end
 
@@ -711,9 +711,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/one-123-time", { variable: "123" }],
-                      [nil, "/one-value-time"]
-                    ])
+          [:variable, "/one-123-time", {variable: "123"}],
+          [nil, "/one-value-time"]
+        ])
       end
     end
 
@@ -726,8 +726,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:variable, "/hey.greedybody.html", { greed: "greedybody" }]
-                    ])
+          [:variable, "/hey.greedybody.html", {greed: "greedybody"}]
+        ])
       end
     end
 
@@ -745,13 +745,13 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:var1, "/one", { v1: "one" }],
-                      [:var2, "/one-two", { v1: "one", v2: "two" }],
-                      [:var3, "/one-two-three", { v1: "one", v2: "two", v3: "three" }],
-                      [:var4, "/one-two-three-four", { v1: "one", v2: "two", v3: "three", v4: "four" }],
-                      [:var5, "/one-two-three-four-five", { v1: "one", v2: "two", v3: "three", v4: "four", v5: "five" }],
-                      [:var6, "/one-two-three-four-five-six", { v1: "one", v2: "two", v3: "three", v4: "four", v5: "five", v6: "six" }]
-                    ])
+          [:var1, "/one", {v1: "one"}],
+          [:var2, "/one-two", {v1: "one", v2: "two"}],
+          [:var3, "/one-two-three", {v1: "one", v2: "two", v3: "three"}],
+          [:var4, "/one-two-three-four", {v1: "one", v2: "two", v3: "three", v4: "four"}],
+          [:var5, "/one-two-three-four-five", {v1: "one", v2: "two", v3: "three", v4: "four", v5: "five"}],
+          [:var6, "/one-two-three-four-five-six", {v1: "one", v2: "two", v3: "three", v4: "four", v5: "five", v6: "six"}]
+        ])
       end
     end
 
@@ -765,9 +765,9 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-                      [:regex, "/common.123", { common_variable: "common", matched: "123" }],
-                      [:noregex, "/common.other", { common_variable: "common", unmatched: "other" }]
-                    ])
+          [:regex, "/common.123", {common_variable: "common", matched: "123"}],
+          [:noregex, "/common.other", {common_variable: "common", unmatched: "other"}]
+        ])
       end
     end
   end

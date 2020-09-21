@@ -7,8 +7,8 @@ RSpec.describe Hanami::Router do
     Hanami::Router.new do
       mount Api::App.new,                  at: "/api"
       mount Backend::App,                  at: "/backend"
-      mount ->(*) { [200, { "Content-Length" => "4" }, ["proc"]] }, at: "/proc"
-      mount ->(*) { [200, { "Content-Length" => "8" }, ["trailing"]] }, at: "/trailing/"
+      mount ->(*) { [200, {"Content-Length" => "4"}, ["proc"]] }, at: "/proc"
+      mount ->(*) { [200, {"Content-Length" => "8"}, ["trailing"]] }, at: "/trailing/"
     end
   end
 
