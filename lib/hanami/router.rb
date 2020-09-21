@@ -48,7 +48,7 @@ module Hanami
     #   is deployed
     # @param resolver [#call(path, to)] a resolver for route entpoints
     # @param block_context [Hanami::Router::Block::Context)
-    # @param default_app [#call(env)] default handler when route is not matched
+    # @param not_found [#call(env)] default handler when route is not matched
     # @param blk [Proc] the route definitions
     #
     # @since 0.1.0
