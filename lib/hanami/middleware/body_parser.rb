@@ -2,13 +2,15 @@
 
 require "hanami/router/params"
 require "hanami/middleware/error"
-require_relative "body_parser/class_interface"
 
 module Hanami
   module Middleware
     # @since 1.3.0
     # @api private
     class BodyParser
+      require_relative "body_parser/class_interface"
+      require_relative "body_parser/parser"
+
       # @since 1.3.0
       # @api private
       CONTENT_TYPE = "CONTENT_TYPE"

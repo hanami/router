@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require "json"
-require_relative "errors"
+require_relative "parser"
 
 module Hanami
   module Middleware
     class BodyParser
       # @since 1.3.0
       # @api private
-      class JsonParser
+      class JsonParser < Parser
         # @since 1.3.0
         # @api private
         def mime_types
