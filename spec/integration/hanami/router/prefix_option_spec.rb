@@ -1,59 +1,32 @@
 # frozen_string_literal: true
 
-module Prefix
-  module Controllers
-    module Home
-      class Index < Action
-        def call(*)
-          [200, {}, ["home"]]
-        end
-      end
-    end
-
-    module Users
-      class Index < Action
-        def call(*)
-          [200, {}, ["users"]]
-        end
-      end
-    end
-
-    module Asteroid
-      class Show < Action
-        def call(*)
-          [200, {}, ["asteroid"]]
-        end
-      end
-    end
-  end
-end
-
 RSpec.describe Hanami::Router do
   describe "with prefix option" do
     let(:router) do
-      Hanami::Router.new(scheme: "https", host: "hanami.test", port: 443, prefix: "/admin", namespace: Prefix::Controllers, configuration: Action::Configuration.new("prefix")) do
-        get     "/home", to: "home#index", as: :get_home
-        post    "/home", to: "home#index", as: :post_home
-        put     "/home", to: "home#index", as: :put_home
-        patch   "/home", to: "home#index", as: :patch_home
-        delete  "/home", to: "home#index", as: :delete_home
-        trace   "/home", to: "home#index", as: :trace_home
-        options "/home", to: "home#index", as: :options_home
+      e = endpoint
+      Hanami::Router.new(base_url: base_url, prefix: prefix) do
+        get     "/home", to: e, as: :get_home
+        post    "/home", to: e, as: :post_home
+        put     "/home", to: e, as: :put_home
+        patch   "/home", to: e, as: :patch_home
+        delete  "/home", to: e, as: :delete_home
+        trace   "/home", to: e, as: :trace_home
+        options "/home", to: e, as: :options_home
 
-        get  "/admin",      to: "home#index", as: :get_admin
-        get  "/admin/new",  to: "home#index", as: :new_admin
-        get  "/admin/edit", to: "home#index", as: :edit_admin
-        post "/admin",      to: "home#index", as: :create_admin
-        put  "/admin",      to: "home#index", as: :put_admin
+        get  "/admin",      to: e, as: :get_admin
+        get  "/admin/new",  to: e, as: :new_admin
+        get  "/admin/edit", to: e, as: :edit_admin
+        post "/admin",      to: e, as: :create_admin
+        put  "/admin",      to: e, as: :put_admin
 
-        resources :users
-        resource :asteroid
-
-        prefix :dashboard do
-          get "/home", to: "dashboard#index", as: :dashboard_home
+        scope :dashboard do
+          get "/home", to: ->(*) {}, as: :home
         end
       end
     end
+    let(:base_url) { "https://hanami.test" }
+    let(:prefix) { "/admin" }
+    let(:endpoint) { ->(*) { [200, {"Content-Length" => "4"}, ["home"]] } }
 
     it "generates relative URLs with prefix" do
       expect(router.path(:get_home)).to eq("/admin/home")
@@ -64,21 +37,11 @@ RSpec.describe Hanami::Router do
       expect(router.path(:trace_home)).to eq("/admin/home")
       expect(router.path(:options_home)).to eq("/admin/home")
 
-      expect(router.path(:users)).to eq("/admin/users")
-      expect(router.path(:new_user)).to eq("/admin/users/new")
-      expect(router.path(:users)).to eq("/admin/users")
-      expect(router.path(:user, id: 1)).to eq("/admin/users/1")
-      expect(router.path(:edit_user, id: 1)).to eq("/admin/users/1/edit")
-
       expect(router.path(:get_admin)).to eq("/admin/admin")
       expect(router.path(:new_admin)).to eq("/admin/admin/new")
       expect(router.path(:create_admin)).to eq("/admin/admin")
       expect(router.path(:edit_admin)).to eq("/admin/admin/edit")
       expect(router.path(:put_admin)).to eq("/admin/admin")
-
-      expect(router.path(:new_asteroid)).to eq("/admin/asteroid/new")
-      expect(router.path(:asteroid)).to eq("/admin/asteroid")
-      expect(router.path(:edit_asteroid)).to eq("/admin/asteroid/edit")
 
       expect(router.path(:dashboard_home)).to eq("/admin/dashboard/home")
     end
@@ -91,16 +54,6 @@ RSpec.describe Hanami::Router do
       expect(router.url(:delete_home)).to eq("https://hanami.test/admin/home")
       expect(router.url(:trace_home)).to eq("https://hanami.test/admin/home")
       expect(router.url(:options_home)).to eq("https://hanami.test/admin/home")
-
-      expect(router.url(:users)).to eq("https://hanami.test/admin/users")
-      expect(router.url(:new_user)).to eq("https://hanami.test/admin/users/new")
-      expect(router.url(:users)).to eq("https://hanami.test/admin/users")
-      expect(router.url(:user, id: 1)).to eq("https://hanami.test/admin/users/1")
-      expect(router.url(:edit_user, id: 1)).to eq("https://hanami.test/admin/users/1/edit")
-
-      expect(router.url(:new_asteroid)).to eq("https://hanami.test/admin/asteroid/new")
-      expect(router.url(:asteroid)).to eq("https://hanami.test/admin/asteroid")
-      expect(router.url(:edit_asteroid)).to eq("https://hanami.test/admin/asteroid/edit")
 
       expect(router.url(:dashboard_home)).to eq("https://hanami.test/admin/dashboard/home")
     end
@@ -115,26 +68,10 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    it "recognizes RESTful resources" do
-      env = Rack::MockRequest.env_for("/admin/users")
-      status, _, body = router.call(env)
-
-      expect(status).to eq(200)
-      expect(body).to eq(["users"])
-    end
-
-    it "recognizes RESTful resource" do
-      env = Rack::MockRequest.env_for("/admin/asteroid")
-      status, _, body = router.call(env)
-
-      expect(status).to eq(200)
-      expect(body).to eq(["asteroid"])
-    end
-
     it "redirect works with prefix" do
-      router = Hanami::Router.new(prefix: "/admin") do
+      router = Hanami::Router.new(prefix: prefix) do
         redirect "/redirect", to: "/redirect_destination"
-        get "/redirect_destination", to: ->(_env) { [200, {}, ["Redirect destination!"]] }
+        get "/redirect_destination", to: ->(*) { [200, {}, ["Redirect destination!"]] }
       end
 
       env = Rack::MockRequest.env_for("/admin/redirect")

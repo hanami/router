@@ -3,18 +3,16 @@
 RSpec.describe Hanami::Router do
   let(:router) do
     e = endpoint
-    Hanami::Router.new(scheme: "https", host: "test.com", port: 443) do
+    Hanami::Router.new(base_url: "https://hanami.test") do
       get "/hanami",               to: e, as: :fixed
       get "/flowers/:id",          to: e, as: :variables
       get "/books/:id", id: /\d+/, to: e, as: :constraints
       get "/articles(.:format)",   to: e, as: :optional
       get "/files/*glob",          to: e, as: :glob
-      resources :leaves,                  as: :resources
-      resource :stem,                     as: :singular_resource
     end
   end
 
-  let(:endpoint) { ->(_) { [200, {}, ["Hi!"]] } }
+  let(:endpoint) { ->(*) { [200, {}, ["Hi!"]] } }
 
   describe "#path" do
     it "recognizes fixed string" do
@@ -26,7 +24,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      expect { router.path(:variables) }.to raise_error(Hanami::Routing::InvalidRouteException, "cannot expand with keys [], possible expansions: [:id]")
+      expect { router.path(:variables) }.to raise_error(Hanami::Router::InvalidRouteExpansionException, "No route could be generated for `:variables': cannot expand with keys [], possible expansions: [:id]")
     end
 
     it "recognizes string with variables and constraints" do
@@ -48,40 +46,9 @@ RSpec.describe Hanami::Router do
       expect(router.path(:fixed, return_to: "/dashboard")).to eq("/hanami?return_to=%2Fdashboard")
     end
 
-    it "raises error when insufficient params are passed" do
-      expect { router.path(nil) }.to raise_error(Hanami::Routing::InvalidRouteException, "No route could be generated for nil - please check given arguments")
-    end
-
-    describe "plural resource routes" do
-      it "recognizes index" do
-        expect(router.path(:resources)).to eq("/leaves")
-      end
-
-      it "recognizes new" do
-        expect(router.path(:new_resource)).to eq("/leaves/new")
-      end
-
-      it "recognizes edit" do
-        expect(router.path(:edit_resource, id: 1)).to eq("/leaves/1/edit")
-      end
-
-      it "recognizes show" do
-        expect(router.path(:resource, id: 1)).to eq("/leaves/1")
-      end
-    end
-
-    describe "singular resource routes" do
-      it "recognizes new" do
-        expect(router.path(:new_singular_resource)).to eq("/stem/new")
-      end
-
-      it "recognizes edit" do
-        expect(router.path(:edit_singular_resource)).to eq("/stem/edit")
-      end
-
-      it "recognizes show" do
-        expect(router.path(:singular_resource)).to eq("/stem")
-      end
+    # FIXME: shall we keep this behavior?
+    xit "raises error when insufficient params are passed" do
+      expect { router.path(nil) }.to raise_error(Hanami::Router::InvalidRouteExpansionException, "No route could be generated for nil - please check given arguments")
     end
   end
 end

@@ -49,7 +49,7 @@ module Hanami
         #       raise Hanami::Middleware::BodyParser::BodyParsingError.new(exception.message)
         #     end
         #   end
-        def parse(body) # rubocop:disable Lint/UnusedMethodArgument
+        def parse(body)
           raise NotImplementedError
         end
       end

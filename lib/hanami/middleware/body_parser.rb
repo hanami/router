@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "hanami/utils/hash"
+require "hanami/router/params"
 require "hanami/middleware/error"
 
 module Hanami
@@ -72,9 +72,9 @@ module Hanami
       # @api private
       def _symbolize(body)
         if body.is_a?(::Hash)
-          Utils::Hash.deep_symbolize(body)
+          Router::Params.deep_symbolize(body)
         else
-          { FALLBACK_KEY => body }
+          {FALLBACK_KEY => body}
         end
       end
 

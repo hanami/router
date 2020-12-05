@@ -3,6 +3,34 @@
 require "rexml/document"
 require "hanami/middleware/body_parser"
 
+require "securerandom"
+
+class RandomMiddleware
+  HEADER_PREFIX = "X-Random"
+  private_constant :HEADER_PREFIX
+
+  def self.headers_count(headers)
+    headers.find_all { |header, _| header.start_with?(HEADER_PREFIX) }.count
+  end
+
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    status, headers, body = @app.call(env)
+    headers["#{HEADER_PREFIX}-#{random}"] = "1"
+
+    [status, headers, body]
+  end
+
+  private
+
+  def random
+    SecureRandom.hex(8)
+  end
+end
+
 class MyMiddleware
   def call(*)
   end
@@ -37,7 +65,9 @@ class Action
   attr_reader :configuration
 
   def initialize(configuration:)
-    raise ArgumentError.new("invalid configuration for #{self.class.name}: #{configuration.inspect}") unless configuration.is_a?(Configuration)
+    unless configuration.is_a?(Configuration)
+      raise ArgumentError.new("invalid configuration for #{self.class.name}: #{configuration.inspect}")
+    end
 
     @configuration = configuration
   end
@@ -374,25 +404,25 @@ module Flowers
 
   class Show < Action
     def call(env)
-      [200, {}, ["Flowers::Show " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Show #{env['router.params'][:id]}"]]
     end
   end
 
   class Edit < Action
     def call(env)
-      [200, {}, ["Flowers::Edit " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Edit #{env['router.params'][:id]}"]]
     end
   end
 
   class Update < Action
     def call(env)
-      [200, {}, ["Flowers::Update " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Update #{env['router.params'][:id]}"]]
     end
   end
 
   class Destroy < Action
     def call(env)
-      [200, {}, ["Flowers::Destroy " + env["router.params"][:id]]]
+      [200, {}, ["Flowers::Destroy #{env['router.params'][:id]}"]]
     end
   end
 end # Flowers
@@ -412,13 +442,13 @@ module Keyboards
 
   class Edit < Action
     def call(env)
-      [200, {}, ["Keyboards::Edit " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Edit #{env['router.params'][:id]}"]]
     end
   end
 
   class Show < Action
     def call(env)
-      [200, {}, ["Keyboards::Show " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Show #{env['router.params'][:id]}"]]
     end
   end
 
@@ -430,13 +460,13 @@ module Keyboards
 
   class Screenshot < Action
     def call(env)
-      [200, {}, ["Keyboards::Screenshot " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Screenshot #{env['router.params'][:id]}"]]
     end
   end
 
   class Print < Action
     def call(env)
-      [200, {}, ["Keyboards::Print " + env["router.params"][:id]]]
+      [200, {}, ["Keyboards::Print #{env['router.params'][:id]}"]]
     end
   end
 
@@ -468,25 +498,25 @@ module Keys
 
   class Edit < Action
     def call(env)
-      [200, {}, ["Keys::Edit " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Edit #{env['router.params'][:id]}"]]
     end
   end
 
   class Update < Action
     def call(env)
-      [200, {}, ["Keys::Update " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Update #{env['router.params'][:id]}"]]
     end
   end
 
   class Show < Action
     def call(env)
-      [200, {}, ["Keys::Show " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Show #{env['router.params'][:id]}"]]
     end
   end
 
   class Destroy < Action
     def call(env)
-      [200, {}, ["Keys::Destroy " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Destroy #{env['router.params'][:id]}"]]
     end
   end
 
@@ -498,7 +528,7 @@ module Keys
 
   class Screenshot < Action
     def call(env)
-      [200, {}, ["Keys::Screenshot " + env["router.params"][:id]]]
+      [200, {}, ["Keys::Screenshot #{env['router.params'][:id]}"]]
     end
   end
 end # Keyboards
@@ -527,26 +557,6 @@ end
 class RackMiddlewareInstanceMethod
   def call(_env)
     [200, {}, ["RackMiddlewareInstanceMethod"]]
-  end
-end
-
-module CreditCards
-  class Index < Action
-    def call(*)
-      [200, {}, ["Hello from CreditCards::Index"]]
-    end
-  end
-end
-
-module Travels
-  module Controllers
-    module Journeys
-      class Index < Action
-        def call(*)
-          [200, {}, ["Hello from Travels::Controllers::Journeys::Index"]]
-        end
-      end
-    end
   end
 end
 

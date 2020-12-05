@@ -4,35 +4,10 @@
 #
 version: 2
 jobs:
-  "ruby-2.5":
-    docker:
-       - image: hanami/ruby-2.5
-    working_directory: ~/hanami-utils
-    steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-      # run tests!
-      - run:
-          name: run tests
-          command: |
-            ./script/ci
   "ruby-2.6":
     docker:
        - image: hanami/ruby-2.6
-    working_directory: ~/hanami-utils
+    working_directory: ~/hanami-router
     steps:
       - checkout
       # Download and cache dependencies
@@ -54,10 +29,34 @@ jobs:
           name: run tests
           command: |
             ./script/ci
-
+  "ruby-2.7":
+    docker:
+       - image: hanami/ruby-2.7
+    working_directory: ~/hanami-router
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            ./script/ci
 workflows:
   version: 2
   build:
     jobs:
-      - "ruby-2.5"
       - "ruby-2.6"
+      - "ruby-2.7"
