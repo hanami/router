@@ -73,7 +73,6 @@ module Hanami
       @variable = {}
       @globbed = {}
       @mounted = {}
-      @blk = blk
       @routes = []
       instance_eval(&blk) if blk
     end
