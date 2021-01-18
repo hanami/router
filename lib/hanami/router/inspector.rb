@@ -68,7 +68,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       def inspect_route(route)
-        return EMPTY_ROUTE if route.fetch(:http_method) == "HEAD"
+        return EMPTY_ROUTE if route.fetch(:http_method) == HTTP_METHOD_HEAD
 
         result = route.fetch(:http_method).to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT)
         result += route.fetch(:path).ljust(LARGE_STRING_JUSTIFY_AMOUNT)

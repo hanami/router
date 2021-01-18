@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rack"
 require "rack/utils"
 
 module Hanami
@@ -55,6 +56,8 @@ module Hanami
     # @param resolver [#call(path, to)] a resolver for route entpoints
     # @param block_context [Hanami::Router::Block::Context)
     # @param not_found [#call(env)] default handler when route is not matched
+    # @param not_allowed [#call(env)] default handler when a path is not
+    #   matched, but not the HTTP method
     # @param blk [Proc] the route definitions
     #
     # @since 0.1.0
@@ -67,7 +70,7 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, not_allowed: NOT_ALLOWED, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
@@ -75,6 +78,7 @@ module Hanami
       @base_url = base_url
       @resolver = resolver
       @not_found = not_found
+      @not_allowed = not_allowed
       @block_context = block_context
       @fixed = {}
       @variable = {}
@@ -196,8 +200,8 @@ module Hanami
     #     get "/users/:id", to: ->(*) { [200, {}, ["OK"]] }, id: /\d+/
     #   end
     def get(path, to: nil, as: nil, **constraints, &blk)
-      add_route("GET", path, to, as, constraints, &blk)
-      add_route("HEAD", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_GET, path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_HEAD, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts POST requests for the given path.
@@ -215,7 +219,7 @@ module Hanami
     # @see #path
     # @see #url
     def post(path, to: nil, as: nil, **constraints, &blk)
-      add_route("POST", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_POST, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts PATCH requests for the given path.
@@ -233,7 +237,7 @@ module Hanami
     # @see #path
     # @see #url
     def patch(path, to: nil, as: nil, **constraints, &blk)
-      add_route("PATCH", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_PATCH, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts PUT requests for the given path.
@@ -251,7 +255,7 @@ module Hanami
     # @see #path
     # @see #url
     def put(path, to: nil, as: nil, **constraints, &blk)
-      add_route("PUT", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_PUT, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts DELETE requests for the given path.
@@ -269,7 +273,7 @@ module Hanami
     # @see #path
     # @see #url
     def delete(path, to: nil, as: nil, **constraints, &blk)
-      add_route("DELETE", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_DELETE, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts TRACE requests for the given path.
@@ -287,7 +291,7 @@ module Hanami
     # @see #path
     # @see #url
     def trace(path, to: nil, as: nil, **constraints, &blk)
-      add_route("TRACE", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_TRACE, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts OPTIONS requests for the given path.
@@ -305,7 +309,7 @@ module Hanami
     # @see #path
     # @see #url
     def options(path, to: nil, as: nil, **constraints, &blk)
-      add_route("OPTIONS", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_OPTIONS, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts LINK requests for the given path.
@@ -323,7 +327,7 @@ module Hanami
     # @see #path
     # @see #url
     def link(path, to: nil, as: nil, **constraints, &blk)
-      add_route("LINK", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_LINK, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts UNLINK requests for the given path.
@@ -341,7 +345,7 @@ module Hanami
     # @see #path
     # @see #url
     def unlink(path, to: nil, as: nil, **constraints, &blk)
-      add_route("UNLINK", path, to, as, constraints, &blk)
+      add_route(HTTP_METHOD_UNLINK, path, to, as, constraints, &blk)
     end
 
     # Defines a route that redirects the incoming request to another path.
@@ -419,7 +423,7 @@ module Hanami
       prefix = Segment.fabricate(path, **constraints)
 
       @mounted[prefix] = @resolver.call(path, app)
-      @routes << {http_method: "*", path: at, to: app, constraints: constraints} if inspect?
+      @routes << {http_method: HTTP_METHOD_ALL, path: at, to: app, constraints: constraints} if inspect?
     end
 
     # Generate an relative URL for a specified named route.
@@ -618,20 +622,20 @@ module Hanami
     # @since 2.0.0
     # @api private
     def fixed(env)
-      @fixed.dig(env["REQUEST_METHOD"], env["PATH_INFO"])
+      @fixed.dig(env[REQUEST_METHOD], env[PATH_INFO])
     end
 
     # @since 2.0.0
     # @api private
     def variable(env)
-      @variable[env["REQUEST_METHOD"]]&.find(env["PATH_INFO"])
+      @variable[env[REQUEST_METHOD]]&.find(env[PATH_INFO])
     end
 
     # @since 2.0.0
     # @api private
     def globbed(env)
-      @globbed[env["REQUEST_METHOD"]]&.each do |path, to|
-        if (match = path.match(env["PATH_INFO"]))
+      @globbed[env[REQUEST_METHOD]]&.each do |path, to|
+        if (match = path.match(env[PATH_INFO]))
           return [to, match.named_captures]
         end
       end
@@ -643,13 +647,13 @@ module Hanami
     # @api private
     def mounted(env)
       @mounted.each do |prefix, app|
-        next unless (match = prefix.peek_match(env["PATH_INFO"]))
+        next unless (match = prefix.peek_match(env[PATH_INFO]))
 
         # TODO: ensure compatibility with existing env["SCRIPT_NAME"]
         # TODO: cleanup this code
-        env["SCRIPT_NAME"] = env["SCRIPT_NAME"].to_s + prefix.to_s
-        env["PATH_INFO"] = env["PATH_INFO"].sub(prefix.to_s, "")
-        env["PATH_INFO"] = "/" if env["PATH_INFO"] == ""
+        env[SCRIPT_NAME] = env[SCRIPT_NAME].to_s + prefix.to_s
+        env[PATH_INFO] = env[PATH_INFO].sub(prefix.to_s, "")
+        env[PATH_INFO] = "/" if env[PATH_INFO] == ""
 
         return [app, match.named_captures]
       end
@@ -661,13 +665,19 @@ module Hanami
     # @api private
     def not_allowed(env)
       (_not_allowed_fixed(env) ||
-       _not_allowed_variable(env)) and return [405, {"Content-Length" => "11"}, ["Not Allowed"]]
+       _not_allowed_variable(env)) and return not_allowed_response(env)
     end
 
     # @since 2.0.0
     # @api private
     def not_found(env)
       @not_found.call(env)
+    end
+
+    # @since 2.0.0
+    # @api private
+    def not_allowed_response(env)
+      @not_allowed.call(env)
     end
 
     protected
@@ -723,13 +733,71 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    PARAMS = "router.params"
+    REQUEST_METHOD = Rack::REQUEST_METHOD
+
+    # @since 2.0.0
+    # @api private
+    PATH_INFO = Rack::PATH_INFO
+
+    # @since 2.0.0
+    # @api private
+    SCRIPT_NAME = Rack::SCRIPT_NAME
 
     # Default response when no route was matched
     #
     # @api private
     # @since 2.0.0
     NOT_FOUND = ->(*) { [404, {"Content-Length" => "9"}, ["Not Found"]] }.freeze
+
+    # Default response when a path is matched, but not the HTTP method
+    #
+    # @api private
+    # @since 2.0.0
+    NOT_ALLOWED = ->(*) { [405, {"Content-Length" => "11"}, ["Not Allowed"]] }.freeze
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_ALL = "*"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_HEAD = "HEAD"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_GET = "GET"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_POST = "POST"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_PATCH = "PATCH"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_PUT = "PUT"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_DELETE = "DELETE"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_TRACE = "TRACE"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_OPTIONS = "OPTIONS"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_LINK = "LINK"
+
+    # @api private
+    # @since 2.0.0
+    HTTP_METHOD_UNLINK = "UNLINK"
 
     # @since 2.0.0
     # @api private
@@ -841,6 +909,7 @@ module Hanami
         prefix: @path_prefix.to_s,
         resolver: @resolver,
         not_found: @not_found,
+        not_allowed: @not_allowed,
         block_context: @block_context,
         inspector: @inspector
       }
@@ -878,7 +947,7 @@ module Hanami
       @fixed.each_value do |routes|
         break if found
 
-        found = routes.key?(env["PATH_INFO"])
+        found = routes.key?(env[PATH_INFO])
       end
 
       found
@@ -892,7 +961,7 @@ module Hanami
       @variable.each_value do |routes|
         break if found
 
-        found = routes.find(env["PATH_INFO"])
+        found = routes.find(env[PATH_INFO])
       end
 
       found

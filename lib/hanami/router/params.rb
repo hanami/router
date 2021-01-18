@@ -2,6 +2,10 @@
 
 module Hanami
   class Router
+    # @since 2.0.0
+    # @api private
+    PARAMS = "router.params"
+
     # Params utilities
     #
     # @since 2.0.0

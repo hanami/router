@@ -25,7 +25,7 @@ module Hanami
 
       # @since 1.3.0
       # @api private
-      ROUTER_PARAMS = "router.params"
+      ROUTER_PARAMS = Router::PARAMS
 
       # @api private
       ROUTER_PARSED_BODY = "router.parsed_body"
