@@ -13,8 +13,13 @@ module Hanami
 
       # @since 2.0.0
       # @api private
-      def initialize(destination, endpoint)
+      attr_reader :code
+
+      # @since 2.0.0
+      # @api private
+      def initialize(destination, code, endpoint)
         @destination = destination
+        @code = code
         @endpoint = endpoint
       end
 
