@@ -67,16 +67,22 @@ module Hanami
 
       # @api private
       # @since 2.0.0
+      EXTRA_SEPERATOR = " "
+      private_constant :EXTRA_SEPERATOR
+
+      # @api private
+      # @since 2.0.0
       def inspect_route(route)
         return EMPTY_ROUTE if route.fetch(:http_method) == "HEAD"
 
         result = route.fetch(:http_method).to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT)
-        result += route.fetch(:path).ljust(LARGE_STRING_JUSTIFY_AMOUNT)
+        result += route.fetch(:path).ljust(LARGE_STRING_JUSTIFY_AMOUNT) + EXTRA_SEPERATOR
         result += inspect_to(route.fetch(:to)).ljust(LARGE_STRING_JUSTIFY_AMOUNT)
-        result += "as #{route.fetch(:as).inspect}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) if route.fetch(:as, nil)
+        result += "#{EXTRA_SEPERATOR}as #{route.fetch(:as).inspect}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) if route[:as]
 
         unless route.fetch(:constraints, {}).empty?
-          result += "(#{inspect_constraints(route.fetch(:constraints))})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT)
+          result += "#{EXTRA_SEPERATOR}(#{inspect_constraints(route.fetch(:constraints))})" \
+            .ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT)
         end
 
         result

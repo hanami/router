@@ -65,6 +65,12 @@ RSpec.describe Hanami::Router do
           get "/users", to: ->(*) {}
         end
 
+        # LOTS OF LONG STUFF
+        get "/very/very/long/url/to/:project_id/:item_id", \
+            to: "my_wonderful_app/controllers/super_duper_controller#action", \
+            as: :long_name_for_long_long_url, \
+            id: /\d+/, project_id: /\d+/
+
         # MOUNT
         mount App.new, at: "/app"
       end
@@ -72,28 +78,30 @@ RSpec.describe Hanami::Router do
 
     it "returns inspectable routes" do
       expected = [
-        "GET     /                             home#index                    as :root",
-        "GET     /foo                          controller#action",
-        "POST    /foo                          controller#action",
-        "PATCH   /foo                          controller#action",
-        "PUT     /foo                          controller#action",
-        "DELETE  /foo                          controller#action",
-        "TRACE   /foo                          controller#action",
-        "OPTIONS /foo                          controller#action",
-        "LINK    /foo                          controller#action",
-        "UNLINK  /foo                          controller#action",
-        "GET     /login                        sessions#new                  as :login",
-        "GET     /constraints/:id/:keyword     constraints#show              (id: /\\d+/, keyword: /\\w+/)",
-        "GET     /block                        (block)",
-        "GET     /proc                         (proc)",
-        "GET     /class                        Endpoint",
-        "GET     /object                       Endpoint",
-        "GET     /anonymous                    (class)",
-        "GET     /anonymous-object             (class)",
-        "GET     /redirect                     /redirect_destination (HTTP 301)",
-        "GET     /redirect-temporary           /redirect_destination (HTTP 302)",
-        "GET     /v1/users                     (proc)",
-        "*       /app                          App"
+        "GET     /                              home#index                     as :root",
+        "GET     /foo                           controller#action",
+        "POST    /foo                           controller#action",
+        "PATCH   /foo                           controller#action",
+        "PUT     /foo                           controller#action",
+        "DELETE  /foo                           controller#action",
+        "TRACE   /foo                           controller#action",
+        "OPTIONS /foo                           controller#action",
+        "LINK    /foo                           controller#action",
+        "UNLINK  /foo                           controller#action",
+        "GET     /login                         sessions#new                   as :login",
+        "GET     /constraints/:id/:keyword      constraints#show               (id: /\\d+/, keyword: /\\w+/)",
+        "GET     /block                         (block)",
+        "GET     /proc                          (proc)",
+        "GET     /class                         Endpoint",
+        "GET     /object                        Endpoint",
+        "GET     /anonymous                     (class)",
+        "GET     /anonymous-object              (class)",
+        "GET     /redirect                      /redirect_destination (HTTP 301)",
+        "GET     /redirect-temporary            /redirect_destination (HTTP 302)",
+        "GET     /v1/users                      (proc)",
+        "GET     /very/very/long/url/to/:project_id/:item_id my_wonderful_app/controllers/super_duper_controller#action " \
+                   "as :long_name_for_long_long_url (id: /\\d+/, project_id: /\\d+/)",
+        "*       /app                           App"
       ]
 
       actual = subject.to_inspect

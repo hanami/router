@@ -28,7 +28,7 @@ RSpec.describe Hanami::Router::Inspector do
 
       it "returns inspected routes" do
         expected = [
-          "GET     /                             home#index                    as :root"
+          "GET     /                              home#index                     as :root"
         ]
 
         actual = subject.call(routes)
