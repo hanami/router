@@ -60,7 +60,7 @@ module Hanami
     class NotRoutableEndpointError < Error
       # @since 0.5.0
       def initialize(env)
-        super %(Cannot find routable endpoint for: #{env['REQUEST_METHOD']} #{env['PATH_INFO']})
+        super %(Cannot find routable endpoint for: #{env[REQUEST_METHOD]} #{env[PATH_INFO]})
       end
     end
   end

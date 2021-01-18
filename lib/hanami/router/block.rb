@@ -59,7 +59,7 @@ module Hanami
         #
         # @since 2.0.0
         def params
-          env["router.params"]
+          env[PARAMS]
         end
 
         # @api private
