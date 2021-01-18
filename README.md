@@ -5,7 +5,7 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://h
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-router.svg)](https://badge.fury.io/rb/hanami-router)
-[![CircleCI](https://circleci.com/gh/hanami/router/tree/unstable.svg?style=svg)](https://circleci.com/gh/hanami/router/tree/unstable)
+[![CI](https://github.com/hanami/router/workflows/ci/badge.svg?branch=unstable)](https://github.com/hanami/router/actions?query=workflow%3Aci+branch%3Aunstable)
 [![Test Coverage](https://codecov.io/gh/hanami/router/branch/unstable/graph/badge.svg)](https://codecov.io/gh/hanami/router)
 [![Depfu](https://badges.depfu.com/badges/5f6b8e8fa3b0d082539f0b0f84d55960/overview.svg)](https://depfu.com/github/hanami/router?project=Bundler)
 [![Inline Docs](http://inch-ci.org/github/hanami/router.svg)](http://inch-ci.org/github/hanami/router)
@@ -21,7 +21,7 @@ Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://h
 
 ## Rubies
 
-__Hanami::Router__ supports Ruby (MRI) 2.5+
+__Hanami::Router__ supports Ruby (MRI) 2.6+
 
 
 ## Installation
@@ -361,6 +361,6 @@ __Hanami::Router__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Copyright
 
-Copyright © 2014-2020 Luca Guidi – Released under MIT License
+Copyright © 2014-2021 Luca Guidi – Released under MIT License
 
 This project was formerly known as Lotus (`lotus-router`).

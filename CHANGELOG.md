@@ -1,6 +1,12 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.alpha4 - 2021-01-16
+### Added
+- [Luca Guidi] Official support for MRI 3.0
+- [Luca Guidi] Introduced `Hanami::Middleware::BodyParser::Parser` as superclass for body parsers
+- [Paweł Świątkowski] Added `not_found:` option to `Hanami::Router#initialize` to customize HTTP 404 status
+
 ## v2.0.0.alpha3 - 2020-05-20
 ### Fixed
 - [Luca Guidi] `Hanami::Router#initialize` do not yield block if not given
