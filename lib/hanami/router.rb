@@ -23,6 +23,12 @@ module Hanami
     # @since 2.0.0
     attr_reader :url_helpers
 
+    # Routes for inspection
+    #
+    # @api private
+    # @since 2.0.0
+    attr_reader :routes
+
     # Returns the given block as it is.
     #
     # @param blk [Proc] a set of route definitions
@@ -61,11 +67,12 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, &blk) # rubocop:disable Layout/LineLength
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @url_helpers = UrlHelpers.new(base_url)
+      @base_url = base_url
       @resolver = resolver
       @not_found = not_found
       @block_context = block_context
@@ -73,7 +80,9 @@ module Hanami
       @variable = {}
       @globbed = {}
       @mounted = {}
-      @routes = []
+      @blk = blk
+      @inspector = inspector
+      @routes = [] if inspect?
       instance_eval(&blk) if blk
     end
 
@@ -408,8 +417,9 @@ module Hanami
     def mount(app, at:, **constraints)
       path = prefixed_path(at)
       prefix = Segment.fabricate(path, **constraints)
+
       @mounted[prefix] = @resolver.call(path, app)
-      @routes << {http_method: "*", path: at, to: app, constraints: constraints}
+      @routes << {http_method: "*", path: at, to: app, constraints: constraints} if inspect?
     end
 
     # Generate an relative URL for a specified named route.
@@ -590,9 +600,19 @@ module Hanami
       )
     end
 
+    # Returns formatted routes
+    #
+    # @return [String] formatted routes
+    #
+    # @since 2.0.0
+    # @api private
     def to_inspect
       require "hanami/router/inspector"
-      Inspector.new(@routes).call
+
+      inspector = Inspector.new
+      router = with(inspector: inspector)
+
+      inspector.call(router.routes)
     end
 
     # @since 2.0.0
@@ -735,7 +755,10 @@ module Hanami
       end
 
       add_named_route(path, as, constraints) if as
-      @routes << {http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk}
+
+      if inspect?
+        @routes << {http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk}
+      end
     end
 
     # @since 2.0.0
@@ -788,6 +811,12 @@ module Hanami
 
     # @since 2.0.0
     # @api private
+    def inspect?
+      !@inspector.nil?
+    end
+
+    # @since 2.0.0
+    # @api private
     def prefixed_path(path)
       @path_prefix.join(path).to_s
     end
@@ -796,6 +825,27 @@ module Hanami
     # @api private
     def prefixed_name(name)
       @name_prefix.relative_join(name, "_").to_sym
+    end
+
+    # Returns a new instance of Hanami::Router with the modified options.
+    #
+    # @return [Hanami::Route] a new instance of Hanami::Router
+    #
+    # @see Hanami::Router#initialize
+    #
+    # @since 2.0.0
+    # @api private
+    def with(**new_options, &blk)
+      options = {
+        base_url: @base_url,
+        prefix: @path_prefix.to_s,
+        resolver: @resolver,
+        not_found: @not_found,
+        block_context: @block_context,
+        inspector: @inspector
+      }
+
+      self.class.new(**options.merge(new_options), &(blk || @blk))
     end
 
     # @since 2.0.0

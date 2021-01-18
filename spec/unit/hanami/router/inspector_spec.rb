@@ -3,11 +3,9 @@
 require "hanami/router/inspector"
 
 RSpec.describe Hanami::Router::Inspector do
-  subject { described_class.new(routes) }
+  subject { described_class.new }
 
   describe "#initialize" do
-    let(:routes) { [] }
-
     it "returns a frozen instance of #{described_class}" do
       expect(subject).to be_kind_of(described_class)
       expect(subject).to be_frozen
@@ -19,7 +17,7 @@ RSpec.describe Hanami::Router::Inspector do
       let(:routes) { [] }
 
       it "returns an empty result" do
-        expect(subject.call).to eq("")
+        expect(subject.call(routes)).to eq("")
       end
     end
 
@@ -33,7 +31,7 @@ RSpec.describe Hanami::Router::Inspector do
           "GET     /                             home#index                    as :root"
         ]
 
-        actual = subject.call
+        actual = subject.call(routes)
         expected.each do |route|
           expect(actual).to include(route)
         end

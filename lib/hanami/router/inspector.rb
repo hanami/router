@@ -10,21 +10,20 @@ module Hanami
     # @api private
     # @since 2.0.0
     class Inspector
-      # @param routes [Array<Hash>] serialized routes
-      #
       # @api private
       # @since 2.0.0
-      def initialize(routes)
-        @routes = inspect_routes(routes)
+      def initialize
         freeze
       end
 
+      # @param routes [Array<Hash>] serialized routes
+      #
       # @return [String] The inspected routes
       #
       # @api private
       # @since 2.0.0
-      def call
-        @routes
+      def call(routes)
+        inspect_routes(routes)
       end
 
       private
