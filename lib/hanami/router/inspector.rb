@@ -23,31 +23,60 @@ module Hanami
       # @api private
       # @since 2.0.0
       def call(routes)
-        inspect_routes(routes)
+        routes.map do |route|
+          inspect_route(route)
+        end.join(NEW_LINE)
       end
 
       private
 
       # @api private
       # @since 2.0.0
-      def inspect_routes(routes)
-        routes.map do |route|
-          inspect_route(route)
-        end.join("\n")
-      end
+      NEW_LINE = $/
+      private_constant :NEW_LINE
+
+      # @api private
+      # @since 2.0.0
+      EMPTY_ROUTE = ""
+      private_constant :EMPTY_ROUTE
+
+      # @api private
+      # @since 2.0.0
+      ROUTE_CONSTRAINT_SEPARATOR = ", "
+      private_constant :ROUTE_CONSTRAINT_SEPARATOR
+
+      # @api private
+      # @since 2.0.0
+      SMALL_STRING_JUSTIFY_AMOUNT = 8
+      private_constant :SMALL_STRING_JUSTIFY_AMOUNT
+
+      # @api private
+      # @since 2.0.0
+      MEDIUM_STRING_JUSTIFY_AMOUNT = 20
+      private_constant :MEDIUM_STRING_JUSTIFY_AMOUNT
+
+      # @api private
+      # @since 2.0.0
+      LARGE_STRING_JUSTIFY_AMOUNT = 30
+      private_constant :LARGE_STRING_JUSTIFY_AMOUNT
+
+      # @api private
+      # @since 2.0.0
+      EXTRA_LARGE_STRING_JUSTIFY_AMOUNT = 40
+      private_constant :EXTRA_LARGE_STRING_JUSTIFY_AMOUNT
 
       # @api private
       # @since 2.0.0
       def inspect_route(route)
-        return "" if route.fetch(:http_method) == "HEAD"
+        return EMPTY_ROUTE if route.fetch(:http_method) == "HEAD"
 
-        result = route.fetch(:http_method).to_s.ljust(8)
-        result += route.fetch(:path).ljust(30)
-        result += inspect_to(route.fetch(:to)).ljust(30)
-        result += "as #{route.fetch(:as).inspect}".ljust(20) if route.fetch(:as, nil)
+        result = route.fetch(:http_method).to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT)
+        result += route.fetch(:path).ljust(LARGE_STRING_JUSTIFY_AMOUNT)
+        result += inspect_to(route.fetch(:to)).ljust(LARGE_STRING_JUSTIFY_AMOUNT)
+        result += "as #{route.fetch(:as).inspect}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) if route.fetch(:as, nil)
 
         unless route.fetch(:constraints, {}).empty?
-          result += "(#{inspect_constraints(route.fetch(:constraints))})".ljust(40)
+          result += "(#{inspect_constraints(route.fetch(:constraints))})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT)
         end
 
         result
@@ -77,7 +106,7 @@ module Hanami
       def inspect_constraints(constraints)
         constraints.map do |key, value|
           "#{key}: #{value.inspect}"
-        end.join(", ")
+        end.join(ROUTE_CONSTRAINT_SEPARATOR)
       end
     end
   end
