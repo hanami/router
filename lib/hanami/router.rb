@@ -15,6 +15,7 @@ module Hanami
     require "hanami/router/params"
     require "hanami/router/trie"
     require "hanami/router/block"
+    require "hanami/router/route"
     require "hanami/router/url_helpers"
 
     # URL helpers for other Hanami integrations
@@ -418,7 +419,9 @@ module Hanami
       prefix = Segment.fabricate(path, **constraints)
 
       @mounted[prefix] = @resolver.call(path, app)
-      @inspector.add_route({http_method: "*", path: at, to: app, constraints: constraints}) if inspect?
+      if inspect?
+        @inspector.add_route(Route.new(http_method: "*", path: at, to: app, constraints: constraints))
+      end
     end
 
     # Generate an relative URL for a specified named route.
@@ -756,7 +759,9 @@ module Hanami
       add_named_route(path, as, constraints) if as
 
       if inspect?
-        @inspector.add_route({http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk})
+        @inspector.add_route(
+          Route.new(http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk)
+        )
       end
     end
 

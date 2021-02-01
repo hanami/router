@@ -14,7 +14,7 @@ RSpec.describe Hanami::Router::Inspector do
 
   describe "#add_route" do
     it "adds a route to the inspector" do
-      subject.add_route({http_method: "GET", path: "/", to: "home#index"})
+      subject.add_route(Hanami::Router::Route.new(http_method: "GET", path: "/", to: "home#index"))
       expect(subject.call).to include("GET     /                             home#index")
     end
   end
@@ -28,7 +28,7 @@ RSpec.describe Hanami::Router::Inspector do
 
     context "with routes" do
       let(:routes) do
-        [{http_method: "GET", path: "/", to: "home#index", as: :root, constraints: {}, blk: nil}]
+        [Hanami::Router::Route.new(http_method: "GET", path: "/", to: "home#index", as: :root, constraints: {}, blk: nil)]
       end
 
       it "returns inspected routes" do
