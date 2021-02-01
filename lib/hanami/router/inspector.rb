@@ -12,8 +12,16 @@ module Hanami
     class Inspector
       # @api private
       # @since 2.0.0
-      def initialize
-        freeze
+      def initialize(routes: [])
+        @routes = routes
+      end
+
+      # @param route [Hash] serialized route
+      #
+      # @api private
+      # @since 2.0.0
+      def add_route(route)
+        @routes.push(route)
       end
 
       # @param routes [Array<Hash>] serialized routes
@@ -22,8 +30,8 @@ module Hanami
       #
       # @api private
       # @since 2.0.0
-      def call(routes)
-        routes.map do |route|
+      def call(*)
+        @routes.map do |route|
           inspect_route(route)
         end.join(NEW_LINE)
       end

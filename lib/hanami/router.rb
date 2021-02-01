@@ -82,7 +82,6 @@ module Hanami
       @mounted = {}
       @blk = blk
       @inspector = inspector
-      @routes = [] if inspect?
       instance_eval(&blk) if blk
     end
 
@@ -419,7 +418,7 @@ module Hanami
       prefix = Segment.fabricate(path, **constraints)
 
       @mounted[prefix] = @resolver.call(path, app)
-      @routes << {http_method: "*", path: at, to: app, constraints: constraints} if inspect?
+      @inspector.add_route({http_method: "*", path: at, to: app, constraints: constraints}) if inspect?
     end
 
     # Generate an relative URL for a specified named route.
@@ -610,9 +609,9 @@ module Hanami
       require "hanami/router/inspector"
 
       inspector = Inspector.new
-      router = with(inspector: inspector)
+      with(inspector: inspector)
 
-      inspector.call(router.routes)
+      inspector.call
     end
 
     # @since 2.0.0
@@ -757,7 +756,7 @@ module Hanami
       add_named_route(path, as, constraints) if as
 
       if inspect?
-        @routes << {http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk}
+        @inspector.add_route({http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk})
       end
     end
 
