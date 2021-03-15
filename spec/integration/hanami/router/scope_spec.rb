@@ -44,6 +44,22 @@ RSpec.describe Hanami::Router do
       expect(app.request("GET", "/trees/", lint: true).body).to eq("Trees (GET)!")
     end
 
+    it "allows interpolation" do
+      router = described_class.new do
+        scope ":locale" do
+          root to: ->(env) { [200, {}, ["Root (#{env.dig('router.params', :locale)})!"]] }
+
+          get "/trees", to: ->(env) { [200, {}, ["Trees (#{env.dig('router.params', :locale)})!"]] }
+        end
+      end
+
+      app = Rack::MockRequest.new(router)
+
+      expect(app.request("GET", "/it", lint: true).body).to eq("Root (it)!")
+      expect(app.request("GET", "/it/", lint: true).body).to eq("Root (it)!")
+      expect(app.request("GET", "/it/trees", lint: true).body).to eq("Trees (it)!")
+    end
+
     context "nested" do
       it "defines HTTP methods correctly" do
         router = described_class.new do
