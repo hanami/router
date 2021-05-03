@@ -21,8 +21,6 @@ module Hanami
         @routes.push(route)
       end
 
-      # @param routes [Array<Hash>] serialized routes
-      #
       # @return [String] The inspected routes
       #
       # @api private

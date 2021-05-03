@@ -1,6 +1,10 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.alpha5 - 2021-05-04
+### Added
+- [Luca Guidi] Introduced `Hanami::Router#to_inspect` which returns a string blob with all the routes formatted for human readability
+
 ## v2.0.0.alpha4 - 2021-01-16
 ### Added
 - [Luca Guidi] Official support for MRI 3.0
