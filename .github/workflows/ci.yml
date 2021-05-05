@@ -28,6 +28,7 @@ jobs:
           - "2.4"
           - "2.3"
           - "jruby"
+          - "truffleruby-head"
     steps:
       - uses: actions/checkout@v1
       - name: Install package dependencies
