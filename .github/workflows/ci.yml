@@ -28,7 +28,7 @@ jobs:
           - "2.4"
           - "2.3"
           - "jruby"
-          - "truffleruby-head"
+          - "truffleruby"
     steps:
       - uses: actions/checkout@v1
       - name: Install package dependencies
@@ -44,3 +44,4 @@ jobs:
         run: bundle install --jobs 4 --retry 3
       - name: Run all tests
         run: script/ci
+        continue-on-error: ${{ startsWith(matrix.ruby, 'truffleruby') }}
