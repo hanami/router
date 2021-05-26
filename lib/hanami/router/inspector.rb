@@ -101,7 +101,7 @@ module Hanami
       def get_column_widths(route_rows)
         column_count = route_rows.first.length
 
-        column_count.times.map do |column_no|
+        Array.new(column_count) do |column_no|
           route_rows.map { |row| row[column_no].length }.max
         end
       end
