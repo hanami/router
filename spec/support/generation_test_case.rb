@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GenerationTestCase
   include ::RSpec::Matchers
   def initialize(router)
@@ -10,6 +12,7 @@ class GenerationTestCase
   end
 
   private
+
   def _run!(type, tests)
     _for_each_test(type, tests) do |actual, expected|
       expect(actual).to eq(expected)
@@ -19,7 +22,11 @@ class GenerationTestCase
   def _for_each_test(type, tests)
     tests.each do |test|
       name, expected, args = *test
-      args = args.dup rescue nil
+      args = begin
+        args.dup
+      rescue
+        nil
+      end
 
       _rescue name, expected, args do
         actual   = _actual(type, name, args)
@@ -31,12 +38,10 @@ class GenerationTestCase
   end
 
   def _rescue(name, expected, args)
-    begin
-      yield
-    rescue Exception => e
-      puts "Failed with #{ name }, #{ expected.inspect }, #{ args.inspect }"
-      raise e
-    end
+    yield
+  rescue => exception
+    puts "Failed with #{name}, #{expected.inspect}, #{args.inspect}"
+    raise exception
   end
 
   def _actual(type, name, args)
@@ -62,6 +67,6 @@ class GenerationTestCase
   end
 
   def _absolute(expected)
-    "http://localhost#{ expected }"
+    "http://localhost#{expected}"
   end
 end

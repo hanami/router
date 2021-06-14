@@ -1,6 +1,49 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.alpha5 - 2021-05-04
+### Added
+- [Luca Guidi] Introduced `Hanami::Router#to_inspect` which returns a string blob with all the routes formatted for human readability
+
+## v2.0.0.alpha4 - 2021-01-16
+### Added
+- [Luca Guidi] Official support for MRI 3.0
+- [Luca Guidi] Introduced `Hanami::Middleware::BodyParser::Parser` as superclass for body parsers
+- [Paweł Świątkowski] Added `not_found:` option to `Hanami::Router#initialize` to customize HTTP 404 status
+
+## v2.0.0.alpha3 - 2020-05-20
+### Fixed
+- [Luca Guidi] `Hanami::Router#initialize` do not yield block if not given
+- [Luca Guidi] Ensure to not accidentally cache response headers for HTTP 404 and 405
+- [Luca Guidi] Ensure scoped root to not be added as trailing slash
+
+## v2.0.0.alpha2 - 2020-02-19
+### Added
+- [Luca Guidi] Block syntax. Routes definition accept a block which returning value is the body of the Rack response.
+- [Luca Guidi] Added `resolver:` option to `Hanami::Router#initialize` to provide your own strategy to load endpoints.
+
+### Changed
+- [Luca Guidi] Removed `Hanami::Router#resource` and `#resources`.
+- [Luca Guidi] Removed loading of routes endpoints.
+- [Luca Guidi] Removed `inflector:` from `Hanami::Router#initialize`
+- [Luca Guidi] Removed `scheme:`, `host:`, `port:` from `Hanami::Router#initialize`, use `base_url:` instead.
+
+## v2.0.0.alpha1 - 2019-01-30
+### Added
+- [Luca Guidi] Introduce `Hanami::Router#scope` to support single routing tier for Hanami
+- [Semyon Pupkov] Added `inflector:` option for `Hanami::Router#initialize` based on `dry-inflector`
+
+### Changed
+- [Luca Guidi] Drop support for Ruby: MRI 2.3, and 2.4.
+- [Luca Guidi] Renamed `Hanami::Router#namespace` => `#prefix`
+- [Gustavo Caso] Remove body cleanup for `HEAD` requests
+- [Semyon Pupkov] Remove the ability to force SSL (`force_ssl:` option for `Hanami::Router#initialize`)
+- [Gustavo Caso] Remove router body parsers (`parsers:` option for `Hanami::Router#initialize`)
+- [Luca Guidi] Globbed path requires named capture (was `get "/files/*"`, now is `get "/files/*names"`)
+- [Luca Guidi] Router is frozen after initialization
+- [Luca Guidi] All the code base respects the frozen string pragma
+- [Luca Guidi] `Hanami::Router#initialize` requires `configuration:` option if routes endpoints are `Hanami::Action` subclasses
+
 ## v1.3.2 - 2019-02-13
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.7

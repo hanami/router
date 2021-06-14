@@ -14,8 +14,7 @@ print_ruby_version() {
 }
 
 run_code_quality_checks() {
-  # bundle exec rubocop .
-  true
+  bundle exec rubocop .
 }
 
 run_unit_tests() {

@@ -1,4 +1,4 @@
-require 'hanami/routing/error'
+# frozen_string_literal: true
 
 module Hanami
   module Middleware
@@ -9,14 +9,17 @@ module Hanami
       # This is raised when parser fails to parse the body
       #
       # @since 1.3.0
-      class BodyParsingError < Hanami::Routing::Parsing::BodyParsingError
+      class BodyParsingError < Hanami::Middleware::Error
       end
 
       # @since 1.3.0
-      class UnknownParserError < Hanami::Routing::Parsing::UnknownParserError
+      class UnknownParserError < Hanami::Middleware::Error
+        def initialize(name)
+          super("Unknown body parser: `#{name.inspect}'")
+        end
       end
 
-      class InvalidParserError < Hanami::Routing::Error
+      class InvalidParserError < Hanami::Middleware::Error
       end
     end
   end

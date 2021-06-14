@@ -1,0 +1,19 @@
+# Please keep AllCops, Bundler, Style, Metrics groups and then order cops
+# alphabetically
+inherit_from:
+  - https://raw.githubusercontent.com/hanami/devtools/main/.rubocop.yml
+Metrics/ParameterLists:
+  Exclude:
+    - "lib/hanami/router.rb"
+Naming/MethodParameterName:
+  AllowedNames:
+    - 'as'
+    - 'at'
+    - 'to'
+Style/FormatStringToken:
+  Enabled: false
+Style/RescueStandardError:
+  Enabled: false
+Style/CommentedKeyword:
+  Exclude:
+    - "spec/**/*.rb"

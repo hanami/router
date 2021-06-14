@@ -1,16 +1,18 @@
-require 'hanami/utils/json'
-require_relative 'errors'
+# frozen_string_literal: true
+
+require "json"
+require_relative "parser"
 
 module Hanami
   module Middleware
     class BodyParser
       # @since 1.3.0
       # @api private
-      class JsonParser
+      class JsonParser < Parser
         # @since 1.3.0
         # @api private
         def mime_types
-          ['application/json', 'application/vnd.api+json']
+          ["application/json", "application/vnd.api+json"]
         end
 
         # Parse a json string
@@ -24,9 +26,9 @@ module Hanami
         # @since 1.3.0
         # @api private
         def parse(body)
-          Hanami::Utils::Json.parse(body)
-        rescue Hanami::Utils::Json::ParserError => e
-          raise BodyParsingError.new(e.message)
+          JSON.parse(body)
+        rescue StandardError => exception
+          raise BodyParsingError.new(exception.message)
         end
       end
     end

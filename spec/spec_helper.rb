@@ -4,6 +4,7 @@ $LOAD_PATH.unshift "lib"
 require "hanami/utils"
 require "hanami/devtools/unit"
 require "hanami/router"
+require "rack"
 
 Rack::MockResponse.class_eval do
   def equal?(other)
@@ -12,12 +13,6 @@ Rack::MockResponse.class_eval do
     status    == other.status  &&
       headers == other.headers &&
       body    == other.body
-  end
-end
-
-Hanami::Router.class_eval do
-  def reset!
-    @router.reset!
   end
 end
 
