@@ -5,6 +5,7 @@
 .devnotes
 .greenbar
 .yardoc
+.rubocop-*
 Gemfile.lock
 InstalledFiles
 _yardoc
@@ -18,4 +19,3 @@ test/tmp
 test/version_tmp
 tmp
 bin
-.rubocop-*

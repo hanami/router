@@ -1,43 +1,56 @@
-RSpec.describe Hanami::Router do
-  before do
-    @router = Hanami::Router.new do
-      mount Api::App,                      at: '/api'
-      mount Api::App.new,                  at: '/api2'
-      mount Backend::App,                  at: '/backend'
-      mount ->(_env) { [200, {}, ['proc']] }, at: '/proc'
-      mount 'dashboard#index',             at: '/dashboard'
-    end
+# frozen_string_literal: true
 
-    @app = Rack::MockRequest.new(@router)
+require "rack/head"
+
+RSpec.describe Hanami::Router do
+  let(:router) do
+    Hanami::Router.new do
+      mount Api::App.new,                  at: "/api"
+      mount Backend::App,                  at: "/backend"
+      mount ->(*) { [200, {"Content-Length" => "4"}, ["proc"]] }, at: "/proc"
+      mount ->(*) { [200, {"Content-Length" => "8"}, ["trailing"]] }, at: "/trailing/"
+    end
   end
 
-  %w[get post delete put patch trace options link unlink].each do |verb|
-    it "accepts #{verb} for a class endpoint" do
-      expect(@app.request(verb.upcase, '/backend', lint: true).body). to eq('home')
+  shared_examples "mountable rack endpoint" do
+    it "accepts an instance endpoint" do
+      expect(app.request(verb.upcase, "/api", lint: true).body).to eq(body_for("home", verb))
     end
 
-    it "accepts #{verb} for an instance endpoint when a class is given" do
-      expect(@app.request(verb.upcase, '/api', lint: true).body).to eq('home')
+    it "accepts for a class endpoint" do
+      expect(app.request(verb.upcase, "/backend", lint: true).body).to eq(body_for("home", verb))
     end
 
-    it "accepts #{verb} for an instance endpoint" do
-      expect(@app.request(verb.upcase, '/api2', lint: true).body).to eq('home')
+    it "accepts for a proc endpoint" do
+      expect(app.request(verb.upcase, "/proc", lint: true).body).to eq(body_for("proc", verb))
     end
 
-    it "accepts #{verb} for a proc endpoint" do
-      expect(@app.request(verb.upcase, '/proc', lint: true).body).to eq('proc')
+    it "accepts for a route using trailing slash" do
+      expect(app.request(verb.upcase, "/trailing/", lint: true).body).to eq(body_for("trailing", verb))
     end
 
-    it "accepts #{verb} for a controller endpoint" do
-      expect(@app.request(verb.upcase, '/dashboard', lint: true).body).to eq('dashboard')
+    it "accepts sub paths when is requested" do
+      expect(app.request(verb.upcase, "/api/articles", lint: true).body).to eq(body_for("articles", verb))
     end
 
-    it "accepts sub paths when #{verb} is requested" do
-      expect(@app.request(verb.upcase, '/api/articles', lint: true).body).to eq('articles')
+    it "returns 404 when is requested and the app cannot find the resource" do
+      expect(app.request(verb.upcase, "/api/unknown", lint: true).status).to eq(404)
     end
+  end
 
-    it "returns 404 when #{verb} is requested and the app cannot find the resource" do
-      expect(@app.request(verb.upcase, '/api/unknown', lint: true).status).to eq(404)
+  RSpec::Support::HTTP.mountable_verbs.each do |http_verb|
+    context http_verb.upcase do
+      let(:app)  { Rack::MockRequest.new(router) }
+      let(:verb) { http_verb }
+
+      it_behaves_like "mountable rack endpoint"
     end
+  end
+
+  context "HEAD" do
+    let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
+    let(:verb) { "head" }
+
+    it_behaves_like "mountable rack endpoint"
   end
 end

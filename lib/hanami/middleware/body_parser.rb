@@ -1,14 +1,19 @@
-require 'hanami/utils/hash'
-require_relative 'body_parser/class_interface'
+# frozen_string_literal: true
+
+require "hanami/router/params"
+require "hanami/middleware/error"
 
 module Hanami
   module Middleware
     # @since 1.3.0
     # @api private
     class BodyParser
+      require_relative "body_parser/class_interface"
+      require_relative "body_parser/parser"
+
       # @since 1.3.0
       # @api private
-      CONTENT_TYPE = 'CONTENT_TYPE'.freeze
+      CONTENT_TYPE = "CONTENT_TYPE"
 
       # @since 1.3.0
       # @api private
@@ -16,17 +21,17 @@ module Hanami
 
       # @since 1.3.0
       # @api private
-      RACK_INPUT = 'rack.input'.freeze
+      RACK_INPUT = "rack.input"
 
       # @since 1.3.0
       # @api private
-      ROUTER_PARAMS = 'router.params'.freeze
+      ROUTER_PARAMS = "router.params"
 
       # @api private
-      ROUTER_PARSED_BODY = 'router.parsed_body'.freeze
+      ROUTER_PARSED_BODY = "router.parsed_body"
 
       # @api private
-      FALLBACK_KEY = '_'.freeze
+      FALLBACK_KEY = "_"
 
       extend ClassInterface
 
@@ -55,21 +60,21 @@ module Hanami
         parser_names = Array(parser_names)
         return {} if parser_names.empty?
 
-        parser_names.each_with_object({}) { |name, parsers|
+        parser_names.each_with_object({}) do |name, parsers|
           parser = self.class.for(name)
 
           parser.mime_types.each do |mime|
             parsers[mime] = parser
           end
-        }
+        end
       end
 
       # @api private
       def _symbolize(body)
-        if body.is_a?(Hash)
-          Utils::Hash.deep_symbolize(body)
+        if body.is_a?(::Hash)
+          Router::Params.deep_symbolize(body)
         else
-          { FALLBACK_KEY => body }
+          {FALLBACK_KEY => body}
         end
       end
 
@@ -82,9 +87,10 @@ module Hanami
 
       # @api private
       def media_type(env)
-        if ct = content_type(env)
-          ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
-        end
+        ct = content_type(env)
+        return unless ct
+
+        ct.split(MEDIA_TYPE_MATCHER, 2).first.downcase
       end
 
       # @api private

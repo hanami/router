@@ -1,1 +1,0 @@
-require 'hanami/router'

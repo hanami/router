@@ -1,89 +1,79 @@
-RSpec.describe Hanami::Router do
-  describe '.new' do
-    before do
-      class MockRoute
-      end
+# frozen_string_literal: true
 
-      endpoint = ->(_env) { [200, {}, ['']] }
-      @router = Hanami::Router.new do
-        root                to: endpoint
-        get '/route',       to: endpoint
-        get '/named_route', to: endpoint, as: :named_route
-        resource  'avatar'
-        resources 'flowers'
-        namespace 'admin' do
-          get '/dashboard', to: endpoint
+RSpec.describe Hanami::Router do
+  describe "#initialize" do
+    let(:app) { Rack::MockRequest.new(router) }
+    let(:endpoint) { ->(_) { [200, {}, [""]] } }
+    let(:router) do
+      e = endpoint
+
+      described_class.new do
+        root                to: e
+        get "/route",       to: e
+        get "/named_route", to: e, as: :named_route
+        scope "admin" do
+          get "/dashboard", to: e
         end
       end
-
-      @app = Rack::MockRequest.new(@router)
     end
 
-    it 'returns instance of Hanami::Router with empty block' do
+    it "returns instance of Hanami::Router" do
+      router = Hanami::Router.new
+      expect(router).to be_instance_of(Hanami::Router)
+    end
+
+    it "returns instance of Hanami::Router with empty block" do
       router = Hanami::Router.new {}
       expect(router).to be_instance_of(Hanami::Router)
     end
 
-    it 'evaluates routes passed from Hanami::Router.define' do
-      routes = Hanami::Router.define { post '/domains', to: ->(_env) { [201, {}, ['Domain Created']] } }
+    # FIXME: check if Hanami::Router.define is still needed
+    xit "evaluates routes passed from Hanami::Router.define" do
+      routes = Hanami::Router.define { post "/domains", to: ->(_env) { [201, {}, ["Domain Created"]] } }
       router = Hanami::Router.new(&routes)
 
       app      = Rack::MockRequest.new(router)
-      response = app.post('/domains', lint: true)
+      response = app.post("/domains", lint: true)
 
       expect(response.status).to eq(201)
-      expect(response.body).to eq('Domain Created')
+      expect(response.body).to eq("Domain Created")
     end
 
-    it 'returns instance of Hanami::Router' do
-      expect(@router).to be_instance_of(Hanami::Router)
+    it "returns instance of Hanami::Router" do
+      expect(router).to be_instance_of(Hanami::Router)
     end
 
-    it 'sets options' do
-      router = Hanami::Router.new(scheme: 'https') do
-        root to: ->(env) {}
+    it "sets options" do
+      router = Hanami::Router.new(base_url: "https://hanami.test") do
+        root to: ->(*) {}
       end
 
-      expect(router.url(:root)).to match('https')
+      expect(router.url(:root)).to match("https")
     end
 
-    it 'sets custom separator' do
-      router = Hanami::Router.new(action_separator: '^')
-      route  = router.root(to: 'test^show')
-
-      expect(route.dest).to eq(Test::Show)
-    end
-
-    it 'checks if there are defined routes' do
+    # FIXME: verify if Hanami::Router#defined? is still needed
+    xit "checks if there are defined routes" do
       router = Hanami::Router.new
       expect(router.defined?).to be false
 
-      router = Hanami::Router.new { get '/', to: ->(env) {} }
+      router = Hanami::Router.new { get "/", to: ->(env) {} }
       expect(router.defined?).to be true
     end
 
-    it 'recognizes root' do
-      expect(@app.get('/', lint: true).status).to eq(200)
+    it "recognizes root" do
+      expect(app.get("/", lint: true).status).to eq(200)
     end
 
-    it 'recognizes path' do
-      expect(@app.get('/route', lint: true).status).to eq(200)
+    it "recognizes path" do
+      expect(app.get("/route", lint: true).status).to eq(200)
     end
 
-    it 'recognizes named path' do
-      expect(@app.get('/named_route', lint: true).status).to eq(200)
+    it "recognizes named path" do
+      expect(app.get("/named_route", lint: true).status).to eq(200)
     end
 
-    it 'recognizes resource' do
-      expect(@app.get('/avatar', lint: true).status).to eq(200)
-    end
-
-    it 'recognizes resources' do
-      expect(@app.get('/avatar', lint: true).status).to eq(200)
-    end
-
-    it 'recognizes namespaced path' do
-      expect(@app.get('/admin/dashboard', lint: true).status).to eq(200)
+    it "recognizes prefixed path" do
+      expect(app.get("/admin/dashboard", lint: true).status).to eq(200)
     end
   end
 end

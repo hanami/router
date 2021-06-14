@@ -1,12 +1,13 @@
-RSpec.describe 'Pass on response' do
-  before do
-    @routes = Hanami::Router.new { get '/', to: ->(_env) { Rack::Response.new } }
-    @app    = Rack::MockRequest.new(@routes)
+# frozen_string_literal: true
+
+RSpec.describe "Pass on response" do
+  let(:app) { Rack::MockRequest.new(routes) }
+  let(:routes) do
+    Hanami::Router.new { get "/", to: ->(*) { [200, {"Content-Length" => "2"}, ["OK"]] } }
   end
 
-  # See https://github.com/hanami/router/pull/197
-  xit 'is successful' do
-    response = @app.get('/', lint: true)
+  it "is successful" do
+    response = app.get("/", lint: true)
     expect(response.status).to eq(200)
   end
 end
