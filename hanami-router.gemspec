@@ -31,4 +31,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rubocop", "0.91"
   spec.add_development_dependency "rubocop-performance", "1.8.1"
+
+  spec.add_development_dependency "dry-events", "~> 0.2"
 end

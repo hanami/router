@@ -30,6 +30,10 @@ module Hanami
     # @since 2.0.0
     attr_reader :routes
 
+    # @api private
+    # @since 2.0.0
+    attr_reader :monitoring
+
     # Returns the given block as it is.
     #
     # @param blk [Proc] a set of route definitions
@@ -68,13 +72,14 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, monitoring: DEFAULT_MONITORING, not_found: NOT_FOUND, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @url_helpers = UrlHelpers.new(base_url)
       @base_url = base_url
       @resolver = resolver
+      @monitoring = monitoring
       @not_found = not_found
       @block_context = block_context
       @fixed = {}
@@ -94,7 +99,7 @@ module Hanami
     #
     # @since 0.1.0
     def call(env)
-      endpoint, params = lookup(env)
+      endpoint, params = monitoring.call { lookup(env) }
 
       unless endpoint
         return not_allowed(env) ||
@@ -726,6 +731,10 @@ module Hanami
     # @since 2.0.0
     # @api private
     PARAMS = "router.params"
+
+    # @since 2.0.0
+    # @api private
+    DEFAULT_MONITORING = ->(*, &blk) { blk.call }
 
     # Default response when no route was matched
     #
