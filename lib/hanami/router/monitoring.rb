@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require "dry/events/publisher"
+begin
+  require "dry/events/publisher"
+rescue LoadError
+  raise "`hanami/router/monitoring` requires `dry-events` gem, add it to your `Gemfile`."
+end
 
 module Hanami
   class Router
