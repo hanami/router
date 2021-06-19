@@ -10,5 +10,3 @@ end
 
 gem "hanami-utils", "~> 2.0.alpha", require: false, git: "https://github.com/hanami/utils.git", branch: "main"
 gem "hanami-devtools",              require: false, git: "https://github.com/hanami/devtools.git", branch: "main"
-
-gem "dry-events", "~> 0.2"
