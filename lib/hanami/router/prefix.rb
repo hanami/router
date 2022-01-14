@@ -48,11 +48,11 @@ module Hanami
 
       # @since 2.0.0
       # @api private
-      DEFAULT_SEPARATOR_REGEXP = /\//.freeze
+      DEFAULT_SEPARATOR_REGEXP = /\//
 
       # @since 2.0.0
       # @api private
-      DOUBLE_DEFAULT_SEPARATOR_REGEXP = /\/{2,}/.freeze
+      DOUBLE_DEFAULT_SEPARATOR_REGEXP = /\/{2,}/
 
       # @since 2.0.0
       # @api private

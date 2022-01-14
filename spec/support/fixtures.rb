@@ -570,6 +570,7 @@ module Nested
           end
         end
       end
+
       module Avatar
         class Show
           def call(_env)
@@ -577,6 +578,7 @@ module Nested
           end
         end
       end
+
       module Posts
         module Comments
           class Index
@@ -587,6 +589,7 @@ module Nested
         end
       end
     end
+
     module User
       module Comments
         class Index
@@ -595,6 +598,7 @@ module Nested
           end
         end
       end
+
       module ApiKey
         class Show
           def call(_env)
@@ -603,6 +607,7 @@ module Nested
         end
       end
     end
+
     module Products
       module Variants
         class Index
@@ -610,6 +615,7 @@ module Nested
             [200, {}, ["Hello from Nested::Controllers::Products::Variants::Index"]]
           end
         end
+
         class Show
           def call(_env)
             [200, {}, ["Hello from Nested::Controllers::Products::Variants::Show"]]
@@ -696,6 +702,7 @@ module User
         [200, {}, ["User::Post::Destroy"]]
       end
     end
+
     module Comment
       class New < Action
         def call(*)
