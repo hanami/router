@@ -30,7 +30,7 @@ main() {
   print_ruby_version
   run_code_quality_checks
   run_unit_tests
-  upload_code_coverage
+  # upload_code_coverage
 }
 
 main
