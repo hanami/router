@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rack"
 require "rack/utils"
 
 module Hanami
@@ -868,7 +869,13 @@ module Hanami
     def _params(env, params)
       params ||= {}
       env[PARAMS] ||= {}
-      env[PARAMS].merge!(Rack::Utils.parse_nested_query(env["QUERY_STRING"]))
+
+      if (input = env[Rack::RACK_INPUT]) and input.rewind
+        env[PARAMS].merge!(Rack::Utils.parse_nested_query(input.read))
+        input.rewind
+      end
+
+      env[PARAMS].merge!(Rack::Utils.parse_nested_query(env[Rack::QUERY_STRING]))
       env[PARAMS].merge!(params)
       env[PARAMS] = Params.deep_symbolize(env[PARAMS])
       env
