@@ -1,6 +1,14 @@
 # Hanami::Router
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.alpha6 - 2022-02-10
+### Added
+- [Luca Guidi] Official support for MRI 3.1
+- [Luca Guidi] Parse non-GET request body and make it available in Rack env under the `router.params` key. For JSON requests, please use `Hanami:::Middleware::JsonParser`
+
+### Changed
+- [Luca Guidi] Drop support for Ruby: MRI 2.6, and 2.7.
+
 ## v2.0.0.alpha5 - 2021-05-04
 ### Added
 - [Luca Guidi] Introduced `Hanami::Router#to_inspect` which returns a string blob with all the routes formatted for human readability
