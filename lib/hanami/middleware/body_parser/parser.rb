@@ -49,7 +49,7 @@ module Hanami
         #       raise Hanami::Middleware::BodyParser::BodyParsingError.new(exception.message)
         #     end
         #   end
-        def parse(body)
+        def parse(_body)
           raise NoMethodError
         end
       end
