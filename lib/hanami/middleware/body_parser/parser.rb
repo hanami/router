@@ -23,7 +23,7 @@ module Hanami
         #     end
         #   end
         def mime_types
-          raise NotImplementedError
+          raise NoMethodError
         end
 
         # Parse raw HTTP request body
@@ -50,7 +50,7 @@ module Hanami
         #     end
         #   end
         def parse(body)
-          raise NotImplementedError
+          raise NoMethodError
         end
       end
     end
