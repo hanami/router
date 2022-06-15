@@ -27,7 +27,6 @@ module Hanami
 
     # Routes for inspection
     #
-    # @api private
     # @since 2.0.0
     attr_reader :routes
 
@@ -603,7 +602,7 @@ module Hanami
       )
     end
 
-    # Returns formatted routes
+    # Returns formatted routes with the default formatter
     #
     # @return [String] formatted routes
     #

@@ -1,0 +1,67 @@
+# frozen_string_literal: true
+
+module Hanami
+  class Router
+    # Renders a human friendly representation of the routes
+    #
+    # @api private
+    # @since 2.0.0
+    module Formatter
+      class HumanFriendly
+        # @api private
+        # @since 2.0.0
+        NEW_LINE = $/
+        private_constant :NEW_LINE
+
+        # @api private
+        # @since 2.0.0
+        EMPTY_ROUTE = ""
+        private_constant :EMPTY_ROUTE
+
+        # @api private
+        # @since 2.0.0
+        SMALL_STRING_JUSTIFY_AMOUNT = 8
+        private_constant :SMALL_STRING_JUSTIFY_AMOUNT
+
+        # @api private
+        # @since 2.0.0
+        MEDIUM_STRING_JUSTIFY_AMOUNT = 20
+        private_constant :MEDIUM_STRING_JUSTIFY_AMOUNT
+
+        # @api private
+        # @since 2.0.0
+        LARGE_STRING_JUSTIFY_AMOUNT = 30
+        private_constant :LARGE_STRING_JUSTIFY_AMOUNT
+
+        # @api private
+        # @since 2.0.0
+        EXTRA_LARGE_STRING_JUSTIFY_AMOUNT = 40
+        private_constant :EXTRA_LARGE_STRING_JUSTIFY_AMOUNT
+
+        # @api private
+        # @since 2.0.0
+        def call(routes)
+          routes.map(&method(:format_route)).join(NEW_LINE)
+        end
+
+        private
+
+        def format_route(route)
+          return EMPTY_ROUTE if route.head?
+
+          [
+            route.http_method.to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT),
+            route.path.ljust(LARGE_STRING_JUSTIFY_AMOUNT),
+            route.inspect_to(route.to).ljust(LARGE_STRING_JUSTIFY_AMOUNT),
+            route.as ? "as #{route.as.inspect}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) : "",
+            route.constraints? ? "(#{format_constraints(route)})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT) : ""
+          ].join
+        end
+
+        def format_constraints(route)
+          route.inspect_constraints(route.constraints)
+        end
+      end
+    end
+  end
+end
