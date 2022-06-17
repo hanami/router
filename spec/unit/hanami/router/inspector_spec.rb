@@ -26,6 +26,17 @@ RSpec.describe Hanami::Router::Inspector do
       expect(inspector.call).to eq("/+/about")
     end
 
+    it "forwards arguments to the formatter" do
+      routes = [
+        Hanami::Router::Route.new(http_method: "GET", path: "/", to: "home#index", as: :root, constraints: {}),
+        Hanami::Router::Route.new(http_method: "GET", path: "/about", to: "home#about", as: :about, constraints: {})
+      ]
+      formatter = ->(rs, join_with:) { rs.map(&:path).join(join_with) }
+      inspector = described_class.new(routes: routes, formatter: formatter)
+
+      expect(inspector.call(join_with: "-")).to eq("/-/about")
+    end
+
     it "defaults to the human friendly formatter" do
       routes = [
         Hanami::Router::Route.new(http_method: "GET", path: "/", to: "home#index", as: :root, constraints: {})
