@@ -32,8 +32,8 @@ module Hanami
       # @return [Any] Formatted routes
       #
       # @since 2.0.0
-      def call(*)
-        @formatter.call(@routes)
+      def call(...)
+        @formatter.call(@routes, ...)
       end
     end
   end
