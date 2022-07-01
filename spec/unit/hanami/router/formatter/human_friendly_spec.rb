@@ -43,6 +43,15 @@ RSpec.describe Hanami::Router::Formatter::HumanFriendly do
         expect(subject.call(routes)).not_to include("resource#show")
       end
 
+      it "doesn't add empty lines for HEAD routes" do
+        routes = [
+          Hanami::Router::Route.new(http_method: "HEAD", path: "/about", to: "home#about", as: :root, constraints: {}),
+          Hanami::Router::Route.new(http_method: "GET", path: "/about", to: "home#about", as: :root, constraints: {})
+        ]
+
+        expect(subject.call(routes).split($/).count).to be(1)
+      end
+
       it "doesn't break when 'as' is not provided" do
         routes = [
           Hanami::Router::Route.new(http_method: "GET", path: "/resources/:id", to: "resource#show", constraints: {id: /\d+/})
