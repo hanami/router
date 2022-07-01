@@ -30,6 +30,13 @@ module Hanami
     # @since 2.0.0
     attr_reader :routes
 
+    # Routes inspector
+    #
+    # @return [Hanami::Router::Inspector]
+    #
+    # @since 2.0.0
+    attr_reader :inspector
+
     # Returns the given block as it is.
     #
     # @param blk [Proc] a set of route definitions
@@ -600,21 +607,6 @@ module Hanami
       RecognizedRoute.new(
         endpoint, _params(env, params)
       )
-    end
-
-    # Returns formatted routes with the default formatter
-    #
-    # @return [String] formatted routes
-    #
-    # @since 2.0.0
-    # @api private
-    def to_inspect
-      require "hanami/router/inspector"
-
-      inspector = Inspector.new
-      with(inspector: inspector)
-
-      inspector.call
     end
 
     # @since 2.0.0

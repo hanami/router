@@ -22,9 +22,9 @@ RSpec.describe Hanami::Router do
     Object.__send__(:remove_const, :App) if defined?(App)
   end
 
-  describe "#to_inspect" do
+  describe "inspect" do
     subject do
-      described_class.new do
+      described_class.new(inspector: Hanami::Router::Inspector.new) do
         # ROOT
         root to: "home#index"
 
@@ -96,7 +96,7 @@ RSpec.describe Hanami::Router do
         "*       /app                          App"
       ]
 
-      actual = subject.to_inspect
+      actual = subject.inspector.()
       expected.each do |route|
         expect(actual).to include(route)
       end
