@@ -738,14 +738,14 @@ module Hanami
     # @api private
     def add_route(http_method, path, to, as, constraints, &blk)
       path = prefixed_path(path)
-      to = resolve_endpoint(path, to, blk)
+      endpoint = resolve_endpoint(path, to, blk)
 
       if globbed?(path)
-        add_globbed_route(http_method, path, to, constraints)
+        add_globbed_route(http_method, path, endpoint, constraints)
       elsif variable?(path)
-        add_variable_route(http_method, path, to, constraints)
+        add_variable_route(http_method, path, endpoint, constraints)
       else
-        add_fixed_route(http_method, path, to)
+        add_fixed_route(http_method, path, endpoint)
       end
 
       add_named_route(path, as, constraints) if as
