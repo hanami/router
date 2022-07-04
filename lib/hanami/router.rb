@@ -25,11 +25,6 @@ module Hanami
     # @since 2.0.0
     attr_reader :url_helpers
 
-    # Routes for inspection
-    #
-    # @since 2.0.0
-    attr_reader :routes
-
     # Routes inspector
     #
     # @return [Hanami::Router::Inspector]
