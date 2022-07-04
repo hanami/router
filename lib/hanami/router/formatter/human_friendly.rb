@@ -46,14 +46,10 @@ module Hanami
             [
               route.http_method.to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT),
               route.path.ljust(LARGE_STRING_JUSTIFY_AMOUNT),
-              route.inspect_to(route.to).ljust(LARGE_STRING_JUSTIFY_AMOUNT),
-              route.as ? "as #{route.as.inspect}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) : "",
-              route.constraints? ? "(#{format_constraints(route)})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT) : ""
+              route.inspect_to.ljust(LARGE_STRING_JUSTIFY_AMOUNT),
+              route.as? ? "as #{route.inspect_as}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) : "",
+              route.constraints? ? "(#{route.inspect_constraints})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT) : ""
             ].join
-        end
-
-        def format_constraints(route)
-          route.inspect_constraints(route.constraints)
         end
       end
     end

@@ -51,14 +51,10 @@ module Hanami
           [
             route.http_method.to_s,
             route.path,
-            route.inspect_to(route.to),
-            route.as ? route.as.inspect : "",
-            route.constraints? ? format_constraints(route) : ""
+            route.inspect_to,
+            route.as? ? route.inspect_as : "",
+            route.constraints? ? route.inspect_constraints : ""
           ]
-        end
-
-        def format_constraints(route)
-          route.inspect_constraints(route.constraints)
         end
       end
     end

@@ -60,7 +60,7 @@ module Hanami
     #   deployed
     # @param prefix [String] the relative URL prefix where the HTTP application
     #   is deployed
-    # @param resolver [#call(path, to)] a resolver for route entpoints
+    # @param resolver [#call(path, to)] a resolver for route endpoints
     # @param block_context [Hanami::Router::Block::Context)
     # @param not_found [#call(env)] default handler when route is not matched
     # @param blk [Proc] the route definitions

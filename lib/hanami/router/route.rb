@@ -47,33 +47,43 @@ module Hanami
       end
 
       # @since 2.0.0
+      def as?
+        !as.nil?
+      end
+
+      # @since 2.0.0
       def constraints?
         constraints.any?
       end
 
       # @since 2.0.0
-      def inspect_to(to)
-        case to
+      def inspect_to(value = to)
+        case value
         when String
-          to
+          value
         when Proc
           "(proc)"
         when Class
-          to.name || "(class)"
+          value.name || "(class)"
         when Block
           "(block)"
         when Redirect
-          "#{to.destination} (HTTP #{to.code})"
+          "#{value.destination} (HTTP #{to.code})"
         else
-          inspect_to(to.class)
+          inspect_to(value.class)
         end
       end
 
       # @since 2.0.0
-      def inspect_constraints(constraints)
-        constraints.map do |key, value|
+      def inspect_constraints
+        @constraints.map do |key, value|
           "#{key}: #{value.inspect}"
         end.join(ROUTE_CONSTRAINT_SEPARATOR)
+      end
+
+      # @since 2.0.0
+      def inspect_as
+        as ? as.inspect : ""
       end
     end
   end
