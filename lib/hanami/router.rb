@@ -25,10 +25,12 @@ module Hanami
     # @since 2.0.0
     attr_reader :url_helpers
 
-    # Routes for inspection
+    # Routes inspector
+    #
+    # @return [Hanami::Router::Inspector]
     #
     # @since 2.0.0
-    attr_reader :routes
+    attr_reader :inspector
 
     # Returns the given block as it is.
     #
@@ -53,7 +55,7 @@ module Hanami
     #   deployed
     # @param prefix [String] the relative URL prefix where the HTTP application
     #   is deployed
-    # @param resolver [#call(path, to)] a resolver for route entpoints
+    # @param resolver [#call(path, to)] a resolver for route endpoints
     # @param block_context [Hanami::Router::Block::Context)
     # @param not_found [#call(env)] default handler when route is not matched
     # @param blk [Proc] the route definitions
@@ -602,21 +604,6 @@ module Hanami
       )
     end
 
-    # Returns formatted routes with the default formatter
-    #
-    # @return [String] formatted routes
-    #
-    # @since 2.0.0
-    # @api private
-    def to_inspect
-      require "hanami/router/inspector"
-
-      inspector = Inspector.new
-      with(inspector: inspector)
-
-      inspector.call
-    end
-
     # @since 2.0.0
     # @api private
     def fixed(env)
@@ -746,14 +733,14 @@ module Hanami
     # @api private
     def add_route(http_method, path, to, as, constraints, &blk)
       path = prefixed_path(path)
-      to = resolve_endpoint(path, to, blk)
+      endpoint = resolve_endpoint(path, to, blk)
 
       if globbed?(path)
-        add_globbed_route(http_method, path, to, constraints)
+        add_globbed_route(http_method, path, endpoint, constraints)
       elsif variable?(path)
-        add_variable_route(http_method, path, to, constraints)
+        add_variable_route(http_method, path, endpoint, constraints)
       else
-        add_fixed_route(http_method, path, to)
+        add_fixed_route(http_method, path, endpoint)
       end
 
       add_named_route(path, as, constraints) if as

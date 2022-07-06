@@ -15,11 +15,6 @@ module Hanami
 
         # @api private
         # @since 2.0.0
-        EMPTY_ROUTE = ""
-        private_constant :EMPTY_ROUTE
-
-        # @api private
-        # @since 2.0.0
         SMALL_STRING_JUSTIFY_AMOUNT = 8
         private_constant :SMALL_STRING_JUSTIFY_AMOUNT
 
@@ -41,25 +36,20 @@ module Hanami
         # @api private
         # @since 2.0.0
         def call(routes)
-          routes.map(&method(:format_route)).join(NEW_LINE)
+          routes.filter_map(&method(:format_route_unless_head)).join(NEW_LINE)
         end
 
         private
 
-        def format_route(route)
-          return EMPTY_ROUTE if route.head?
-
-          [
-            route.http_method.to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT),
-            route.path.ljust(LARGE_STRING_JUSTIFY_AMOUNT),
-            route.inspect_to(route.to).ljust(LARGE_STRING_JUSTIFY_AMOUNT),
-            route.as ? "as #{route.as.inspect}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) : "",
-            route.constraints? ? "(#{format_constraints(route)})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT) : ""
-          ].join
-        end
-
-        def format_constraints(route)
-          route.inspect_constraints(route.constraints)
+        def format_route_unless_head(route)
+          !route.head? &&
+            [
+              route.http_method.to_s.ljust(SMALL_STRING_JUSTIFY_AMOUNT),
+              route.path.ljust(LARGE_STRING_JUSTIFY_AMOUNT),
+              route.inspect_to.ljust(LARGE_STRING_JUSTIFY_AMOUNT),
+              route.as? ? "as #{route.inspect_as}".ljust(MEDIUM_STRING_JUSTIFY_AMOUNT) : "",
+              route.constraints? ? "(#{route.inspect_constraints})".ljust(EXTRA_LARGE_STRING_JUSTIFY_AMOUNT) : ""
+            ].join
         end
       end
     end
