@@ -35,7 +35,7 @@ module Hanami
           if value
             @status = value
           else
-            @status ||= 200
+            @status ||= Router::HTTP_STATUS_OK
           end
         end
 
@@ -59,7 +59,7 @@ module Hanami
         #
         # @since 2.0.0
         def params
-          env["router.params"]
+          env[Router::PARAMS]
         end
 
         # @api private

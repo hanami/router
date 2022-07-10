@@ -41,7 +41,7 @@ module Hanami
       # @since 0.5.0
       # @api public
       def verb
-        @env["REQUEST_METHOD"]
+        @env[::Rack::REQUEST_METHOD]
       end
 
       # Relative URL (path)
@@ -51,13 +51,13 @@ module Hanami
       # @since 0.7.0
       # @api public
       def path
-        @env["PATH_INFO"]
+        @env[::Rack::PATH_INFO]
       end
 
       # @since 0.7.0
       # @api public
       def params
-        @env["router.params"]
+        @env[Router::PARAMS]
       end
 
       # @since 0.7.0

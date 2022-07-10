@@ -43,7 +43,7 @@ module Hanami
 
       # @since 2.0.0
       def head?
-        http_method == "HEAD"
+        http_method == ::Rack::HEAD
       end
 
       # @since 2.0.0
@@ -83,7 +83,7 @@ module Hanami
 
       # @since 2.0.0
       def inspect_as
-        as ? as.inspect : ""
+        as ? as.inspect : Router::EMPTY_STRING
       end
     end
   end

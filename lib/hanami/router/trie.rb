@@ -54,8 +54,13 @@ module Hanami
 
       # @api private
       # @since 2.0.0
+      SEGMENT_SEPARATOR = /\//
+      private_constant :SEGMENT_SEPARATOR
+
+      # @api private
+      # @since 2.0.0
       def for_each_segment(path, &blk)
-        _, *segments = path.split(/\//)
+        _, *segments = path.split(SEGMENT_SEPARATOR)
         segments.each(&blk)
       end
     end

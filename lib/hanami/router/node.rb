@@ -72,7 +72,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       def variable?(segment)
-        /:/.match?(segment)
+        Router::ROUTE_VARIABLE_MATCHER.match?(segment)
       end
 
       # @api private

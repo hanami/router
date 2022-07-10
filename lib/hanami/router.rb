@@ -147,7 +147,7 @@ module Hanami
     #   router.path(:root) # => "/"
     #   router.url(:root)  # => "https://hanamirb.org"
     def root(to: nil, &blk)
-      get("/", to: to, as: :root, &blk)
+      get(ROOT_PATH, to: to, as: :root, &blk)
     end
 
     # Defines a route that accepts GET requests for the given path.
@@ -198,8 +198,8 @@ module Hanami
     #     get "/users/:id", to: ->(*) { [200, {}, ["OK"]] }, id: /\d+/
     #   end
     def get(path, to: nil, as: nil, **constraints, &blk)
-      add_route("GET", path, to, as, constraints, &blk)
-      add_route("HEAD", path, to, as, constraints, &blk)
+      add_route(::Rack::GET, path, to, as, constraints, &blk)
+      add_route(::Rack::HEAD, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts POST requests for the given path.
@@ -217,7 +217,7 @@ module Hanami
     # @see #path
     # @see #url
     def post(path, to: nil, as: nil, **constraints, &blk)
-      add_route("POST", path, to, as, constraints, &blk)
+      add_route(::Rack::POST, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts PATCH requests for the given path.
@@ -235,7 +235,7 @@ module Hanami
     # @see #path
     # @see #url
     def patch(path, to: nil, as: nil, **constraints, &blk)
-      add_route("PATCH", path, to, as, constraints, &blk)
+      add_route(::Rack::PATCH, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts PUT requests for the given path.
@@ -253,7 +253,7 @@ module Hanami
     # @see #path
     # @see #url
     def put(path, to: nil, as: nil, **constraints, &blk)
-      add_route("PUT", path, to, as, constraints, &blk)
+      add_route(::Rack::PUT, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts DELETE requests for the given path.
@@ -271,7 +271,7 @@ module Hanami
     # @see #path
     # @see #url
     def delete(path, to: nil, as: nil, **constraints, &blk)
-      add_route("DELETE", path, to, as, constraints, &blk)
+      add_route(::Rack::DELETE, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts TRACE requests for the given path.
@@ -289,7 +289,7 @@ module Hanami
     # @see #path
     # @see #url
     def trace(path, to: nil, as: nil, **constraints, &blk)
-      add_route("TRACE", path, to, as, constraints, &blk)
+      add_route(::Rack::TRACE, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts OPTIONS requests for the given path.
@@ -307,7 +307,7 @@ module Hanami
     # @see #path
     # @see #url
     def options(path, to: nil, as: nil, **constraints, &blk)
-      add_route("OPTIONS", path, to, as, constraints, &blk)
+      add_route(::Rack::OPTIONS, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts LINK requests for the given path.
@@ -325,7 +325,7 @@ module Hanami
     # @see #path
     # @see #url
     def link(path, to: nil, as: nil, **constraints, &blk)
-      add_route("LINK", path, to, as, constraints, &blk)
+      add_route(::Rack::LINK, path, to, as, constraints, &blk)
     end
 
     # Defines a route that accepts UNLINK requests for the given path.
@@ -343,7 +343,7 @@ module Hanami
     # @see #path
     # @see #url
     def unlink(path, to: nil, as: nil, **constraints, &blk)
-      add_route("UNLINK", path, to, as, constraints, &blk)
+      add_route(::Rack::UNLINK, path, to, as, constraints, &blk)
     end
 
     # Defines a route that redirects the incoming request to another path.
@@ -453,7 +453,7 @@ module Hanami
     #   router.path(:login, return_to: "/dashboard") # => "/login?return_to=%2Fdashboard"
     #   router.path(:framework, name: "router")      # => "/router"
     def path(name, variables = {})
-      @url_helpers.path(name, variables)
+      url_helpers.path(name, variables)
     end
 
     # Generate an absolute URL for a specified named route.
@@ -483,7 +483,7 @@ module Hanami
     #   router.url(:login, return_to: "/dashboard") # => "https://hanamirb.org/login?return_to=%2Fdashboard"
     #   router.url(:framework, name: "router")      # => "https://hanamirb.org/router"
     def url(name, variables = {})
-      @url_helpers.url(name, variables)
+      url_helpers.url(name, variables)
     end
 
     # Recognize the given env, path, or name and return a route for testing
@@ -607,20 +607,20 @@ module Hanami
     # @since 2.0.0
     # @api private
     def fixed(env)
-      @fixed.dig(env["REQUEST_METHOD"], env["PATH_INFO"])
+      @fixed.dig(env[::Rack::REQUEST_METHOD], env[::Rack::PATH_INFO])
     end
 
     # @since 2.0.0
     # @api private
     def variable(env)
-      @variable[env["REQUEST_METHOD"]]&.find(env["PATH_INFO"])
+      @variable[env[::Rack::REQUEST_METHOD]]&.find(env[::Rack::PATH_INFO])
     end
 
     # @since 2.0.0
     # @api private
     def globbed(env)
-      @globbed[env["REQUEST_METHOD"]]&.each do |path, to|
-        if (match = path.match(env["PATH_INFO"]))
+      @globbed[env[::Rack::REQUEST_METHOD]]&.each do |path, to|
+        if (match = path.match(env[::Rack::PATH_INFO]))
           return [to, match.named_captures]
         end
       end
@@ -632,13 +632,13 @@ module Hanami
     # @api private
     def mounted(env)
       @mounted.each do |prefix, app|
-        next unless (match = prefix.peek_match(env["PATH_INFO"]))
+        next unless (match = prefix.peek_match(env[::Rack::PATH_INFO]))
 
-        # TODO: ensure compatibility with existing env["SCRIPT_NAME"]
+        # TODO: ensure compatibility with existing env[::Rack::SCRIPT_NAME]
         # TODO: cleanup this code
-        env["SCRIPT_NAME"] = env["SCRIPT_NAME"].to_s + prefix.to_s
-        env["PATH_INFO"] = env["PATH_INFO"].sub(prefix.to_s, "")
-        env["PATH_INFO"] = "/" if env["PATH_INFO"] == ""
+        env[::Rack::SCRIPT_NAME] = env[::Rack::SCRIPT_NAME].to_s + prefix.to_s
+        env[::Rack::PATH_INFO] = env[::Rack::PATH_INFO].sub(prefix.to_s, EMPTY_STRING)
+        env[::Rack::PATH_INFO] = DEFAULT_PREFIX if env[::Rack::PATH_INFO] == EMPTY_STRING
 
         return [app, match.named_captures]
       end
@@ -650,7 +650,9 @@ module Hanami
     # @api private
     def not_allowed(env)
       (_not_allowed_fixed(env) ||
-       _not_allowed_variable(env)) and return [405, {"Content-Length" => "11"}, ["Not Allowed"]]
+      _not_allowed_variable(env)) and return [HTTP_STATUS_NOT_ALLOWED,
+                                              {::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH},
+                                              [HTTP_BODY_NOT_ALLOWED]]
     end
 
     # @since 2.0.0
@@ -704,6 +706,18 @@ module Hanami
 
     # @since 2.0.0
     # @api private
+    PREFIXED_NAME_SEPARATOR = "_"
+
+    # @since 2.0.0
+    # @api private
+    ROOT_PATH = "/"
+
+    # @since 2.0.0
+    # @api private
+    EMPTY_STRING = ""
+
+    # @since 2.0.0
+    # @api private
     DEFAULT_RESOLVER = ->(_, to) { to }
 
     # @since 2.0.0
@@ -712,13 +726,55 @@ module Hanami
 
     # @since 2.0.0
     # @api private
+    HTTP_STATUS_OK = 200
+
+    # @since 2.0.0
+    # @api private
+    HTTP_STATUS_NOT_FOUND = 404
+
+    # @since 2.0.0
+    # @api private
+    HTTP_BODY_NOT_FOUND = ::Rack::Utils::HTTP_STATUS_CODES.fetch(HTTP_STATUS_NOT_FOUND)
+
+    # @since 2.0.0
+    # @api private
+    HTTP_BODY_NOT_FOUND_LENGTH = HTTP_BODY_NOT_FOUND.bytesize.to_s
+
+    # @since 2.0.0
+    # @api private
+    HTTP_STATUS_NOT_ALLOWED = 405
+
+    # @since 2.0.0
+    # @api private
+    HTTP_BODY_NOT_ALLOWED = ::Rack::Utils::HTTP_STATUS_CODES.fetch(HTTP_STATUS_NOT_ALLOWED)
+
+    # @since 2.0.0
+    # @api private
+    HTTP_BODY_NOT_ALLOWED_LENGTH = HTTP_BODY_NOT_ALLOWED.bytesize.to_s
+
+    # @since 2.0.0
+    # @api private
+    HTTP_HEADER_LOCATION = "Location"
+
+    # @since 2.0.0
+    # @api private
     PARAMS = "router.params"
+
+    # @since 2.0.0
+    # @api private
+    ROUTE_VARIABLE_MATCHER = /:/
+
+    # @since 2.0.0
+    # @api private
+    ROUTE_GLOBBED_MATCHER = /\*/
 
     # Default response when no route was matched
     #
     # @api private
     # @since 2.0.0
-    NOT_FOUND = ->(*) { [404, {"Content-Length" => "9"}, ["Not Found"]] }.freeze
+    NOT_FOUND = ->(*) {
+      [HTTP_STATUS_NOT_FOUND, {::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_FOUND_LENGTH}, [HTTP_BODY_NOT_FOUND]]
+    }.freeze
 
     # @since 2.0.0
     # @api private
@@ -791,13 +847,13 @@ module Hanami
     # @since 2.0.0
     # @api private
     def variable?(path)
-      /:/.match?(path)
+      ROUTE_VARIABLE_MATCHER.match?(path)
     end
 
     # @since 2.0.0
     # @api private
     def globbed?(path)
-      /\*/.match?(path)
+      ROUTE_GLOBBED_MATCHER.match?(path)
     end
 
     # @since 2.0.0
@@ -815,7 +871,7 @@ module Hanami
     # @since 2.0.0
     # @api private
     def prefixed_name(name)
-      @name_prefix.relative_join(name, "_").to_sym
+      @name_prefix.relative_join(name, PREFIXED_NAME_SEPARATOR).to_sym
     end
 
     # Returns a new instance of Hanami::Router with the modified options.
@@ -842,12 +898,12 @@ module Hanami
     # @since 2.0.0
     # @api private
     def _redirect(to, code)
-      body = Rack::Utils::HTTP_STATUS_CODES.fetch(code) do
+      body = ::Rack::Utils::HTTP_STATUS_CODES.fetch(code) do
         raise UnknownHTTPStatusCodeError.new(code)
       end
 
       destination = prefixed_path(to)
-      Redirect.new(destination, code, ->(*) { [code, {"Location" => destination}, [body]] })
+      Redirect.new(destination, code, ->(*) { [code, {HTTP_HEADER_LOCATION => destination}, [body]] })
     end
 
     # @since 2.0.0
@@ -856,12 +912,12 @@ module Hanami
       params ||= {}
       env[PARAMS] ||= {}
 
-      if (input = env[Rack::RACK_INPUT]) and input.rewind
-        env[PARAMS].merge!(Rack::Utils.parse_nested_query(input.read))
+      if (input = env[::Rack::RACK_INPUT]) and input.rewind
+        env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
         input.rewind
       end
 
-      env[PARAMS].merge!(Rack::Utils.parse_nested_query(env[Rack::QUERY_STRING]))
+      env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))
       env[PARAMS].merge!(params)
       env[PARAMS] = Params.deep_symbolize(env[PARAMS])
       env
@@ -875,7 +931,7 @@ module Hanami
       @fixed.each_value do |routes|
         break if found
 
-        found = routes.key?(env["PATH_INFO"])
+        found = routes.key?(env[::Rack::PATH_INFO])
       end
 
       found
@@ -889,7 +945,7 @@ module Hanami
       @variable.each_value do |routes|
         break if found
 
-        found = routes.find(env["PATH_INFO"])
+        found = routes.find(env[::Rack::PATH_INFO])
       end
 
       found
