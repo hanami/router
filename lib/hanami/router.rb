@@ -747,7 +747,9 @@ module Hanami
 
       if inspect?
         @inspector.add_route(
-          Route.new(http_method: http_method, path: path, to: to, as: as, constraints: constraints, blk: blk)
+          Route.new(
+            http_method: http_method, path: path, to: to || endpoint, as: as, constraints: constraints, blk: blk
+          )
         )
       end
     end
