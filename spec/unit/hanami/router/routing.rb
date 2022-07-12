@@ -14,5 +14,17 @@ RSpec.describe Hanami::Router do
 
       expect(router.inspector.call).to include("home#index")
     end
+
+    it "uses resolved block value to generate the route" do
+      inspector = Hanami::Router::Inspector.new
+
+      router = Hanami::Router.new(inspector: inspector) do
+        get "/" do
+          "Block"
+        end
+      end
+
+      expect(router.inspector.call).to include("(block)")
+    end
   end
 end
