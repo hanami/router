@@ -2,7 +2,7 @@
 
 Rack compatible HTTP router for Ruby
 
-## v2.0.0.beta1 - 2022-07-13
+## v2.0.0.beta1 - 2022-07-20
 
 ### Added
 
@@ -12,6 +12,7 @@ Rack compatible HTTP router for Ruby
 
 - [Marc Busqué] Routes inspection: Don't print empty line after the definition of a `get` route
 - [Marc Busqué] Routes inspection: Print `<controller>.<action>` instead of `(proc)`
+- [Marc Busqué] Routes inspection: Print `(block)` instead of `NilClass` when inspecting a route block
 
 ## v2.0.0.alpha6 - 2022-02-10
 
