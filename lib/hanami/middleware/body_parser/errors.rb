@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "hanami/middleware/error"
+
 module Hanami
   module Middleware
     # @since 1.3.0
