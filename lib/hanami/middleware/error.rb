@@ -5,7 +5,7 @@ module Hanami
   #
   # @since 1.3.0
   module Middleware
-    unless defined?(Error)
+    unless defined?(::Hanami::Middleware::Error)
       # Base error for Rack middleware
       #
       # @since 2.0.0
