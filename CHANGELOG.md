@@ -2,6 +2,12 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.beta2 - 2022-08-16
+
+### Fixed
+
+- [Luca Guidi] [Internal] Ensure `Hanami::Middleware::Error` class is available where it is needed [#225]
+
 ## v2.0.0.beta1 - 2022-07-20
 
 ### Added
