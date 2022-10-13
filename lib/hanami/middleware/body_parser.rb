@@ -56,15 +56,17 @@ module Hanami
 
       private
 
-      def build_parsers(parser_names)
-        parser_names = Array(parser_names)
-        return {} if parser_names.empty?
+      def build_parsers(parser_specs)
+        parsers = Array(parser_specs).flatten(0)
 
-        parser_names.each_with_object({}) do |name, parsers|
-          parser = self.class.for(name)
+        return {} if parsers.empty?
+
+        parsers.each_with_object({}) do |spec, memo|
+          name, *mime_types = Array(*spec).flatten(0)
+          parser = self.class.for(name, mime_types: mime_types)
 
           parser.mime_types.each do |mime|
-            parsers[mime] = parser
+            memo[mime] = parser
           end
         end
       end

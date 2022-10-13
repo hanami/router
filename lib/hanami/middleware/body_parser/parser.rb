@@ -7,7 +7,7 @@ module Hanami
       #
       # @since 2.0.0
       class Parser
-        # Declare supported MIME types
+        # Return supported mime types
         #
         # @return [Array<String>] supported MIME types
         #
@@ -22,8 +22,11 @@ module Hanami
         #       ["application/xml", "text/xml"]
         #     end
         #   end
-        def mime_types
-          raise NotImplementedError
+        attr_reader :mime_types
+
+        # @api private
+        def initialize(mime_types: [])
+          @mime_types = self.class.mime_types + mime_types
         end
 
         # Parse raw HTTP request body

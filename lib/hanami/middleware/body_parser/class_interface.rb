@@ -11,13 +11,13 @@ module Hanami
       module ClassInterface
         # @api private
         # @since 1.3.0
-        def for(parser)
+        def for(parser, **config)
           parser =
             case parser
             when String, Symbol
-              require_parser(parser)
+              self.for(require_parser(parser), **config)
             when Class
-              parser.new
+              parser.new(**config)
             else
               parser
             end
@@ -44,7 +44,7 @@ module Hanami
         def require_parser(parser)
           require "hanami/middleware/body_parser/#{parser}_parser"
 
-          load_parser!("#{classify(parser)}Parser").new
+          load_parser!("#{classify(parser)}Parser")
         rescue LoadError, NameError
           raise UnknownParserError.new(parser)
         end
