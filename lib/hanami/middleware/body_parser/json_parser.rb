@@ -11,7 +11,7 @@ module Hanami
       class JsonParser < Parser
         # @since 1.3.0
         # @api private
-        def mime_types
+        def self.mime_types
           ["application/json", "application/vnd.api+json"]
         end
 
