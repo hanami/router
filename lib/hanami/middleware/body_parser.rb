@@ -37,7 +37,7 @@ module Hanami
 
       def initialize(app, parsers)
         @app = app
-        @parsers = build_parsers(parsers)
+        @parsers = parsers
       end
 
       def call(env)
@@ -55,21 +55,6 @@ module Hanami
       end
 
       private
-
-      def build_parsers(parser_specs)
-        parsers = Array(parser_specs).flatten(0)
-
-        return {} if parsers.empty?
-
-        parsers.each_with_object({}) do |spec, memo|
-          name, *mime_types = Array(*spec).flatten(0)
-          parser = self.class.for(name, mime_types: mime_types)
-
-          parser.mime_types.each do |mime|
-            memo[mime] = parser
-          end
-        end
-      end
 
       # @api private
       def _symbolize(body)
