@@ -14,8 +14,17 @@ RSpec.describe Hanami::Middleware::BodyParser do
         .to be_instance_of(Hanami::Middleware::BodyParser::JsonParser)
     end
 
-    it "accepts a parser name with additional mime-type(s)" do
+    it "accepts a parser name with additional mime-type" do
       body_parser = Hanami::Middleware::BodyParser.new(app, [json: "application/json+scim"])
+
+      expect(body_parser.instance_variable_get("@parsers")["application/json+scim"])
+        .to be_instance_of(Hanami::Middleware::BodyParser::JsonParser)
+    end
+
+    it "accepts a parser name with additional mime-types" do
+      body_parser = Hanami::Middleware::BodyParser.new(
+        app, [json: ["application/json+scim", "application/json+foo"]]
+      )
 
       expect(body_parser.instance_variable_get("@parsers")["application/json+scim"])
         .to be_instance_of(Hanami::Middleware::BodyParser::JsonParser)

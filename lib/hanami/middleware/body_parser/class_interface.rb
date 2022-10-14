@@ -42,7 +42,8 @@ module Hanami
 
           parsers.each_with_object({}) do |spec, memo|
             name, *mime_types = Array(*spec).flatten(0)
-            parser = build(name, mime_types: mime_types)
+
+            parser = build(name, mime_types: mime_types.flatten)
 
             parser.mime_types.each do |mime|
               memo[mime] = parser
