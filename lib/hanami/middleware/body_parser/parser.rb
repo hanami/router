@@ -7,6 +7,8 @@ module Hanami
       #
       # @since 2.0.0
       class Parser
+        DEFAULT_MIME_TYPES = [].freeze
+
         # Return supported mime types
         #
         # @return [Array<String>] supported MIME types
@@ -25,7 +27,7 @@ module Hanami
         attr_reader :mime_types
 
         # @api private
-        def initialize(mime_types: [])
+        def initialize(mime_types: DEFAULT_MIME_TYPES)
           @mime_types = self.class.mime_types + mime_types
         end
 
