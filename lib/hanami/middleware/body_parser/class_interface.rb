@@ -21,7 +21,7 @@ module Hanami
           parser =
             case parser
             when String, Symbol
-              build(require_parser(parser), **config)
+              build(parser_class(parser), **config)
             when Class
               parser.new(**config)
             else
@@ -64,18 +64,22 @@ module Hanami
 
         # @api private
         # @since 1.3.0
-        def require_parser(parser)
-          require "hanami/middleware/body_parser/#{parser}_parser"
+        def parser_class(parser_name)
+          require "hanami/middleware/body_parser/#{parser_name}_parser"
 
-          load_parser!("#{classify(parser)}Parser")
+          load_parser!("#{classify(parser_name)}Parser")
         rescue LoadError, NameError
-          raise UnknownParserError.new(parser)
+          raise UnknownParserError, parser_name
         end
 
+        # @api private
+        # @since 1.3.0
         def classify(parser)
           parser.to_s.split(/_/).map(&:capitalize).join
         end
 
+        # @api private
+        # @since 1.3.0
         def load_parser!(class_name)
           Hanami::Middleware::BodyParser.const_get(class_name, false)
         end
