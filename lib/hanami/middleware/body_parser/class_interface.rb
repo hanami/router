@@ -100,11 +100,11 @@ module Hanami
 
           begin
             require "hanami/middleware/body_parser/#{parser_name}_parser"
-          rescue LoadError;end
+          rescue LoadError; end
 
           begin
             parser = load_parser!("#{classify(parser_name)}Parser")
-          rescue NameError;end
+          rescue NameError; end
 
           parser
         ensure
