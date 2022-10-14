@@ -59,7 +59,9 @@ module Hanami
         # @api private
         # @since 1.3.0
         def ensure_parser(parser)
-          raise InvalidParserError.new(parser) unless PARSER_METHODS.all? { |method| parser.respond_to?(method) }
+          unless PARSER_METHODS.all? { |method| parser.respond_to?(method) }
+            raise InvalidParserError.new(parser)
+          end
         end
 
         # @api private
