@@ -52,18 +52,24 @@ module Hanami
 
         # @api private
         # @since 2.0.0
-        def build_parsers(parser_specs)
+        def build_parsers(parser_specs, registry = {})
           return DEFAULT_BODY_PARSERS if parser_specs.empty?
 
           parsers = Array(parser_specs).flatten(0)
 
-          parsers.each_with_object({}) do |spec, memo|
-            name, *mime_types = Array(*spec).flatten(0)
+          parsers.each_with_object(registry) do |spec, memo|
+            if spec.is_a?(Hash) && spec.size > 1
+              spec.each do |key, value|
+                build_parsers([key => [value]], memo)
+              end
+            else
+              name, *mime_types = Array(*spec).flatten(0)
 
-            parser = build(name, mime_types: mime_types.flatten)
+              parser = build(name, mime_types: mime_types.flatten)
 
-            parser.mime_types.each do |mime|
-              memo[mime] = parser
+              parser.mime_types.each do |mime|
+                memo[mime] = parser
+              end
             end
           end
         end
@@ -89,11 +95,19 @@ module Hanami
         # @api private
         # @since 1.3.0
         def parser_class(parser_name)
-          require "hanami/middleware/body_parser/#{parser_name}_parser"
+          parser = nil
 
-          load_parser!("#{classify(parser_name)}Parser")
-        rescue LoadError, NameError
-          raise UnknownParserError, parser_name
+          begin
+            require "hanami/middleware/body_parser/#{parser_name}_parser"
+          rescue LoadError;end
+
+          begin
+            parser = load_parser!("#{classify(parser_name)}Parser")
+          rescue NameError;end
+
+          parser
+        ensure
+          raise UnknownParserError, parser_name unless parser
         end
 
         # @api private
