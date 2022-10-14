@@ -18,7 +18,7 @@ module Hanami
         #   require "hanami/middleware/body_parser"
         #
         #   class XMLParser < Hanami::Middleware::BodyParser::Parser
-        #     def mime_types
+        #     def self.mime_types
         #       ["application/xml", "text/xml"]
         #     end
         #   end
