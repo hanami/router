@@ -9,8 +9,25 @@ module Hanami
       # @api private
       # @since 1.3.0
       module ClassInterface
+        # Instantiate a new body parser instance and load its parsers
+        #
+        # @example
+        #   Hanami::Middleware::BodyParser.new(->(env) { [200, {}, "app"] }, :json)
+        #
+        #   Hanami::Middleware::BodyParser.new(
+        #     ->(env) { [200, {}, "app"] }, [json: "application/json+scim"]
+        #   )
+        #
+        #   Hanami::Middleware::BodyParser.new(
+        #     ->(env) { [200, {}, "app"] }, [json: ["application/json+scim", "application/ld+json"]]
+        #   )
+        #
+        # @param app [#call]
+        # @param parser_specs [Symbol, Array<Hash>] parser name or name with mime-type(s)
+        #
         # @api private
         # @since 2.0.0
+        # @return BodyParser
         def new(app, parser_specs)
           super(app, build_parsers(parser_specs))
         end
