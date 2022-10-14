@@ -52,6 +52,26 @@ RSpec.describe Hanami::Middleware::BodyParser do
       Hanami::Middleware::BodyParser.__send__(:remove_const, :XmlParser)
     end
 
+    it "accepts multiple parser class ids" do
+      class Hanami::Middleware::BodyParser::XmlParser < Hanami::Middleware::BodyParser::Parser
+        def self.mime_types
+          ["application/xml"]
+        end
+      end
+
+      body_parser = Hanami::Middleware::BodyParser.new(app, [:json, :xml])
+
+      parsers = body_parser.instance_variable_get("@parsers")
+
+      expect(parsers["application/json"])
+        .to be_instance_of(Hanami::Middleware::BodyParser::JsonParser)
+
+      expect(parsers["application/xml"])
+        .to be_instance_of(Hanami::Middleware::BodyParser::XmlParser)
+
+      Hanami::Middleware::BodyParser.__send__(:remove_const, :XmlParser)
+    end
+
     it "raises error when parser spec is invalid" do
       Hanami::Middleware::BodyParser.new(app, :a_parser)
     rescue Hanami::Middleware::BodyParser::UnknownParserError => exception
