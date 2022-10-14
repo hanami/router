@@ -36,9 +36,9 @@ module Hanami
         # @api private
         # @since 2.0.0
         def build_parsers(parser_specs)
-          parsers = Array(parser_specs).flatten(0)
+          return DEFAULT_BODY_PARSERS if parser_specs.empty?
 
-          return {} if parsers.empty?
+          parsers = Array(parser_specs).flatten(0)
 
           parsers.each_with_object({}) do |spec, memo|
             name, *mime_types = Array(*spec).flatten(0)
@@ -55,6 +55,10 @@ module Hanami
         # @api private
         # @since 1.3.0
         PARSER_METHODS = %i[mime_types parse].freeze
+
+        # @api private
+        # @since 2.0.0
+        DEFAULT_BODY_PARSERS = {}.freeze
 
         # @api private
         # @since 1.3.0
