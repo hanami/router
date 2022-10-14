@@ -94,6 +94,7 @@ module Hanami
 
         # @api private
         # @since 1.3.0
+        # rubocop:disable Lint/SuppressedException
         def parser_class(parser_name)
           parser = nil
 
@@ -109,6 +110,7 @@ module Hanami
         ensure
           raise UnknownParserError, parser_name unless parser
         end
+        # rubocop:enable Lint/SuppressedException
 
         # @api private
         # @since 1.3.0
