@@ -80,5 +80,13 @@ RSpec.describe Hanami::Router do
       expect(status).to eq(301)
       expect(headers["Location"]).to eq("/admin/redirect_destination")
     end
+
+    describe "without a leading slash" do
+      let(:prefix) { "admin" }
+
+      it "generates relative URLs with prefix" do
+        expect(router.path(:get_home)).to eq("/admin/home")
+      end
+    end
   end
 end
