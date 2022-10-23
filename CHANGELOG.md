@@ -2,6 +2,12 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.beta4 - 2022-10-24
+
+### Changed
+
+- [Peter Solnica] `Hanami::Middleware::BodyParser` can be initialized with one or more formats and additional custom mime types per format (`Hanami::Middleware::BodyParser.new(app, [:json, :xml])` or `Hanami::Middleware::BodyParser.new(app, [json: "application/json+scim"])`) (#230)
+
 ## v2.0.0.beta2 - 2022-08-16
 
 ### Fixed
