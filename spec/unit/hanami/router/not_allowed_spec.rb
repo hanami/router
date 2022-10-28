@@ -3,7 +3,7 @@
 RSpec.describe Hanami::Router do
   subject do
     described_class.new do
-      get "/", to: ->(*) { [200, {"Content-Length" => "4"}, ["root"]] }
+      get "/", to: ->(*) { [200, {"content-length" => "4"}, ["root"]] }
     end
   end
 
@@ -13,7 +13,7 @@ RSpec.describe Hanami::Router do
       status, headers, body = subject.call(env)
 
       expect(status).to  eq(405)
-      expect(headers).to eq("Content-Length" => "18")
+      expect(headers).to eq("content-length" => "18")
       expect(body).to    eq(["Method Not Allowed"])
     end
 

@@ -44,7 +44,9 @@ module Hanami
         body = env[RACK_INPUT].read
         return @app.call(env) if body.empty?
 
-        env[RACK_INPUT].rewind # somebody might try to read this stream
+        if Rack::RELEASE < "3.0"
+          env[RACK_INPUT].rewind # somebody might try to read this stream
+        end
 
         if (parser = @parsers[media_type(env)])
           env[ROUTER_PARSED_BODY] = parser.parse(body)

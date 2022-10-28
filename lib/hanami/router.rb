@@ -754,7 +754,7 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = "Location"
+    HTTP_HEADER_LOCATION = "location"
 
     # @since 2.0.0
     # @api private
@@ -914,9 +914,15 @@ module Hanami
       params ||= {}
       env[PARAMS] ||= {}
 
-      if (input = env[::Rack::RACK_INPUT]) and input.rewind
-        env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
-        input.rewind
+      if Rack::RELEASE > "3.0"
+        if (input = env[::Rack::RACK_INPUT])
+          env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
+        end
+      else
+        if (input = env[::Rack::RACK_INPUT]) and input.rewind
+          env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
+          input.rewind
+        end
       end
 
       env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))

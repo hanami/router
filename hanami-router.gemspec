@@ -20,13 +20,13 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.required_ruby_version = ">= 3.0"
 
-  spec.add_dependency "rack",               "~> 2.0"
+  spec.add_dependency "rack",               ">= 2", "< 4"
   spec.add_dependency "mustermann",         "~> 1.0"
   spec.add_dependency "mustermann-contrib", "~> 1.0"
 
   spec.add_development_dependency "bundler",   ">= 1.6", "< 3"
   spec.add_development_dependency "rake",      "~> 13"
-  spec.add_development_dependency "rack-test", "~> 1.0"
+  spec.add_development_dependency "rack-test", "~> 2.0"
   spec.add_development_dependency "rspec",     "~> 3.8"
 
   spec.add_development_dependency "rubocop", "~> 1.0"
