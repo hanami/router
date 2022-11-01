@@ -5,15 +5,18 @@ require_relative "./trie"
 
 module Hanami
   module Middleware
-    # Hanami::API middleware stack
-    #
-    # @since 0.1.1
+    # Hanami Rack middleware stack
+
+    # @since 2.0.0
     # @api private
     class App
-      # @since 0.1.1
+      # @param router [Hanami::Router]
+      # @param mapping [Hash]
+      #
+      # @since 2.0.0
       # @api private
-      def initialize(app, mapping)
-        @trie = Hanami::Middleware::Trie.new(app)
+      def initialize(router, mapping)
+        @trie = Hanami::Middleware::Trie.new(router)
 
         mapping.each do |path, stack|
           builder = Rack::Builder.new
@@ -22,25 +25,25 @@ module Hanami
             builder.use(middleware, *args, &blk)
           end
 
-          builder.run(app)
+          builder.run(router)
 
           @trie.add(path, builder.to_app.freeze)
         end
 
         @trie.freeze
-        @inspector = app.inspector.freeze
+        @inspector = router.inspector.freeze
       end
 
-      # @since 0.1.1
+      # @since 2.0.0
       # @api private
       def call(env)
         @trie.find(env[::Rack::PATH_INFO]).call(env)
       end
 
-      # @since x.x.x
+      # @since 2.0.0
       # @api private
       def to_inspect
-        @inspector.call
+        @inspector&.call.to_s
       end
     end
   end
