@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "hanami/router/error"
+require "hanami/router/errors"
 require "mustermann/error"
 
 module Hanami

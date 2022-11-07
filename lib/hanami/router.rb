@@ -10,7 +10,7 @@ module Hanami
   # @since 0.1.0
   class Router
     require "hanami/router/version"
-    require "hanami/router/error"
+    require "hanami/router/errors"
     require "hanami/router/segment"
     require "hanami/router/redirect"
     require "hanami/router/prefix"
