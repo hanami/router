@@ -2,6 +2,16 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.0.0.rc1 - 2022-11-08
+
+### Fixed
+
+- [Luca Guidi] During routes inspection, ensure to print path prefixes for nested named routes
+
+### Changed
+
+- [Benjamin Klotz] `Hanami::Middleware::BodyParser::Parser#parse` (abstract method) to raise `NoMethodError` instead of `NotImplementedError`
+
 ## v2.0.0.beta4 - 2022-10-24
 
 ### Changed
