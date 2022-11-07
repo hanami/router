@@ -5,7 +5,8 @@ require "mustermann/error"
 
 module Hanami
   class Router
-    # URL Helpers
+    # @since 2.0.0
+    # @api private
     class UrlHelpers
       # @since 2.0.0
       # @api private
@@ -21,7 +22,7 @@ module Hanami
       end
 
       # @since 2.0.0
-      # @api public
+      # @api private
       def path(name, variables = {})
         @named.fetch(name.to_sym) do
           raise MissingRouteError.new(name)
@@ -31,7 +32,7 @@ module Hanami
       end
 
       # @since 2.0.0
-      # @api public
+      # @api private
       def url(name, variables = {})
         @base_url + path(name, variables)
       end
