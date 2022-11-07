@@ -799,7 +799,10 @@ module Hanami
         add_fixed_route(http_method, path, endpoint)
       end
 
-      add_named_route(path, as, constraints) if as
+      if as
+        as = prefixed_name(as)
+        add_named_route(path, as, constraints)
+      end
 
       if inspect?
         @inspector.add_route(
@@ -843,7 +846,7 @@ module Hanami
     # @since 2.0.0
     # @api private
     def add_named_route(path, as, constraints)
-      @url_helpers.add(prefixed_name(as), Segment.fabricate(path, **constraints))
+      @url_helpers.add(as, Segment.fabricate(path, **constraints))
     end
 
     # @since 2.0.0
