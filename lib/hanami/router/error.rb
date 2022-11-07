@@ -20,7 +20,7 @@ module Hanami
     # Invalid route exception. It's raised when the router cannot recognize a route
     #
     # @since 2.0.0
-    class InvalidRouteException < Error
+    class MissingRouteError < Error
       def initialize(name)
         super("No route could be generated for #{name.inspect} - please check given arguments")
       end

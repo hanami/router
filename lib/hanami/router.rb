@@ -435,7 +435,7 @@ module Hanami
     #
     # @return [String]
     #
-    # @raise [Hanami::Routing::InvalidRouteException] when the router fails to
+    # @raise [Hanami::Router::MissingRouteError] when the router fails to
     #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
@@ -465,7 +465,7 @@ module Hanami
     #
     # @return [String]
     #
-    # @raise [Hanami::Routing::InvalidRouteException] when the router fails to
+    # @raise [Hanami::Router::MissingRouteError] when the router fails to
     #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
@@ -687,7 +687,7 @@ module Hanami
         begin
           url = path(env, params)
           return env_for(url, params, options) # rubocop:disable Style/RedundantReturn
-        rescue Hanami::Router::InvalidRouteException
+        rescue Hanami::Router::MissingRouteError
           {} # Empty Rack env
         end
       else

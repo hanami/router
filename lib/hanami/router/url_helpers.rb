@@ -24,7 +24,7 @@ module Hanami
       # @api public
       def path(name, variables = {})
         @named.fetch(name.to_sym) do
-          raise InvalidRouteException.new(name)
+          raise MissingRouteError.new(name)
         end.expand(:append, variables)
       rescue Mustermann::ExpandError => exception
         raise InvalidRouteExpansionException.new(name, exception.message)
