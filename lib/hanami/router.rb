@@ -599,12 +599,11 @@ module Hanami
     #   route.params    # => {:id=>"1"}
     def recognize(env, params = {}, options = {})
       require "hanami/router/recognized_route"
+
       env = env_for(env, params, options)
       endpoint, params = lookup(env)
 
-      RecognizedRoute.new(
-        endpoint, _params(env, params)
-      )
+      RecognizedRoute.new(endpoint, _params(env, params))
     end
 
     # @since 2.0.0
