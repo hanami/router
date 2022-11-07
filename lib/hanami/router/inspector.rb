@@ -10,12 +10,15 @@ module Hanami
     # formatter.
     #
     # @since 2.0.0
+    # @api private
     class Inspector
       # @param routes [Array<Hanami::Route>]
       # @param formatter [#call] Takes the routes as an argument and returns
       #   whatever representation it creates. Defaults to
       #   {Hanami::Router::Formatter::HumanFriendly}.
+      #
       # @since 2.0.0
+      # @api private
       def initialize(routes: [], formatter: Formatter::HumanFriendly.new)
         @routes = routes
         @formatter = formatter
@@ -23,8 +26,8 @@ module Hanami
 
       # @param route [Hash] serialized route
       #
-      # @api private
       # @since 2.0.0
+      # @api private
       def add_route(route)
         @routes.push(route)
       end
@@ -32,6 +35,7 @@ module Hanami
       # @return [Any] Formatted routes
       #
       # @since 2.0.0
+      # @api private
       def call(...)
         @formatter.call(@routes, ...)
       end
