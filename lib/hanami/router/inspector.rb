@@ -1,16 +1,24 @@
 # frozen_string_literal: true
 
+require "hanami/router/formatter/human_friendly"
+
 module Hanami
   class Router
     # Routes inspector
     #
-    # @api private
+    # Builds a representation of an array of routes according to a given
+    # formatter.
+    #
     # @since 2.0.0
     class Inspector
-      # @api private
+      # @param routes [Array<Hanami::Route>]
+      # @param formatter [#call] Takes the routes as an argument and returns
+      #   whatever representation it creates. Defaults to
+      #   {Hanami::Router::Formatter::HumanFriendly}.
       # @since 2.0.0
-      def initialize(routes: [])
+      def initialize(routes: [], formatter: Formatter::HumanFriendly.new)
         @routes = routes
+        @formatter = formatter
       end
 
       # @param route [Hash] serialized route
@@ -21,18 +29,12 @@ module Hanami
         @routes.push(route)
       end
 
-      # @return [String] The inspected routes
+      # @return [Any] Formatted routes
       #
-      # @api private
       # @since 2.0.0
-      def call(*)
-        @routes.map(&:to_inspect).join(NEW_LINE)
+      def call(...)
+        @formatter.call(@routes, ...)
       end
-
-      # @api private
-      # @since 2.0.0
-      NEW_LINE = $/
-      private_constant :NEW_LINE
     end
   end
 end

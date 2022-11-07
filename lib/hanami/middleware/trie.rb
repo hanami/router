@@ -1,66 +1,67 @@
 # frozen_string_literal: true
 
-require "hanami/router/node"
+require_relative "./node"
 
 module Hanami
-  class Router
-    # Trie data structure to store routes
+  module Middleware
+    # Trie to register scopes with custom Rack middleware
     #
     # @api private
     # @since 2.0.0
     class Trie
       # @api private
       # @since 2.0.0
-      attr_reader :root
-
-      # @api private
-      # @since 2.0.0
-      def initialize
+      def initialize(app)
+        @app = app
         @root = Node.new
       end
 
       # @api private
       # @since 2.0.0
-      def add(path, to, constraints)
+      def freeze
+        @root.freeze
+        super
+      end
+
+      # @api private
+      # @since 2.0.0
+      def add(path, app)
         node = @root
         for_each_segment(path) do |segment|
-          node = node.put(segment, constraints)
+          node = node.put(segment)
         end
 
-        node.leaf!(to)
+        node.app!(app)
       end
 
       # @api private
       # @since 2.0.0
       def find(path)
         node = @root
-        params = {}
 
         for_each_segment(path) do |segment|
           break unless node
 
-          child, captures = node.get(segment)
-          params.merge!(captures) if captures
-
-          node = child
+          node = node.get(segment)
         end
 
-        return [node.to, params] if node&.leaf?
+        return node.app if node&.app?
 
-        nil
+        @root.app || @app
+      end
+
+      # @api private
+      # @since 2.0.0
+      def empty?
+        @root.leaf?
       end
 
       private
 
       # @api private
       # @since 2.0.0
-      SEGMENT_SEPARATOR = /\//
-      private_constant :SEGMENT_SEPARATOR
-
-      # @api private
-      # @since 2.0.0
       def for_each_segment(path, &blk)
-        _, *segments = path.split(SEGMENT_SEPARATOR)
+        _, *segments = path.split(/\//)
         segments.each(&blk)
       end
     end

@@ -534,7 +534,7 @@ module Keys
 end # Keyboards
 
 class XMLBodyParser < Hanami::Middleware::BodyParser::Parser
-  def mime_types
+  def self.mime_types
     ["application/xml", "text/xml"]
   end
 

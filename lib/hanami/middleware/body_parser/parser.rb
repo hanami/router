@@ -7,7 +7,9 @@ module Hanami
       #
       # @since 2.0.0
       class Parser
-        # Declare supported MIME types
+        DEFAULT_MIME_TYPES = [].freeze
+
+        # Return supported mime types
         #
         # @return [Array<String>] supported MIME types
         #
@@ -18,12 +20,15 @@ module Hanami
         #   require "hanami/middleware/body_parser"
         #
         #   class XMLParser < Hanami::Middleware::BodyParser::Parser
-        #     def mime_types
+        #     def self.mime_types
         #       ["application/xml", "text/xml"]
         #     end
         #   end
-        def mime_types
-          raise NoMethodError
+        attr_reader :mime_types
+
+        # @api private
+        def initialize(mime_types: DEFAULT_MIME_TYPES)
+          @mime_types = self.class.mime_types + mime_types
         end
 
         # Parse raw HTTP request body

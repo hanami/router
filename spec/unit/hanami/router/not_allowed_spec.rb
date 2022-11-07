@@ -13,8 +13,8 @@ RSpec.describe Hanami::Router do
       status, headers, body = subject.call(env)
 
       expect(status).to  eq(405)
-      expect(headers).to eq("Content-Length" => "11")
-      expect(body).to    eq(["Not Allowed"])
+      expect(headers).to eq("Content-Length" => "18")
+      expect(body).to    eq(["Method Not Allowed"])
     end
 
     it "doesn't cache previous 405 header responses" do
@@ -40,7 +40,7 @@ RSpec.describe Hanami::Router do
       random_headers_count = RandomMiddleware.headers_count(headers)
       expect(status).to               eq(405)
       expect(random_headers_count).to be(1)
-      expect(body).to                 eq(["Not Allowed"])
+      expect(body).to                 eq(["Method Not Allowed"])
     end
   end
 end
