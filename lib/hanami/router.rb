@@ -3,6 +3,7 @@
 require "rack"
 require "rack/utils"
 
+# @see Hanami::Router
 module Hanami
   # Rack compatible, lightweight and fast HTTP Router.
   #
