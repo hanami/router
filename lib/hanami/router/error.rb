@@ -2,63 +2,81 @@
 
 module Hanami
   class Router
-    # Base error
+    # Base class for all Hanami::Router errors.
     #
     # @since 0.5.0
+    # @api public
     class Error < StandardError
     end
 
-    # Missing endpoint error. It's raised when the route definition is missing `to:` endpoint and a block.
+    # Error raised when no endpoint is specified for a route.
+    #
+    # Endpoints must be specified by `to:` or a block.
     #
     # @since 2.0.0
+    # @api public
     class MissingEndpointError < Error
+      # @since 2.0.0
+      # @api private
       def initialize(path)
         super("missing endpoint for #{path.inspect}")
       end
     end
 
-    # Invalid route exception. It's raised when the router cannot recognize a route
-    #
-    # @since 2.0.0
-    class MissingRouteError < Error
-      def initialize(name)
-        super("No route could be generated for #{name.inspect} - please check given arguments")
-      end
-    end
-
-    # Invalid route expansion exception. It's raised when the router recognizes
-    # a route but given variables cannot be expanded into a path/url
-    #
-    # @since 2.0.0
+    # Error raised when a named route could not be found.
     #
     # @see Hanami::Router#path
     # @see Hanami::Router#url
+    #
+    # @since 2.0.0
+    # @api public
+    class MissingRouteError < Error
+      # @since 2.0.0
+      # @api private
+      def initialize(name)
+        super("No route could be found with name #{name.inspect}")
+      end
+    end
+
+    # Error raised when variables given for route cannot be expanded into a full path.
+    #
+    # @see Hanami::Router#path
+    # @see Hanami::Router#url
+    #
+    # @since 2.0.0
+    # @api public
     class InvalidRouteExpansionError < Error
+      # @since 2.0.0
+      # @api private
       def initialize(name, message)
         super("No route could be generated for `#{name.inspect}': #{message}")
       end
     end
 
-    # Handle unknown HTTP status codes
+    # Error raised when an unknown HTTP status code is given.
+    #
+    # @see Hanami::Router#redirect
     #
     # @since 2.0.0
+    # @api public
     class UnknownHTTPStatusCodeError < Error
+      # @since 2.0.0
+      # @api private
       def initialize(code)
         super("Unknown HTTP status code: #{code.inspect}")
       end
     end
 
-    # This error is raised when <tt>#call</tt> is invoked on a non-routable
-    # recognized route.
-    #
-    # @since 0.5.0
+    # Error raised when a recognized route is called but has no callable endpoint.
     #
     # @see Hanami::Router#recognize
-    # @see Hanami::Router::RecognizedRoute
     # @see Hanami::Router::RecognizedRoute#call
-    # @see Hanami::Router::RecognizedRoute#routable?
+    #
+    # @since 0.5.0
+    # @api public
     class NotRoutableEndpointError < Error
       # @since 0.5.0
+      # @api private
       def initialize(env)
         super %(Cannot find routable endpoint for: #{env[::Rack::REQUEST_METHOD]} #{env[::Rack::PATH_INFO]})
       end
