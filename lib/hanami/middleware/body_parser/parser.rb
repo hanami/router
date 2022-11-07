@@ -54,8 +54,8 @@ module Hanami
         #       raise Hanami::Middleware::BodyParser::BodyParsingError.new(exception.message)
         #     end
         #   end
-        def parse(body)
-          raise NotImplementedError
+        def parse(_body)
+          raise NoMethodError
         end
       end
     end
