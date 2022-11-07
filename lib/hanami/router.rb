@@ -354,6 +354,8 @@ module Hanami
     # @param as [Symbol] a unique name for the route
     # @param code [Integer] a HTTP status code to use for the redirect
     #
+    # @raise [Hanami::Router::UnknownHTTPStatusCodeError] when an unknown redirect code is given
+    #
     # @since 0.1.0
     #
     # @see #get
