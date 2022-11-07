@@ -33,7 +33,7 @@ module Hanami
     #
     # @see Hanami::Router#path
     # @see Hanami::Router#url
-    class InvalidRouteExpansionException < Error
+    class InvalidRouteExpansionError < Error
       def initialize(name, message)
         super("No route could be generated for `#{name.inspect}': #{message}")
       end

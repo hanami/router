@@ -27,7 +27,7 @@ module Hanami
           raise MissingRouteError.new(name)
         end.expand(:append, variables)
       rescue Mustermann::ExpandError => exception
-        raise InvalidRouteExpansionException.new(name, exception.message)
+        raise InvalidRouteExpansionError.new(name, exception.message)
       end
 
       # @since 2.0.0

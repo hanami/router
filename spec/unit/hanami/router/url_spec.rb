@@ -25,7 +25,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "raises error when variables aren't satisfied" do
-      expect { router.url(:variables) }.to raise_error(Hanami::Router::InvalidRouteExpansionException, "No route could be generated for `:variables': cannot expand with keys [], possible expansions: [:id]")
+      expect { router.url(:variables) }.to raise_error(Hanami::Router::InvalidRouteExpansionError, "No route could be generated for `:variables': cannot expand with keys [], possible expansions: [:id]")
     end
 
     it "recognizes string with variables and constraints" do
@@ -49,7 +49,7 @@ RSpec.describe Hanami::Router do
 
     # FIXME: should preserve this behavior?
     xit "raises error when insufficient params are passed" do
-      expect { router.url(nil) }.to raise_error(Hanami::Router::InvalidRouteExpansionException, "No route could be generated for nil - please check given arguments")
+      expect { router.url(nil) }.to raise_error(Hanami::Router::InvalidRouteExpansionError, "No route could be generated for nil - please check given arguments")
     end
   end
 end
