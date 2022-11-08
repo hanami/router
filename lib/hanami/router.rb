@@ -3,13 +3,14 @@
 require "rack"
 require "rack/utils"
 
+# @see Hanami::Router
 module Hanami
   # Rack compatible, lightweight and fast HTTP Router.
   #
   # @since 0.1.0
   class Router
     require "hanami/router/version"
-    require "hanami/router/error"
+    require "hanami/router/errors"
     require "hanami/router/segment"
     require "hanami/router/redirect"
     require "hanami/router/prefix"
@@ -353,6 +354,8 @@ module Hanami
     # @param as [Symbol] a unique name for the route
     # @param code [Integer] a HTTP status code to use for the redirect
     #
+    # @raise [Hanami::Router::UnknownHTTPStatusCodeError] when an unknown redirect code is given
+    #
     # @since 0.1.0
     #
     # @see #get
@@ -434,7 +437,7 @@ module Hanami
     #
     # @return [String]
     #
-    # @raise [Hanami::Routing::InvalidRouteException] when the router fails to
+    # @raise [Hanami::Router::MissingRouteError] when the router fails to
     #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
@@ -464,7 +467,7 @@ module Hanami
     #
     # @return [String]
     #
-    # @raise [Hanami::Routing::InvalidRouteException] when the router fails to
+    # @raise [Hanami::Router::MissingRouteError] when the router fails to
     #   recognize a route, because of the given arguments.
     #
     # @since 0.1.0
@@ -596,12 +599,11 @@ module Hanami
     #   route.params    # => {:id=>"1"}
     def recognize(env, params = {}, options = {})
       require "hanami/router/recognized_route"
+
       env = env_for(env, params, options)
       endpoint, params = lookup(env)
 
-      RecognizedRoute.new(
-        endpoint, _params(env, params)
-      )
+      RecognizedRoute.new(endpoint, _params(env, params))
     end
 
     # @since 2.0.0
@@ -686,7 +688,7 @@ module Hanami
         begin
           url = path(env, params)
           return env_for(url, params, options) # rubocop:disable Style/RedundantReturn
-        rescue Hanami::Router::InvalidRouteException
+        rescue Hanami::Router::MissingRouteError
           {} # Empty Rack env
         end
       else

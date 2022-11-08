@@ -4,10 +4,13 @@ module Hanami
   class Router
     # Represents a result of router path recognition.
     #
-    # @since 0.5.0
-    #
     # @see Hanami::Router#recognize
+    #
+    # @since 0.5.0
+    # @api public
     class RecognizedRoute
+      # @since 0.5.0
+      # @api private
       def initialize(endpoint, env)
         @endpoint = endpoint
         @env = env
@@ -54,12 +57,22 @@ module Hanami
         @env[::Rack::PATH_INFO]
       end
 
+      # Returns the route's path params.
+      #
+      # @return [Hash]
+      #
       # @since 0.7.0
       # @api public
       def params
         @env[Router::PARAMS]
       end
 
+      # Returns the route's endpoint object.
+      #
+      # Returns nil if the route is a {#redirect? redirect}.
+      #
+      # @return [Object, nil]
+      #
       # @since 0.7.0
       # @api public
       def endpoint
@@ -68,18 +81,30 @@ module Hanami
         @endpoint
       end
 
+      # Returns true if the route has an {#endpoint}.
+      #
+      # @return [Boolean]
+      #
       # @since 0.7.0
       # @api public
       def routable?
         !@endpoint.nil?
       end
 
+      # Returns true if the route is a redirect.
+      #
+      # @return [Boolean]
+      #
       # @since 0.7.0
       # @api public
       def redirect?
         @endpoint.is_a?(Redirect)
       end
 
+      # Returns the route's redirect path, if it is a redirect, or nil otherwise.
+      #
+      # @return [String, nil]
+      #
       # @since 0.7.0
       # @api public
       def redirection_path

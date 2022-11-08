@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require "hanami/router/error"
+require "hanami/router/errors"
 require "mustermann/error"
 
 module Hanami
   class Router
-    # URL Helpers
+    # @since 2.0.0
+    # @api private
     class UrlHelpers
       # @since 2.0.0
       # @api private
@@ -21,17 +22,17 @@ module Hanami
       end
 
       # @since 2.0.0
-      # @api public
+      # @api private
       def path(name, variables = {})
         @named.fetch(name.to_sym) do
-          raise InvalidRouteException.new(name)
+          raise MissingRouteError.new(name)
         end.expand(:append, variables)
       rescue Mustermann::ExpandError => exception
-        raise InvalidRouteExpansionException.new(name, exception.message)
+        raise InvalidRouteExpansionError.new(name, exception.message)
       end
 
       # @since 2.0.0
-      # @api public
+      # @api private
       def url(name, variables = {})
         @base_url + path(name, variables)
       end
