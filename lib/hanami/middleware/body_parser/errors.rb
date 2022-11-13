@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "hanami/middleware/error"
+require "hanami/middleware/error" # from hanami-utils
 
 module Hanami
   module Middleware

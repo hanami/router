@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "hanami/router/redirect"
-require "hanami/router/block"
-
 module Hanami
   class Router
     # A route from the router

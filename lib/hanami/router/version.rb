@@ -2,7 +2,7 @@
 
 module Hanami
   class Router
-    # Returns the hanami-router version.
+    # The current hanami-router version.
     #
     # @return [String]
     #

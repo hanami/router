@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "hanami/router/segment"
-
 module Hanami
   class Router
     # Trie node

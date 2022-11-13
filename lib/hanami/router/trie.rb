@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "hanami/router/node"
-
 module Hanami
   class Router
     # Trie data structure to store routes

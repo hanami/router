@@ -2,6 +2,7 @@
 
 require "rack"
 require "rack/utils"
+require "zeitwerk"
 
 # @see Hanami::Router
 module Hanami
@@ -9,16 +10,23 @@ module Hanami
   #
   # @since 0.1.0
   class Router
-    require "hanami/router/version"
-    require "hanami/router/errors"
-    require "hanami/router/segment"
-    require "hanami/router/redirect"
-    require "hanami/router/prefix"
-    require "hanami/router/params"
-    require "hanami/router/trie"
-    require "hanami/router/block"
-    require "hanami/router/route"
-    require "hanami/router/url_helpers"
+    # @since 2.0.0
+    # @api private
+    def self.gem_loader
+      @gem_loader ||= Zeitwerk::Loader.new.tap do |loader|
+        root = File.expand_path("..", __dir__)
+        loader.tag = "hanami-router"
+        loader.inflector = Zeitwerk::GemInflector.new("#{root}/hanami-router.rb")
+        loader.push_dir(root)
+        loader.ignore(
+          "#{root}/hanami-router.rb",
+          "#{root}/hanami/action/{errors,version}.rb"
+        )
+        loader.inflector.inflect("csv" => "CSV")
+      end
+    end
+
+    gem_loader.setup
 
     # URL helpers for other Hanami integrations
     #
@@ -598,8 +606,6 @@ module Hanami
     #   route.routable? # => false
     #   route.params    # => {:id=>"1"}
     def recognize(env, params = {}, options = {})
-      require "hanami/router/recognized_route"
-
       env = env_for(env, params, options)
       endpoint, params = lookup(env)
 

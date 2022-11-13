@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "hanami/router/formatter/human_friendly"
-
 module Hanami
   class Router
     # Builds a representation of an array of routes according to a given formatter.
