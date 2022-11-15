@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json"
+
 RSpec.describe "Params" do
   subject do
     e = endpoint
@@ -40,7 +42,7 @@ RSpec.describe "Params" do
 
   context "form payload" do
     it "has params from POST form submission" do
-      input = {"preferences" => {"language" => "Ruby", "framework" => "Hanami"}}
+      input = {"preferences" => {"language" => "Ruby", "framework" => "Hanami", "popularity" => "100%"}}
       env = Rack::MockRequest.env_for("/submit", method: "POST", params: input)
       subject.call(env)
 
@@ -64,6 +66,21 @@ RSpec.describe "Params" do
       expected = Rack::Utils.build_nested_query(input)
       expect(env["rack.input"].read).to eq(expected)
     end
+  end
+
+  context "json payload" do
+    it "shouldn't parse a json payload" do
+      input = JSON.generate("foo" => "100% bar")
+      env = Rack::MockRequest.env_for("/submit", method: "POST", params: input)
+      env["CONTENT_TYPE"] = "application/json"
+      subject.call(env)
+      
+      expect(env["router.params"]).to eq({})
+    end
+  end
+
+  context "file upload" do
+    # TODO: test a file upload
   end
 
   context "priority" do

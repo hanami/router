@@ -919,9 +919,14 @@ module Hanami
       params ||= {}
       env[PARAMS] ||= {}
 
-      if (input = env[::Rack::RACK_INPUT]) and input.rewind
-        env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
-        input.rewind
+      if (input = env[::Rack::RACK_INPUT])
+        case env["CONTENT_TYPE"]
+        when "application/x-www-form-urlencoded"
+          env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
+          input.rewind
+        when %r|\Amultipart/.*boundary=\"?([^\";,]+)\"?|ni
+          env[PARAMS].merge!(::Rack::Multipart.parse_multipart(env))          
+        end
       end
 
       env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))
