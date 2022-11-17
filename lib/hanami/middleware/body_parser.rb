@@ -2,6 +2,7 @@
 
 require "hanami/router/params"
 require "hanami/middleware/error"
+require_relative "../router/constants"
 
 module Hanami
   module Middleware
@@ -28,9 +29,6 @@ module Hanami
       ROUTER_PARAMS = "router.params"
 
       # @api private
-      ROUTER_PARSED_BODY = "router.parsed_body"
-
-      # @api private
       FALLBACK_KEY = "_"
 
       extend ClassInterface
@@ -47,8 +45,8 @@ module Hanami
         env[RACK_INPUT].rewind # somebody might try to read this stream
 
         if (parser = @parsers[media_type(env)])
-          env[ROUTER_PARSED_BODY] = parser.parse(body)
-          env[ROUTER_PARAMS] = _symbolize(env[ROUTER_PARSED_BODY])
+          env[Router::ROUTER_PARSED_BODY] = parser.parse(body)
+          env[ROUTER_PARAMS] = _symbolize(env[Router::ROUTER_PARSED_BODY])
         end
 
         @app.call(env)

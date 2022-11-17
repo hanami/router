@@ -60,6 +60,16 @@ RSpec.describe Hanami::Middleware::BodyParser do
         expect(env["router.parsed_body"]).to eq("data" => {"attribute" => "ok"})
       end
 
+      # See https://github.com/hanami/router/issues/237
+      context "when payload contains '%'" do
+        let(:body) { %({"foo": "%"}) }
+
+        it "parses params from body" do
+          expect(env["router.params"]).to eq(foo: "%")
+          expect(env["router.parsed_body"]).to eq("foo" => "%")
+        end
+      end
+
       describe "with malformed json" do
         let(:body) {  %({"hanami":"ok" "attribute":"ok"}) }
 

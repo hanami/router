@@ -10,6 +10,7 @@ module Hanami
   # @since 0.1.0
   class Router
     require "hanami/router/version"
+    require "hanami/router/constants"
     require "hanami/router/errors"
     require "hanami/router/segment"
     require "hanami/router/redirect"
@@ -919,7 +920,7 @@ module Hanami
       params ||= {}
       env[PARAMS] ||= {}
 
-      if (input = env[::Rack::RACK_INPUT]) and input.rewind
+      if !env.key?(ROUTER_PARSED_BODY) && (input = env[::Rack::RACK_INPUT]) and input.rewind
         env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
         input.rewind
       end
