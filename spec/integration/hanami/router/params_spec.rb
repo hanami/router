@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
+require "json"
+require "hanami/middleware/body_parser"
+
 RSpec.describe "Params" do
-  subject do
+  subject { router }
+
+  let(:router) do
     e = endpoint
 
     Hanami::Router.new do
@@ -40,7 +45,7 @@ RSpec.describe "Params" do
 
   context "form payload" do
     it "has params from POST form submission" do
-      input = {"preferences" => {"language" => "Ruby", "framework" => "Hanami"}}
+      input = {"preferences" => {"language" => "Ruby", "framework" => "Hanami", "completion" => "100%"}}
       env = Rack::MockRequest.env_for("/submit", method: "POST", params: input)
       subject.call(env)
 
@@ -63,6 +68,27 @@ RSpec.describe "Params" do
 
       expected = Rack::Utils.build_nested_query(input)
       expect(env["rack.input"].read).to eq(expected)
+    end
+  end
+
+  context "JSON payload" do
+    subject do
+      r = router
+
+      Rack::Builder.new do
+        use Hanami::Middleware::BodyParser, :json
+        run r
+      end
+    end
+
+    # See: https://github.com/hanami/router/issues/237
+    it "doesn't parse when body parser is mounted" do
+      input = JSON.generate("foo" => "100% bar")
+      env = Rack::MockRequest.env_for("/submit", method: "POST", params: input)
+      env["CONTENT_TYPE"] = "application/json"
+      subject.call(env)
+
+      expect(env["router.params"]).to eq(foo: "100% bar")
     end
   end
 
