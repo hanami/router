@@ -223,5 +223,26 @@ RSpec.describe Hanami::Router do
         end
       end
     end
+
+    context "scoped named path" do
+      let(:app) { Rack::MockRequest.new(router) }
+      let(:router) do
+        Hanami::Router.new do
+          scope "resources" do
+            get "/:id", to: ->(*) { [200, {}, ["resources/:id"]] }
+            get "/:resource_id/subresource", to: ->(*) { [200, {}, ["resources/:resource_id/subresources"]] }
+          end
+        end
+      end
+
+      it "responds to /resources/:id" do
+        actual = app.request("GET", "/resources/123", lint: true)
+        expect(actual.status).to eq(200)
+
+        # This is a 404
+        # actual = app.request("GET", "/resources/123/subresource", lint: true)
+        # expect(actual.status).to eq(200)
+      end
+    end
   end
 end
