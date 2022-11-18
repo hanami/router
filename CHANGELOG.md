@@ -2,6 +2,12 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.0.0 - 2022-11-22
+
+### Fixed
+
+- [Luca Guidi] Don't parse request body when Body Parser already parsed it
+
 ## v2.0.0.rc1 - 2022-11-08
 
 ### Fixed
