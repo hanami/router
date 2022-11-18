@@ -45,7 +45,7 @@ module Hanami
         env[RACK_INPUT].rewind # somebody might try to read this stream
 
         if (parser = @parsers[media_type(env)])
-          env[Router::ROUTER_PARSED_BODY] = parser.parse(body)
+          env[Router::ROUTER_PARSED_BODY] = parser.parse(body, env)
           env[ROUTER_PARAMS] = _symbolize(env[Router::ROUTER_PARSED_BODY])
         end
 

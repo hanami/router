@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "json"
+require "pathname"
+require "rack/builder"
+require "rack/multipart"
 require "hanami/middleware/body_parser"
 
 RSpec.describe "Params" do
@@ -71,6 +74,28 @@ RSpec.describe "Params" do
     end
   end
 
+  context "file upload" do
+    subject do
+      r = router
+
+      Rack::Builder.new do
+        use Hanami::Middleware::BodyParser, :form
+        run r
+      end
+    end
+
+    it "handles file upload" do
+      env = Rack::MockRequest.env_for(
+        "/submit",
+        multipart_fixture("foo.xml").merge(method: "POST")
+      )
+
+      subject.call(env)
+
+      puts env["router.params"]
+    end
+  end
+
   context "JSON payload" do
     subject do
       r = router
@@ -108,5 +133,23 @@ RSpec.describe "Params" do
 
       expect(env["router.params"]).to eq(id: expected)
     end
+  end
+
+  private
+
+  def multipart_fixture(name, boundary = Rack::Multipart::MULTIPART_BOUNDARY)
+    file = fixture_path(name)
+    data = File.binread(file)
+
+    type = %(multipart/form-data; boundary=#{boundary})
+    length = data.size
+
+    {"CONTENT_TYPE" => type,
+     "CONTENT_LENGTH" => length.to_s,
+     :input => StringIO.new(data)}
+  end
+
+  def fixture_path(name)
+    Pathname.new(Dir.pwd).join("spec", "support", "fixtures", name).realpath
   end
 end
