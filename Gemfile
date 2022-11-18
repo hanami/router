@@ -9,5 +9,5 @@ unless ENV["CI"]
   gem "yard-junk"
 end
 
-gem "hanami-utils", "~> 2.0.beta", git: "https://github.com/hanami/utils.git", branch: "main"
+gem "hanami-utils", "~> 2.0", git: "https://github.com/hanami/utils.git", branch: "main"
 gem "hanami-devtools", git: "https://github.com/hanami/devtools.git", branch: "main"
