@@ -331,22 +331,22 @@ curl http://localhost:2300/authors/1 \
 require "hanami/router"
 
 router = Hanami::Router.new do
-  get "/books/:id", to: "books#show", as: :book
+  get "/books/:id", to: "books.show", as: :book
 end
 
 route = router.recognize("/books/23")
 route.verb      # "GET"
-route.action    # => "books#show"
+route.endpoint  # => "books.show"
 route.params    # => {:id=>"23"}
 route.routable? # => true
 
 route = router.recognize(:book, id: 23)
 route.verb      # "GET"
-route.action    # => "books#show"
+route.endpoint  # => "books.show"
 route.params    # => {:id=>"23"}
 route.routable? # => true
 
-route = router.recognize("/books/23", method: :post)
+route = router.recognize("/books/23", {}, method: :post)
 route.verb      # "POST"
 route.routable? # => false
 ```
