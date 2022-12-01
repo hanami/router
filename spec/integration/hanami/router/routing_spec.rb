@@ -127,7 +127,7 @@ RSpec.describe Hanami::Router do
 
         context "#HEAD" do
           let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
-          let(:response) { Rack::MockResponse.new(405, {"Content-Length" => "18"}, []) }
+          let(:response) { Rack::MockResponse.new(405, {"Content-Length" => "18", "Allow" => verb.upcase}, []) }
 
           context "path recognition" do
             context "fixed string" do

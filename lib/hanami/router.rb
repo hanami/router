@@ -652,10 +652,15 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      (_not_allowed_fixed(env) ||
-      _not_allowed_variable(env)) and return [HTTP_STATUS_NOT_ALLOWED,
-                                              {::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH},
-                                              [HTTP_BODY_NOT_ALLOWED]]
+      http_methods = _not_allowed_fixed(env) || _not_allowed_variable(env)
+      return if http_methods.nil?
+
+      [HTTP_STATUS_NOT_ALLOWED,
+       {
+         ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
+         "Allow" => http_methods.join(", ")
+       },
+       [HTTP_BODY_NOT_ALLOWED]]
     end
 
     # @since 2.0.0
@@ -934,13 +939,15 @@ module Hanami
     # @since 2.0.0
     # @api private
     def _not_allowed_fixed(env)
-      found = false
+      found = []
 
-      @fixed.each_value do |routes|
-        break if found
+      @fixed.each do |http_method, routes|
+        next if routes.fetch(env[::Rack::PATH_INFO], nil).nil?
 
-        found = routes.key?(env[::Rack::PATH_INFO])
+        found << http_method
       end
+
+      return nil if found.empty?
 
       found
     end
@@ -948,13 +955,15 @@ module Hanami
     # @since 2.0.0
     # @api private
     def _not_allowed_variable(env)
-      found = false
+      found = []
 
-      @variable.each_value do |routes|
-        break if found
+      @variable.each do |http_method, routes|
+        next if routes.find(env[::Rack::PATH_INFO]).nil?
 
-        found = routes.find(env[::Rack::PATH_INFO])
+        found << http_method
       end
+
+      return nil if found.empty?
 
       found
     end
