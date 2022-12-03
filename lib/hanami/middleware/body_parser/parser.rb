@@ -34,6 +34,7 @@ module Hanami
         # Parse raw HTTP request body
         #
         # @param body [String] HTTP request body
+        # @param env [Hash] Rack env
         #
         # @return [Hash] the result of the parsing
         #
@@ -54,7 +55,7 @@ module Hanami
         #       raise Hanami::Middleware::BodyParser::BodyParsingError.new(exception.message)
         #     end
         #   end
-        def parse(body) # rubocop:disable Lint/UnusedMethodArgument
+        def parse(body, env = {}) # rubocop:disable Lint/UnusedMethodArgument
           raise NoMethodError
         end
       end

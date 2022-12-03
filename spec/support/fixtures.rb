@@ -538,7 +538,7 @@ class XMLBodyParser < Hanami::Middleware::BodyParser::Parser
     ["application/xml", "text/xml"]
   end
 
-  def parse(body)
+  def parse(body, *)
     result = {}
 
     xml = REXML::Document.new(body)
