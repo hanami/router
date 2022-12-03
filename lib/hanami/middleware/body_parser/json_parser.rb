@@ -25,7 +25,7 @@ module Hanami
         #
         # @since 1.3.0
         # @api private
-        def parse(body)
+        def parse(body, *)
           JSON.parse(body)
         rescue StandardError => exception
           raise BodyParsingError.new(exception.message)

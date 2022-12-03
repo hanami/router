@@ -2,6 +2,16 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.0.1 - 2022-12-06
+
+### Added
+
+- [Armin, Luca Guidi] Introduce `Hanami::Middleware::BodyParser::FormParser` to parse multipart file upload
+
+### Fixed
+
+- [Luca Guidi] Return HTTP response header `Allow` when returning `405` HTTP status
+
 ## v2.0.0 - 2022-11-22
 
 ### Fixed
