@@ -12,7 +12,6 @@ module Hanami
         # @since 2.0.0
         # @api private
         MIME_TYPES = [
-          "application/x-www-form-urlencoded",
           "multipart/form-data"
         ].freeze
 

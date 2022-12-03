@@ -85,14 +85,15 @@ RSpec.describe "Params" do
     end
 
     it "handles file upload" do
-      env = Rack::MockRequest.env_for(
-        "/submit",
-        multipart_fixture("foo.xml").merge(method: "POST")
-      )
+      filename = "foo.xml"
+      env, contents = multipart_fixture(filename)
 
       subject.call(env)
 
-      puts env["router.params"]
+      uploaded_file = env["router.params"].fetch(:file)
+
+      expect(uploaded_file.fetch(:filename)).to eq(filename)
+      expect(uploaded_file.fetch(:tempfile).read).to eq(contents)
     end
   end
 
@@ -137,16 +138,19 @@ RSpec.describe "Params" do
 
   private
 
-  def multipart_fixture(name, boundary = Rack::Multipart::MULTIPART_BOUNDARY)
-    file = fixture_path(name)
-    data = File.binread(file)
+  def multipart_fixture(filename, boundary = Rack::Multipart::MULTIPART_BOUNDARY)
+    path = fixture_path(filename)
+    file = Rack::Multipart::UploadedFile.new(path)
+    data = Rack::Multipart.build_multipart("file" => file)
+    env = Rack::MockRequest.env_for(
+      "/submit",
+      "CONTENT_TYPE" => "multipart/form-data; boundary=#{boundary}",
+      "CONTENT_LENGTH" => data.length.to_s,
+      method: "POST",
+      :input => StringIO.new(data)
+    )
 
-    type = %(multipart/form-data; boundary=#{boundary})
-    length = data.size
-
-    {"CONTENT_TYPE" => type,
-     "CONTENT_LENGTH" => length.to_s,
-     :input => StringIO.new(data)}
+    [env, File.binread(path)]
   end
 
   def fixture_path(name)
