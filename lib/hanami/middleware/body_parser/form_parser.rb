@@ -6,30 +6,30 @@ require "rack/multipart"
 module Hanami
   module Middleware
     class BodyParser
-      # @since 2.0.0
+      # @since 2.0.1
       # @api private
       class FormParser < Parser
-        # @since 2.0.0
+        # @since 2.0.1
         # @api private
         MIME_TYPES = [
           "multipart/form-data"
         ].freeze
 
-        # @since 2.0.0
+        # @since 2.0.1
         # @api private
         def self.mime_types
           MIME_TYPES
         end
 
-        # Parse a json string
+        # Parse a multipart body payload (form file uploading)
         #
-        # @param body [String] a json string
+        # @param body [String] a multipart body
         #
-        # @return [Hash] the parsed json
+        # @return [Hash] the parsed multipart body
         #
         # @raise [Hanami::Middleware::BodyParser::BodyParsingError] when the body can't be parsed.
         #
-        # @since 2.0.0
+        # @since 2.0.1
         # @api private
         def parse(*, env)
           ::Rack::Multipart.parse_multipart(env)
