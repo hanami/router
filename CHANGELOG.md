@@ -2,6 +2,12 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.0.2 - 2022-12-25
+
+### Added
+
+- [Luca Guidi] Official support for Ruby 3.2
+
 ## v2.0.1 - 2022-12-06
 
 ### Added
