@@ -37,8 +37,11 @@ module Hanami
         result = @children[segment]
         return result if result
 
-        dynamic_segment = @children.keys.find { |saved_segment| saved_segment.start_with?(":") }
-        @children.fetch(dynamic_segment) { self if leaf? }
+        @children.fetch(find_dynamic_segment) { self if leaf? }
+      end
+
+      def find_dynamic_segment
+        @children.keys.find { |saved_segment| saved_segment.start_with?(":") }
       end
 
       # @api private

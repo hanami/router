@@ -73,6 +73,15 @@ RSpec.describe Hanami::Middleware::Node do
     end
   end
 
+  describe "#find_dynamic_segment" do
+    it "returns the dynamic segment value" do
+      dynamic_segment = ":bar"
+      subject.put(dynamic_segment)
+
+      expect(subject.find_dynamic_segment).to eq(":bar")
+    end
+  end
+
   describe "#app!" do
     it "sets the app" do
       subject.app!(double("app"))
