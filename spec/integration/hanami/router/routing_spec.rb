@@ -98,7 +98,7 @@ RSpec.describe Hanami::Router do
 
             it "recognizes by the given symbol" do
               expect(router.path(:"#{verb}_named_route")).to eq("/named_route")
-              expect(router.url(:"#{verb}_named_route")).to  eq("http://localhost/named_route")
+              expect(router.url(:"#{verb}_named_route")).to  eq(URI("http://localhost/named_route"))
             end
           end
 
@@ -107,7 +107,7 @@ RSpec.describe Hanami::Router do
 
             it "recognizes" do
               expect(router.path(:"#{verb}_named_route_var", var: "route")).to eq("/named_route")
-              expect(router.url(:"#{verb}_named_route_var", var: "route")).to  eq("http://localhost/named_route")
+              expect(router.url(:"#{verb}_named_route_var", var: "route")).to  eq(URI("http://localhost/named_route"))
             end
           end
 
@@ -120,7 +120,7 @@ RSpec.describe Hanami::Router do
                 __send__ verb, "/custom_named_route", to: ->(_) { r }, as: :"#{verb}_custom_named_route"
               end
 
-              expect(router.url(:"#{verb}_custom_named_route")).to eq("https://hanamirb.org/custom_named_route")
+              expect(router.url(:"#{verb}_custom_named_route")).to eq(URI("https://hanamirb.org/custom_named_route"))
             end
           end
         end
@@ -198,7 +198,7 @@ RSpec.describe Hanami::Router do
 
           it "recognizes by :root" do
             expect(router.path(:root)).to eq("/")
-            expect(router.url(:root)).to  eq("http://localhost/")
+            expect(router.url(:root)).to  eq(URI("http://localhost/"))
           end
         end
 

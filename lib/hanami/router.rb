@@ -147,7 +147,7 @@ module Hanami
     #   end
     #
     #   router.path(:root) # => "/"
-    #   router.url(:root)  # => "https://hanamirb.org"
+    #   router.url(:root)  # => #<URI::HTTPS https://hanamirb.org>
     def root(to: nil, &blk)
       get(ROOT_PATH, to: to, as: :root, &blk)
     end
@@ -191,7 +191,7 @@ module Hanami
     #   end
     #
     #   router.path(:welcome) # => "/"
-    #   router.url(:welcome)  # => "http://localhost/"
+    #   router.url(:welcome)  # => #<URI::HTTP http://localhost/>
     #
     # @example Constraints
     #   require "hanami/router"
@@ -466,7 +466,7 @@ module Hanami
     #
     # @param name [Symbol] the route name
     #
-    # @return [String]
+    # @return [URI::HTTP, URI::HTTPS]
     #
     # @raise [Hanami::Router::MissingRouteError] when the router fails to
     #   recognize a route, because of the given arguments.
@@ -483,9 +483,9 @@ module Hanami
     #     get "/:name", to: ->(*) { ... }, as: :framework
     #   end
     #
-    #   router.url(:login)                          # => "https://hanamirb.org/login"
-    #   router.url(:login, return_to: "/dashboard") # => "https://hanamirb.org/login?return_to=%2Fdashboard"
-    #   router.url(:framework, name: "router")      # => "https://hanamirb.org/router"
+    #   router.url(:login)                          # => #<URI::HTTPS https://hanamirb.org/login>
+    #   router.url(:login, return_to: "/dashboard") # => #<URI::HTTPS https://hanamirb.org/login?return_to=%2Fdashboard>
+    #   router.url(:framework, name: "router")      # => #<URI::HTTPS https://hanamirb.org/router>
     def url(name, variables = {})
       url_helpers.url(name, variables)
     end

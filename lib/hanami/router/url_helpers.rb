@@ -2,6 +2,7 @@
 
 require "hanami/router/errors"
 require "mustermann/error"
+require_relative "./prefix"
 
 module Hanami
   class Router
@@ -11,8 +12,11 @@ module Hanami
       # @since 2.0.0
       # @api private
       def initialize(base_url)
-        @base_url = base_url
+        @base_url = URI(base_url)
         @named = {}
+        prefix = @base_url.path
+        prefix = DEFAULT_PREFIX if prefix.empty?
+        @prefix = Prefix.new(prefix)
       end
 
       # @since 2.0.0
@@ -34,7 +38,7 @@ module Hanami
       # @since 2.0.0
       # @api private
       def url(name, variables = {})
-        @base_url + path(name, variables)
+        @base_url + @prefix.join(path(name, variables)).to_s
       end
     end
   end
