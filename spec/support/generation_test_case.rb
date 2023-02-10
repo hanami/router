@@ -67,6 +67,6 @@ class GenerationTestCase
   end
 
   def _absolute(expected)
-    "http://localhost#{expected}"
+    URI("http://localhost#{expected}")
   end
 end

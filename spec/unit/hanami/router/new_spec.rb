@@ -48,7 +48,7 @@ RSpec.describe Hanami::Router do
         root to: ->(*) {}
       end
 
-      expect(router.url(:root)).to match("https")
+      expect(router.url(:root)).to eq(URI("https://hanami.test"))
     end
 
     # FIXME: verify if Hanami::Router#defined? is still needed

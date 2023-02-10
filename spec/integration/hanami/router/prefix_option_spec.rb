@@ -50,17 +50,17 @@ RSpec.describe Hanami::Router do
     end
 
     it "generates absolute URLs with prefix" do
-      expect(subject.url(:root)).to eq("https://hanami.test/admin")
+      expect(subject.url(:root)).to eq(URI("https://hanami.test/admin"))
 
-      expect(subject.url(:get_home)).to eq("https://hanami.test/admin/home")
-      expect(subject.url(:post_home)).to eq("https://hanami.test/admin/home")
-      expect(subject.url(:put_home)).to eq("https://hanami.test/admin/home")
-      expect(subject.url(:patch_home)).to eq("https://hanami.test/admin/home")
-      expect(subject.url(:delete_home)).to eq("https://hanami.test/admin/home")
-      expect(subject.url(:trace_home)).to eq("https://hanami.test/admin/home")
-      expect(subject.url(:options_home)).to eq("https://hanami.test/admin/home")
+      expect(subject.url(:get_home)).to eq(URI("https://hanami.test/admin/home"))
+      expect(subject.url(:post_home)).to eq(URI("https://hanami.test/admin/home"))
+      expect(subject.url(:put_home)).to eq(URI("https://hanami.test/admin/home"))
+      expect(subject.url(:patch_home)).to eq(URI("https://hanami.test/admin/home"))
+      expect(subject.url(:delete_home)).to eq(URI("https://hanami.test/admin/home"))
+      expect(subject.url(:trace_home)).to eq(URI("https://hanami.test/admin/home"))
+      expect(subject.url(:options_home)).to eq(URI("https://hanami.test/admin/home"))
 
-      expect(subject.url(:dashboard_home)).to eq("https://hanami.test/admin/dashboard/home")
+      expect(subject.url(:dashboard_home)).to eq(URI("https://hanami.test/admin/dashboard/home"))
     end
 
     it "recognizes requests to root" do
