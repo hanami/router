@@ -790,7 +790,7 @@ module Hanami
       endpoint = fixed(env)
       return [endpoint, {}] if endpoint
 
-      variable(env) || globbed(env) || mounted(env)
+      variable(env) || mounted(env) || globbed(env)
     end
 
     # @since 2.0.0

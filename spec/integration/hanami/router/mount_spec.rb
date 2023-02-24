@@ -9,6 +9,8 @@ RSpec.describe Hanami::Router do
       mount Backend::App,                  at: "/backend"
       mount ->(*) { [200, {"Content-Length" => "4"}, ["proc"]] }, at: "/proc"
       mount ->(*) { [200, {"Content-Length" => "8"}, ["trailing"]] }, at: "/trailing/"
+
+      get "/*any", to: ->(*) { [200, {"Content-Length" => "4"}, ["home"]] }
     end
   end
 
@@ -52,5 +54,13 @@ RSpec.describe Hanami::Router do
     let(:verb) { "head" }
 
     it_behaves_like "mountable rack endpoint"
+  end
+
+  context "glob routes" do
+    let(:app) { Rack::MockRequest.new(router) }
+
+    it "falls back to glob" do
+      expect(app.request("GET", "/foo", lint: true).status).to eq(200)
+    end
   end
 end
