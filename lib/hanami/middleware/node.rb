@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "hanami/router/segment"
+
 module Hanami
   module Middleware
     # Trie node to register scopes with custom Rack middleware
@@ -15,33 +17,46 @@ module Hanami
       # @since 2.0.0
       def initialize
         @app = nil
-        @children = {}
+        @variable = nil
+        @fixed = nil
       end
 
       # @api private
       # @since 2.0.0
       def freeze
-        @children.freeze
+        @variable.freeze
+        @fixed.freeze
         super
       end
 
       # @api private
       # @since 2.0.0
       def put(segment)
-        @children[segment] ||= self.class.new
+        if variable?(segment)
+          @variable ||= {}
+          @variable[segment_for(segment)] ||= self.class.new
+        else
+          @fixed ||= {}
+          @fixed[segment] ||= self.class.new
+        end
       end
 
       # @api private
       # @since 2.0.0
-      def get(segment)
-        result = @children[segment]
-        return result if result
+      def get(segment) # rubocop:disable Metrics/PerceivedComplexity
+        found = @fixed&.fetch(segment, nil)
+        return found if found
 
-        @children.fetch(find_dynamic_segment) { self if leaf? }
-      end
+        @variable&.each do |matcher, node|
+          break if found
 
-      def find_dynamic_segment
-        @children.keys.find { |saved_segment| saved_segment.start_with?(":") }
+          captured = matcher.match(segment)
+          found = node if captured
+        end
+
+        return found if found
+
+        self if leaf?
       end
 
       # @api private
@@ -59,7 +74,19 @@ module Hanami
       # @api private
       # @since 2.0.0
       def leaf?
-        @children.empty?
+        @fixed.nil? && @variable.nil?
+      end
+
+      # @api private
+      # @since 2.0.3
+      def variable?(segment)
+        Router::ROUTE_VARIABLE_MATCHER.match?(segment)
+      end
+
+      # @api private
+      # @since 2.0.3
+      def segment_for(segment)
+        Router::Segment.fabricate(segment)
       end
     end
   end
