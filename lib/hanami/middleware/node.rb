@@ -34,7 +34,14 @@ module Hanami
       # @api private
       # @since 2.0.0
       def get(segment)
-        @children.fetch(segment) { self if leaf? }
+        result = @children[segment]
+        return result if result
+
+        @children.fetch(find_dynamic_segment) { self if leaf? }
+      end
+
+      def find_dynamic_segment
+        @children.keys.find { |saved_segment| saved_segment.start_with?(":") }
       end
 
       # @api private

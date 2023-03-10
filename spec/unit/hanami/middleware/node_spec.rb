@@ -27,11 +27,23 @@ RSpec.describe Hanami::Middleware::Node do
 
   describe "#get" do
     context "when segment is found" do
-      it "returns the node" do
-        segment = "foo"
-        subject.put(segment)
+      context "and segment is defined as symbol" do
+        it "returns the node" do
+          segment = "foo"
+          dynamic_segment = ":bar"
+          subject.put(dynamic_segment)
 
-        expect(subject.get(segment)).to be_kind_of(described_class)
+          expect(subject.get(segment)).to be_kind_of(described_class)
+        end
+      end
+
+      context "and segment is defined as string" do
+        it "returns the node" do
+          segment = "foo"
+          subject.put(segment)
+
+          expect(subject.get(segment)).to be_kind_of(described_class)
+        end
       end
     end
 
@@ -58,6 +70,15 @@ RSpec.describe Hanami::Middleware::Node do
           expect(subject.get("bar")).to be(nil)
         end
       end
+    end
+  end
+
+  describe "#find_dynamic_segment" do
+    it "returns the dynamic segment value" do
+      dynamic_segment = ":bar"
+      subject.put(dynamic_segment)
+
+      expect(subject.find_dynamic_segment).to eq(":bar")
     end
   end
 
