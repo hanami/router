@@ -72,13 +72,14 @@ module Hanami
     #   Hanami::Router.new do
     #     get "/", to: ->(*) { [200, {}, ["OK"]] }
     #   end
-    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_found: NOT_FOUND, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
+    def initialize(base_url: DEFAULT_BASE_URL, prefix: DEFAULT_PREFIX, resolver: DEFAULT_RESOLVER, not_allowed: NOT_ALLOWED, not_found: NOT_FOUND, block_context: nil, inspector: nil, &blk) # rubocop:disable Layout/LineLength
       # TODO: verify if Prefix can handle both name and path prefix
       @path_prefix = Prefix.new(prefix)
       @name_prefix = Prefix.new("")
       @url_helpers = UrlHelpers.new(base_url)
       @base_url = base_url
       @resolver = resolver
+      @not_allowed = not_allowed
       @not_found = not_found
       @block_context = block_context
       @fixed = {}
@@ -101,8 +102,7 @@ module Hanami
       endpoint, params = lookup(env)
 
       unless endpoint
-        return not_allowed(env) ||
-               not_found(env)
+        return not_allowed(env) || not_found(env)
       end
 
       endpoint.call(
@@ -652,15 +652,10 @@ module Hanami
     # @since 2.0.0
     # @api private
     def not_allowed(env)
-      http_methods = _not_allowed_fixed(env) || _not_allowed_variable(env)
-      return if http_methods.nil?
+      allowed_http_methods = _not_allowed_fixed(env) || _not_allowed_variable(env)
+      return if allowed_http_methods.nil?
 
-      [HTTP_STATUS_NOT_ALLOWED,
-       {
-         ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
-         "Allow" => http_methods.join(", ")
-       },
-       [HTTP_BODY_NOT_ALLOWED]]
+      @not_allowed.call(env, allowed_http_methods)
     end
 
     # @since 2.0.0
@@ -775,6 +770,21 @@ module Hanami
     # @since 2.0.0
     # @api private
     ROUTE_GLOBBED_MATCHER = /\*/
+
+    # Default response when the route method was not allowed
+    #
+    # @api private
+    # @since 2.1.0
+    NOT_ALLOWED = -> (_, allowed_http_methods) {
+      [
+        HTTP_STATUS_NOT_ALLOWED,
+        {
+          ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
+          "Allow" => allowed_http_methods.join(", ")
+        },
+        [HTTP_BODY_NOT_ALLOWED]
+      ]
+    }
 
     # Default response when no route was matched
     #
@@ -900,6 +910,7 @@ module Hanami
         base_url: @base_url,
         prefix: @path_prefix.to_s,
         resolver: @resolver,
+        not_allowed: @not_allowed,
         not_found: @not_found,
         block_context: @block_context,
         inspector: @inspector

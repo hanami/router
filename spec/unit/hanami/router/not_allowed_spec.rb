@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json"
+
 RSpec.describe Hanami::Router do
   subject do
     described_class.new do
@@ -94,6 +96,29 @@ RSpec.describe Hanami::Router do
 
       # second request
       request("/", app, :post)
+    end
+
+    context "with not_allowed option" do
+      let(:not_allowed) {
+        ->(*, allowed_http_methods) {
+          [499, {"Content-Type" => "application/json"}, [JSON.dump(allowed: allowed_http_methods)]]
+        }
+      }
+
+      subject {
+        described_class.new(not_allowed: not_allowed) do
+          get "/", to: ->(*) {}
+        end
+      }
+
+      it "uses it" do
+        env = Rack::MockRequest.env_for("/", method: :post)
+        status, headers, body = subject.call(env)
+
+        expect(status).to eq(499)
+        expect(headers).to eq("Content-Type" => "application/json")
+        expect(body).to eq(['{"allowed":["GET","HEAD"]}'])
+      end
     end
 
     private
