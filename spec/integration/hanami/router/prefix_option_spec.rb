@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Hanami::Router do
   describe "with prefix option" do
     subject do

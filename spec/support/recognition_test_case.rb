@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RecognitionTestCase
   include ::RSpec::Matchers
   HEADER_ENV     = "_env"

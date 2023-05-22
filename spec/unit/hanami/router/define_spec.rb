@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Hanami::Router do
   describe ".define" do
     it "returns block as it is" do

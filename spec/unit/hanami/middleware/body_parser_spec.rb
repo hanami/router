@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "hanami/middleware/body_parser"
 require "hanami/middleware/body_parser/json_parser"
 

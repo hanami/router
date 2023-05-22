@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Hanami
   class Router
     # Represents a result of router path recognition.

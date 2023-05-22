@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "hanami/router/formatter/human_friendly"
 
 module Hanami

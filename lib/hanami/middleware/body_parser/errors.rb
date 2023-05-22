@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "hanami/middleware/error"
 
 module Hanami

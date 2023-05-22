@@ -250,8 +250,6 @@ It comes with a built-in JSON parser and allows to pass custom parsers.
 #### JSON Parsing
 
 ```ruby
-# frozen_string_literal: true
-
 require "hanami/router"
 require "hanami/middleware/body_parser"
 
@@ -286,8 +284,6 @@ If you want to use a different JSON backend, include `multi_json` in your `Gemfi
 #### Custom Parsers
 
 ```ruby
-# frozen_string_literal: true
-
 require "hanami/router"
 require "hanami/middleware/body_parser"
 
@@ -326,8 +322,6 @@ curl http://localhost:2300/authors/1 \
 ## Testing
 
 ```ruby
-# frozen_string_literal: true
-
 require "hanami/router"
 
 router = Hanami::Router.new do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "hanami/middleware/trie"
 
 RSpec.describe Hanami::Middleware::Trie do

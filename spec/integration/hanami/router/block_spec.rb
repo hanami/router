@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rack/mock"
 
 RSpec.describe Hanami::Router do

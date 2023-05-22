@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Hanami::Router::Route do
   describe "#inspect_to" do
     context "when it's a String" do

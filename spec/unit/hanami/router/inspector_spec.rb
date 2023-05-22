@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "hanami/router/inspector"
 
 RSpec.describe Hanami::Router::Inspector do

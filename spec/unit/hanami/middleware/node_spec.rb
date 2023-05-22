@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "hanami/middleware/node"
 
 RSpec.describe Hanami::Middleware::Node do

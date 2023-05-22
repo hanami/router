@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Hanami::Router do
   describe "#recognize" do
     let(:router) do

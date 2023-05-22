@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.xdescribe "Inspector nested resources" do
   before do
     @router = Hanami::Router.new(namespace: Nested::Controllers) do

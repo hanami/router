@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Pass on response" do
   let(:app) { Rack::MockRequest.new(routes) }
   let(:routes) do
