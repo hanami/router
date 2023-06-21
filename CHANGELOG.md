@@ -2,6 +2,13 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.1.0.beta1
+
+### Changed
+
+- [Tim Riley] Accept `not_allowed_proc:` argument when initializing `Hanami::Router`. This allows
+  customisation of the `not_allowed` behavior like for `not_found` (#259)
+
 ## v2.0.2 - 2022-12-25
 
 ### Added
