@@ -115,7 +115,7 @@ module Hanami
         # @api private
         # @since 1.3.0
         def classify(parser)
-          parser.to_s.split(/_/).map(&:capitalize).join
+          parser.to_s.split("_").map(&:capitalize).join
         end
 
         # @api private

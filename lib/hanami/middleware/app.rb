@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rack/builder"
-require_relative "./trie"
+require_relative "trie"
 
 module Hanami
   module Middleware

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./node"
+require_relative "node"
 
 module Hanami
   module Middleware
@@ -61,7 +61,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       def for_each_segment(path, &blk)
-        _, *segments = path.split(/\//)
+        _, *segments = path.split("/")
         segments.each(&blk)
       end
     end

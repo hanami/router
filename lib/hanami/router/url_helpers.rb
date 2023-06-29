@@ -2,7 +2,7 @@
 
 require "hanami/router/errors"
 require "mustermann/error"
-require_relative "./prefix"
+require_relative "prefix"
 
 module Hanami
   class Router
