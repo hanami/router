@@ -2,6 +2,8 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.1.0.rc1 - 2023-11-02
+
 ## v2.1.0.beta1 - 2023-06-29
 
 ### Added
