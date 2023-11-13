@@ -23,8 +23,6 @@ module Hanami
 
         # Parse a multipart body payload (form file uploading)
         #
-        # @param body [String] a multipart body
-        #
         # @return [Hash] the parsed multipart body
         #
         # @raise [Hanami::Middleware::BodyParser::BodyParsingError] when the body can't be parsed.
