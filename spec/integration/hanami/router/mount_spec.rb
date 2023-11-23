@@ -9,8 +9,7 @@ RSpec.describe Hanami::Router do
       mount Backend::App,                  at: "/backend"
       mount ->(*) { [200, {"Content-Length" => "4"}, ["proc"]] }, at: "/proc"
       mount ->(*) { [200, {"Content-Length" => "8"}, ["trailing"]] }, at: "/trailing/"
-
-      get "/*any", to: ->(*) { [200, {"Content-Length" => "4"}, ["home"]] }
+      mount Api::App.new, at: "/"
     end
   end
 
@@ -38,6 +37,10 @@ RSpec.describe Hanami::Router do
     it "returns 404 when is requested and the app cannot find the resource" do
       expect(app.request(verb.upcase, "/api/unknown", lint: true).status).to eq(404)
     end
+
+    it "accepts paths for mounted apps at the root" do
+      expect(app.request(verb.upcase, "/articles", lint: true).body).to eq(body_for("articles", verb))
+    end
   end
 
   RSpec::Support::HTTP.mountable_verbs.each do |http_verb|
@@ -57,6 +60,13 @@ RSpec.describe Hanami::Router do
   end
 
   context "glob routes" do
+    let(:router) do
+      Hanami::Router.new do
+        mount Api::App.new, at: "/api"
+
+        get "/*any", to: ->(*) { [200, {"Content-Length" => "4"}, ["home"]] }
+      end
+    end
     let(:app) { Rack::MockRequest.new(router) }
 
     it "falls back to glob" do
