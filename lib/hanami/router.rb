@@ -20,6 +20,8 @@ module Hanami
     require "hanami/router/block"
     require "hanami/router/route"
     require "hanami/router/url_helpers"
+    require "hanami/router/globbed_path"
+    require "hanami/router/mounted_path"
 
     # URL helpers for other Hanami integrations
     #
@@ -84,8 +86,7 @@ module Hanami
       @block_context = block_context
       @fixed = {}
       @variable = {}
-      @globbed = {}
-      @mounted = {}
+      @globs_and_mounts = []
       @blk = blk
       @inspector = inspector
       instance_eval(&blk) if blk
@@ -424,7 +425,7 @@ module Hanami
       path = prefixed_path(at)
       prefix = Segment.fabricate(path, **constraints)
 
-      @mounted[prefix] = @resolver.call(path, app)
+      @globs_and_mounts << MountedPath.new(prefix, @resolver.call(path, app))
       if inspect?
         @inspector.add_route(Route.new(http_method: "*", path: at, to: app, constraints: constraints))
       end
@@ -619,33 +620,12 @@ module Hanami
       @variable[env[::Rack::REQUEST_METHOD]]&.find(env[::Rack::PATH_INFO])
     end
 
-    # @since 2.0.0
+    # @since 2.1.0
     # @api private
-    def globbed(env)
-      @globbed[env[::Rack::REQUEST_METHOD]]&.each do |path, to|
-        if (match = path.match(env[::Rack::PATH_INFO]))
-          return [to, match.named_captures]
-        end
-      end
-
-      nil
-    end
-
-    # @since 2.0.0
-    # @api private
-    def mounted(env)
-      @mounted.each do |prefix, app|
-        next unless (match = prefix.peek_match(env[::Rack::PATH_INFO]))
-
-        if prefix.to_s == "/"
-          env[::Rack::SCRIPT_NAME] = EMPTY_STRING
-        else
-          env[::Rack::SCRIPT_NAME] = env[::Rack::SCRIPT_NAME].to_s + prefix.to_s
-          env[::Rack::PATH_INFO] = env[::Rack::PATH_INFO].sub(prefix.to_s, EMPTY_STRING)
-          env[::Rack::PATH_INFO] = DEFAULT_PREFIX if env[::Rack::PATH_INFO] == EMPTY_STRING
-        end
-
-        return [app, match.named_captures]
+    def globbed_or_mounted(env)
+      @globs_and_mounts.each do |path|
+        result = path.endpoint_and_params(env)
+        return result unless result.empty?
       end
 
       nil
@@ -802,7 +782,7 @@ module Hanami
       endpoint = fixed(env)
       return [endpoint, {}] if endpoint
 
-      variable(env) || mounted(env) || globbed(env)
+      variable(env) || globbed_or_mounted(env)
     end
 
     # @since 2.0.0
@@ -845,8 +825,7 @@ module Hanami
     # @since 2.0.0
     # @api private
     def add_globbed_route(http_method, path, to, constraints)
-      @globbed[http_method] ||= []
-      @globbed[http_method] << [Segment.fabricate(path, **constraints), to]
+      @globs_and_mounts << GlobbedPath.new(http_method, Segment.fabricate(path, **constraints), to)
     end
 
     # @since 2.0.0
