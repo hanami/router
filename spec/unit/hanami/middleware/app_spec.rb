@@ -7,7 +7,7 @@ RSpec.describe Hanami::Middleware::App do
   subject { described_class.new(app, mapping) }
 
   let(:app) { Hanami::Router.new { root { "OK" } } }
-  let(:mapping) { {"/" => [], "/admin" => [[authentication, [], nil]]} }
+  let(:mapping) { {"/" => [], "/admin" => [[authentication, [], {}, nil]]} }
   let(:authentication) do
     Class.new do
       def self.inspect

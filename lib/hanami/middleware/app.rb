@@ -21,8 +21,8 @@ module Hanami
         mapping.each do |path, stack|
           builder = Rack::Builder.new
 
-          stack.each do |middleware, args, blk|
-            builder.use(middleware, *args, &blk)
+          stack.each do |middleware, args, kwargs, blk|
+            builder.use(middleware, *args, **kwargs, &blk)
           end
 
           builder.run(router)
