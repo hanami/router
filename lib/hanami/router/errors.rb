@@ -78,7 +78,7 @@ module Hanami
       # @since 0.5.0
       # @api private
       def initialize(env)
-        super %(Cannot find routable endpoint for: #{env[::Rack::REQUEST_METHOD]} #{env[::Rack::PATH_INFO]})
+        super(%(Cannot find routable endpoint for: #{env[::Rack::REQUEST_METHOD]} #{env[::Rack::PATH_INFO]}))
       end
     end
   end

@@ -918,7 +918,7 @@ module Hanami
         inspector: @inspector
       }
 
-      self.class.new(**options.merge(new_options), &(blk || @blk))
+      self.class.new(**options.merge(new_options), &blk || @blk)
     end
 
     # @since 2.0.0
