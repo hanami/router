@@ -72,5 +72,22 @@ RSpec.describe Hanami::Router do
     it "falls back to glob" do
       expect(app.request("GET", "/foo", lint: true).status).to eq(200)
     end
+
+    context "with more-specific glob before root-level mount" do
+      let(:router) do
+        Hanami::Router.new do
+          get "/home/*any", to: ->(*) { [200, {"Content-Length" => "4"}, ["home"]] }
+
+          mount Api::App.new, at: "/"
+        end
+      end
+
+      it "respects the glob" do
+        response = app.request("GET", "/home/foo", lint: true)
+
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("home")
+      end
+    end
   end
 end
