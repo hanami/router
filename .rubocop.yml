@@ -20,3 +20,5 @@ Style/RescueStandardError:
 Style/CommentedKeyword:
   Exclude:
     - "spec/**/*.rb"
+Style/RedundantParentheses:
+  Enabled: false

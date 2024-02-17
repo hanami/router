@@ -7,19 +7,21 @@ RSpec.describe Hanami::Middleware::App do
   subject { described_class.new(app, mapping) }
 
   let(:app) { Hanami::Router.new { root { "OK" } } }
-  let(:mapping) { {"/" => [], "/admin" => [[authentication, [], nil]]} }
+  let(:mapping) { {"/" => [], "/admin" => [[authentication, ["arg"], {kwarg: "kwarg"}, nil]]} }
   let(:authentication) do
     Class.new do
       def self.inspect
         "<Middleware::Auth>"
       end
 
-      def initialize(app)
+      def initialize(app, arg, kwarg:)
         @app = app
+        @arg = arg
+        @kwarg = kwarg
       end
 
       def call(env)
-        env["AUTH_USER_ID"] = user_id = "23"
+        env["AUTH_USER_ID"] = user_id = "23 #{@arg} #{@kwarg}"
         status, headers, body = @app.call(env)
         headers["X-Auth-User-ID"] = user_id
 
@@ -46,7 +48,7 @@ RSpec.describe Hanami::Middleware::App do
       env = Rack::MockRequest.env_for("/admin")
       _, headers, _ = subject.call(env)
 
-      expect(headers).to have_key("X-Auth-User-ID")
+      expect(headers["X-Auth-User-ID"]).to eq "23 arg kwarg"
     end
   end
 
