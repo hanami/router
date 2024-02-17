@@ -58,7 +58,7 @@ RSpec.describe Hanami::Router::MountedPath do
         expect(env[Rack::PATH_INFO]).to eq("/orders")
       end
 
-      it "uses a slahs for the PATH_INFO if it would otherwise be empty" do
+      it "uses a slash for the PATH_INFO if it would otherwise be empty" do
         env.merge!(Rack::PATH_INFO => "/api")
 
         subject.endpoint_and_params(env)
