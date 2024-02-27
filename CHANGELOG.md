@@ -2,6 +2,17 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.1.0 - 2024-02-27
+
+### Fixed
+
+- [Pat Allan] Fix PATH_INFO and SCRIPT_NAME for Rack apps mounted at the root (keep the leading slash in PATH_INFO, and set SCRIPT_NAME to a blank string)
+- [Pat Allan] Process glob routes and mounted apps together, so that the routes can be handled in the user-specified order (previously, a root-mounted app would handle routes even if matching globs were declared earlier)
+
+### Changed
+
+- [Pat Allan] Pass keyword args through to middleware
+
 ## v2.1.0.rc3 - 2024-02-16
 
 ## v2.1.0.rc2 - 2023-11-08
