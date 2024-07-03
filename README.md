@@ -1,34 +1,26 @@
 # Hanami::Router
 
-Rack compatible, lightweight and fast HTTP Router for Ruby and [Hanami](http://hanamirb.org).
-
-## Version
-
-**This branch contains the code for `hanami-router` 2.x.**
+Rack compatible, lightweight, and fast HTTP Router for Ruby and [Hanami](http://hanamirb.org).
 
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-router.svg)](https://badge.fury.io/rb/hanami-router)
-[![CI](https://github.com/hanami/router/workflows/ci/badge.svg?branch=main)](https://github.com/hanami/router/actions?query=workflow%3Aci+branch%3Amain)
+[![CI](https://github.com/hanami/router/actions/workflows/ci.yml/badge.svg)](https://github.com/hanami/router/actions?query=workflow%3Aci+branch%3Amain)
 [![Test Coverage](https://codecov.io/gh/hanami/router/branch/main/graph/badge.svg)](https://codecov.io/gh/hanami/router)
 [![Depfu](https://badges.depfu.com/badges/5f6b8e8fa3b0d082539f0b0f84d55960/overview.svg)](https://depfu.com/github/hanami/router?project=Bundler)
-[![Inline Docs](http://inch-ci.org/github/hanami/router.svg)](http://inch-ci.org/github/hanami/router)
 
 ## Contact
 
 * Home page: http://hanamirb.org
 * Mailing List: http://hanamirb.org/mailing-list
-* API Doc: http://rdoc.info/gems/hanami-router
+* API Doc: http://rubydoc.info/gems/hanami-router
 * Bugs/Issues: https://github.com/hanami/router/issues
-* Support: http://stackoverflow.com/questions/tagged/hanami
 * Chat: http://chat.hanamirb.org
-
-## Rubies
-
-__Hanami::Router__ supports Ruby (MRI) 3.0+
 
 
 ## Installation
+
+__Hanami::Router__ supports Ruby (MRI) 3.1.+
 
 Add this line to your application's Gemfile:
 
@@ -365,4 +357,4 @@ __Hanami::Router__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Copyright
 
-Copyright © 2014 Hanami Team – Released under MIT License
+Copyright © 2014–2024 Hanami Team – Released under MIT License
