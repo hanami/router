@@ -256,6 +256,22 @@ RSpec.describe Hanami::Router do
       end
     end
 
+    describe "variable and variable with fixed" do
+      let(:router) do
+        described_class.new do
+          get "/:foo",     as: :variable_one, to: RecognitionTestCase.endpoint("variable_one")
+          get "/:bar/baz", as: :variable_two, to: RecognitionTestCase.endpoint("variable_two")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:variable_one, "/one", {foo: "one"}],
+          [:variable_two, "/two/baz", {bar: "two"}],
+        ])
+      end
+    end
+
     describe "relative variable with constraints" do
       let(:router) do
         described_class.new do
