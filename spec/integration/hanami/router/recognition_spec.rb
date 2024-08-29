@@ -256,11 +256,27 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    describe "variable and variable with fixed" do
+    describe "variable followed by variable with fixed with different slug names" do
       let(:router) do
         described_class.new do
           get "/:foo",     as: :variable_one, to: RecognitionTestCase.endpoint("variable_one")
           get "/:bar/baz", as: :variable_two, to: RecognitionTestCase.endpoint("variable_two")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:variable_one, "/one", {foo: "one"}],
+          [:variable_two, "/two/baz", {bar: "two"}],
+        ])
+      end
+    end
+
+    describe "variable with fixed followed by variable with different slug names" do
+      let(:router) do
+        described_class.new do
+          get "/:bar/baz", as: :variable_two, to: RecognitionTestCase.endpoint("variable_two")
+          get "/:foo",     as: :variable_one, to: RecognitionTestCase.endpoint("variable_one")
         end
       end
 
