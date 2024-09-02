@@ -21,33 +21,26 @@ module Hanami
 
       # @api private
       # @since 2.0.0
-      def add(path, to, constraints)
+      def add(route, to, constraints)
+        segments = split(route)
         node = @root
-        for_each_segment(path) do |segment|
-          node = node.put(segment, constraints)
+
+        segments.each do |segment|
+          node = node.put(segment)
         end
 
-        node.leaf!(to)
+        node.leaf!(route, to, constraints)
       end
 
       # @api private
       # @since 2.0.0
       def find(path)
+        segments = split(path)
         node = @root
-        params = {}
 
-        for_each_segment(path) do |segment|
-          break unless node
+        return unless segments.all? { |segment| node = node.get(segment) }
 
-          child, captures = node.get(segment)
-          params.merge!(captures) if captures
-
-          node = child
-        end
-
-        return [node.to, params] if node&.leaf?
-
-        nil
+        node.match(path)&.then { |found| [found.to, found.params] }
       end
 
       private
@@ -58,10 +51,11 @@ module Hanami
       private_constant :SEGMENT_SEPARATOR
 
       # @api private
-      # @since 2.0.0
-      def for_each_segment(path, &blk)
+      # @since 2.1.1
+      def split(path)
         _, *segments = path.split(SEGMENT_SEPARATOR)
-        segments.each(&blk)
+
+        segments
       end
     end
   end
