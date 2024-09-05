@@ -91,7 +91,7 @@ RSpec.describe Hanami::Router::Node do
           segment = ":foo"
           route = "/:foo"
           to = double("to")
-          constraints = { foo: :digit }
+          constraints = {foo: :digit}
           path = "/bar"
           subject.put(segment).leaf!(route, to, constraints)
 
@@ -104,7 +104,7 @@ RSpec.describe Hanami::Router::Node do
           segment = ":foo"
           route = "/:foo"
           to = double("to")
-          constraints = { foo: :digit }
+          constraints = {foo: :digit}
           path = "/123"
           subject.put(segment).leaf!(route, to, constraints)
 

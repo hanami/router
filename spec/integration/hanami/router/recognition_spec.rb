@@ -267,7 +267,7 @@ RSpec.describe Hanami::Router do
       it "recognizes route(s)" do
         runner.run!([
           [:variable_one, "/one", {foo: "one"}],
-          [:variable_two, "/two/baz", {bar: "two"}],
+          [:variable_two, "/two/baz", {bar: "two"}]
         ])
       end
     end
@@ -283,7 +283,7 @@ RSpec.describe Hanami::Router do
       it "recognizes route(s)" do
         runner.run!([
           [:variable_one, "/one", {foo: "one"}],
-          [:variable_two, "/two/baz", {bar: "two"}],
+          [:variable_two, "/two/baz", {bar: "two"}]
         ])
       end
     end

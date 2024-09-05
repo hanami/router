@@ -59,7 +59,7 @@ RSpec.describe Hanami::Router::Trie do
     let(:bar) { double("bar") }
     let(:baz) { double("baz") }
     let(:foo_constraints) { {foo: :digit} }
-    let(:empty_constraints) { {} } 
+    let(:empty_constraints) { {} }
 
     it "matches path with variable segment and matching constraints" do
       to, params = subject.find("/123")

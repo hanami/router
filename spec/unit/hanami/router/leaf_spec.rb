@@ -13,16 +13,16 @@ RSpec.describe Hanami::Router::Leaf do
       expect(subject).to be_kind_of(described_class)
     end
   end
-  
+
   describe "#to" do
     it "returns the endpoint passed as 'to' when initialized" do
       expect(subject.to).to eq(to)
     end
   end
-  
+
   describe "#match" do
     context "when path matches route" do
-      let(:matching_path)    { route }
+      let(:matching_path) { route }
 
       it "returns true" do
         expect(subject.match(matching_path)).to be_truthy
