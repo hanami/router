@@ -22,7 +22,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       def add(route, to, constraints)
-        segments = split(route)
+        segments = segments_from(route)
         node = @root
 
         segments.each do |segment|
@@ -35,7 +35,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       def find(path)
-        segments = split(path)
+        segments = segments_from(path)
         node = @root
 
         return unless segments.all? { |segment| node = node.get(segment) }
@@ -52,7 +52,7 @@ module Hanami
 
       # @api private
       # @since 2.1.1
-      def split(path)
+      def segments_from(path)
         _, *segments = path.split(SEGMENT_SEPARATOR)
 
         segments
