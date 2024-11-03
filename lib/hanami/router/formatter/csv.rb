@@ -37,7 +37,7 @@ module Hanami
         # @api private
         # @since 2.0.0
         def call(routes, **csv_opts)
-          ::CSV.generate(**DEFAULT_OPTIONS.merge(csv_opts)) do |csv|
+          ::CSV.generate(**DEFAULT_OPTIONS, **csv_opts) do |csv|
             csv << HEADERS if csv.write_headers?
             routes.reduce(csv) do |acc, route|
               route.head? ? acc : acc << row(route)
