@@ -2,21 +2,10 @@ name: ci
 
 on:
   push:
-    paths:
-      - ".github/workflows/ci.yml"
-      - "lib/**"
-      - "*.gemspec"
-      - "spec/**"
-      - "Rakefile"
-      - "Gemfile"
-      - ".rubocop.yml"
-      - "script/ci"
   pull_request:
-    branches:
-      - main
+  create:
   schedule:
     - cron: "30 4 * * *"
-  create:
 
 jobs:
   tests:
@@ -39,3 +28,11 @@ jobs:
           bundler-cache: true # 'bundle install' and cache gems
       - name: Run all tests
         run: script/ci
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
