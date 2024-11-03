@@ -10,3 +10,4 @@ unless ENV["CI"]
 end
 
 gem "hanami-devtools", github: "hanami/devtools", branch: "main"
+gem "rexml"
