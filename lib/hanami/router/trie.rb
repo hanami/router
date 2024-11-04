@@ -51,7 +51,7 @@ module Hanami
       private_constant :SEGMENT_SEPARATOR
 
       # @api private
-      # @since 2.1.1
+      # @since 2.2.0
       def segments_from(path)
         _, *segments = path.split(SEGMENT_SEPARATOR)
 

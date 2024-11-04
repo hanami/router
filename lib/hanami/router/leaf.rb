@@ -8,11 +8,11 @@ module Hanami
       # Trie Leaf
       #
       # @api private
-      # @since 2.1.1
+      # @since 2.2.0
       attr_reader :to, :params
 
       # @api private
-      # @since 2.1.1
+      # @since 2.2.0
       def initialize(route, to, constraints)
         @route = route
         @to = to
@@ -21,7 +21,7 @@ module Hanami
       end
 
       # @api private
-      # @since 2.1.1
+      # @since 2.2.0
       def match(path)
         match = matcher.match(path)
 
@@ -33,7 +33,7 @@ module Hanami
       private
 
       # @api private
-      # @since 2.1.1
+      # @since 2.2.0
       def matcher
         @matcher ||= Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
       end

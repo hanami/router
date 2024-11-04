@@ -46,7 +46,7 @@ module Hanami
       end
 
       # @api private
-      # @since 2.1.1
+      # @since 2.2.0
       def match(path)
         @leaves&.find { |leaf| leaf.match(path) }
       end
