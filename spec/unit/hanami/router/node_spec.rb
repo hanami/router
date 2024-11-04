@@ -10,13 +10,6 @@ RSpec.describe Hanami::Router::Node do
     end
   end
 
-  describe "#put" do
-    it "adds a node matching segment" do
-      segment = "foo"
-      subject.put(segment)
-    end
-  end
-
   describe "#get" do
     context "when segment is found" do
       context "and segment is fixed" do
@@ -45,15 +38,6 @@ RSpec.describe Hanami::Router::Node do
 
         expect(subject.get("bar")).to be_nil
       end
-    end
-  end
-
-  describe "#leaf!" do
-    it "sets leaf data" do
-      route = "/route"
-      to = double("to")
-      constraints = {}
-      subject.leaf!(route, to, constraints)
     end
   end
 
