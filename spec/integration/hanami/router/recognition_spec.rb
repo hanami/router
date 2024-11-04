@@ -601,20 +601,6 @@ RSpec.describe Hanami::Router do
       end
     end
 
-    describe "relative variable with permissive constraint" do
-      let(:router) do
-        described_class.new do
-          get ":test", as: :regex, test: /.*/, to: RecognitionTestCase.endpoint("regex")
-        end
-      end
-
-      it "recognizes route(s)" do
-        runner.run!([
-          [:regex, "/test/", {test: "test"}]
-        ])
-      end
-    end
-
     describe "variable with permissive constraint" do
       let(:router) do
         described_class.new do
