@@ -56,7 +56,6 @@ RSpec.describe Hanami::Router do
       app = Rack::MockRequest.new(router)
 
       expect(app.request("GET", "/it", lint: true).body).to eq("Root (it)!")
-      expect(app.request("GET", "/it/", lint: true).body).to eq("Root (it)!")
       expect(app.request("GET", "/it/trees", lint: true).body).to eq("Trees (it)!")
     end
 

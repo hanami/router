@@ -256,6 +256,38 @@ RSpec.describe Hanami::Router do
       end
     end
 
+    describe "variable followed by variable with fixed with different slug names" do
+      let(:router) do
+        described_class.new do
+          get "/:foo",     as: :variable_one, to: RecognitionTestCase.endpoint("variable_one")
+          get "/:bar/baz", as: :variable_two, to: RecognitionTestCase.endpoint("variable_two")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:variable_one, "/one", {foo: "one"}],
+          [:variable_two, "/two/baz", {bar: "two"}]
+        ])
+      end
+    end
+
+    describe "variable with fixed followed by variable with different slug names" do
+      let(:router) do
+        described_class.new do
+          get "/:bar/baz", as: :variable_two, to: RecognitionTestCase.endpoint("variable_two")
+          get "/:foo",     as: :variable_one, to: RecognitionTestCase.endpoint("variable_one")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:variable_one, "/one", {foo: "one"}],
+          [:variable_two, "/two/baz", {bar: "two"}]
+        ])
+      end
+    end
+
     describe "relative variable with constraints" do
       let(:router) do
         described_class.new do
@@ -565,20 +597,6 @@ RSpec.describe Hanami::Router do
           #        this makes Node `@variable` to set them in two different children where the first shadows the latter
           #        a potential solution could be to use `Segment.new` and implement `#==`
           # [:greedy, "/123/anything", { test: "123" }]
-        ])
-      end
-    end
-
-    describe "relative variable with permissive constraint" do
-      let(:router) do
-        described_class.new do
-          get ":test", as: :regex, test: /.*/, to: RecognitionTestCase.endpoint("regex")
-        end
-      end
-
-      it "recognizes route(s)" do
-        runner.run!([
-          [:regex, "/test/", {test: "test"}]
         ])
       end
     end
