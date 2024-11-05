@@ -4,6 +4,10 @@ Rack compatible HTTP router for Ruby
 
 ## v2.2.0 - 2024-11-05
 
+### Changed
+
+- [Damian C. Rossney, Kyle Plump] Scopes with a dynamic segment (e.g. `scope ":locale" do`) and containing a `root` route will no longer match the root route for requests with a trailing slash. This makes the behavior consistent with scopes using static strings. (#273)
+
 ### Fixed
 
 - [Damian C. Rossney, Kyle Plump] Support paths with different variable names in same path location (#273)
