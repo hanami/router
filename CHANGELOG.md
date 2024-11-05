@@ -2,6 +2,12 @@
 
 Rack compatible HTTP router for Ruby
 
+## v2.2.0 - 2024-11-05
+
+### Fixed
+
+- [Damian C. Rossney, Kyle Plump] Support paths with different variable names in same path location (#273)
+
 ## v2.2.0.rc1 - 2024-10-29
 
 ## v2.2.0.beta2 - 2024-09-25
