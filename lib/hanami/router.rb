@@ -739,7 +739,7 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = "Location"
+    HTTP_HEADER_LOCATION = "location"
 
     # @since 2.0.0
     # @api private
@@ -762,7 +762,7 @@ module Hanami
         HTTP_STATUS_NOT_ALLOWED,
         {
           ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
-          "Allow" => allowed_http_methods.join(", ")
+          "allow" => allowed_http_methods.join(", ")
         },
         [HTTP_BODY_NOT_ALLOWED]
       ]
@@ -774,7 +774,7 @@ module Hanami
     # @since 2.0.0
     NOT_FOUND = ->(*) {
       [HTTP_STATUS_NOT_FOUND, {::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_FOUND_LENGTH}, [HTTP_BODY_NOT_FOUND]]
-    }.freeze
+    }
 
     # @since 2.0.0
     # @api private
