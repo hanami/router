@@ -13,7 +13,7 @@ RSpec.describe Hanami::Router do
       status, headers, = router.call(env)
 
       expect(status).to eq(301)
-      expect(headers["Location"]).to eq("/redirect_destination")
+      expect(headers["location"]).to eq("/redirect_destination")
     end
 
     it "recognizes string endpoint with custom http code" do
@@ -27,7 +27,7 @@ RSpec.describe Hanami::Router do
       status, headers, = router.call(env)
 
       expect(status).to eq(302)
-      expect(headers["Location"]).to eq("/redirect_destination")
+      expect(headers["location"]).to eq("/redirect_destination")
     end
 
     it "recognizes string endpoint with absolute url" do

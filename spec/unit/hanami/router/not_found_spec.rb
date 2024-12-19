@@ -9,7 +9,7 @@ RSpec.describe Hanami::Router do
       status, headers, body = subject.call(env)
 
       expect(status).to  eq(404)
-      expect(headers).to eq("Content-Length" => "9")
+      expect(headers).to eq("content-length" => "9")
       expect(body).to    eq(["Not Found"])
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Hanami::Router do
     end
 
     context "with not_found option" do
-      let(:not_found) { ->(*) { [499, {"Content-Type" => "application/json"}, [JSON.dump({error: "not_found"})]] } }
+      let(:not_found) { ->(*) { [499, {"content-type" => "application/json"}, [JSON.dump({error: "not_found"})]] } }
       subject { described_class.new(not_found: not_found) {} }
 
       it "uses it" do
@@ -36,7 +36,7 @@ RSpec.describe Hanami::Router do
         status, headers, body = subject.call(env)
 
         expect(status).to eq(499)
-        expect(headers).to eq("Content-Type" => "application/json")
+        expect(headers).to eq("content-type" => "application/json")
         expect(body).to eq(['{"error":"not_found"}'])
       end
     end
