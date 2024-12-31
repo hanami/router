@@ -18,6 +18,7 @@ module Hanami
         @to = to
         @constraints = constraints
         @params = nil
+        @matcher = Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
       end
 
       # @api private
