@@ -147,7 +147,7 @@ RSpec.describe "Params" do
       "CONTENT_TYPE" => "multipart/form-data; boundary=#{boundary}",
       "CONTENT_LENGTH" => data.length.to_s,
       method: "POST",
-      :input => StringIO.new(data)
+      :input => Rack::RewindableInput.new(StringIO.new(data))
     )
 
     [env, File.binread(path)]

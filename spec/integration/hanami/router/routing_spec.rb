@@ -23,7 +23,7 @@ RSpec.describe Hanami::Router do
           end
         end
 
-        let(:app) { Rack::MockRequest.new(router) }
+        let(:app) { Rack::MockRequest.new(Rack::ContentLength.new(router)) }
 
         context "path recognition" do
           context "root trailing slash" do
@@ -175,7 +175,7 @@ RSpec.describe Hanami::Router do
 
     describe "#root" do
       context "path recognition" do
-        let(:app) { Rack::MockRequest.new(router) }
+        let(:app) { Rack::MockRequest.new(Rack::ContentLength.new(router)) }
 
         context "fixed string" do
           let(:router) do
@@ -192,7 +192,7 @@ RSpec.describe Hanami::Router do
             actual = app.request("GET", "/", lint: true)
 
             expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
+            expect(actual.original_headers).to eq(response.original_headers)
             expect(actual.body).to   eq(response.body)
           end
 
@@ -217,7 +217,7 @@ RSpec.describe Hanami::Router do
             actual = app.request("GET", "/", lint: true)
 
             expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
+            expect(actual.original_headers).to eq(response.original_headers)
             expect(actual.body).to   eq(response.body)
           end
         end
