@@ -30,6 +30,8 @@ module Hanami
         # @since 2.0.1
         # @api private
         def parse(*, env)
+          env[::Rack::RACK_INPUT].rewind if env[::Rack::RACK_INPUT].respond_to?(:rewind)
+
           ::Rack::Multipart.parse_multipart(env)
         rescue StandardError => exception
           raise BodyParsingError.new(exception.message)

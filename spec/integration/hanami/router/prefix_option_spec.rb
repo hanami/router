@@ -90,7 +90,7 @@ RSpec.describe Hanami::Router do
       status, headers, = subject.call(env)
 
       expect(status).to eq(301)
-      expect(headers["Location"]).to eq("/admin/redirect_destination")
+      expect(headers["location"]).to eq("/admin/redirect_destination")
     end
   end
 end
