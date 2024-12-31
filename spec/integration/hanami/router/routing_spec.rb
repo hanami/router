@@ -193,7 +193,7 @@ RSpec.describe Hanami::Router do
 
             expect(actual.status).to eq(response.status)
             expect(actual.original_headers).to eq(response.original_headers)
-            expect(actual.body).to   eq(response.body)
+            expect(actual.body).to eq(response.body)
           end
 
           it "recognizes by :root" do
@@ -218,7 +218,7 @@ RSpec.describe Hanami::Router do
 
             expect(actual.status).to eq(response.status)
             expect(actual.original_headers).to eq(response.original_headers)
-            expect(actual.body).to   eq(response.body)
+            expect(actual.body).to eq(response.body)
           end
         end
       end

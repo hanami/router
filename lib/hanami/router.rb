@@ -916,8 +916,9 @@ module Hanami
     def _params(env, params)
       params ||= {}
       env[PARAMS] ||= {}
+      input = Rack::RewindableInput.new(env[::Rack::RACK_INPUT]) if env[::Rack::RACK_INPUT]
 
-      if !env.key?(ROUTER_PARSED_BODY) && env[::Rack::RACK_INPUT] && (input = Rack::RewindableInput.new(env[::Rack::RACK_INPUT]))
+      if !env.key?(ROUTER_PARSED_BODY) && input
         env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
         input.rewind
         env[::Rack::RACK_INPUT] = input
