@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rack",               "~> 2.0"
   spec.add_dependency "mustermann",         "~> 3.0"
   spec.add_dependency "mustermann-contrib", "~> 3.0"
+  spec.add_dependency "csv",                "~> 3.3"
 
   spec.add_development_dependency "bundler",   ">= 1.6", "< 3"
   spec.add_development_dependency "rake",      "~> 13"

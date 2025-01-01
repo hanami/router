@@ -36,7 +36,12 @@ RSpec.describe "Body parsing" do
       response = @app.patch("/books/23", "CONTENT_TYPE" => "application/json", "rack.input" => body, lint: true)
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq(%({:published=>"true", :id=>"23"}))
+
+      if RUBY_VERSION < "3.4"
+        expect(response.body).to eq(%({:published=>"true", :id=>"23"}))
+      else
+        expect(response.body).to eq(%({published: "true", id: "23"}))
+      end
     end
 
     # See https://github.com/hanami/router/issues/124
@@ -45,7 +50,12 @@ RSpec.describe "Body parsing" do
       response = @app.patch("/books/23", "CONTENT_TYPE" => "application/json", "rack.input" => body, lint: true)
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq(%({:id=>"23"}))
+
+      if RUBY_VERSION < "3.4"
+        expect(response.body).to eq(%({:id=>"23"}))
+      else
+        expect(response.body).to eq(%({id: "23"}))
+      end
     end
 
     it "is successful (JSON as array)" do
@@ -53,7 +63,12 @@ RSpec.describe "Body parsing" do
       response = @app.patch("/books/23", "CONTENT_TYPE" => "application/json", "rack.input" => body, lint: true)
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq(%({:_=>["alpha", "beta"], :id=>"23"}))
+
+      if RUBY_VERSION < "3.4"
+        expect(response.body).to eq(%({:_=>["alpha", "beta"], :id=>"23"}))
+      else
+        expect(response.body).to eq(%({_: ["alpha", "beta"], id: "23"}))
+      end
     end
 
     # See https://github.com/hanami/utils/issues/169
@@ -62,7 +77,12 @@ RSpec.describe "Body parsing" do
       response = @app.patch("/books/23", "CONTENT_TYPE" => "application/json", "rack.input" => body, lint: true)
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq(%({:json_class=>"Foo", :id=>"23"}))
+
+      if RUBY_VERSION < "3.4"
+        expect(response.body).to eq(%({:json_class=>"Foo", :id=>"23"}))
+      else
+        expect(response.body).to eq(%({json_class: "Foo", id: "23"}))
+      end
     end
 
     it "is idempotent" do
@@ -71,7 +91,12 @@ RSpec.describe "Body parsing" do
         response = @app.patch("/books/23", "CONTENT_TYPE" => "application/json", "rack.input" => body, lint: true)
 
         expect(response.status).to eq(200)
-        expect(response.body).to eq(%({:published=>"true", :id=>"23"}))
+
+        if RUBY_VERSION < "3.4"
+          expect(response.body).to eq(%({:published=>"true", :id=>"23"}))
+        else
+          expect(response.body).to eq(%({published: "true", id: "23"}))
+        end
       end
     end
   end
@@ -82,7 +107,12 @@ RSpec.describe "Body parsing" do
       response = @app.patch("/authors/23", "CONTENT_TYPE" => "application/xml", "rack.input" => body, lint: true)
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq(%({:name=>"LG", :id=>"23"}))
+
+      if RUBY_VERSION < "3.4"
+        expect(response.body).to eq(%({:name=>"LG", :id=>"23"}))
+      else
+        expect(response.body).to eq(%({name: "LG", id: "23"}))
+      end
     end
 
     it "is successful (XML aliased mime)" do
@@ -90,7 +120,12 @@ RSpec.describe "Body parsing" do
       response = @app.patch("/authors/15", "CONTENT_TYPE" => "text/xml", "rack.input" => body, lint: true)
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq(%({:name=>"MGF", :id=>"15"}))
+
+      if RUBY_VERSION < "3.4"
+        expect(response.body).to eq(%({:name=>"MGF", :id=>"15"}))
+      else
+        expect(response.body).to eq(%({name: "MGF", id: "15"}))
+      end
     end
   end
 end
