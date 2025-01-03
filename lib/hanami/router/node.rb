@@ -18,7 +18,7 @@ module Hanami
       def initialize
         @variable = nil
         @fixed = nil
-        @leaves = nil
+        @leaves = []
       end
 
       # @api private
@@ -41,7 +41,6 @@ module Hanami
       # @api private
       # @since 2.0.0
       def leaf!(route, to, constraints)
-        @leaves ||= []
         @leaves << Leaf.new(route, to, constraints)
       end
 
