@@ -741,6 +741,10 @@ module Hanami
     # @api private
     HTTP_HEADER_LOCATION = defined?(Rack::Headers) ? 'location' : 'Location'
 
+    # @since 2.2.0
+    # @api private
+    HTTP_HEADER_ALLOW = defined?(Rack::Headers) ? 'allow' : 'Allow'
+
     # @since 2.0.0
     # @api private
     PARAMS = "router.params"
@@ -752,10 +756,6 @@ module Hanami
     # @since 2.0.0
     # @api private
     ROUTE_GLOBBED_MATCHER = /\*/
-
-    # @since 2.2.0
-    # @api private
-    HTTP_HEADER_ALLOW = defined?(Rack::Headers) ? 'allow' : 'Allow'
 
     # Default response when the route method was not allowed
     #
@@ -784,6 +784,7 @@ module Hanami
     # @api private
     def lookup(env)
       endpoint = fixed(env)
+
       return [endpoint, {}] if endpoint
 
       variable(env) || globbed_or_mounted(env)
@@ -931,6 +932,7 @@ module Hanami
       env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))
       env[PARAMS].merge!(params)
       env[PARAMS] = Params.deep_symbolize(env[PARAMS])
+
       env
     end
 

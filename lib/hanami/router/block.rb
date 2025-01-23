@@ -66,6 +66,10 @@ module Hanami
         # @since 2.0.0
         def call
           body = instance_exec(&@blk)
+
+          # explicitly set 'content-length' header
+          headers[::Rack::CONTENT_LENGTH] = body.size.to_s
+
           [status, headers, [body]]
         end
       end
