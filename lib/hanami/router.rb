@@ -101,17 +101,6 @@ module Hanami
     # @since 0.1.0
     def call(env)
       endpoint, params = lookup(env)
-      
-      if defined?(Rack::Headers)
-        headers = Rack::Headers.new
-        env.each do |k, v|
-          headers[k] = v
-        end
-
-        env = env.each_with_object({}) do |(k, v), hash|
-          hash[k] = v
-        end
-      end
 
       unless endpoint
         return not_allowed(env) || not_found(env)
@@ -754,7 +743,7 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = "location"
+    HTTP_HEADER_LOCATION = defined?(Rack::Headers) ? 'location' : 'Location'
 
     # @since 2.0.0
     # @api private
@@ -768,6 +757,10 @@ module Hanami
     # @api private
     ROUTE_GLOBBED_MATCHER = /\*/
 
+    # @since 2.2.0
+    # @api private
+    HTTP_HEADER_ALLOW = defined?(Rack::Headers) ? 'allow' : 'Allow'
+
     # Default response when the route method was not allowed
     #
     # @api private
@@ -777,7 +770,7 @@ module Hanami
         HTTP_STATUS_NOT_ALLOWED,
         {
           ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
-          "Allow" => allowed_http_methods.join(", ")
+          HTTP_HEADER_ALLOW => allowed_http_methods.join(", ")
         },
         [HTTP_BODY_NOT_ALLOWED]
       ]

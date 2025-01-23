@@ -24,7 +24,7 @@ RSpec.describe Hanami::Router do
         end
 
         let(:app) { Rack::MockRequest.new(router) }
-  
+
         # context "path recognition" do
         #   context "root trailing slash" do
         #     let(:response) { Rack::MockResponse.new(200, RSpec::Support::HTTP.headers({"Content-Length" => "14"}), "Trailing root!") }
@@ -150,7 +150,6 @@ RSpec.describe Hanami::Router do
 
             context "format string" do
               it "recognizes" do
-                p "app: #{app}"
                 expect(app.request("HEAD", "/hanami/all.json", lint: true)).to eq_response(response)
               end
             end

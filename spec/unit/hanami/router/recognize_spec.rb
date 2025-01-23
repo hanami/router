@@ -107,7 +107,7 @@ RSpec.describe Hanami::Router do
         _, headers, body = *route.call({})
 
         expect(body).to eq(["Moved Permanently"])
-        expect(headers).to eq("location" => "/")
+        expect(headers).to eq(RSpec::Support::HTTP.headers("Location" => "/"))
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(true)
@@ -221,7 +221,7 @@ RSpec.describe Hanami::Router do
         _, headers, body = *route.call({})
 
         expect(body).to eq(["Moved Permanently"])
-        expect(headers).to eq("location" => "/")
+        expect(headers).to eq(RSpec::Support::HTTP.headers("Location" => "/"))
 
         expect(route.routable?).to be(true)
         expect(route.redirect?).to be(true)

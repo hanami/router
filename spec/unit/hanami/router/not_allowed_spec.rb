@@ -101,7 +101,7 @@ RSpec.describe Hanami::Router do
     context "with not_allowed option" do
       let(:not_allowed) {
         ->(*, allowed_http_methods) {
-          [499, {"Content-Type" => "application/json"}, [JSON.dump(allowed: allowed_http_methods)]]
+          [499, RSpec::Support::HTTP.headers({"Content-Type" => "application/json"}), [JSON.dump(allowed: allowed_http_methods)]]
         }
       }
 
