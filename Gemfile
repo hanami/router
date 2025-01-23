@@ -10,4 +10,5 @@ unless ENV["CI"]
 end
 
 gem "hanami-devtools", github: "kyleplump/devtools", branch: "rack3"
+# gem "hanami-devtools", github: "hanami/devtools", branch: "main"
 gem "rexml"

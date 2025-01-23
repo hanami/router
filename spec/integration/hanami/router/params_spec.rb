@@ -142,12 +142,13 @@ RSpec.describe "Params" do
     path = fixture_path(filename)
     file = Rack::Multipart::UploadedFile.new(path)
     data = Rack::Multipart.build_multipart("file" => file)
+
     env = Rack::MockRequest.env_for(
       "/submit",
       "CONTENT_TYPE" => "multipart/form-data; boundary=#{boundary}",
       "CONTENT_LENGTH" => data.length.to_s,
       method: "POST",
-      :input => Rack::RewindableInput.new(StringIO.new(data))
+      :input => StringIO.new(data)
     )
 
     [env, File.binread(path)]

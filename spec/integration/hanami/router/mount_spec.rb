@@ -7,8 +7,8 @@ RSpec.describe Hanami::Router do
     Hanami::Router.new do
       mount Api::App.new,                  at: "/api"
       mount Backend::App,                  at: "/backend"
-      mount ->(*) { [200, {"content-length" => "4"}, ["proc"]] }, at: "/proc"
-      mount ->(*) { [200, {"content-length" => "8"}, ["trailing"]] }, at: "/trailing/"
+      mount ->(*) { [200, RSpec::Support::HTTP.headers({"Content-Length" => "4"}), ["proc"]] }, at: "/proc"
+      mount ->(*) { [200, RSpec::Support::HTTP.headers({"Content-Length" => "8"}), ["trailing"]] }, at: "/trailing/"
       mount Api::App.new, at: "/"
     end
   end
@@ -64,7 +64,7 @@ RSpec.describe Hanami::Router do
       Hanami::Router.new do
         mount Api::App.new, at: "/api"
 
-        get "/*any", to: ->(*) { [200, {"content-length" => "4"}, ["home"]] }
+        get "/*any", to: ->(*) { [200, RSpec::Support::HTTP.headers({"Content-Length" => "4"}), ["home"]] }
       end
     end
     let(:app) { Rack::MockRequest.new(router) }
@@ -76,7 +76,7 @@ RSpec.describe Hanami::Router do
     context "with more-specific glob before root-level mount" do
       let(:router) do
         Hanami::Router.new do
-          get "/home/*any", to: ->(*) { [200, {"content-length" => "4"}, ["home"]] }
+          get "/home/*any", to: ->(*) { [200, RSpec::Support::HTTP.headers({"Content-Length" => "4"}), ["home"]] }
 
           mount Api::App.new, at: "/"
         end
