@@ -18,6 +18,20 @@ module RSpec
         (mounted == requested) ||
           (mounted == "get" && requested == "head")
       end
+
+      def self.headers(expected)
+        if defined?(Rack::Headers)
+          headers = Rack::Headers.new
+
+          expected.each do |k,v|
+            headers[k] = v
+          end
+
+          headers
+        else
+          expected
+        end
+      end
     end
   end
 end

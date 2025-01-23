@@ -24,7 +24,7 @@ RSpec.describe Hanami::Router do
         status, headers, body = subject.call(env)
 
         expect(status).to  eq(405)
-        expect(headers).to eq("content-length" => "18", "allow" => "GET, HEAD")
+        expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Length" => "18", "Allow" => "GET, HEAD"))
         expect(body).to    eq(["Method Not Allowed"])
       end
 
@@ -34,7 +34,7 @@ RSpec.describe Hanami::Router do
           status, headers, body = subject.call(env)
 
           expect(status).to  eq(405)
-          expect(headers).to eq("content-length" => "18", "allow" => "POST")
+          expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Length" => "18", "Allow" => "POST"))
           expect(body).to    eq(["Method Not Allowed"])
         end
       end
@@ -45,7 +45,7 @@ RSpec.describe Hanami::Router do
           status, headers, body = subject.call(env)
 
           expect(status).to  eq(405)
-          expect(headers).to eq("content-length" => "18", "allow" => "PUT, PATCH")
+          expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Length" => "18", "Allow" => "PUT, PATCH"))
           expect(body).to    eq(["Method Not Allowed"])
         end
       end
@@ -57,7 +57,7 @@ RSpec.describe Hanami::Router do
         status, headers, body = subject.call(env)
 
         expect(status).to  eq(405)
-        expect(headers).to eq("content-length" => "18", "allow" => "GET, HEAD")
+        expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Length" => "18", "Allow" => "GET, HEAD"))
         expect(body).to    eq(["Method Not Allowed"])
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Hanami::Router do
           status, headers, body = subject.call(env)
 
           expect(status).to  eq(405)
-          expect(headers).to eq("content-length" => "18", "allow" => "POST")
+          expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Length" => "18", "Allow" => "POST"))
           expect(body).to    eq(["Method Not Allowed"])
         end
       end
@@ -78,7 +78,7 @@ RSpec.describe Hanami::Router do
           status, headers, body = subject.call(env)
 
           expect(status).to  eq(405)
-          expect(headers).to eq("content-length" => "18", "allow" => "PUT, PATCH")
+          expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Length" => "18", "Allow" => "PUT, PATCH"))
           expect(body).to    eq(["Method Not Allowed"])
         end
       end
@@ -101,7 +101,7 @@ RSpec.describe Hanami::Router do
     context "with not_allowed option" do
       let(:not_allowed) {
         ->(*, allowed_http_methods) {
-          [499, {"content-type" => "application/json"}, [JSON.dump(allowed: allowed_http_methods)]]
+          [499, {"Content-Type" => "application/json"}, [JSON.dump(allowed: allowed_http_methods)]]
         }
       }
 
@@ -116,7 +116,7 @@ RSpec.describe Hanami::Router do
         status, headers, body = subject.call(env)
 
         expect(status).to eq(499)
-        expect(headers).to eq("content-type" => "application/json")
+        expect(headers).to eq(RSpec::Support::HTTP.headers("Content-Type" => "application/json"))
         expect(body).to eq(['{"allowed":["GET","HEAD"]}'])
       end
     end
