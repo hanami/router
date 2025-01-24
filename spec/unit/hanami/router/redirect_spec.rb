@@ -12,7 +12,7 @@ RSpec.describe Hanami::Router do
       env = Rack::MockRequest.env_for("/redirect")
       status, headers, = router.call(env)
 
-      location_header = if defined?(Rack::Headers)
+      location_header = if Hanami::Router.modern_rack?
         headers.fetch("location")
       else
         headers["Location"]
@@ -32,7 +32,7 @@ RSpec.describe Hanami::Router do
       env = Rack::MockRequest.env_for("/redirect")
       status, headers, = router.call(env)
 
-      location_header = if defined?(Rack::Headers)
+      location_header = if Hanami::Router.modern_rack?
         headers.fetch("location")
       else
         headers["Location"]

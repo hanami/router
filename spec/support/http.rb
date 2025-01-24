@@ -20,7 +20,7 @@ module RSpec
       end
 
       def self.headers(expected)
-        if defined?(Rack::Headers)
+        if Hanami::Router.modern_rack?
           headers = Rack::Headers.new
 
           expected.each do |k,v|

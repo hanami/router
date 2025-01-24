@@ -22,6 +22,7 @@ module Hanami
     require "hanami/router/url_helpers"
     require "hanami/router/globbed_path"
     require "hanami/router/mounted_path"
+    require "hanami/router/rack_utils"
 
     # URL helpers for other Hanami integrations
     #
@@ -739,11 +740,11 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = defined?(Rack::Headers) ? 'location' : 'Location'
+    HTTP_HEADER_LOCATION = modern_rack? ? 'location' : 'Location'
 
     # @since 2.2.0
     # @api private
-    HTTP_HEADER_ALLOW = defined?(Rack::Headers) ? 'allow' : 'Allow'
+    HTTP_HEADER_ALLOW = modern_rack? ? 'allow' : 'Allow'
 
     # @since 2.0.0
     # @api private
