@@ -89,7 +89,7 @@ RSpec.describe Hanami::Router do
       env = Rack::MockRequest.env_for("/admin/redirect")
       status, headers, = subject.call(env)
 
-      location_header = if defined?(Rack::Headers)
+      location_header = if Hanami::Router.modern_rack?
         headers.fetch("location")
       else
         headers["Location"]
