@@ -9,16 +9,14 @@ module Hanami
       #
       # @api private
       # @since 2.2.0
-      attr_reader :to, :params
+      attr_reader :to, :params, :matcher
 
       # @api private
       # @since 2.2.0
       def initialize(route, to, constraints)
-        @route = route
         @to = to
-        @constraints = constraints
         @params = nil
-        @matcher = Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
+        @matcher = Mustermann.new(route, type: :rails, version: "5.0", capture: constraints)
       end
 
       # @api private
@@ -35,9 +33,9 @@ module Hanami
 
       # @api private
       # @since 2.2.0
-      def matcher
-        @matcher ||= Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
-      end
+      # def matcher
+      #   @matcher ||= Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
+      # end
     end
   end
 end
