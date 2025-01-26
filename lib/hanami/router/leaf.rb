@@ -28,14 +28,6 @@ module Hanami
 
         match
       end
-
-      private
-
-      # @api private
-      # @since 2.2.0
-      # def matcher
-      #   @matcher ||= Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
-      # end
     end
   end
 end
