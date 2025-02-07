@@ -2,7 +2,6 @@
 
 module Hanami
   class Router
-
     # @since 2.2.0
     # @api private
     def self.modern_rack?

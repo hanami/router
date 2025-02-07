@@ -744,11 +744,11 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = modern_rack? ? 'location' : 'Location'
+    HTTP_HEADER_LOCATION = modern_rack? ? "location" : "Location"
 
     # @since 2.2.0
     # @api private
-    HTTP_HEADER_ALLOW = modern_rack? ? 'allow' : 'Allow'
+    HTTP_HEADER_ALLOW = modern_rack? ? "allow" : "Allow"
 
     # @since 2.0.0
     # @api private
