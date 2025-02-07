@@ -923,7 +923,7 @@ module Hanami
       end
 
       env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))
-      env[PARAMS].merge!(params) unless params.empty?
+      env[PARAMS].merge!(params)
       env[PARAMS] = Params.deep_symbolize(env[PARAMS])
       env
     end

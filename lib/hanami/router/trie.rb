@@ -57,10 +57,8 @@ module Hanami
         if @segments_map[path]
           @segments_map[path]
         else
-        _, *segments = path.split(SEGMENT_SEPARATOR)
-        
-        @segments_map[path] = segments
-        segments
+            _, *segments = path.split(SEGMENT_SEPARATOR)
+            @segments_map[path] = segments
         end
       end
     end
