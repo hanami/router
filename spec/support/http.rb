@@ -23,7 +23,7 @@ module RSpec
         if Hanami::Router.modern_rack?
           headers = Rack::Headers.new
 
-          expected.each do |k,v|
+          expected.each do |k, v|
             headers[k] = v
           end
 

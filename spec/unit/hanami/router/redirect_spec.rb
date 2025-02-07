@@ -13,10 +13,10 @@ RSpec.describe Hanami::Router do
       status, headers, = router.call(env)
 
       location_header = if Hanami::Router.modern_rack?
-        headers.fetch("location")
-      else
-        headers["Location"]
-      end
+                          headers.fetch("location")
+                        else
+                          headers["Location"]
+                        end
 
       expect(status).to eq(301)
       expect(location_header).to eq("/redirect_destination")
@@ -33,10 +33,10 @@ RSpec.describe Hanami::Router do
       status, headers, = router.call(env)
 
       location_header = if Hanami::Router.modern_rack?
-        headers.fetch("location")
-      else
-        headers["Location"]
-      end
+                          headers.fetch("location")
+                        else
+                          headers["Location"]
+                        end
 
       expect(status).to eq(302)
       expect(location_header).to eq("/redirect_destination")
