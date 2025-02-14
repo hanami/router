@@ -2,6 +2,12 @@
 
 Rack compatible HTTP router for Ruby
 
+## [Unreleased]
+
+### Changed
+
+- [Sven Schwyn] Convert -, +, ~, and . to underscore in URL helper names (#280)
+
 ## v2.2.0 - 2024-11-05
 
 ### Changed
