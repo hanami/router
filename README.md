@@ -349,12 +349,17 @@ __Hanami::Router__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Contributing
 
-1. Fork it
+1. Fork this repo to your account and clone it locally (`git clone git@github.com:your-pseudo/your-cloned-repo.git`)
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+3. Install the dependencies (`bundle install`)
+4. Run tests, they should all pass (`bundle exec rake`)
+5. Make your changes & check that the tests still pass. Add some test cases if needed.
+6. Commit your changes (`git commit -am 'Add some feature'`)
+7. Push to the branch (`git push origin my-new-feature`)
+8. Create new Pull Request on Github with some context on what you're trying to fix or to improve with this contribution
+
+Thank you for contributing! 
 
 ## Copyright
 
-Copyright © 2014–2024 Hanami Team – Released under MIT License
+Copyright © 2014–2025 Hanami Team – Released under MIT License
