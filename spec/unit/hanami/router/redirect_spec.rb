@@ -18,7 +18,7 @@ RSpec.describe Hanami::Router do
 
     it "recognizes string endpoint with custom http code" do
       endpoint = ->(_env) { [200, {}, ["Redirect destination!"]] }
-      router   = Hanami::Router.new do
+      router = Hanami::Router.new do
         get "/redirect_destination", to: endpoint
         redirect "/redirect", to: "/redirect_destination", code: 302
       end
@@ -31,7 +31,7 @@ RSpec.describe Hanami::Router do
     end
 
     it "recognizes string endpoint with absolute url" do
-      router   = Hanami::Router.new do
+      router = Hanami::Router.new do
         redirect "/redirect", to: "https://hanamirb.org/"
       end
 
@@ -44,7 +44,7 @@ RSpec.describe Hanami::Router do
 
     it "recognizes string endpoint with relative path that start like an absolute url but is not" do
       endpoint = ->(_env) { [200, {}, ["Redirect destination!"]] }
-      router   = Hanami::Router.new do
+      router = Hanami::Router.new do
         get "/http:redirect_destination", to: endpoint, as: :destination
         redirect "/redirect", to: "/http:redirect_destination"
       end

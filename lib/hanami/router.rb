@@ -908,10 +908,10 @@ module Hanami
       end
 
       destination = if to.start_with?("http://") || to.start_with?("https://")
-        to
-      else
-        prefixed_path(to)
-      end
+                      to
+                    else
+                      prefixed_path(to)
+                    end
       Redirect.new(destination, code, ->(*) { [code, {HTTP_HEADER_LOCATION => destination}, [body]] })
     end
 
