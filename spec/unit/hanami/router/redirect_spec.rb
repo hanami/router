@@ -55,5 +55,17 @@ RSpec.describe Hanami::Router do
       expect(status).to eq(301)
       expect(headers["Location"]).to eq("/http:redirect_destination")
     end
+
+    it "recognizes URI endpoint" do
+      router = Hanami::Router.new do
+        redirect "/redirect", to: URI("custom://hanamirb.org/1234")
+      end
+
+      env = Rack::MockRequest.env_for("/redirect")
+      status, headers, = router.call(env)
+
+      expect(status).to eq(301)
+      expect(headers["Location"]).to eq("custom://hanamirb.org/1234")
+    end
   end
 end

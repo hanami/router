@@ -907,7 +907,9 @@ module Hanami
         raise UnknownHTTPStatusCodeError.new(code)
       end
 
-      destination = if to.start_with?("http://") || to.start_with?("https://")
+      destination = if to.is_a?(URI)
+                      to.to_s
+                    elsif to.start_with?("http://") || to.start_with?("https://")
                       to
                     else
                       prefixed_path(to)
