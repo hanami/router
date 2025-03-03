@@ -158,6 +158,7 @@ Hanami::Router.new do
   get "/redirect_destination", to: ->(env) { [200, {}, ["Redirect destination!"]] }
   redirect "/legacy",          to: "/redirect_destination"
   redirect "/learn-more",      to: "https://hanamirb.org/"
+  redirect "/chat",            to: URI("xmpp://myapp.net/")
 end
 ```
 
