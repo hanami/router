@@ -907,7 +907,13 @@ module Hanami
         raise UnknownHTTPStatusCodeError.new(code)
       end
 
-      destination = prefixed_path(to)
+      destination = if to.is_a?(URI)
+                      to.to_s
+                    elsif to.start_with?("http://") || to.start_with?("https://")
+                      to
+                    else
+                      prefixed_path(to)
+                    end
       Redirect.new(destination, code, ->(*) { [code, {HTTP_HEADER_LOCATION => destination}, [body]] })
     end
 
