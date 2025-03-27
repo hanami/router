@@ -47,7 +47,7 @@ module Hanami
 
       # @api private
       # @since 2.0.0
-      SEGMENT_SEPARATOR = /\//
+      SEGMENT_SEPARATOR = "/"
       private_constant :SEGMENT_SEPARATOR
 
       # @api private
