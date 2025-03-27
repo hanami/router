@@ -693,6 +693,10 @@ module Hanami
     # @api private
     PREFIXED_NAME_SEPARATOR = "_"
 
+    # @since x.x.x
+    # @api private
+    UNDERSCORED_NAME_REGEXP = /[\-+~.]/
+
     # @since 2.0.0
     # @api private
     ROOT_PATH = "/"
@@ -800,7 +804,7 @@ module Hanami
       end
 
       if as
-        as = prefixed_name(as)
+        as = prefixed_underscored_name(as)
         add_named_route(path, as, constraints)
       end
 
@@ -872,10 +876,13 @@ module Hanami
       @path_prefix.join(path).to_s
     end
 
-    # @since 2.0.0
+    # @since x.x.x
     # @api private
-    def prefixed_name(name)
-      @name_prefix.relative_join(name, PREFIXED_NAME_SEPARATOR).to_sym
+    def prefixed_underscored_name(name)
+      @name_prefix
+        .relative_join(name, PREFIXED_NAME_SEPARATOR)
+        .gsub(UNDERSCORED_NAME_REGEXP, "_")
+        .to_sym
     end
 
     # Returns a new instance of Hanami::Router with the modified options.

@@ -9,6 +9,9 @@ RSpec.describe Hanami::Router do
       get "/books/:id", id: /\d+/, to: e, as: :constraints
       get "/articles(.:format)",   to: e, as: :optional
       get "/files/*glob",          to: e, as: :glob
+      scope "/a-b+c~d.e" do
+        get "/hanami", to: e, as: :scoped
+      end
     end
   end
 
@@ -45,6 +48,10 @@ RSpec.describe Hanami::Router do
 
     it "escapes additional params in query string" do
       expect(router.url(:fixed, return_to: "/dashboard")).to eq(URI("#{base_url}/hanami?return_to=%2Fdashboard"))
+    end
+
+    it "prefixes the scope using underscores" do
+      expect(router.url(:a_b_c_d_e_scoped)).to eq(URI("#{base_url}/a-b+c~d.e/hanami"))
     end
 
     # FIXME: should preserve this behavior?
