@@ -22,6 +22,7 @@ module Hanami
     require "hanami/router/url_helpers"
     require "hanami/router/globbed_path"
     require "hanami/router/mounted_path"
+    require "hanami/router/rack_utils"
 
     # URL helpers for other Hanami integrations
     #
@@ -743,7 +744,11 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = "Location"
+    HTTP_HEADER_LOCATION = modern_rack? ? "location" : "Location"
+
+    # @since 2.2.0
+    # @api private
+    HTTP_HEADER_ALLOW = modern_rack? ? "allow" : "Allow"
 
     # @since 2.0.0
     # @api private
@@ -766,7 +771,7 @@ module Hanami
         HTTP_STATUS_NOT_ALLOWED,
         {
           ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
-          "Allow" => allowed_http_methods.join(", ")
+          HTTP_HEADER_ALLOW => allowed_http_methods.join(", ")
         },
         [HTTP_BODY_NOT_ALLOWED]
       ]
@@ -778,12 +783,13 @@ module Hanami
     # @since 2.0.0
     NOT_FOUND = ->(*) {
       [HTTP_STATUS_NOT_FOUND, {::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_FOUND_LENGTH}, [HTTP_BODY_NOT_FOUND]]
-    }.freeze
+    }
 
     # @since 2.0.0
     # @api private
     def lookup(env)
       endpoint = fixed(env)
+
       return [endpoint, {}] if endpoint
 
       variable(env) || globbed_or_mounted(env)
@@ -929,15 +935,18 @@ module Hanami
     def _params(env, params)
       params ||= {}
       env[PARAMS] ||= {}
+      input = Rack::RewindableInput.new(env[::Rack::RACK_INPUT]) if env[::Rack::RACK_INPUT]
 
-      if !env.key?(ROUTER_PARSED_BODY) && (input = env[::Rack::RACK_INPUT]) and input.rewind
+      if !env.key?(ROUTER_PARSED_BODY) && input
         env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
         input.rewind
+        env[::Rack::RACK_INPUT] = input
       end
 
       env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))
       env[PARAMS].merge!(params)
       env[PARAMS] = Params.deep_symbolize(env[PARAMS])
+
       env
     end
 
