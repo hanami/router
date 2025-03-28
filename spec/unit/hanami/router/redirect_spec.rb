@@ -13,7 +13,7 @@ RSpec.describe Hanami::Router do
       status, headers, = router.call(env)
 
       location_header = if Hanami::Router.modern_rack?
-                          headers.fetch("location")
+                          headers["location"]
                         else
                           headers["Location"]
                         end
