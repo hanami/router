@@ -19,7 +19,7 @@ module RSpec
           (mounted == "get" && requested == "head")
       end
 
-      def self.headers(expected)
+      def self.headers(headers_hash)
         if Hanami::Router.modern_rack?
           headers = Rack::Headers.new
 
