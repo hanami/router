@@ -4,7 +4,7 @@ module Hanami
   class Router
     # @since 2.2.0
     # @api private
-    def self.modern_rack?
+    def self.rack_3?
       defined?(Rack::Headers)
     end
   end
