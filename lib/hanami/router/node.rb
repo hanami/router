@@ -23,8 +23,9 @@ module Hanami
 
       # @api private
       # @since 2.0.0
-      def put(segment)
+      def put(segment, param_keys)
         if variable?(segment)
+          param_keys << segment
           @variable ||= self.class.new
         else
           @fixed ||= {}
@@ -34,21 +35,26 @@ module Hanami
 
       # @api private
       # @since 2.0.0
-      def get(segment)
-        @fixed&.fetch(segment, nil) || @variable
+      def get(segment, param_values)
+        fixed = @fixed&.fetch(segment, nil)
+        return fixed if fixed
+
+        param_values << segment
+
+        @variable
       end
 
       # @api private
       # @since 2.0.0
-      def leaf!(route, to, constraints)
+      def leaf!(param_keys, to, constraints)
         @leaves ||= []
-        @leaves << Leaf.new(route, to, constraints)
+        @leaves << Leaf.new(param_keys, to, constraints)
       end
 
       # @api private
       # @since 2.2.0
-      def match(path)
-        @leaves&.find { |leaf| leaf.match(path) }
+      def match(param_values)
+        @leaves&.find { |leaf| leaf.match(param_values) }
       end
 
       private
