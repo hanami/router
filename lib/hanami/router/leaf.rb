@@ -13,8 +13,8 @@ module Hanami
 
       # @api private
       # @since 2.2.0
-      def initialize(route, to, constraints)
-        @route = route
+      def initialize(param_keys, to, constraints)
+        @param_keys = param_keys.map { |key| key[1..] }.freeze
         @to = to
         @constraints = constraints
         @params = nil
@@ -22,20 +22,8 @@ module Hanami
 
       # @api private
       # @since 2.2.0
-      def match(path)
-        match = matcher.match(path)
-
-        @params = match.named_captures if match
-
-        match
-      end
-
-      private
-
-      # @api private
-      # @since 2.2.0
-      def matcher
-        @matcher ||= Mustermann.new(@route, type: :rails, version: "5.0", capture: @constraints)
+      def match(param_values)
+        @params = @param_keys.zip(param_values).to_h
       end
     end
   end
