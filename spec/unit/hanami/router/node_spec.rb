@@ -15,18 +15,24 @@ RSpec.describe Hanami::Router::Node do
       context "and segment is fixed" do
         it "returns a node" do
           segment = "foo"
-          subject.put(segment)
+          param_keys = []
+          param_values = []
 
-          expect(subject.get(segment)).to be_kind_of(described_class)
+          subject.put(segment, param_keys)
+
+          expect(subject.get(segment, param_values)).to be_kind_of(described_class)
         end
       end
 
       context "and segment is variable" do
         it "returns a node" do
           dynamic_segment = ":foo"
-          subject.put(dynamic_segment)
+          param_keys = []
+          param_values = []
 
-          expect(subject.get("bar")).to be_kind_of(described_class)
+          subject.put(dynamic_segment, param_keys)
+
+          expect(subject.get("bar", param_values)).to be_kind_of(described_class)
         end
       end
     end
@@ -34,9 +40,12 @@ RSpec.describe Hanami::Router::Node do
     context "when segment is not found" do
       it "returns nil" do
         segment = "foo"
-        subject.put(segment)
+        param_keys = []
+        param_values = []
 
-        expect(subject.get("bar")).to be_nil
+        subject.put(segment, param_keys)
+
+        expect(subject.get("bar", param_values)).to be_nil
       end
     end
   end
@@ -50,9 +59,12 @@ RSpec.describe Hanami::Router::Node do
           to = double("to")
           constraints = {}
           path = "/bar"
-          subject.put(segment).leaf!(route, to, constraints)
+          param_keys = []
+          param_values = []
 
-          expect(subject.get(segment).match(path)).to be_nil
+          subject.put(segment, param_keys).leaf!(param_keys, to, constraints)
+
+          expect(subject.get(segment, param_values).match(param_values)).to be_nil
         end
       end
 
@@ -62,9 +74,12 @@ RSpec.describe Hanami::Router::Node do
           route = "/foo"
           to = double("to")
           constraints = {}
-          subject.put(segment).leaf!(route, to, constraints)
+          param_keys = []
+          param_values = []
 
-          expect(subject.get(segment).match(route)).to be_kind_of(Hanami::Router::Leaf)
+          subject.put(segment, param_keys).leaf!(param_keys, to, constraints)
+
+          expect(subject.get(segment, param_values).match(param_values)).to be_kind_of(Hanami::Router::Leaf)
         end
       end
     end
@@ -77,9 +92,12 @@ RSpec.describe Hanami::Router::Node do
           to = double("to")
           constraints = {foo: :digit}
           path = "/bar"
-          subject.put(segment).leaf!(route, to, constraints)
+          param_keys = []
+          param_values = []
 
-          expect(subject.get(segment).match(path)).to be_nil
+          subject.put(segment, param_keys).leaf!(param_keys, to, constraints)
+
+          expect(subject.get(segment, param_values).match(param_values)).to be_nil
         end
       end
 
@@ -90,9 +108,12 @@ RSpec.describe Hanami::Router::Node do
           to = double("to")
           constraints = {foo: :digit}
           path = "/123"
-          subject.put(segment).leaf!(route, to, constraints)
+          param_keys = []
+          param_values = []
 
-          expect(subject.get(segment).match(path)).to be_kind_of(Hanami::Router::Leaf)
+          subject.put(segment, param_keys).leaf!(param_keys, to, constraints)
+
+          expect(subject.get(segment, param_values).match(param_values)).to be_kind_of(Hanami::Router::Leaf)
         end
       end
     end
