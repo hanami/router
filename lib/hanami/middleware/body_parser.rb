@@ -43,7 +43,7 @@ module Hanami
         return @app.call(env) if body.nil? || body.empty?
 
         # Somebody might try to read this stream
-        Rack::RewindableInput.new(env[RACK_INPUT]).rewind 
+        Rack::RewindableInput.new(env[RACK_INPUT]).rewind
 
         if (parser = @parsers[media_type(env)])
           env[Router::ROUTER_PARSED_BODY] = parser.parse(body, env)
