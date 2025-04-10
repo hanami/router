@@ -3,7 +3,9 @@
 RSpec.describe "Pass on response" do
   let(:app) { Rack::MockRequest.new(routes) }
   let(:routes) do
-    Hanami::Router.new { get "/", to: ->(*) { [200, RSpec::Support::HTTP.headers({"Content-Length" => "2"}), ["OK"]] } }
+    # Hoist back into RSpec context to use "rack_headers" helper
+    action = ->(*) { [200, rack_headers({"Content-Length" => "2"}), ["OK"]] }
+    Hanami::Router.new { get "/", to: action }
   end
 
   it "is successful" do

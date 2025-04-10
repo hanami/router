@@ -18,20 +18,6 @@ module RSpec
         (mounted == requested) ||
           (mounted == "get" && requested == "head")
       end
-
-      def self.headers(headers_hash)
-        if Hanami::Router.modern_rack?
-          headers = Rack::Headers.new
-
-          expected.each do |k, v|
-            headers[k] = v
-          end
-
-          headers
-        else
-          expected
-        end
-      end
     end
   end
 end

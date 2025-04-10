@@ -107,6 +107,14 @@ module Hanami
         return not_allowed(env) || not_found(env)
       end
 
+      # Rack 3 no longer requires "rack.input" to be rewindable. Force input to be
+      # rewindable to maintain Rack 2 behavior.
+      #
+      # @since 2.2.0
+      if Hanami::Router.rack_3? && env[::Rack::RACK_INPUT]
+        env[::Rack::RACK_INPUT] = Rack::RewindableInput.new(env[::Rack::RACK_INPUT])
+      end
+
       endpoint.call(
         _params(env, params)
       ).to_a
@@ -744,11 +752,11 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = modern_rack? ? "location" : "Location"
+    HTTP_HEADER_LOCATION = Hanami::Router.rack_3? ? "location" : "Location"
 
     # @since 2.2.0
     # @api private
-    HTTP_HEADER_ALLOW = modern_rack? ? "allow" : "Allow"
+    HTTP_HEADER_ALLOW = Hanami::Router.rack_3? ? "allow" : "Allow"
 
     # @since 2.0.0
     # @api private
@@ -935,9 +943,8 @@ module Hanami
     def _params(env, params)
       params ||= {}
       env[PARAMS] ||= {}
-      input = Rack::RewindableInput.new(env[::Rack::RACK_INPUT]) if env[::Rack::RACK_INPUT]
 
-      if !env.key?(ROUTER_PARSED_BODY) && input
+      if !env.key?(ROUTER_PARSED_BODY) && (input = env[::Rack::RACK_INPUT]) && input.rewind
         env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
         input.rewind
         env[::Rack::RACK_INPUT] = input
