@@ -3,7 +3,6 @@
 module RSpec
   module Support
     module Rack
-
       # Given a headers hash, respond with headers compatible with current Rack version
       def rack_headers(headers_hash)
         if Hanami::Router.rack_3?
