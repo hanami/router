@@ -23,8 +23,6 @@ module Hanami
       # @api private
       # @since 2.2.0
       def match(param_values)
-        return false if param_values.empty?
-
         @params = @param_keys.zip(param_values).to_h
 
         return true if @constraints.empty?
