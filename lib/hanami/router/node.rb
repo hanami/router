@@ -11,10 +11,6 @@ module Hanami
     class Node
       # @api private
       # @since 2.0.0
-      attr_reader :to
-
-      # @api private
-      # @since 2.0.0
       def initialize
         @variable = nil
         @fixed = nil
