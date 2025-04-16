@@ -4,7 +4,7 @@ require "hanami/router/leaf"
 
 RSpec.describe Hanami::Router::Leaf do
   let(:subject) { described_class.new(param_keys, to, constraints) }
-  let(:to)          { "test proc" }
+  let(:to) { "test proc" }
 
   describe "#initialize" do
     let(:param_keys)  { [] }
@@ -30,11 +30,11 @@ RSpec.describe Hanami::Router::Leaf do
   end
 
   describe "#match" do
-      let(:param_keys)    { [":variable"] }
-      let(:param_values)  { ["value"] }
+    let(:param_keys) { [":variable"] }
+    let(:param_values) { ["value"] }
 
     context "with no constraints" do
-      let(:constraints)   { {} }
+      let(:constraints) { {} }
 
       it "returns true" do
         result = subject.match(param_values)

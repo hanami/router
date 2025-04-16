@@ -28,7 +28,6 @@ module Hanami
         return true if @constraints.empty?
 
         @constraints.all? do |key, constraint|
-
           match = constraint.match(@params[key.to_s])
 
           match && (match.string == match[0])
