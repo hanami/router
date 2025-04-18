@@ -596,12 +596,8 @@ RSpec.describe Hanami::Router do
 
       it "recognizes route(s)" do
         runner.run!([
-          [:regex, "/123/number", {test: "123"}]
-          # FIXME: this passes if `:greedy` route has the same constraint of the other (`test: /\d+/`)
-          #        this because the returned segment for the two /:test is different because of the contraint.
-          #        this makes Node `@variable` to set them in two different children where the first shadows the latter
-          #        a potential solution could be to use `Segment.new` and implement `#==`
-          # [:greedy, "/123/anything", { test: "123" }]
+          [:regex, "/123/number", {test: "123"}],
+          [:greedy, "/123/anything", {test: "123"}]
         ])
       end
     end
@@ -635,6 +631,84 @@ RSpec.describe Hanami::Router do
       end
     end
 
+    describe "optional fixed segment" do
+      let(:router) do
+        described_class.new do
+          get "/one(/two)", as: :nested, to: RecognitionTestCase.endpoint("nested")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:nested, "/one"],
+          [:nested, "/one/two"]
+        ])
+      end
+    end
+
+    describe "optional variable segment" do
+      let(:router) do
+        described_class.new do
+          get "/one(/:two)", as: :nested, to: RecognitionTestCase.endpoint("nested")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:nested, "/one", {}],
+          [:nested, "/one/2", {two: "2"}]
+        ])
+      end
+    end
+
+    describe "optional variable between fixed segments" do
+      let(:router) do
+        described_class.new do
+          get "/one(/:var)/two", as: :nested, to: RecognitionTestCase.endpoint("nested")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:nested, "/one/two", {}],
+          [:nested, "/one/abc/two", {var: "abc"}]
+        ])
+      end
+    end
+
+    describe "consecutive optional variables" do
+      let(:router) do
+        described_class.new do
+          get "/one(/:year)(/:month)/two", as: :nested, to: RecognitionTestCase.endpoint("nested")
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:nested, "/one/two", {}],
+          [:nested, "/one/1970/two", {year: "1970"}],
+          [:nested, "/one/1970/12/two", {year: "1970", month: "12"}]
+        ])
+      end
+    end
+
+    describe "consecutive optional variables with constraints" do
+      let(:router) do
+        described_class.new do
+          get "/one(/:year)(/:month)", as: :nested, to: RecognitionTestCase.endpoint("nested"), year: /\d{4}/, month: /\d{2}/
+        end
+      end
+
+      it "recognizes route(s)" do
+        runner.run!([
+          [:nested, "/one", {}],
+          [:nested, "/one/1970", {year: "1970"}],
+          [:nested, "/one/12", {month: "12"}],
+          [:nested, "/one/1970/12", {year: "1970", month: "12"}]
+        ])
+      end
+    end
+
     describe "multiple nested optional fixed segments" do
       let(:router) do
         described_class.new do
@@ -642,7 +716,7 @@ RSpec.describe Hanami::Router do
         end
       end
 
-      xit "recognizes route(s)" do
+      it "recognizes route(s)" do
         runner.run!([
           [:nested, "/one"],
           [:nested, "/one/two"],
@@ -652,6 +726,18 @@ RSpec.describe Hanami::Router do
           [:nested, "/one/two/three/four/five"],
           [nil, "/one/two/four/five"]
         ])
+      end
+    end
+
+    describe "invalid optional definition" do
+      let(:router) do
+        described_class.new do
+          get "/one(/two", as: :broken, to: RecognitionTestCase.endpoint("broken")
+        end
+      end
+
+      it "raise InvalidRouteDefinitionError" do
+        expect { runner }.to raise_error(Hanami::Router::InvalidRouteDefinitionError)
       end
     end
 
