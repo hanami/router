@@ -869,7 +869,7 @@ module Hanami
         match_data = ROUTE_INNER_PARENTHESES_MATCHER.match(optional_path)
 
         if match_data.nil?
-          raise Hanami::Router::InvalidRouteDefinitionError.new(http_method, path, "unmatched parenthesis in route")
+          raise InvalidRouteDefinitionError.new(http_method, path, "unmatched parenthesis in route")
         end
 
         [
