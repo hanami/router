@@ -28,7 +28,11 @@ module Hanami
         return true if @constraints.empty?
 
         @constraints.all? do |key, constraint|
-          match = constraint.match(@params[key.to_s])
+          param_value = @params[key.to_s]
+
+          next true if param_value.nil? # ignore constraints on nonexistent keys
+
+          match = constraint.match(param_value)
 
           match && (match.string == match[0])
         end
