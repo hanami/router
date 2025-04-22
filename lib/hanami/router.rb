@@ -751,7 +751,7 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    ROUTE_VARIABLE_MATCHER = /:/
+    ROUTE_VARIABLE_INDICATOR = ":"
 
     # @since 2.0.0
     # @api private
@@ -890,7 +890,7 @@ module Hanami
     # @since 2.0.0
     # @api private
     def variable?(path)
-      ROUTE_VARIABLE_MATCHER.match?(path)
+      path.include?(ROUTE_VARIABLE_INDICATOR)
     end
 
     # @since 2.2.1

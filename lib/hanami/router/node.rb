@@ -58,7 +58,7 @@ module Hanami
       # @api private
       # @since 2.0.0
       def variable?(segment)
-        Router::ROUTE_VARIABLE_MATCHER.match?(segment)
+        segment.include?(Router::ROUTE_VARIABLE_INDICATOR)
       end
     end
   end
