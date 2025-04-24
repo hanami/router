@@ -749,7 +749,7 @@ module Hanami
     # @api private
     ROUTE_OPTIONAL_INDICATOR = "("
 
-    # @since 2.0.0
+    # @since 2.2.1
     # @api private
     ROUTE_VARIABLE_INDICATOR = ":"
 
