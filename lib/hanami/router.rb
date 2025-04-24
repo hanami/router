@@ -753,9 +753,9 @@ module Hanami
     # @api private
     ROUTE_VARIABLE_INDICATOR = ":"
 
-    # @since 2.0.0
+    # @since 2.2.1
     # @api private
-    ROUTE_GLOBBED_MATCHER = /\*/
+    ROUTE_GLOBBED_INDICATOR = "*"
 
     # @since 2.2.1
     # @api private
@@ -902,7 +902,7 @@ module Hanami
     # @since 2.0.0
     # @api private
     def globbed?(path)
-      ROUTE_GLOBBED_MATCHER.match?(path)
+      path.include?(ROUTE_GLOBBED_INDICATOR)
     end
 
     # @since 2.0.0
