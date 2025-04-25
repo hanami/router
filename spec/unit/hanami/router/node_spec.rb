@@ -27,11 +27,12 @@ RSpec.describe Hanami::Router::Node do
     context "when segment is variable" do
       it "updates param_keys" do
         variable_segment = ":foo"
+        key_for_variable_segment = "foo"
         param_keys = []
 
         subject.put(variable_segment, param_keys)
 
-        expect(param_keys).to include(":foo")
+        expect(param_keys).to include(key_for_variable_segment)
       end
     end
   end
