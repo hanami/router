@@ -21,7 +21,7 @@ module Hanami
       # @since 2.0.0
       def put(segment, param_keys)
         if variable?(segment)
-          param_keys << segment
+          param_keys << segment.delete_prefix(Router::ROUTE_VARIABLE_INDICATOR).freeze
           @variable ||= self.class.new
         else
           @fixed ||= {}
