@@ -22,9 +22,8 @@ module Hanami
       # @api private
       # @since 2.0.0
       def add(route, to, constraints)
-        # segments = segments_from(route)
-        param_keys = []
         node = @root
+        param_keys = []
 
         segments_from(route).each do |segment|
           node = node.put(segment, param_keys)
@@ -36,11 +35,14 @@ module Hanami
       # @api private
       # @since 2.0.0
       def find(path)
-        # segments = segments_from(path)
-        param_values = []
         node = @root
+        param_values = []
 
-        return unless segments_from(path).all? { |segment| node = node.get(segment, param_values) }
+        return unless path[1..].split(SEGMENT_SEPARATOR) do |segment|
+          node = node.get(segment, param_values)
+
+          break false if node.nil?
+        end
 
         node.match(param_values)&.then { |found| [found.to, found.params] }
       end
