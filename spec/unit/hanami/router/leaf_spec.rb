@@ -30,7 +30,7 @@ RSpec.describe Hanami::Router::Leaf do
   end
 
   describe "#match" do
-    let(:param_keys) { [":variable"] }
+    let(:param_keys) { ["variable"] }
     let(:param_values) { ["value"] }
 
     context "with no constraints" do
