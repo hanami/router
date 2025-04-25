@@ -863,7 +863,6 @@ module Hanami
     def add_optional_routes(http_method, path, to, constraints, &blk)
       as = nil # avoid creating named routes for all optional permutations
       optional_paths = [path]
-      derived_paths = []
 
       optional_paths.each do |optional_path|
         match_data = ROUTE_INNER_PARENTHESES_MATCHER.match(optional_path)
@@ -879,12 +878,10 @@ module Hanami
           if optional?(new_path)
             optional_paths << new_path
           else
-            derived_paths << new_path
+            add_route(http_method, new_path, to, as, constraints, &blk)
           end
         end
       end
-
-      derived_paths.each { |derived| add_route(http_method, derived, to, as, constraints, &blk) }
     end
 
     # @since 2.0.0
