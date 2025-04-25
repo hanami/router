@@ -14,7 +14,7 @@ module Hanami
       # @api private
       # @since 2.2.0
       def initialize(param_keys, to, constraints)
-        @param_keys = param_keys.map { |key| key.delete_prefix(":") }.freeze
+        @param_keys = param_keys.freeze
         @to = to
         @constraints = constraints
         @params = nil
