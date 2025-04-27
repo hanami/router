@@ -41,10 +41,10 @@ module Hanami
         path[1..].split(SEGMENT_SEPARATOR) do |segment|
           node = node.get(segment, param_values)
 
-          return if node.nil?
+          break if node.nil?
         end
 
-        node.match(param_values)&.then { |found| [found.to, found.params] }
+        node&.match(param_values)&.then { |found| [found.to, found.params] }
       end
 
       private
