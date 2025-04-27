@@ -38,10 +38,10 @@ module Hanami
         node = @root
         param_values = []
 
-        return unless path[1..].split(SEGMENT_SEPARATOR) do |segment|
+        path[1..].split(SEGMENT_SEPARATOR) do |segment|
           node = node.get(segment, param_values)
 
-          break false if node.nil?
+          return if node.nil?
         end
 
         node.match(param_values)&.then { |found| [found.to, found.params] }
