@@ -38,7 +38,7 @@ module Hanami
         node = @root
         param_values = []
 
-        path[1..].split(SEGMENT_SEPARATOR) do |segment|
+        path.slice(1..).split(SEGMENT_SEPARATOR) do |segment|
           node = node.get(segment, param_values)
 
           break if node.nil?
