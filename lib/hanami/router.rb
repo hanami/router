@@ -871,10 +871,7 @@ module Hanami
           raise InvalidRouteDefinitionError.new(http_method, path, "unmatched parenthesis in route")
         end
 
-        [
-          +EMPTY_STRING << match_data.pre_match << match_data[1] << match_data.post_match,
-          +EMPTY_STRING << match_data.pre_match << match_data.post_match
-        ].each do |new_path|
+        optional_routes_from(match_data).each do |new_path|
           if optional?(new_path)
             optional_paths << new_path
           else
@@ -882,6 +879,15 @@ module Hanami
           end
         end
       end
+    end
+
+    # @since 2.2.1
+    # @api private
+    def optional_routes_from(match_data)
+      [
+        -"#{match_data.pre_match}#{match_data[1]}#{match_data.post_match}",
+        -"#{match_data.pre_match}#{match_data.post_match}"
+      ]
     end
 
     # @since 2.0.0
