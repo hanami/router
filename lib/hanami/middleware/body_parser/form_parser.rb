@@ -30,6 +30,7 @@ module Hanami
         # @since 2.0.1
         # @api private
         def parse(*, env)
+          # Rewind to ensure successful parsing (required for Rack 3's `.parse_multipart`).
           env[::Rack::RACK_INPUT].rewind if env[::Rack::RACK_INPUT].respond_to?(:rewind)
           ::Rack::Multipart.parse_multipart(env)
         rescue StandardError => exception
