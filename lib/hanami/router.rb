@@ -944,7 +944,7 @@ module Hanami
       params ||= {}
       env[PARAMS] ||= {}
 
-      if !env.key?(ROUTER_PARSED_BODY) && (input = env[::Rack::RACK_INPUT]) && input.rewind
+      if !env.key?(ROUTER_PARSED_BODY) && (input = env[::Rack::RACK_INPUT]) and input.rewind
         env[PARAMS].merge!(::Rack::Utils.parse_nested_query(input.read))
         input.rewind
         env[::Rack::RACK_INPUT] = input
