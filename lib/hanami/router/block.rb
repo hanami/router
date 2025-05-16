@@ -67,8 +67,8 @@ module Hanami
         def call
           body = instance_exec(&@blk)
 
-          # Rack 2.1 no longer guarantees the presense of the 'Content-Length'
-          # header.  Always include this header to maintain backwards compatibility
+          # Rack 2.1 no longer guarantees the presence of the 'Content-Length' header. Always
+          # include this header to maintain backwards compatibility.
           headers[::Rack::CONTENT_LENGTH] = body.size.to_s
 
           [status, headers, [body]]
