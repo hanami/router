@@ -2,6 +2,7 @@
 
 class RecognitionTestCase
   include ::RSpec::Matchers
+
   HEADER_ENV     = "_env"
   ROUTER_PARAMS  = "router.params"
   REQUEST_METHOD = "REQUEST_METHOD"

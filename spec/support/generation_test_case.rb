@@ -2,6 +2,7 @@
 
 class GenerationTestCase
   include ::RSpec::Matchers
+
   def initialize(router)
     @router = router
   end
