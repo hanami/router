@@ -27,7 +27,7 @@ RSpec.describe Hanami::Router do
 
         context "path recognition" do
           context "root trailing slash" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "14"}, "Trailing root!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Trailing root!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/", lint: true)).to eq_response(response)
@@ -35,7 +35,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "trailing slash" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "9"}, "Trailing!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Trailing!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/trailing/", lint: true)).to eq_response(response)
@@ -43,7 +43,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "fixed string" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "6"}, "Fixed!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Fixed!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/hanami", lint: true)).to eq_response(response)
@@ -51,7 +51,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "moving parts string" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "7"}, "Moving!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Moving!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/hanami/23", lint: true)).to eq_response(response)
@@ -59,7 +59,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "globbing string" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "9"}, "Globbing!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Globbing!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/hanami/all", lint: true)).to eq_response(response)
@@ -67,7 +67,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "format string" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "7"}, "Format!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Format!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/hanami/all.json", lint: true)).to eq_response(response)
@@ -75,7 +75,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "block" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "6"}, "Block!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Block!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
@@ -84,7 +84,7 @@ RSpec.describe Hanami::Router do
         end
 
         describe "constraints" do
-          let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "24"}, "Moving with constraints!") }
+          let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Moving with constraints!") }
 
           it "recognize when called with matching constraints" do
             expect(app.request(verb.upcase, "/books/23", lint: true)).to eq_response(response)
@@ -94,7 +94,7 @@ RSpec.describe Hanami::Router do
 
         context "named routes" do
           context "symbol" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "12"}, "Named route!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Named route!") }
 
             it "recognizes by the given symbol" do
               expect(router.path(:"#{verb}_named_route")).to eq("/named_route")
@@ -103,7 +103,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "compiled variables" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "13"}, "Named %route!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Named %route!") }
 
             it "recognizes" do
               expect(router.path(:"#{verb}_named_route_var", var: "route")).to eq("/named_route")
@@ -112,7 +112,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "custom url parts" do
-            let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "30"}, "Named route with custom parts!") }
+            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Named route with custom parts!") }
 
             it "recognizes" do
               r      = response
@@ -127,7 +127,7 @@ RSpec.describe Hanami::Router do
 
         context "#HEAD" do
           let(:app) { Rack::MockRequest.new(Rack::Head.new(router)) }
-          let(:response) { Rack::MockResponse.new(405, {"Content-Length" => "18", "Allow" => verb.upcase}, []) }
+          let(:response) { Rack::MockResponse.new(405, rack_headers({"Content-Length" => "18", "Allow" => verb.upcase}), []) }
 
           context "path recognition" do
             context "fixed string" do
@@ -186,14 +186,10 @@ RSpec.describe Hanami::Router do
             end
           end
 
-          let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "6"}, "Fixed!") }
+          let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Fixed!") }
 
           it "recognizes" do
-            actual = app.request("GET", "/", lint: true)
-
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
+            expect(app.request("GET", "/", lint: true)).to eq_response(response)
           end
 
           it "recognizes by :root" do
@@ -211,14 +207,10 @@ RSpec.describe Hanami::Router do
             end
           end
 
-          let(:response) { Rack::MockResponse.new(200, {"Content-Length" => "6"}, "Block!") }
+          let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Block!") }
 
           it "recognizes" do
-            actual = app.request("GET", "/", lint: true)
-
-            expect(actual.status).to eq(response.status)
-            expect(actual.header).to eq(response.header)
-            expect(actual.body).to   eq(response.body)
+            expect(app.request("GET", "/", lint: true)).to eq_response(response)
           end
         end
       end

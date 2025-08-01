@@ -4,7 +4,7 @@ require "hanami/middleware/trie"
 
 RSpec.describe Hanami::Middleware::Trie do
   subject { described_class.new(app) }
-  let(:app) { -> (*) { [200, {"content-length" => "2"}, ["OK"]] } }
+  let(:app) { -> (*) { [200, {"Content-Length" => "2"}, ["OK"]] } }
 
   describe "#initialize" do
     it "returns an instance of #{described_class}" do

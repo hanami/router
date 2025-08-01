@@ -66,6 +66,7 @@ module Hanami
         # @since 2.0.0
         def call
           body = instance_exec(&@blk)
+
           [status, headers, [body]]
         end
       end

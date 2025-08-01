@@ -4,12 +4,16 @@ require "rack/head"
 
 RSpec.describe Hanami::Router do
   let(:router) do
+    # Hoist these definitions back into RSpec context to use "rack_headers" helper
+    proc_app = ->(*) { [200, rack_headers({"Content-Length" => "4"}), ["proc"]] }
+    trailing_app = ->(*) { [200, rack_headers({"Content-Length" => "8"}), ["trailing"]] }
+
     Hanami::Router.new do
-      mount Api::App.new,                  at: "/api"
-      mount Backend::App,                  at: "/backend"
-      mount ->(*) { [200, {"Content-Length" => "4"}, ["proc"]] }, at: "/proc"
-      mount ->(*) { [200, {"Content-Length" => "8"}, ["trailing"]] }, at: "/trailing/"
-      mount Api::App.new, at: "/"
+      mount Api::App.new,   at: "/api"
+      mount Backend::App,   at: "/backend"
+      mount proc_app,       at: "/proc"
+      mount trailing_app,   at: "/trailing/"
+      mount Api::App.new,   at: "/"
     end
   end
 
@@ -61,10 +65,12 @@ RSpec.describe Hanami::Router do
 
   context "glob routes" do
     let(:router) do
+      glob_app = ->(*) { [200, rack_headers({"Content-Length" => "4"}), ["home"]] }
+
       Hanami::Router.new do
         mount Api::App.new, at: "/api"
 
-        get "/*any", to: ->(*) { [200, {"Content-Length" => "4"}, ["home"]] }
+        get "/*any", to: glob_app
       end
     end
     let(:app) { Rack::MockRequest.new(router) }
@@ -75,8 +81,10 @@ RSpec.describe Hanami::Router do
 
     context "with more-specific glob before root-level mount" do
       let(:router) do
+        glob_app = ->(*) { [200, rack_headers({"Content-Length" => "4"}), ["home"]] }
+
         Hanami::Router.new do
-          get "/home/*any", to: ->(*) { [200, {"Content-Length" => "4"}, ["home"]] }
+          get "/home/*any", to: glob_app
 
           mount Api::App.new, at: "/"
         end

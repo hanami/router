@@ -22,6 +22,7 @@ module Hanami
     require "hanami/router/url_helpers"
     require "hanami/router/globbed_path"
     require "hanami/router/mounted_path"
+    require "hanami/router/rack_utils"
 
     # URL helpers for other Hanami integrations
     #
@@ -104,6 +105,14 @@ module Hanami
 
       unless endpoint
         return not_allowed(env) || not_found(env)
+      end
+
+      # Rack 3 no longer requires "rack.input" to be rewindable. Force input to be
+      # rewindable to maintain Rack 2 behavior.
+      #
+      # @since 2.2.0
+      if Hanami::Router.rack_3? && env[::Rack::RACK_INPUT]
+        env[::Rack::RACK_INPUT] = Rack::RewindableInput.new(env[::Rack::RACK_INPUT])
       end
 
       endpoint.call(
@@ -743,7 +752,11 @@ module Hanami
 
     # @since 2.0.0
     # @api private
-    HTTP_HEADER_LOCATION = "Location"
+    HTTP_HEADER_LOCATION = Hanami::Router.rack_3? ? "location" : "Location"
+
+    # @since 2.2.0
+    # @api private
+    HTTP_HEADER_ALLOW = Hanami::Router.rack_3? ? "allow" : "Allow"
 
     # @since 2.0.0
     # @api private
@@ -766,7 +779,7 @@ module Hanami
         HTTP_STATUS_NOT_ALLOWED,
         {
           ::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_ALLOWED_LENGTH,
-          "Allow" => allowed_http_methods.join(", ")
+          HTTP_HEADER_ALLOW => allowed_http_methods.join(", ")
         },
         [HTTP_BODY_NOT_ALLOWED]
       ]
@@ -778,12 +791,13 @@ module Hanami
     # @since 2.0.0
     NOT_FOUND = ->(*) {
       [HTTP_STATUS_NOT_FOUND, {::Rack::CONTENT_LENGTH => HTTP_BODY_NOT_FOUND_LENGTH}, [HTTP_BODY_NOT_FOUND]]
-    }.freeze
+    }
 
     # @since 2.0.0
     # @api private
     def lookup(env)
       endpoint = fixed(env)
+
       return [endpoint, {}] if endpoint
 
       variable(env) || globbed_or_mounted(env)
@@ -938,6 +952,7 @@ module Hanami
       env[PARAMS].merge!(::Rack::Utils.parse_nested_query(env[::Rack::QUERY_STRING]))
       env[PARAMS].merge!(params)
       env[PARAMS] = Params.deep_symbolize(env[PARAMS])
+
       env
     end
 
