@@ -12,10 +12,8 @@ RSpec.describe Hanami::Router do
       env = Rack::MockRequest.env_for("/redirect")
       status, headers, = router.call(env)
 
-      location_header = Hanami::Router.rack_3? ? headers["location"] : headers["Location"]
-
       expect(status).to eq(301)
-      expect(location_header).to eq("/redirect_destination")
+      expect(headers[Hanami::Router::HTTP_HEADER_LOCATION]).to eq("/redirect_destination")
     end
 
     it "recognizes string endpoint with custom http code" do
@@ -28,10 +26,8 @@ RSpec.describe Hanami::Router do
       env = Rack::MockRequest.env_for("/redirect")
       status, headers, = router.call(env)
 
-      location_header = Hanami::Router.rack_3? ? headers["location"] : headers["Location"]
-
       expect(status).to eq(302)
-      expect(location_header).to eq("/redirect_destination")
+      expect(headers[Hanami::Router::HTTP_HEADER_LOCATION]).to eq("/redirect_destination")
     end
 
     it "recognizes string endpoint with absolute url" do
