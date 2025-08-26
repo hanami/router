@@ -21,6 +21,7 @@ jobs:
         rack:
           - "~> 2.0"
           - "~> 3.0"
+    name: tests (Ruby ${{ matrix.ruby }}, Rack ${{ matrix.rack }})
     steps:
       - uses: actions/checkout@v4
       - name: Install package dependencies
