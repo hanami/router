@@ -75,7 +75,7 @@ RSpec.describe Hanami::Router do
           end
 
           context "block" do
-            let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Block!") }
+            let(:response) { Rack::MockResponse.new(200, block_content_length_headers("Block!"), "Block!") }
 
             it "recognizes" do
               expect(app.request(verb.upcase, "/block", lint: true)).to eq_response(response)
@@ -207,12 +207,20 @@ RSpec.describe Hanami::Router do
             end
           end
 
-          let(:response) { Rack::MockResponse.new(200, rack_headers({}), "Block!") }
+          let(:response) { Rack::MockResponse.new(200, block_content_length_headers("Block!"), "Block!") }
 
           it "recognizes" do
             expect(app.request("GET", "/", lint: true)).to eq_response(response)
           end
         end
+      end
+    end
+
+    def block_content_length_headers(body)
+      if Hanami::Router.rack_3?
+        rack_headers({})
+      else
+        rack_headers({"Content-Length" => body.length.to_s})
       end
     end
   end
