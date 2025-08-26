@@ -704,7 +704,7 @@ module Hanami
 
     # @since x.x.x
     # @api private
-    UNDERSCORED_NAME_REGEXP = /[\-+~.]/
+    UNDERSCORED_NAME_REGEXP = /[-+~.]/
 
     # @since 2.0.0
     # @api private
