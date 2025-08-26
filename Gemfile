@@ -9,5 +9,9 @@ unless ENV["CI"]
   gem "yard-junk"
 end
 
+if ENV["RACK_VERSION_CONSTRAINT"]
+  gem "rack", ENV["RACK_VERSION_CONSTRAINT"]
+end
+
 gem "hanami-devtools", github: "hanami/devtools", branch: "main"
 gem "rexml"
