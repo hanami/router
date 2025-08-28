@@ -18,6 +18,10 @@ jobs:
           - "3.3"
           - "3.2"
           - "3.1"
+        rack:
+          - "~> 2.0"
+          - "~> 3.0"
+    name: tests (Ruby ${{ matrix.ruby }}, Rack ${{ matrix.rack }})
     steps:
       - uses: actions/checkout@v4
       - name: Install package dependencies
@@ -27,8 +31,12 @@ jobs:
         with:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true # 'bundle install' and cache gems
+        env:
+          RACK_VERSION_CONSTRAINT: ${{matrix.rack}}
       - name: Run all tests
         run: script/ci
+        env:
+          RACK_VERSION_CONSTRAINT: ${{matrix.rack}}
 
   workflow-keepalive:
     if: github.event_name == 'schedule'
