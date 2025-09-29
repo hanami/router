@@ -2,11 +2,13 @@
 
 Rack compatible HTTP router for Ruby
 
-## [Unreleased]
+## v2.3.0.beta1 - Unreleased
 
 ### Changed
 
+- [Kyle Plump, Tim Riley] Support Rack 3 in addition to Rack 2 (#277)
 - [Sven Schwyn] Convert -, +, ~, and . to underscore in URL helper names (#280)
+- [inouire] Allow redirects to absolute URLs: `redirect "/redirect", to: "https://hanamirb.org/"` (#282)
 
 ## v2.2.0 - 2024-11-05
 
