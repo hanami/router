@@ -2,7 +2,7 @@
 
 Rack compatible HTTP router for Ruby
 
-## v2.3.0.beta1 - Unreleased
+## v2.3.0.beta1 - 2025-10-03
 
 ### Changed
 
